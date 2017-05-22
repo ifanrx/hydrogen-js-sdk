@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha -R spec --timeout 300000 test/index.js",
     "dev": "export NODE_ENV=dev && gulp dev",
-    "build": " export NODE_ENV=production && gulp release",
+    "build": "export NODE_ENV=production && gulp release",
     "lock": "npm prune && npm shrinkwrap --dev"
   },
   "repository": {
