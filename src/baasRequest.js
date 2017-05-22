@@ -117,7 +117,7 @@ const doCreateRequestMethod = (methodMap) => {
           let method = methodItem.method || 'GET';
 
           if (methodItem.defaultParams) {
-            objects = extend(methodItem.defaultParams, objects);
+            objects = extend(objects, methodItem.defaultParams);
           }
 
           let url = utils.format(methodItem.url, objects);
