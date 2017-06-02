@@ -1,3 +1,5 @@
+'use strict';
+
 let config;
 try {
   config = require('sdk-config');
