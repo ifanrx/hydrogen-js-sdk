@@ -18,11 +18,11 @@ const API = {
   // 通用存储模块
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1/table/:tableID/record/:recordID/',
+  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
   // 用户
   USER_INFO: '/hserve/v1/user/info/:userID/',
 };
@@ -86,6 +86,21 @@ const methodMapList = [{
   // 获取分类详情
   getContentCategory: {
     url: API.CONTENT_CATEGORY_DETAIL
+  }
+}, {
+  pay: {
+    url: API.PAY,
+    method: 'POST'
+  },
+
+  order: {
+    url: API.ORDER,
+    method: 'GET'
+  }
+}, {
+  uploadFile: {
+    url: API.uploadFile,
+    method: 'POST'
   }
 }];
 
