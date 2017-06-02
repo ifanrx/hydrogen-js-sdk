@@ -10,6 +10,8 @@ const storage = require('./storage');
  * @param  {Object} header 自定义请求头
  * @return {Object}        扩展后的请求
  */
+const builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization']
+
 const setHeader = (header) => {
   var extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
@@ -20,6 +22,14 @@ const setHeader = (header) => {
   var getAuthToken = BaaS.getAuthToken();
   if (getAuthToken) {
     extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + getAuthToken;
+  }
+
+  if (header) {
+    builtInHeader.map( (key) => {
+      if (header.hasOwnProperty(key)) {
+        delete header[key]
+      }
+    })
   }
 
   return extend(extendHeader, header || {});
