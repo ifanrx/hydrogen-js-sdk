@@ -5,7 +5,7 @@ describe('baas', () => {
       'request', 'init', 'pay', 'login', 'logout', 'getTableList', 'getTable',
       'getRecordList', 'getRecord', 'createRecord', 'updateRecord', 'deleteRecord',
       'getContentList', 'getContent', 'getContentGroupList', 'getContentGroup',
-      'getContentCategory', 'test'
+      'getContentCategory', 'pay', 'order', 'uploadFile', 'getUserInfo', 'clearSession', 'test'
     ];
     let len = expectBaaSProperties.length;
 

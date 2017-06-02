@@ -1,5 +1,3 @@
-'use strict';
-
 if (typeof require !== 'undefined') {
   global.expect = require('chai').expect;
   global.BaaS = require('../src');
