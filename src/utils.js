@@ -16,6 +16,21 @@ const getConfig = () => {
 };
 
 /**
+ * 获取系统 Platform 信息
+ * @return {String}
+ */
+const getSysPlatform = () => {
+  var platform = 'UNKNOWN';
+  try {
+    var res = wx.getSystemInfoSync();
+    platform = res.platform;
+  } catch (e) {
+    // pass for now
+  }
+  return platform;
+};
+
+/**
  * 日志记录
  * @param  {String} msg 日志信息
  */
@@ -63,5 +78,6 @@ module.exports = {
   log,
   format,
   excludeParams,
-  getConfig
+  getConfig,
+  getSysPlatform
 };

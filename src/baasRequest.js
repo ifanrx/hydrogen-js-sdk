@@ -14,7 +14,7 @@ let loginResolve = [];
 
 /**
  * auth
- * @return {Promise]
+ * @return {Promise}
  */
 const auth = () => {
   if (storage.get(constants.STORAGE_KEY.UID)) {
@@ -45,7 +45,7 @@ const auth = () => {
 
 /**
  * login
- * @return {Promise]
+ * @return {Promise}
  */
 const login = () => {
   if (BaaS.isLogined()) {

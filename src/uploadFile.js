@@ -1,4 +1,4 @@
-const baasRequest = require('./baasRequest').baasRequest
+const utils = require('./utils');
 const BaaS = require('./baas')
 const API_HOST = BaaS._config.API_HOST
 const API = BaaS._config.API
@@ -13,17 +13,18 @@ const Promise = require('./promise')
 
 const uploadFile = (params) => {
 
-  if (!BaaS._config.CLIENT_ID) {
-    reject('未初始化客户端');
-  }
-
-  let token = BaaS.getAuthToken()
-
-  if(!token) {
-    return reject()
-  }
-
   return new Promise((resolve, reject) => {
+
+    if (!BaaS._config.CLIENT_ID) {
+      reject('未初始化客户端')
+    }
+
+    let token = BaaS.getAuthToken()
+
+    if(!token) {
+      reject('未认证，请先完成用户登录')
+    }
+
     wx.uploadFile({
       url: API_HOST + API.UPLOAD,
       filePath: params.filePath,
@@ -31,14 +32,16 @@ const uploadFile = (params) => {
       formData: params.formData,
       header: {
         'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + token,
+        'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+        'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
         'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
         'User-Agent': constants.UPLOAD.UA,
       },
       success: (res) => {
-        return resolve(res)
+        resolve(res)
       },
       fail: (err) => {
-        return reject(err)
+        reject(err)
       }
     })
   }, (err) => {
