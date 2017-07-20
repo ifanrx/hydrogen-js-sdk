@@ -113,18 +113,16 @@ const doCreateRequestMethod = (methodMap) => {
       BaaS[k] = ((k) => {
         let methodItem = methodMap[k];
         return (objects) => {
-
           let method = methodItem.method || 'GET';
+          let defaultParamsCopy = extend({}, methodItem.defaultParams)
 
           if (methodItem.defaultParams) {
-            objects = extend(objects, methodItem.defaultParams);
+            objects = extend(defaultParamsCopy, objects)
           }
 
           let url = utils.format(methodItem.url, objects);
-
           let data = (objects && objects.data) || objects;
-
-          data = utils.excludeParams(methodItem.url, data);
+          data = utils.excludeParams(url, data);
 
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
