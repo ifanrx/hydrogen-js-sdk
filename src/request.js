@@ -16,7 +16,7 @@ const setHeader = (header) => {
   var extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': (typeof window !== 'undefined' && window.navigator.platform) || 'UNKNOWN'
+    'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
   };
 
   var getAuthToken = BaaS.getAuthToken();

@@ -7,7 +7,7 @@ const API = {
   LOGOUT: '/hserve/v1/session/destroy/',
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
-  UPLOAD: API_HOST + '/hserve/v1/file/upload/',
+  UPLOAD: '/hserve/v1/file/upload/',
 
   // 内容模块
   CONTENT_LIST: '/hserve/v1/content/detail/',
@@ -96,11 +96,6 @@ const methodMapList = [{
   order: {
     url: API.ORDER,
     method: 'GET'
-  }
-}, {
-  uploadFile: {
-    url: API.uploadFile,
-    method: 'POST'
   }
 }];
 
