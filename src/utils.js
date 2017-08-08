@@ -85,15 +85,19 @@ const replaceQueryParams = (URL, params = {}) => {
   const paramsMap = {
     contentGroupID: 'content_group_id',
     categoryID: 'category_id',
+    recordID: 'id',
   }
 
   let copiedParams = extend({}, params)
 
   Object.keys(params).map(key => {
-    if (paramsMap.hasOwnProperty(key)) {
-      delete copiedParams[key]
-      copiedParams[paramsMap[key]] = params[key]
-    }
+    Object.keys(paramsMap).map(mapKey => {
+      if (key.startsWith(mapKey)) {
+        var newKey = key.replace(mapKey, paramsMap[mapKey])
+        delete copiedParams[key]
+        copiedParams[newKey] = params[key]
+      }
+    })
   })
 
   return copiedParams

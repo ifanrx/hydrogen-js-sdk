@@ -111,18 +111,18 @@ const doCreateRequestMethod = (methodMap) => {
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
       BaaS[k] = ((k) => {
-        let methodItem = methodMap[k];
+        let methodItem = methodMap[k]
         return (objects) => {
-          let method = methodItem.method || 'GET';
-          let defaultParamsCopy = extend({}, methodItem.defaultParams)
+          let method = methodItem.method || 'GET'
 
           if (methodItem.defaultParams) {
+            let defaultParamsCopy = extend({}, methodItem.defaultParams)
             objects = extend(defaultParamsCopy, objects)
           }
 
-          let url = utils.format(methodItem.url, objects);
-          let data = (objects && objects.data) || objects;
-          data = utils.excludeParams(url, data);
+          let url = utils.format(methodItem.url, objects)
+          let data = (objects && objects.data) || objects
+          data = utils.excludeParams(url, data)
           data = utils.replaceQueryParams(url, data)
 
           return new Promise((resolve, reject) => {
