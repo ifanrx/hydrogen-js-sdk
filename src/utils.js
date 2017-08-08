@@ -1,4 +1,5 @@
 'use strict';
+const extend = require('node.extend');
 
 let config;
 try {
@@ -74,10 +75,35 @@ const excludeParams = (URL, params) => {
   return params;
 };
 
+/**
+ * 将 URL 中的查询字符串替换为服务端可接受的参数
+ * @param  {String} URL    URL 链接
+ * @param  {Object} params 参数对象
+ * @return {Object}
+ */
+const replaceQueryParams = (URL, params = {}) => {
+  const paramsMap = {
+    contentGroupID: 'content_group_id',
+    categoryID: 'category_id',
+  }
+
+  let copiedParams = extend({}, params)
+
+  Object.keys(params).map(key => {
+    if (paramsMap.hasOwnProperty(key)) {
+      delete copiedParams[key]
+      copiedParams[paramsMap[key]] = params[key]
+    }
+  })
+
+  return copiedParams
+}
+
 module.exports = {
   log,
   format,
   excludeParams,
   getConfig,
-  getSysPlatform
+  getSysPlatform,
+  replaceQueryParams,
 };

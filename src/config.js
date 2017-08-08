@@ -87,17 +87,7 @@ const methodMapList = [{
   getContentCategory: {
     url: API.CONTENT_CATEGORY_DETAIL
   }
-}, {
-  pay: {
-    url: API.PAY,
-    method: 'POST'
-  },
-
-  order: {
-    url: API.ORDER,
-    method: 'GET'
-  }
-}];
+},];
 
 // 配置
 module.exports = {

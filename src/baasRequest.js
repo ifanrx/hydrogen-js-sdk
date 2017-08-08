@@ -123,6 +123,7 @@ const doCreateRequestMethod = (methodMap) => {
           let url = utils.format(methodItem.url, objects);
           let data = (objects && objects.data) || objects;
           data = utils.excludeParams(url, data);
+          data = utils.replaceQueryParams(url, data)
 
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
@@ -135,7 +136,6 @@ const doCreateRequestMethod = (methodMap) => {
               reject(err);
             });
           });
-
         };
       })(k);
     }
