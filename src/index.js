@@ -10,6 +10,8 @@ BaaS.login = require('./baasRequest').login;
 BaaS.logout = require('./user').logout;
 BaaS.uploadFile = require('./uploadFile')
 BaaS.order = require('./order')
+BaaS.TableObject = require('./tableObject')
+BaaS.Query = require('./query')
 
 // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 require('./baasRequest').createRequestMethod();

@@ -23,6 +23,7 @@ const API = {
   CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  COMPLEX_QUERY_LIST: '/hserve/v1/table/:tableID/query/',
   // 用户
   USER_INFO: '/hserve/v1/user/info/:userID/',
 };
@@ -65,6 +66,10 @@ const methodMapList = [{
   deleteRecord: {
     url: API.DELETE_RECORD,
     method: 'DELETE'
+  },
+  // 复杂查询
+  getComplexQueryList: {
+    url: API.COMPLEX_QUERY_LIST,
   }
 }, {
   // 获取内容列表
