@@ -2,7 +2,7 @@ const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const Query = require('./query')
 const utils = require('./utils')
-const _cloneDeep = require('lodash.cloneDeep')
+const _cloneDeep = require('lodash.clonedeep')
 const _isInteger = require('lodash/isInteger')
 
 const API = BaaS._config.API
