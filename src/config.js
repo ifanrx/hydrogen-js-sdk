@@ -2,30 +2,29 @@ const API_HOST = 'https://sso.ifanr.com';
 
 // API 配置
 const API = {
-  INIT: '/hserve/v1/session/init/',
-  LOGIN: '/hserve/v1/session/authenticate/',
-  LOGOUT: '/hserve/v1/session/destroy/',
-  PAY: '/hserve/v1/wechat/pay/order/',
-  ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
-  UPLOAD: '/hserve/v1/file/upload/',
+  INIT: '/hserve/v1.2/session/init/',
+  LOGIN: '/hserve/v1.2/session/authenticate/',
+  LOGOUT: '/hserve/v1.2/session/destroy/',
+  PAY: '/hserve/v1.2/wechat/pay/order/',
+  ORDER: '/hserve/v1.2/wechat/pay/order/:transactionID/',
+  UPLOAD: '/hserve/v1.2/file/upload/',
 
   // 内容模块
-  CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
+  CONTENT_LIST: '/hserve/v1.2/content/detail/',
+  CONTENT_GROUP_LIST: '/hserve/v1.2/content/group/',
+  CONTENT_DETAIL: '/hserve/v1.2/content/detail/:richTextID/',
+  CONTENT_GROUP_DETAIL: '/hserve/v1.2/content/category/',
+  CONTENT_CATEGORY_DETAIL: '/hserve/v1.2/content/category/:categoryID/',
   // 通用存储模块
-  TABLE_LIST: '/hserve/v1/table/',
-  TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  COMPLEX_QUERY_LIST: '/hserve/v1/table/:tableID/query/',
+  TABLE_LIST: '/hserve/v1.2/table/',
+  TABLE_DETAIL: '/hserve/v1.2/table/:tableID/',
+  RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   // 用户
-  USER_INFO: '/hserve/v1/user/info/:userID/',
+  USER_INFO: '/hserve/v1.2/user/info/:userID/',
 };
 
 const methodMapList = [{

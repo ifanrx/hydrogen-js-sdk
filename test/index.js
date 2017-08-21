@@ -26,3 +26,5 @@ require('./utils');
 require('./request');
 require('./tableObject');
 require('./query');
+require('./geoPoint');
+require('./geoPolygon');

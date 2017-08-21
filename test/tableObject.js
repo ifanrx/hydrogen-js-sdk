@@ -1,4 +1,6 @@
 require('../src/baasRequest').createRequestMethod()
+const GeoPoint = require('../src/geoPoint')
+const GeoPolygon = require('../src/geoPolygon')
 const Query = require('../src/query')
 const TableObject = require('../src/tableObject')
 
@@ -11,6 +13,20 @@ describe('tableObject', () => {
 
   it('#_resetTableObject', () => {
     isCleared(Product)
+  })
+
+  it('#_handleQueryObject', () => {
+    var query = new Query()
+    query.in('price', [1, 3, 4])
+    Product.setQuery(query)
+    Product.orderBy('-amount')
+    expect(Product._handleQueryObject()).to.deep.equal({
+      tableID: 1,
+      limit: 20,
+      offset: 0,
+      order_by: '-amount',
+      where: '{"$and":[{"price":{"$in":"1,3,4"}}]}'
+    })
   })
 
   it('#create', () => {
@@ -28,6 +44,24 @@ describe('tableObject', () => {
     Product.set({price: 10})
     Product.set({amount: 10})
     expect(Product._record).to.deep.equal({amount: 10})
+  })
+
+  it('#set GeoPoint', () => {
+    var point = new GeoPoint(1, 1)
+    Product.set({'geoPoint': point})
+    expect(Product._record).to.deep.equal({geoPoint: {
+      'type': 'Point',
+      'coordinates': [1, 1]
+    }})
+  })
+
+  it('#set GeoPolygon', () => {
+    var polygon = new GeoPolygon([[1, 1], [1, 1], [1, 1]])
+    Product.set({'geoPolygon': polygon})
+    expect(Product._record).to.deep.equal({geoPolygon: {
+      'type': 'Polygon',
+      'coordinates': [[1, 1], [1, 1], [1, 1]]
+    }})
   })
 
   it('#set illegal', () => {
@@ -84,25 +118,23 @@ describe('tableObject', () => {
     getRecord.restore()
   })
 
-  it('#setQuery object', () => {
-    Product.setQuery({price__gt: 10})
-    expect(Product._queryObject).to.deep.equal({price__gt: 10})
-    expect(Product._queryMode).to.equal('simple')
-    Product.setQuery({amount__gt: 10})
-    expect(Product._queryObject).to.deep.equal({amount__gt: 10})
-    expect(Product._queryMode).to.equal('simple')
-  })
-
   it('#setQuery Query', () => {
     var query = new Query()
     query.in('price', [1, 3, 4])
     Product.setQuery(query)
-    expect(Product._queryObject).to.deep.equal({and: [{price__in: '1,3,4'}]})
-    expect(Product._queryMode).to.equal('complex')
+    expect(Product._queryObject).to.deep.equal({
+      $and: [
+        {price: {$in: '1,3,4'}}
+      ]
+    })
     query.compare('amount', '<', 10)
     Product.setQuery(query)
-    expect(Product._queryObject).to.deep.equal({and: [{price__in: '1,3,4'}, {amount__lt: 10}]})
-    expect(Product._queryMode).to.equal('complex')
+    expect(Product._queryObject).to.deep.equal({
+      $and: [
+        {price: {$in: '1,3,4'}},
+        {amount: {$lt: 10}}
+      ]
+      })
   })
 
   it('#setQuery illegal', () => {
@@ -141,4 +173,5 @@ function isCleared(Product) {
   expect(Product._recordID).to.be.a('null')
   expect(Product._limit).to.equal(20)
   expect(Product._offset).to.equal(0)
+  expect(Product._orderBy).to.be.a('null')
 }

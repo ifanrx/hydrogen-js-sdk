@@ -1,23 +1,23 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
+const GeoPoint = require('./geoPoint')
+const GeoPolygon = require('./geoPolygon')
 const Query = require('./query')
 const utils = require('./utils')
 const _cloneDeep = require('lodash.clonedeep')
 const _isInteger = require('lodash/isInteger')
 
 const API = BaaS._config.API
-const SIMPLE_QUERY = 'simple'
-const COMPLEX_QUERY = 'complex'
 
 class TableObject {
   constructor(tableID) {
     this._tableID = tableID
     this._queryObject = {}
-    this._queryMode = SIMPLE_QUERY
     this._record = {}
     this._recordID = null
     this._limit = 20
     this._offset = 0
+    this._orderBy = null
   }
 
   _resetTableObject() {
@@ -26,14 +26,19 @@ class TableObject {
     this._recordID = null
     this._limit = 20,
     this._offset = 0
+    this._orderBy = null
   }
 
   _handleQueryObject() {
-    let newQueryObject = _cloneDeep(this._queryObject)
-    newQueryObject.tableID = this._tableID
-    newQueryObject.limit = this._limit
-    newQueryObject.offset = this.offset
-    return newQueryObject
+    var conditions = {}
+    conditions.tableID = this._tableID
+    conditions.limit = this._limit
+    conditions.offset = this._offset
+    if (this._orderBy) {
+      conditions.order_by = this._orderBy
+    }
+    conditions.where = JSON.stringify(this._queryObject)
+    return conditions
   }
 
   create() {
@@ -44,12 +49,17 @@ class TableObject {
   set(...args) {
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
-        this._record = args[0]
+        var objectArg = args[0]
+        var record = {}
+        Object.keys(args[0]).forEach((key) => {
+          record[key] = (objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon) ? objectArg[key].toGeoJSON(): objectArg[key]
+        })
+        this._record = record
       } else {
         throw new Error('只接收参数 (key, value) 或 ({})')
       }
     } else if (args.length === 2) {
-      this._record[args[0]] = args[1]
+      this._record[args[0]] = (args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon) ? args[1].toGeoJSON() : args[1]
     } else {
       throw new Error('只接收参数 (key, value) 或 ({})')
     }
@@ -86,15 +96,10 @@ class TableObject {
   }
 
   setQuery(queryObject) {
-    console.log(Object.prototype.toString.call(queryObject))
     if (queryObject instanceof Query) {
-      this._queryMode = COMPLEX_QUERY
       this._queryObject = _cloneDeep(queryObject.queryObject)
-    } else if (Object.prototype.toString.call(queryObject) === '[object Object]') {
-      this._queryMode = SIMPLE_QUERY
-      this._queryObject = _cloneDeep(queryObject)
     } else {
-      throw new Error('只接收 Query 类型 或 普通对象')
+      throw new Error('只接收 Query 类型')
     }
     return this
   }
@@ -115,12 +120,17 @@ class TableObject {
     return this
   }
 
-  find() {
-    if (this._queryMode === COMPLEX_QUERY) {
-      return BaaS.getComplexQueryList(this._handleQueryObject())
+  orderBy(args) {
+    if (args instanceof Array) {
+      this._orderBy = args.join(',')
     } else {
-      return BaaS.getRecordList(this._handleQueryObject())
+      this._orderBy = args
     }
+    return this
+  }
+
+  find() {
+    return BaaS.RECORD_LIST(this._handleQueryObject())
   }
 }
 

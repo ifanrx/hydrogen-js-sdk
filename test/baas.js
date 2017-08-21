@@ -7,10 +7,9 @@ describe('baas', () => {
       'getRecordList', 'getRecord', 'createRecord', 'updateRecord', 'deleteRecord', 'getComplexQueryList',
       'getContentList', 'getContent', 'getContentGroupList', 'getContentGroup',
       'getContentCategory', 'order', 'uploadFile', 'getUserInfo', 'clearSession', 'test',
-      'TableObject', 'Query'
+      'TableObject', 'Query', 'GeoPoint', 'GeoPolygon'
     ];
     let len = expectBaaSProperties.length;
-    console.log(Object.getOwnPropertyNames(BaaS))
     expect(Object.getOwnPropertyNames(BaaS).length).to.equal(len);
 
     while (len--) {
