@@ -35,6 +35,7 @@ describe('tableObject', () => {
   })
 
   it('#set key && value', () => {
+    Product.set({})
     Product.set('price', 10)
     Product.set('amount', 10)
     expect(Product._record).to.deep.equal({price: 10, amount: 10})
@@ -116,6 +117,34 @@ describe('tableObject', () => {
       expect(res).to.equal('success')
     })
     getRecord.restore()
+  })
+
+  it('#incrementBy', () => {
+    Product.set({})
+    Product.incrementBy('price', -1)
+    expect(Product._record).to.deep.equal({price: {$inc: -1}})
+  })
+
+  it('#append', () => {
+    Product.set({})
+    Product.append('arr', 1)
+    expect(Product._record).to.deep.equal({arr: {$add: [1]}})
+    Product.append('arr', [1, 3])
+    expect(Product._record).to.deep.equal({arr: {$add: [1, 3]}})
+  })
+
+  it('#uAppend', () => {
+    Product.set({})
+    Product.uAppend('arr', 1)
+    expect(Product._record).to.deep.equal({arr: {$add_unique: [1]}})
+    Product.uAppend('arr', [1, 3])
+    expect(Product._record).to.deep.equal({arr: {$add_unique: [1, 3]}})
+  })
+
+  it('#remove', () => {
+    Product.set({})
+    Product.remove('arr', 2)
+    expect(Product._record).to.deep.equal({arr: {$pull: 2}})
   })
 
   it('#setQuery Query', () => {

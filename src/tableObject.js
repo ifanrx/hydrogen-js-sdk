@@ -95,6 +95,28 @@ class TableObject {
     return BaaS.getRecord({tableID: this.tableID, recordID})
   }
 
+  incrementBy(key, value) {
+    this._record[key] = {$inc: value}
+  }
+
+  append(key, value) {
+    if (!(value instanceof Array)) {
+      value = [value]
+    }
+    this._record[key] = {$add: value}
+  }
+
+  uAppend(key, value) {
+    if (!(value instanceof Array)) {
+      value = [value]
+    }
+    this._record[key] = {$add_unique: value}
+  }
+
+  remove(key, value) {
+    this._record[key] = {$pull: value}
+  }
+
   setQuery(queryObject) {
     if (queryObject instanceof Query) {
       this._queryObject = _cloneDeep(queryObject.queryObject)
