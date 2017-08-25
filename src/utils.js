@@ -103,6 +103,11 @@ const replaceQueryParams = (URL, params = {}) => {
   return copiedParams
 }
 
+const getFileNameFromPath = (path) => {
+  let index = path.lastIndexOf('/')
+  return path.slice(index + 1)
+}
+
 module.exports = {
   log,
   format,
@@ -110,4 +115,5 @@ module.exports = {
   getConfig,
   getSysPlatform,
   replaceQueryParams,
+  getFileNameFromPath
 };
