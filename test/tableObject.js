@@ -25,7 +25,7 @@ describe('tableObject', () => {
       limit: 20,
       offset: 0,
       order_by: '-amount',
-      where: '{"$and":[{"price":{"$in":"1,3,4"}}]}'
+      where: '{"$and":[{"price":{"$in":[1,3,4]}}]}'
     })
   })
 
@@ -122,29 +122,31 @@ describe('tableObject', () => {
   it('#incrementBy', () => {
     Product.set({})
     Product.incrementBy('price', -1)
-    expect(Product._record).to.deep.equal({price: {$inc: -1}})
+    expect(Product._record).to.deep.equal({price: {$incr_by: -1}})
   })
 
   it('#append', () => {
     Product.set({})
     Product.append('arr', 1)
-    expect(Product._record).to.deep.equal({arr: {$add: [1]}})
+    expect(Product._record).to.deep.equal({arr: {$append: [1]}})
     Product.append('arr', [1, 3])
-    expect(Product._record).to.deep.equal({arr: {$add: [1, 3]}})
+    expect(Product._record).to.deep.equal({arr: {$append: [1, 3]}})
   })
 
   it('#uAppend', () => {
     Product.set({})
     Product.uAppend('arr', 1)
-    expect(Product._record).to.deep.equal({arr: {$add_unique: [1]}})
+    expect(Product._record).to.deep.equal({arr: {$append_unique: [1]}})
     Product.uAppend('arr', [1, 3])
-    expect(Product._record).to.deep.equal({arr: {$add_unique: [1, 3]}})
+    expect(Product._record).to.deep.equal({arr: {$append_unique: [1, 3]}})
   })
 
   it('#remove', () => {
     Product.set({})
-    Product.remove('arr', 2)
-    expect(Product._record).to.deep.equal({arr: {$pull: 2}})
+    Product.remove('arr', 1)
+    expect(Product._record).to.deep.equal({arr: {$remove: [1]}})
+    Product.remove('arr', [1, 3])
+    expect(Product._record).to.deep.equal({arr: {$remove: [1, 3]}})
   })
 
   it('#setQuery Query', () => {
@@ -153,14 +155,14 @@ describe('tableObject', () => {
     Product.setQuery(query)
     expect(Product._queryObject).to.deep.equal({
       $and: [
-        {price: {$in: '1,3,4'}}
+        {price: {$in: [1, 3, 4]}}
       ]
     })
     query.compare('amount', '<', 10)
     Product.setQuery(query)
     expect(Product._queryObject).to.deep.equal({
       $and: [
-        {price: {$in: '1,3,4'}},
+        {price: {$in: [1, 3, 4]}},
         {amount: {$lt: 10}}
       ]
       })

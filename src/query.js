@@ -60,22 +60,34 @@ class Query {
   }
 
   in(key, arr) {
-    this._addQueryObject(key, 'in', arr.join(','))
+    this._addQueryObject(key, 'in', arr)
     return this
   }
 
   notIn(key, arr) {
-    this._addQueryObject(key, 'nin', arr.join(','))
+    this._addQueryObject(key, 'nin', arr)
     return this
   }
 
   isNull(key) {
-    this._addQueryObject(key, 'isnull', true)
+    if (key && key instanceof Array) {
+      key.forEach((k) => {
+        this._addQueryObject(k, 'isnull', true)
+      })
+    } else {
+      this._addQueryObject(key, 'isnull', true)
+    }
     return this
   }
 
   isNotNull(key) {
-    this._addQueryObject(key, 'isnull', false)
+    if (key && key instanceof Array) {
+      key.forEach((k) => {
+        this._addQueryObject(k, 'isnull', false)
+      })
+    } else {
+      this._addQueryObject(key, 'isnull', false)
+    }
     return this
   }
 

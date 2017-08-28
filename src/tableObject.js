@@ -67,17 +67,17 @@ class TableObject {
   }
 
   save() {
-    var record = _cloneDeep(this.record)
+    var record = _cloneDeep(this._record)
     if (JSON.stringify(this._record) === '{}') {
       throw new Error('set something before save')
     } else {
       this._record = {}
-      return BaaS.createRecord({tableID: this.tableID, data: record})
+      return BaaS.createRecord({tableID: this._tableID, data: record})
     }
   }
 
   delete(recordID) {
-    return BaaS.deleteRecord({tableID: this.tableID, recordID})
+    return BaaS.deleteRecord({tableID: this._tableID, recordID})
   }
 
   getWithoutData(recordID) {
@@ -86,35 +86,42 @@ class TableObject {
   }
 
   update() {
-    var record = _cloneDeep(this.record)
+    var record = _cloneDeep(this._record)
     this._record = {}
-    return BaaS.updateRecord({tableID: this.tableID, recordID: this.recordID, data: record})
+    return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
   }
 
   get(recordID) {
-    return BaaS.getRecord({tableID: this.tableID, recordID})
+    return BaaS.getRecord({tableID: this._tableID, recordID})
   }
 
   incrementBy(key, value) {
-    this._record[key] = {$inc: value}
+    this._record[key] = {$incr_by: value}
+    return this
   }
 
   append(key, value) {
     if (!(value instanceof Array)) {
       value = [value]
     }
-    this._record[key] = {$add: value}
+    this._record[key] = {$append: value}
+    return this
   }
 
   uAppend(key, value) {
     if (!(value instanceof Array)) {
       value = [value]
     }
-    this._record[key] = {$add_unique: value}
+    this._record[key] = {$append_unique: value}
+    return this
   }
 
   remove(key, value) {
-    this._record[key] = {$pull: value}
+    if (!(value instanceof Array)) {
+      value = [value]
+    }
+    this._record[key] = {$remove: value}
+    return this
   }
 
   setQuery(queryObject) {
@@ -152,7 +159,7 @@ class TableObject {
   }
 
   find() {
-    return BaaS.RECORD_LIST(this._handleQueryObject())
+    return BaaS.getRecordList(this._handleQueryObject())
   }
 }
 

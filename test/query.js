@@ -63,7 +63,7 @@ describe('query', () => {
     query.in('price', [1, 3, 4])
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$in: '1,3,4'}}
+        {price: {$in: [1, 3, 4]}}
       ]
     })
   })
@@ -73,7 +73,7 @@ describe('query', () => {
     query.notIn('price', [1, 3, 4])
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$nin: '1,3,4'}}
+        {price: {$nin: [1, 3, 4]}}
       ]
     })
   })
@@ -88,12 +88,34 @@ describe('query', () => {
     })
   })
 
+  it('#isNull array', () => {
+    var query = new Query()
+    query.isNull(['price', 'amount'])
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$isnull: true}},
+        {amount: {$isnull: true}}
+      ]
+    })
+  })
+
   it('#isNotNull', () => {
     var query = new Query()
     query.isNotNull('price')
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$isnull: false}}
+      ]
+    })
+  })
+
+  it('#isNotNull array', () => {
+    var query = new Query()
+    query.isNotNull(['price', 'amount'])
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$isnull: false}},
+        {amount: {$isnull: false}}
       ]
     })
   })
