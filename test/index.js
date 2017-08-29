@@ -18,13 +18,14 @@ BaaS.test = {
 };
 
 // 引入待测试模块
-require('./baas');
-require('./content');
-require('./schema');
-require('./storage');
-require('./utils');
-require('./request');
-require('./tableObject');
-require('./query');
-require('./geoPoint');
-require('./geoPolygon');
+require('./baas')
+require('./content')
+require('./geoPoint')
+require('./geoPolygon')
+require('./query')
+require('./request')
+require('./schema')
+require('./storage')
+require('./tableObject')
+require('./utils')
+require('./templateMessage')

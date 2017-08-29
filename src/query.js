@@ -94,7 +94,7 @@ class Query {
 
   // 在指定多边形集合中找出包含某一点的多边形
   include(key, point) {
-    if(point && point instanceof GeoPoint) {
+    if (point && point instanceof GeoPoint) {
       this._addQueryObject(key, 'intersects', point.toGeoJSON())
       return this
     } else {

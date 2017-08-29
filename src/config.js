@@ -8,6 +8,7 @@ const API = {
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
+  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
 
   // 内容模块
   CONTENT_LIST: '/hserve/v1/content/detail/',

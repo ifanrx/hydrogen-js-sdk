@@ -89,6 +89,8 @@ const replaceQueryParams = (URL, params = {}) => {
     contentGroupID: 'content_group_id',
     categoryID: 'category_id',
     recordID: 'id',
+    submissionType: 'submission_type',
+    submissionValue: 'submission_value'
   }
 
   let copiedParams = extend({}, params)
