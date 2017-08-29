@@ -4,7 +4,7 @@ describe('baas', () => {
 
     let expectBaaSProperties = ['auth', '_config', 'getAuthToken', 'isLogined', 'check', 'Promise', 'storage',
       'request', 'init', 'pay', 'login', 'logout', 'getTableList', 'getTable',
-      'getRecordList', 'getRecord', 'createRecord', 'updateRecord', 'deleteRecord', 'getComplexQueryList',
+      'getRecordList', 'getRecord', 'createRecord', 'updateRecord', 'deleteRecord',
       'getContentList', 'getContent', 'getContentGroupList', 'getContentGroup',
       'getContentCategory', 'order', 'uploadFile', 'getUserInfo', 'clearSession', 'test',
       'TableObject', 'Query', 'GeoPoint', 'GeoPolygon'

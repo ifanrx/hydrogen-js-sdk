@@ -1,5 +1,6 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
+const constants = require('./constants')
 const GeoPoint = require('./geoPoint')
 const GeoPolygon = require('./geoPolygon')
 const Query = require('./query')
@@ -56,24 +57,20 @@ class TableObject {
         })
         this._record = record
       } else {
-        throw new Error('只接收参数 (key, value) 或 ({})')
+        throw new Error(constants.MSG.ARGS_ERROR)
       }
     } else if (args.length === 2) {
       this._record[args[0]] = (args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon) ? args[1].toGeoJSON() : args[1]
     } else {
-      throw new Error('只接收参数 (key, value) 或 ({})')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
     return this
   }
 
   save() {
     var record = _cloneDeep(this._record)
-    if (JSON.stringify(this._record) === '{}') {
-      throw new Error('set something before save')
-    } else {
-      this._record = {}
-      return BaaS.createRecord({tableID: this._tableID, data: record})
-    }
+    this._record = {}
+    return BaaS.createRecord({tableID: this._tableID, data: record})
   }
 
   delete(recordID) {
@@ -128,24 +125,24 @@ class TableObject {
     if (queryObject instanceof Query) {
       this._queryObject = _cloneDeep(queryObject.queryObject)
     } else {
-      throw new Error('只接收 Query 类型')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
     return this
   }
 
-  limit(amount) {
-    if (!amount || !_isInteger(amount)) {
-      throw new Error('只接收 Integer 类型')
+  limit(value) {
+    if (!value || !_isInteger(value)) {
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
-    this._limit = amount
+    this._limit = value
     return this
   }
 
-  offset(amount) {
-    if (!amount || !_isInteger(amount)) {
-      throw new Error('只接收 Integer 类型')
+  offset(value) {
+    if (!value || !_isInteger(value)) {
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
-    this._offset = amount
+    this._offset = value
     return this
   }
 

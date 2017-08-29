@@ -1121,6 +1121,12 @@
       "resolved": "https://registry.npmjs.org/extglob/-/extglob-0.3.2.tgz",
       "dev": true
     },
+    "faker": {
+      "version": "4.1.0",
+      "from": "faker@latest",
+      "resolved": "https://registry.npm.taobao.org/faker/download/faker-4.1.0.tgz",
+      "dev": true
+    },
     "falafel": {
       "version": "2.1.0",
       "from": "falafel@>=2.0.0 <3.0.0",

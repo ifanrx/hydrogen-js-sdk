@@ -1,20 +1,35 @@
+const config = require('../src/config')
+const faker = require('faker')
 const GeoPoint = require('../src/geoPoint')
 const GeoPolygon = require('../src/geoPolygon')
 const Query = require('../src/query')
+const utils = require('../src/utils')
+
+const randomOption = config.RANDOM_OPTION
 
 describe('query', () => {
+  let randomNumber, randomNumber1, randomNumber2, randomString, randomArray
+
+  before(() => {
+    randomNumber = faker.random.number()
+    randomNumber1 = faker.random.number()
+    randomNumber2 = faker.random.number()
+    randomString = faker.lorem.words(1)
+    randomArray = utils.generateRandomArray()
+  })
+
   it('#_setQueryObject', () => {
-    var query = new Query()
-    var queryObj1 = {
+    let query = new Query()
+    let queryObj1 = {
       $and: [
-        {price: {$gt: 10}}
+        {price: {$gt: randomNumber}}
       ]
     }
     query._setQueryObject(queryObj1)
     expect(query.queryObject).to.deep.equal(queryObj1)
-    var queryObj2 = {
+    let queryObj2 = {
       $and: [
-        {amount: {$lt: 10}}
+        {amount: {$lt: randomNumber}}
       ]
     }
     query._setQueryObject(queryObj2)
@@ -22,64 +37,64 @@ describe('query', () => {
   })
 
   it('#_addQueryObject', () => {
-    var query = new Query()
-    query._addQueryObject('price', 'gt', 10)
+    let query = new Query()
+    query._addQueryObject('price', 'gt', randomNumber)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$gt: 10}}
+        {price: {$gt: randomNumber}}
       ]
     })
-    query._addQueryObject('amount', 'lt', 10)
+    query._addQueryObject('amount', 'lt', randomNumber)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$gt: 10}},
-        {amount: {$lt: 10}}
+        {price: {$gt: randomNumber}},
+        {amount: {$lt: randomNumber}}
       ]
     })
   })
 
   it('#compare', () => {
-    var query = new Query()
-    query.compare('price', '<', 10)
+    let query = new Query()
+    query.compare('price', '<', randomNumber)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$lt: 10}}
+        {price: {$lt: randomNumber}}
       ]
     })
   })
 
   it('#contains', () => {
-    var query = new Query()
-    query.contains('name', 'beef')
+    let query = new Query()
+    query.contains('name', randomString)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {name: {$contains: 'beef'}}
+        {name: {$contains: randomString}}
       ]
     })
   })
 
   it('#in', () => {
-    var query = new Query()
-    query.in('price', [1, 3, 4])
+    let query = new Query()
+    query.in('price', randomArray)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$in: [1, 3, 4]}}
+        {price: {$in: randomArray}}
       ]
     })
   })
 
   it('#notIn', () => {
-    var query = new Query()
-    query.notIn('price', [1, 3, 4])
+    let query = new Query()
+    query.notIn('price', randomArray)
     expect(query.queryObject).to.deep.equal({
       $and: [
-        {price: {$nin: [1, 3, 4]}}
+        {price: {$nin: randomArray}}
       ]
     })
   })
 
   it('#isNull', () => {
-    var query = new Query()
+    let query = new Query()
     query.isNull('price')
     expect(query.queryObject).to.deep.equal({
       $and: [
@@ -89,7 +104,7 @@ describe('query', () => {
   })
 
   it('#isNull array', () => {
-    var query = new Query()
+    let query = new Query()
     query.isNull(['price', 'amount'])
     expect(query.queryObject).to.deep.equal({
       $and: [
@@ -100,7 +115,7 @@ describe('query', () => {
   })
 
   it('#isNotNull', () => {
-    var query = new Query()
+    let query = new Query()
     query.isNotNull('price')
     expect(query.queryObject).to.deep.equal({
       $and: [
@@ -110,7 +125,7 @@ describe('query', () => {
   })
 
   it('#isNotNull array', () => {
-    var query = new Query()
+    let query = new Query()
     query.isNotNull(['price', 'amount'])
     expect(query.queryObject).to.deep.equal({
       $and: [
@@ -121,16 +136,16 @@ describe('query', () => {
   })
 
   it('#include', () => {
-    var query = new Query()
-    var point = new GeoPoint(1, 1)
-    query.include('geoField', point)
+    let query = new Query()
+    let randomPoint = new GeoPoint(randomNumber1, randomNumber2)
+    query.include('geoField', randomPoint)
     expect(query.queryObject).to.deep.equal({
       $and: [
         {
           geoField: {
             $intersects: {
               type: "Point",
-              coordinates: [1, 1],
+              coordinates: [randomNumber1, randomNumber2],
             }
           }
         }
@@ -139,16 +154,20 @@ describe('query', () => {
   })
 
   it('#within', () => {
-    var query = new Query()
-    var polygon = new GeoPolygon([[1, 1], [1, 1], [1, 1]])
-    query.within('geoField', polygon)
+    let query = new Query()
+    var random2DArray = []
+    for(var i = 0; i < 5; i++) {
+      random2DArray.push(utils.generateRandomArray(2))
+    }
+    var randomPolygon = new GeoPolygon(random2DArray)
+    query.within('geoField', randomPolygon)
     expect(query.queryObject).to.deep.equal({
       $and: [
         {
           geoField: {
             $within: {
               type: "Polygon",
-              coordinates: [[1, 1], [1, 1], [1, 1]],
+              coordinates: random2DArray,
             }
           }
         }
@@ -157,16 +176,16 @@ describe('query', () => {
   })
 
   it('#withinCircle', () => {
-    var query = new Query()
-    var point = new GeoPoint(1, 1)
-    query.withinCircle('geoField', point, 1)
+    let query = new Query()
+    let randomPoint = new GeoPoint(randomNumber1, randomNumber2)
+    query.withinCircle('geoField', randomPoint, randomNumber)
     expect(query.queryObject).to.deep.equal({
       $and: [
         {
           geoField: {
             $center: {
-              radius: 1,
-              coordinates: [1, 1],
+              radius: randomNumber,
+              coordinates: [randomNumber1, randomNumber2],
             }
           }
         }
@@ -175,9 +194,9 @@ describe('query', () => {
   })
 
   it('#withinRegion', () => {
-    var query = new Query()
-    var point = new GeoPoint(1, 1)
-    query.withinRegion('geoField', point)
+    let query = new Query()
+    let randomPoint = new GeoPoint(randomNumber1, randomNumber2)
+    query.withinRegion('geoField', randomPoint)
     expect(query.queryObject).to.deep.equal({
       $and: [
         {
@@ -185,7 +204,7 @@ describe('query', () => {
             $nearsphere: {
               geometry: {
                 type: "Point",
-                coordinates: [1, 1]
+                coordinates: [randomNumber1, randomNumber2]
               },
               min_distance: 0
             }
@@ -196,16 +215,16 @@ describe('query', () => {
   })
 
   it('#static and', () => {
-    var query1 = new Query()
-    query1.contains('name', 'beef')
-    var query2 = new Query()
+    let query1 = new Query()
+    query1.contains('name', randomString)
+    let query2 = new Query()
     query2.isNull('price')
-    var andQuery = Query.and(query1, query2)
+    let andQuery = Query.and(query1, query2)
     expect(andQuery.queryObject).to.deep.equal({
       $and: [
         {
           $and: [
-            {name: {$contains: 'beef'}}
+            {name: {$contains: randomString}}
           ]
         },
         {
@@ -218,16 +237,16 @@ describe('query', () => {
   })
 
   it('#static or', () => {
-    var query1 = new Query()
-    query1.contains('name', 'beef')
-    var query2 = new Query()
+    let query1 = new Query()
+    query1.contains('name', randomString)
+    let query2 = new Query()
     query2.isNull('price')
-    var orQuery = Query.or(query1, query2)
+    let orQuery = Query.or(query1, query2)
     expect(orQuery.queryObject).to.deep.equal({
       $or: [
         {
           $and: [
-            {name: {$contains: 'beef'}}
+            {name: {$contains: randomString}}
           ]
         },
         {
@@ -240,21 +259,21 @@ describe('query', () => {
   })
 
   it('#static and && or', () => {
-    var query1 = new Query()
-    query1.contains('name', 'beef')
-    var query2 = new Query()
+    let query1 = new Query()
+    query1.contains('name', randomString)
+    let query2 = new Query()
     query2.isNull('price')
-    var orQuery = Query.or(query1, query2)
-    var query3 = new Query()
+    let orQuery = Query.or(query1, query2)
+    let query3 = new Query()
     query3.isNotNull('name')
-    var andQuery = Query.and(orQuery, query3)
+    let andQuery = Query.and(orQuery, query3)
     expect(andQuery.queryObject).to.deep.equal({
       $and: [
         {
           $or: [
             {
               $and: [
-                {name: {$contains: 'beef'}}
+                {name: {$contains: randomString}}
               ]
             },
             {

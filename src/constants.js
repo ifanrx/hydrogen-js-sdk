@@ -11,6 +11,7 @@ module.exports = {
   MSG: {
     STATUS_CODE_ERROR: 'Unexpected API Status Code',
     NETWORT_ERROR: 'Network Error',
+    ARGS_ERROR: '参数使用错误'
   },
   STATUS_CODE: {
     CREATED: 201,

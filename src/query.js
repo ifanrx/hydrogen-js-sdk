@@ -1,3 +1,4 @@
+const constants = require('./constants')
 const GeoPoint = require('./geoPoint')
 const GeoPolygon = require('./geoPolygon')
 
@@ -48,7 +49,7 @@ class Query {
         op = 'gte'
         break
       default:
-        throw new Error('arguments error')
+        throw new Error(constants.MSG.ARGS_ERROR)
     }
     this._addQueryObject(key, op, value)
     return this
@@ -97,7 +98,7 @@ class Query {
       this._addQueryObject(key, 'intersects', point.toGeoJSON())
       return this
     } else {
-      throw Error('参数错误')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
   }
 
@@ -106,7 +107,7 @@ class Query {
     if (polygon && polygon instanceof GeoPolygon) {
       this._addQueryObject(key, 'within', polygon.toGeoJSON())
     } else {
-      throw Error('参数错误')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
   }
 
@@ -119,7 +120,7 @@ class Query {
       }
       this._addQueryObject(key, 'center', data)
     } else {
-      throw Error('参数错误')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
   }
 
@@ -135,7 +136,7 @@ class Query {
       }
       this._addQueryObject(key, 'nearsphere', data)
     } else {
-      throw Error('参数错误')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
   }
 

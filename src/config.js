@@ -65,10 +65,6 @@ const methodMapList = [{
   deleteRecord: {
     url: API.DELETE_RECORD,
     method: 'DELETE'
-  },
-  // 复杂查询
-  getComplexQueryList: {
-    url: API.COMPLEX_QUERY_LIST,
   }
 }, {
   // 获取内容列表
@@ -93,6 +89,10 @@ const methodMapList = [{
   }
 },];
 
+const RANDOM_OPTION = {
+  max: 100
+}
+
 // 配置
 module.exports = {
   API_HOST: API_HOST,
@@ -101,4 +101,5 @@ module.exports = {
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
+  RANDOM_OPTION: RANDOM_OPTION
 };

@@ -1,5 +1,6 @@
 'use strict';
 const extend = require('node.extend');
+const faker = require('faker')
 
 let config;
 try {
@@ -7,6 +8,8 @@ try {
 } catch (e) {
   config = require('./config.dev');
 }
+
+const randomOption = config.RANDOM_OPTION
 
 /**
  * 获取 SDK 配置信息
@@ -108,6 +111,17 @@ const getFileNameFromPath = (path) => {
   return path.slice(index + 1)
 }
 
+const generateRandomArray = (count) => {
+  var len = 5, result = []
+  if (count) {
+    len = count
+  }
+  for (var i = 0; i < len; i++) {
+    result.push(faker.random.number(randomOption))
+  }
+  return result
+}
+
 module.exports = {
   log,
   format,
@@ -115,5 +129,6 @@ module.exports = {
   getConfig,
   getSysPlatform,
   replaceQueryParams,
-  getFileNameFromPath
+  getFileNameFromPath,
+  generateRandomArray
 };

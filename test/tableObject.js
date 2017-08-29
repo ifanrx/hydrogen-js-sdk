@@ -1,14 +1,24 @@
 require('../src/baasRequest').createRequestMethod()
+const config = require('../src/config')
+const faker = require('faker')
 const GeoPoint = require('../src/geoPoint')
 const GeoPolygon = require('../src/geoPolygon')
 const Query = require('../src/query')
 const TableObject = require('../src/tableObject')
+const randomOption = config.RANDOM_OPTION
+const utils = require('../src/utils')
 
 describe('tableObject', () => {
   let Product = null
+  let randomNumber, randomNumber1, randomNumber2, randomString, randomArray
 
   before(() => {
     Product = new TableObject(1)
+    randomNumber = faker.random.number()
+    randomNumber1 = faker.random.number()
+    randomNumber2 = faker.random.number()
+    randomString = faker.lorem.words(1)
+    randomArray = utils.generateRandomArray()
   })
 
   it('#_resetTableObject', () => {
@@ -17,7 +27,7 @@ describe('tableObject', () => {
 
   it('#_handleQueryObject', () => {
     var query = new Query()
-    query.in('price', [1, 3, 4])
+    query.in('price', randomArray)
     Product.setQuery(query)
     Product.orderBy('-amount')
     expect(Product._handleQueryObject()).to.deep.equal({
@@ -25,7 +35,7 @@ describe('tableObject', () => {
       limit: 20,
       offset: 0,
       order_by: '-amount',
-      where: '{"$and":[{"price":{"$in":[1,3,4]}}]}'
+      where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })
 
@@ -36,75 +46,75 @@ describe('tableObject', () => {
 
   it('#set key && value', () => {
     Product.set({})
-    Product.set('price', 10)
-    Product.set('amount', 10)
-    expect(Product._record).to.deep.equal({price: 10, amount: 10})
+    Product.set('price', randomNumber1)
+    Product.set('amount', randomNumber2)
+    expect(Product._record).to.deep.equal({price: randomNumber1, amount: randomNumber2})
   })
 
   it('#set object', () => {
-    Product.set({price: 10})
-    Product.set({amount: 10})
-    expect(Product._record).to.deep.equal({amount: 10})
+    Product.set({price: randomNumber1})
+    Product.set({amount: randomNumber2})
+    expect(Product._record).to.deep.equal({amount: randomNumber2})
   })
 
   it('#set GeoPoint', () => {
-    var point = new GeoPoint(1, 1)
-    Product.set({'geoPoint': point})
+    var randomPoint = new GeoPoint(randomNumber1, randomNumber2)
+    Product.set({'geoPoint': randomPoint})
     expect(Product._record).to.deep.equal({geoPoint: {
       'type': 'Point',
-      'coordinates': [1, 1]
+      'coordinates': [randomNumber1, randomNumber2]
     }})
   })
 
   it('#set GeoPolygon', () => {
-    var polygon = new GeoPolygon([[1, 1], [1, 1], [1, 1]])
-    Product.set({'geoPolygon': polygon})
+    var random2DArray = []
+    for(var i = 0; i < 5; i++) {
+      random2DArray.push(utils.generateRandomArray(2))
+    }
+    var randomPolygon = new GeoPolygon(random2DArray)
+    Product.set({'geoPolygon': randomPolygon})
     expect(Product._record).to.deep.equal({geoPolygon: {
       'type': 'Polygon',
-      'coordinates': [[1, 1], [1, 1], [1, 1]]
+      'coordinates': random2DArray
     }})
   })
 
   it('#set illegal', () => {
-    expect(() => Product.set('test')).to.throw()
-    expect(() => Product.set('test', 'test', 'test')).to.throw()
+    expect(() => Product.set('')).to.throw()
+    expect(() => Product.set('', '', '')).to.throw()
   })
 
   it('#save', () => {
     let createRecord = sinon.stub(BaaS, 'createRecord')
-    createRecord.returnsPromise().resolves('success')
+    createRecord.returnsPromise().resolves(randomString)
     Product.set('key', 'value')
     Product.save().then((res) => {
-      expect(res).to.equal('success')
+      expect(res).to.equal(randomString)
     })
     expect(Product._record).to.deep.equal({})
     createRecord.restore()
   })
 
-  it('#save without setting', () => {
-    expect(() => Product.save()).to.throw()
-  })
-
   it('#delete', () => {
     let deleteRecord = sinon.stub(BaaS, 'deleteRecord')
-    deleteRecord.returnsPromise().resolves('success')
+    deleteRecord.returnsPromise().resolves(randomString)
     Product.get(1).then((res) => {
-      expect(res).to.equal('success')
+      expect(res).to.equal(randomString)
     })
     deleteRecord.restore()
   })
 
   it('#getWithoutData', () => {
-    Product.getWithoutData(1)
-    expect(Product._recordID).to.equal(1)
+    Product.getWithoutData(randomNumber)
+    expect(Product._recordID).to.equal(randomNumber)
   })
 
   it('#update', () => {
     let updateRecord = sinon.stub(BaaS, 'updateRecord')
-    updateRecord.returnsPromise().resolves('success')
+    updateRecord.returnsPromise().resolves(randomString)
     Product.set('key', 'value')
     Product.update().then((res) => {
-      expect(res).to.equal('success')
+      expect(res).to.equal(randomString)
     })
     expect(Product._record).to.deep.equal({})
     updateRecord.restore()
@@ -112,58 +122,59 @@ describe('tableObject', () => {
 
   it('#get', () => {
     let getRecord = sinon.stub(BaaS, 'getRecord')
-    getRecord.returnsPromise().resolves('success')
+    getRecord.returnsPromise().resolves(randomString)
     Product.get(1).then((res) => {
-      expect(res).to.equal('success')
+      expect(res).to.equal(randomString)
     })
     getRecord.restore()
   })
 
   it('#incrementBy', () => {
     Product.set({})
-    Product.incrementBy('price', -1)
-    expect(Product._record).to.deep.equal({price: {$incr_by: -1}})
+    Product.incrementBy('price', randomNumber)
+    expect(Product._record).to.deep.equal({price: {$incr_by: randomNumber}})
   })
 
   it('#append', () => {
     Product.set({})
-    Product.append('arr', 1)
-    expect(Product._record).to.deep.equal({arr: {$append: [1]}})
-    Product.append('arr', [1, 3])
-    expect(Product._record).to.deep.equal({arr: {$append: [1, 3]}})
+    Product.append('arr', randomNumber)
+    expect(Product._record).to.deep.equal({arr: {$append: [randomNumber]}})
+    Product.append('arr', randomArray)
+    expect(Product._record).to.deep.equal({arr: {$append: randomArray}})
   })
 
   it('#uAppend', () => {
     Product.set({})
-    Product.uAppend('arr', 1)
-    expect(Product._record).to.deep.equal({arr: {$append_unique: [1]}})
-    Product.uAppend('arr', [1, 3])
-    expect(Product._record).to.deep.equal({arr: {$append_unique: [1, 3]}})
+    Product.uAppend('arr', randomNumber)
+    expect(Product._record).to.deep.equal({arr: {$append_unique: [randomNumber]}})
+    var randomArray = []
+    Product.uAppend('arr', randomArray)
+    expect(Product._record).to.deep.equal({arr: {$append_unique: randomArray}})
   })
 
   it('#remove', () => {
     Product.set({})
-    Product.remove('arr', 1)
-    expect(Product._record).to.deep.equal({arr: {$remove: [1]}})
-    Product.remove('arr', [1, 3])
-    expect(Product._record).to.deep.equal({arr: {$remove: [1, 3]}})
+    Product.remove('arr', randomNumber)
+    expect(Product._record).to.deep.equal({arr: {$remove: [randomNumber]}})
+    Product.remove('arr', randomArray)
+    expect(Product._record).to.deep.equal({arr: {$remove: randomArray}})
   })
 
   it('#setQuery Query', () => {
     var query = new Query()
-    query.in('price', [1, 3, 4])
+    query.in('price', randomArray)
     Product.setQuery(query)
     expect(Product._queryObject).to.deep.equal({
       $and: [
-        {price: {$in: [1, 3, 4]}}
+        {price: {$in: randomArray}}
       ]
     })
-    query.compare('amount', '<', 10)
+    query.compare('amount', '<', randomNumber)
     Product.setQuery(query)
     expect(Product._queryObject).to.deep.equal({
       $and: [
-        {price: {$in: [1, 3, 4]}},
-        {amount: {$lt: 10}}
+        {price: {$in: randomArray}},
+        {amount: {$lt: randomNumber}}
       ]
       })
   })
@@ -174,8 +185,8 @@ describe('tableObject', () => {
   })
 
   it('#limit', () => {
-    Product.limit(10)
-    expect(Product._limit).to.equal(10)
+    Product.limit(randomNumber)
+    expect(Product._limit).to.equal(randomNumber)
   })
 
   it('#limit illegal', () => {
@@ -184,8 +195,8 @@ describe('tableObject', () => {
   })
 
   it('#offset', () => {
-    Product.offset(10)
-    expect(Product._offset).to.equal(10)
+    Product.offset(randomNumber)
+    expect(Product._offset).to.equal(randomNumber)
   })
 
   it('#offset illegal', () => {

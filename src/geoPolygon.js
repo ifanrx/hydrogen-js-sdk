@@ -5,7 +5,7 @@ class GeoPolygon {
   constructor(args) {
     if (args && args instanceof Array) {
       if (args.length < 3) {
-        throw Error('point less than three')
+        throw new Error(constants.MSG.ARGS_ERROR)
       } else {
         this.points = args
         this.geoJSON = {
@@ -14,19 +14,19 @@ class GeoPolygon {
         }
       }
     } else {
-      throw Error('只接收参数 [GeoPoint] 或 [[], [], ...]')
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
   }
 
   toGeoJSON() {
     var coordinates = this.geoJSON.coordinates
     this.points.forEach((point) => {
-      if(point instanceof GeoPoint) {
+      if (point instanceof GeoPoint) {
         coordinates.push([point.attitude, point.longitude])
       } else if (point instanceof Array && point.length === 2) {
         coordinates.push(point)
       } else {
-        throw Error('point is invaild')
+        throw new Error(constants.MSG.ARGS_ERROR)
       }
     })
     return _cloneDeep(this.geoJSON)

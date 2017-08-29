@@ -5,6 +5,7 @@
   "description": "爱范儿知晓云平台 JS SDK",
   "scripts": {
     "test": "mocha -R mochawesome -t 300000 test/index.js",
+    "mocha": "mocha test/index.js",
     "dev": "export NODE_ENV=dev && gulp dev",
     "build": "export NODE_ENV=production && gulp release",
     "lock": "npm prune && npm shrinkwrap --dev"
@@ -32,6 +33,7 @@
     "browserify": "^13.1.1",
     "chai": "^3.5.0",
     "del": "^2.2.2",
+    "faker": "^4.1.0",
     "frock": "^1.1.1",
     "frock-proxy": "^1.0.0",
     "frock-static": "^1.0.0",
