@@ -76142,7 +76142,7 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constants":1083,"./storage":1092,"./utils":1096,"./version":1097,"node.extend":1075}],1080:[function(require,module,exports){
+},{"./constants":1083,"./storage":1092,"./utils":1098,"./version":1099,"node.extend":1075}],1080:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -76318,7 +76318,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./baas":1079,"./constants":1083,"./promise":1089,"./request":1091,"./storage":1092,"./user":1095,"./utils":1096,"node.extend":1075}],1081:[function(require,module,exports){
+},{"./baas":1079,"./constants":1083,"./promise":1089,"./request":1091,"./storage":1092,"./user":1097,"./utils":1098,"node.extend":1075}],1081:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -76343,6 +76343,7 @@ var API = {
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
+  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
 
   // 内容模块
   CONTENT_LIST: '/hserve/v1/content/detail/',
@@ -76563,34 +76564,35 @@ module.exports = GeoPolygon;
 },{"./geoPoint":1084,"lodash.clonedeep":1058}],1086:[function(require,module,exports){
 'use strict';
 
-var BaaS = require('./baas');
+var BaaS = require('./baas'
 
 // 暴露指定 BaaS 方法
-BaaS.Promise = require('./promise');
-BaaS.storage = require('./storage');
-BaaS.request = require('./request');
-BaaS.pay = require('./pay');
-BaaS.auth = require('./baasRequest').auth;
+);BaaS.auth = require('./baasRequest').auth;
+BaaS.GeoPoint = require('./geoPoint');
+BaaS.GeoPolygon = require('./geoPolygon');
 BaaS.login = require('./baasRequest').login;
 BaaS.logout = require('./user').logout;
-BaaS.uploadFile = require('./uploadFile');
 BaaS.order = require('./order');
-BaaS.TableObject = require('./tableObject');
+BaaS.pay = require('./pay');
+BaaS.Promise = require('./promise');
 BaaS.Query = require('./query');
-BaaS.GeoPoint = require('./geoPoint');
-BaaS.GeoPolygon = require('./geoPolygon'
+BaaS.request = require('./request');
+BaaS.wxReportTicket = require('./templateMessage').wxReportTicket;
+BaaS.storage = require('./storage');
+BaaS.TableObject = require('./tableObject');
+BaaS.uploadFile = require('./uploadFile'
 
 // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
-);require('./baasRequest').createRequestMethod();
+);require('./baasRequest').createRequestMethod
 
 // 暴露 BaaS 到小程序环境
-if (typeof wx !== 'undefined') {
+();if (typeof wx !== 'undefined') {
   wx.BaaS = BaaS;
 }
 
 module.exports = BaaS;
 
-},{"./baas":1079,"./baasRequest":1080,"./geoPoint":1084,"./geoPolygon":1085,"./order":1087,"./pay":1088,"./promise":1089,"./query":1090,"./request":1091,"./storage":1092,"./tableObject":1093,"./uploadFile":1094,"./user":1095}],1087:[function(require,module,exports){
+},{"./baas":1079,"./baasRequest":1080,"./geoPoint":1084,"./geoPolygon":1085,"./order":1087,"./pay":1088,"./promise":1089,"./query":1090,"./request":1091,"./storage":1092,"./tableObject":1093,"./templateMessage":1095,"./uploadFile":1096,"./user":1097}],1087:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -76618,7 +76620,7 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./promise":1089,"./utils":1096}],1088:[function(require,module,exports){
+},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./promise":1089,"./utils":1098}],1088:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -76992,7 +76994,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./baas":1079,"./constants":1083,"./promise":1089,"./storage":1092,"./utils":1096,"node.extend":1075}],1092:[function(require,module,exports){
+},{"./baas":1079,"./constants":1083,"./promise":1089,"./storage":1092,"./utils":1098,"node.extend":1075}],1092:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -77017,8 +77019,6 @@ module.exports = {
 },{}],1093:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -77026,10 +77026,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var BaaS = require('./baas');
 var baasRequest = require('./baasRequest').baasRequest;
 var constants = require('./constants');
-var GeoPoint = require('./geoPoint');
-var GeoPolygon = require('./geoPolygon');
 var Query = require('./query');
-var utils = require('./utils');
+var TableRecord = require('./tableRecord');
 var _cloneDeep = require('lodash.clonedeep');
 var _isInteger = require('lodash/isInteger');
 
@@ -77041,23 +77039,12 @@ var TableObject = function () {
 
     this._tableID = tableID;
     this._queryObject = {};
-    this._record = {};
-    this._recordID = null;
     this._limit = 20;
     this._offset = 0;
     this._orderBy = null;
   }
 
   _createClass(TableObject, [{
-    key: '_resetTableObject',
-    value: function _resetTableObject() {
-      this._queryObject = {};
-      this._record = {};
-      this._recordID = null;
-      this._limit = 20, this._offset = 0;
-      this._orderBy = null;
-    }
-  }, {
     key: '_handleQueryObject',
     value: function _handleQueryObject() {
       var conditions = {};
@@ -77073,10 +77060,101 @@ var TableObject = function () {
   }, {
     key: 'create',
     value: function create() {
-      this._resetTableObject();
+      return new TableRecord(this._tableID);
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(recordID) {
+      return BaaS.deleteRecord({ tableID: this._tableID, recordID: recordID });
+    }
+  }, {
+    key: 'getWithoutData',
+    value: function getWithoutData(recordID) {
+      return new TableRecord(this._tableID, recordID);
+    }
+  }, {
+    key: 'get',
+    value: function get(recordID) {
+      return BaaS.getRecord({ tableID: this._tableID, recordID: recordID });
+    }
+  }, {
+    key: 'setQuery',
+    value: function setQuery(queryObject) {
+      if (queryObject instanceof Query) {
+        this._queryObject = _cloneDeep(queryObject.queryObject);
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
       return this;
     }
   }, {
+    key: 'limit',
+    value: function limit(value) {
+      if (!_isInteger(value)) {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      this._limit = value;
+      return this;
+    }
+  }, {
+    key: 'offset',
+    value: function offset(value) {
+      if (!_isInteger(value)) {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      this._offset = value;
+      return this;
+    }
+  }, {
+    key: 'orderBy',
+    value: function orderBy(args) {
+      if (args instanceof Array) {
+        this._orderBy = args.join(',');
+      } else {
+        this._orderBy = args;
+      }
+      return this;
+    }
+  }, {
+    key: 'find',
+    value: function find() {
+      return BaaS.getRecordList(this._handleQueryObject());
+    }
+  }]);
+
+  return TableObject;
+}();
+
+module.exports = TableObject;
+
+},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./query":1090,"./tableRecord":1094,"lodash.clonedeep":1058,"lodash/isInteger":1068}],1094:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BaaS = require('./baas');
+var baasRequest = require('./baasRequest').baasRequest;
+var constants = require('./constants');
+var GeoPoint = require('./geoPoint');
+var GeoPolygon = require('./geoPolygon');
+var _cloneDeep = require('lodash.clonedeep');
+
+var API = BaaS._config.API;
+
+var TableRecord = function () {
+  function TableRecord(tableID, recordID) {
+    _classCallCheck(this, TableRecord);
+
+    this._tableID = tableID;
+    this._recordID = recordID;
+    this._record = {};
+  }
+
+  _createClass(TableRecord, [{
     key: 'set',
     value: function set() {
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -77109,27 +77187,11 @@ var TableObject = function () {
       return BaaS.createRecord({ tableID: this._tableID, data: record });
     }
   }, {
-    key: 'delete',
-    value: function _delete(recordID) {
-      return BaaS.deleteRecord({ tableID: this._tableID, recordID: recordID });
-    }
-  }, {
-    key: 'getWithoutData',
-    value: function getWithoutData(recordID) {
-      this._recordID = recordID;
-      return this;
-    }
-  }, {
     key: 'update',
     value: function update() {
       var record = _cloneDeep(this._record);
       this._record = {};
       return BaaS.updateRecord({ tableID: this._tableID, recordID: this._recordID, data: record });
-    }
-  }, {
-    key: 'get',
-    value: function get(recordID) {
-      return BaaS.getRecord({ tableID: this._tableID, recordID: recordID });
     }
   }, {
     key: 'incrementBy',
@@ -77164,57 +77226,59 @@ var TableObject = function () {
       this._record[key] = { $remove: value };
       return this;
     }
-  }, {
-    key: 'setQuery',
-    value: function setQuery(queryObject) {
-      if (queryObject instanceof Query) {
-        this._queryObject = _cloneDeep(queryObject.queryObject);
-      } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      return this;
-    }
-  }, {
-    key: 'limit',
-    value: function limit(value) {
-      if (!value || !_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      this._limit = value;
-      return this;
-    }
-  }, {
-    key: 'offset',
-    value: function offset(value) {
-      if (!value || !_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      this._offset = value;
-      return this;
-    }
-  }, {
-    key: 'orderBy',
-    value: function orderBy(args) {
-      if (args instanceof Array) {
-        this._orderBy = args.join(',');
-      } else {
-        this._orderBy = args;
-      }
-      return this;
-    }
-  }, {
-    key: 'find',
-    value: function find() {
-      return BaaS.getRecordList(this._handleQueryObject());
-    }
   }]);
 
-  return TableObject;
+  return TableRecord;
 }();
 
-module.exports = TableObject;
+module.exports = TableRecord;
 
-},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./geoPoint":1084,"./geoPolygon":1085,"./query":1090,"./utils":1096,"lodash.clonedeep":1058,"lodash/isInteger":1068}],1094:[function(require,module,exports){
+},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./geoPoint":1084,"./geoPolygon":1085,"lodash.clonedeep":1058}],1095:[function(require,module,exports){
+'use strict';
+
+var baasRequest = require('./baasRequest').baasRequest;
+var constants = require('./constants');
+var BaaS = require('./baas');
+var Promise = require('./promise');
+
+var API = BaaS._config.API;
+
+function makeParams(formID) {
+  if (!formID) {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
+
+  var paramsObj = {};
+  paramsObj['submission_type'] = 'form_id';
+  paramsObj['submission_value'] = formID;
+
+  return paramsObj;
+}
+
+var wxReportTicket = function wxReportTicket(formID) {
+  var paramsObj = makeParams(formID);
+
+  return baasRequest({
+    url: API.TEMPLATE_MESSAGE,
+    method: 'POST',
+    data: paramsObj
+  }).then(function (res) {
+    return new Promise(function (resolve, reject) {
+      return resolve(res);
+    }, function (err) {
+      return reject(err);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+module.exports = {
+  makeParams: makeParams,
+  wxReportTicket: wxReportTicket
+};
+
+},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./promise":1089}],1096:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -77298,7 +77362,7 @@ var uploadFile = function uploadFile(params) {
 
 module.exports = uploadFile;
 
-},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./promise":1089,"./utils":1096}],1095:[function(require,module,exports){
+},{"./baas":1079,"./baasRequest":1080,"./constants":1083,"./promise":1089,"./utils":1098}],1097:[function(require,module,exports){
 'use strict';
 
 var request = require('./request');
@@ -77431,7 +77495,7 @@ module.exports = {
   logout: logout
 };
 
-},{"./baas":1079,"./constants":1083,"./promise":1089,"./request":1091,"./storage":1092,"./utils":1096}],1096:[function(require,module,exports){
+},{"./baas":1079,"./constants":1083,"./promise":1089,"./request":1091,"./storage":1092,"./utils":1098}],1098:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -77526,7 +77590,9 @@ var replaceQueryParams = function replaceQueryParams(URL) {
   var paramsMap = {
     contentGroupID: 'content_group_id',
     categoryID: 'category_id',
-    recordID: 'id'
+    recordID: 'id',
+    submissionType: 'submission_type',
+    submissionValue: 'submission_value'
   };
 
   var copiedParams = extend({}, params);
@@ -77572,9 +77638,9 @@ module.exports = {
   generateRandomArray: generateRandomArray
 };
 
-},{"./config.dev":1081,"./config.dev.js":1081,"faker":1,"node.extend":1075}],1097:[function(require,module,exports){
+},{"./config.dev":1081,"./config.dev.js":1081,"faker":1,"node.extend":1075}],1099:[function(require,module,exports){
 'use strict';
 
-module.exports = 'v1.1.0';
+module.exports = 'v1.1.0b';
 
 },{}]},{},[1086]);
