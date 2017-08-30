@@ -9,14 +9,10 @@ describe('templateMessage', () => {
 
   it('#makeParams error', () => {
     expect(() => Product.makeParams()).to.throw()
-    expect(() => Product.makeParams({})).to.throw()
-    expect(() => Product.makeParams('type', randomString)).to.throw()
   })
 
   it('#makeParams', () => {
-    var result1 = makeParams('form_id', randomString)
-    var result2 = makeParams('prepay_id', randomString)
+    var result1 = makeParams(randomString)
     expect(result1).to.deep.equal({'submission_type': 'form_id', submission_value: randomString})
-    expect(result2).to.deep.equal({'submission_type': 'prepay_id', submission_value: randomString})
   })
 })

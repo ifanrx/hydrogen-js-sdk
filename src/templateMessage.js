@@ -5,24 +5,20 @@ const Promise = require('./promise')
 
 const API = BaaS._config.API
 
-function makeParams(...params) {
-  if (!params || params.length !== 2) {
-    throw new Error(constants.MSG.ARGS_ERROR)
-  }
-
-  if (params[0] !== 'form_id' && params[0] !== 'prepay_id') {
+function makeParams(formID) {
+  if (!formID) {
     throw new Error(constants.MSG.ARGS_ERROR)
   }
 
   var paramsObj = {}
-  paramsObj['submission_type'] = params[0]
-  paramsObj['submission_value'] = params[1]
+  paramsObj['submission_type'] = 'form_id'
+  paramsObj['submission_value'] = formID
 
   return paramsObj
 }
 
-const sendTemplateMessage = (params) => {
-  var paramsObj = makeParams(params)
+const wxReportTicket = (formID) => {
+  var paramsObj = makeParams(formID)
 
   return baasRequest({
     url: API.TEMPLATE_MESSAGE,
@@ -41,5 +37,5 @@ const sendTemplateMessage = (params) => {
 
 module.exports = {
   makeParams,
-  sendTemplateMessage
+  wxReportTicket
 }
