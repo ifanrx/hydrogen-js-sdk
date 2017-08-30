@@ -113,15 +113,16 @@ const doCreateRequestMethod = (methodMap) => {
       BaaS[k] = ((k) => {
         let methodItem = methodMap[k]
         return (objects) => {
+          let newObjects = extend(true, {}, objects)
           let method = methodItem.method || 'GET'
 
           if (methodItem.defaultParams) {
             let defaultParamsCopy = extend({}, methodItem.defaultParams)
-            objects = extend(defaultParamsCopy, objects)
+            newObjects = extend(defaultParamsCopy, newObjects)
           }
 
-          let url = utils.format(methodItem.url, objects)
-          let data = (objects && objects.data) || objects
+          let url = utils.format(methodItem.url, newObjects)
+          let data = (newObjects && newObjects.data) || newObjects
           data = utils.excludeParams(methodItem.url, data)
           data = utils.replaceQueryParams(url, data)
 
