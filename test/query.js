@@ -3,7 +3,7 @@ const faker = require('faker')
 const GeoPoint = require('../src/geoPoint')
 const GeoPolygon = require('../src/geoPolygon')
 const Query = require('../src/query')
-const utils = require('../src/utils')
+const util = require('./util')
 
 const randomOption = config.RANDOM_OPTION
 
@@ -15,7 +15,7 @@ describe('query', () => {
     randomNumber1 = faker.random.number()
     randomNumber2 = faker.random.number()
     randomString = faker.lorem.words(1)
-    randomArray = utils.generateRandomArray()
+    randomArray = util.generateRandomArray()
   })
 
   it('#_setQueryObject', () => {
@@ -157,7 +157,7 @@ describe('query', () => {
     let query = new Query()
     var random2DArray = []
     for(var i = 0; i < 5; i++) {
-      random2DArray.push(utils.generateRandomArray(2))
+      random2DArray.push(util.generateRandomArray(2))
     }
     var randomPolygon = new GeoPolygon(random2DArray)
     query.within('geoField', randomPolygon)

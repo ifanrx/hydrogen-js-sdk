@@ -5,7 +5,7 @@ const Query = require('../src/query')
 const TableObject = require('../src/tableObject')
 const TableRecord = require('../src/tableRecord')
 const randomOption = config.RANDOM_OPTION
-const utils = require('../src/utils')
+const util = require('./util')
 
 describe('tableObject', () => {
   let Product = null
@@ -17,7 +17,7 @@ describe('tableObject', () => {
     randomNumber1 = faker.random.number(randomOption)
     randomNumber2 = faker.random.number(randomOption)
     randomString = faker.lorem.words(1)
-    randomArray = utils.generateRandomArray()
+    randomArray = util.generateRandomArray()
   })
 
   it('#_handleQueryObject', () => {
