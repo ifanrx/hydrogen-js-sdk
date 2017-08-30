@@ -21,6 +21,8 @@ const isAuth = (resolve, reject) => {
 const getUploadFileConfig = (fileName) => {
   return baasRequest({
     url: API_HOST + API.UPLOAD,
+    method: 'POST',
+    data: {filename: fileName}
   }).then((res) => {
     return new Promise((resolve, reject) => {
       return resolve(res)
