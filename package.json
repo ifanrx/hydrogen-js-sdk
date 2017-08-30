@@ -5,6 +5,7 @@
   "description": "爱范儿知晓云平台 JS SDK",
   "scripts": {
     "test": "mocha -R mochawesome -t 300000 test/index.js",
+    "mocha": "mocha test/index.js",
     "dev": "export NODE_ENV=dev && gulp dev",
     "build": "export NODE_ENV=production && gulp release",
     "lock": "npm prune && npm shrinkwrap --dev"
@@ -32,6 +33,7 @@
     "browserify": "^13.1.1",
     "chai": "^3.5.0",
     "del": "^2.2.2",
+    "faker": "^4.1.0",
     "frock": "^1.1.1",
     "frock-proxy": "^1.0.0",
     "frock-static": "^1.0.0",
@@ -49,12 +51,15 @@
     "node-extend": "^0.2.0",
     "node-localstorage": "^1.3.0",
     "path": "^0.12.7",
+    "sinon": "^3.2.0",
+    "sinon-stub-promise": "^4.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.8.0"
   },
   "dependencies": {
     "debug": "^2.2.0",
+    "lodash": "http://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
     "md5": "^2.2.1",
     "node-localstorage": "^1.3.0",
     "rsvp": "^3.3.3"

@@ -7,7 +7,8 @@ const API = {
   LOGOUT: '/hserve/v1/session/destroy/',
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
-  UPLOAD: '/hserve/v1/file/upload/',
+  UPLOAD: '/hserve/v1/upload/',
+  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
 
   // 内容模块
   CONTENT_LIST: '/hserve/v1/content/detail/',
@@ -18,11 +19,11 @@ const API = {
   // 通用存储模块
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   // 用户
   USER_INFO: '/hserve/v1/user/info/:userID/',
 };
@@ -89,6 +90,10 @@ const methodMapList = [{
   }
 },];
 
+const RANDOM_OPTION = {
+  max: 100
+}
+
 // 配置
 module.exports = {
   API_HOST: API_HOST,
@@ -97,4 +102,5 @@ module.exports = {
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
+  RANDOM_OPTION: RANDOM_OPTION
 };

@@ -86,6 +86,8 @@ const replaceQueryParams = (URL, params = {}) => {
     contentGroupID: 'content_group_id',
     categoryID: 'category_id',
     recordID: 'id',
+    submissionType: 'submission_type',
+    submissionValue: 'submission_value'
   }
 
   let copiedParams = extend({}, params)
@@ -103,6 +105,11 @@ const replaceQueryParams = (URL, params = {}) => {
   return copiedParams
 }
 
+const getFileNameFromPath = (path) => {
+  let index = path.lastIndexOf('/')
+  return path.slice(index + 1)
+}
+
 module.exports = {
   log,
   format,
@@ -110,4 +117,5 @@ module.exports = {
   getConfig,
   getSysPlatform,
   replaceQueryParams,
+  getFileNameFromPath
 };
