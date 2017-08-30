@@ -34,7 +34,7 @@ const getUploadFileConfig = (fileName) => {
   })
 }
 
-const wxUpload = (config) => {
+const wxUpload = (config, resolve, reject) => {
   return wx.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
@@ -44,13 +44,20 @@ const wxUpload = (config) => {
       policy: config.policy
     },
     header: {
-      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + token,
+      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + BaaS.getAuthToken(),
       'X-Hydrogen-Client-Version': BaaS._config.VERSION,
       'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
       'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
       'User-Agent': constants.UPLOAD.UA,
     },
     success: (res) => {
+      let result = {}
+      result.status = 'ok'
+      result.path = config.destLink
+
+      delete res.data
+      res.data = JSON.stringify(result)
+
       resolve(res)
     },
     fail: (err) => {
@@ -71,9 +78,10 @@ const uploadFile = (params) => {
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
-        filePath: params.filePath
+        filePath: params.filePath,
+        destLink: res.data.file_link
       }
-      return wxUpload(config)
+      return wxUpload(config, resolve, reject)
     })
   }, (err) => {
     throw new Error(err)
