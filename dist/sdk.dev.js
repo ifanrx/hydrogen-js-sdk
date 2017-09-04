@@ -5867,13 +5867,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var GeoPoint = require('./geoPoint');
 var _cloneDeep = require('lodash.clonedeep');
+var constants = require('./constants');
 
 var GeoPolygon = function () {
   function GeoPolygon(args) {
     _classCallCheck(this, GeoPolygon);
 
     if (args && args instanceof Array) {
-      if (args.length < 3) {
+      if (args.length < 4) {
         throw new Error(constants.MSG.ARGS_ERROR);
       } else {
         this.points = args;
@@ -5891,15 +5892,17 @@ var GeoPolygon = function () {
     key: 'toGeoJSON',
     value: function toGeoJSON() {
       var coordinates = this.geoJSON.coordinates;
+      var face = [];
       this.points.forEach(function (point) {
         if (point instanceof GeoPoint) {
-          coordinates.push([point.attitude, point.longitude]);
+          face.push([point.attitude, point.longitude]);
         } else if (point instanceof Array && point.length === 2) {
-          coordinates.push(point);
+          face.push(point);
         } else {
           throw new Error(constants.MSG.ARGS_ERROR);
         }
       });
+      coordinates.push(face);
       return _cloneDeep(this.geoJSON);
     }
   }]);
@@ -5909,7 +5912,7 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./geoPoint":36,"lodash.clonedeep":10}],38:[function(require,module,exports){
+},{"./constants":35,"./geoPoint":36,"lodash.clonedeep":10}],38:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas'
