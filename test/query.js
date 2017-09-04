@@ -167,7 +167,7 @@ describe('query', () => {
           geoField: {
             $within: {
               type: "Polygon",
-              coordinates: random2DArray,
+              coordinates: [random2DArray],
             }
           }
         }

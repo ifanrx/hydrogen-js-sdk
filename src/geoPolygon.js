@@ -1,10 +1,11 @@
 const GeoPoint = require('./geoPoint')
 const _cloneDeep = require('lodash.clonedeep')
+const constants = require('./constants')
 
 class GeoPolygon {
   constructor(args) {
     if (args && args instanceof Array) {
-      if (args.length < 3) {
+      if (args.length < 4) {
         throw new Error(constants.MSG.ARGS_ERROR)
       } else {
         this.points = args
@@ -20,15 +21,17 @@ class GeoPolygon {
 
   toGeoJSON() {
     var coordinates = this.geoJSON.coordinates
+    var face = []
     this.points.forEach((point) => {
       if (point instanceof GeoPoint) {
-        coordinates.push([point.attitude, point.longitude])
+        face.push([point.attitude, point.longitude])
       } else if (point instanceof Array && point.length === 2) {
-        coordinates.push(point)
+        face.push(point)
       } else {
         throw new Error(constants.MSG.ARGS_ERROR)
       }
     })
+    coordinates.push(face)
     return _cloneDeep(this.geoJSON)
   }
 }
