@@ -80,7 +80,7 @@ class TableObject {
   }
 
   find() {
-    return BaaS.getRecordList(this._handleQueryObject())
+    return BaaS.queryRecordList(this._handleQueryObject())
   }
 }
 

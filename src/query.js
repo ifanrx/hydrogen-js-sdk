@@ -125,14 +125,14 @@ class Query {
   }
 
   // 在指定点集合中，查找包含在以某点为起点的最大和最小距离所构成的圆环区域中的点
-  withinRegion(key, point, minDistance = 0, maxDistance) {
+  withinRegion(key, point, maxDistance, minDistance = 0) {
     if (point && point instanceof GeoPoint) {
       var data = {
         geometry: point.toGeoJSON(),
         min_distance: minDistance
       }
       if (maxDistance) {
-        data.maxDistance = maxDistance
+        data.max_distance = maxDistance
       }
       this._addQueryObject(key, 'nearsphere', data)
     } else {
