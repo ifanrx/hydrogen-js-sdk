@@ -5702,11 +5702,12 @@ var API = {
   // 通用存储模块
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
   // 用户
   USER_INFO: '/hserve/v1/user/info/:userID/'
 };
@@ -5730,6 +5731,10 @@ var methodMapList = [{
   // 获取记录列表
   getRecordList: {
     url: API.RECORD_LIST
+  },
+  // 获取记录列表 (增加复杂查询)
+  queryRecordList: {
+    url: API.QUERY_RECORD_LIST
   },
   // 获取记录详情
   getRecord: {
@@ -6178,9 +6183,8 @@ var Query = function () {
 
   }, {
     key: 'withinRegion',
-    value: function withinRegion(key, point) {
-      var minDistance = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-      var maxDistance = arguments[3];
+    value: function withinRegion(key, point, maxDistance) {
+      var minDistance = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
       if (point && point instanceof GeoPoint) {
         var data = {
@@ -6188,7 +6192,7 @@ var Query = function () {
           min_distance: minDistance
         };
         if (maxDistance) {
-          data.maxDistance = maxDistance;
+          data.max_distance = maxDistance;
         }
         this._addQueryObject(key, 'nearsphere', data);
       } else {
@@ -6469,7 +6473,7 @@ var TableObject = function () {
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.getRecordList(this._handleQueryObject());
+      return BaaS.queryRecordList(this._handleQueryObject());
     }
   }]);
 
