@@ -5704,10 +5704,10 @@ var API = {
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
   RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
   QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.1/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.1/table/:tableID/record/:recordID/',
+  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   // 用户
   USER_INFO: '/hserve/v1/user/info/:userID/'
 };
