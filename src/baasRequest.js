@@ -1,16 +1,16 @@
-const Promise = require('./promise');
-const request = require('./request');
-const extend = require('node.extend');
-const utils = require('./utils');
-const user = require('./user');
-const constants = require('./constants');
-const BaaS = require('./baas');
-const storage = require('./storage');
+const Promise = require('./promise')
+const request = require('./request')
+const extend = require('node.extend')
+const utils = require('./utils')
+const user = require('./user')
+const constants = require('./constants')
+const BaaS = require('./baas')
+const storage = require('./storage')
 
-let isLogining = false;
-let isAuthing = false;
-let authResolve = [];
-let loginResolve = [];
+let isLogining = false
+let isAuthing = false
+let authResolve = []
+let loginResolve = []
 
 /**
  * auth
@@ -19,29 +19,29 @@ let loginResolve = [];
 const auth = () => {
   if (storage.get(constants.STORAGE_KEY.UID)) {
     return new Promise((resolve, reject) => {
-      resolve();
-    });
+      resolve()
+    })
   }
   if (isAuthing) {
     return new Promise((resolve, reject) => {
-      authResolve.push(resolve);
-    });
+      authResolve.push(resolve)
+    })
   }
 
-  isAuthing = true;
+  isAuthing = true
   return user.auth().then(() => {
     setTimeout(() => {
       while (authResolve.length) {
-        authResolve.shift()();
+        authResolve.shift()()
       }
-    }, 0);
+    }, 0)
     return new Promise((resolve, reject) => {
-      resolve();
-    });
+      resolve()
+    })
   }, (err) => {
-    throw new Error(err);
-  });
-};
+    throw new Error(err)
+  })
+}
 
 /**
  * login
@@ -50,32 +50,34 @@ const auth = () => {
 const login = () => {
   if (BaaS.isLogined()) {
     return new Promise((resolve, reject) => {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO));
-    });
+      resolve(storage.get(constants.STORAGE_KEY.USERINFO))
+    })
   }
 
   if (isLogining) {
     return new Promise((resolve, reject) => {
-      loginResolve.push(resolve);
-    });
+      loginResolve.push(resolve)
+    })
   }
 
-  isLogining = true;
+  isLogining = true
   return auth().then(() => {
-    return user.login();
+    return user.login()
   }).then(() => {
+    isLogining = false
     setTimeout(() => {
       while (loginResolve.length) {
-        loginResolve.shift()(storage.get(constants.STORAGE_KEY.USERINFO));
+        loginResolve.shift()(storage.get(constants.STORAGE_KEY.USERINFO))
       }
-    }, 0);
+    }, 0)
     return new Promise((resolve, reject) => {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO));
-    });
+      resolve(storage.get(constants.STORAGE_KEY.USERINFO))
+    })
   }).catch((err) => {
-    throw new Error(err);
-  });
-};
+    isLogining = false
+    throw new Error(err)
+  })
+}
 
 /**
  * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
@@ -87,13 +89,13 @@ const login = () => {
  * @return {Object}                       返回一个 Promise 对象
  */
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
-  return login().then(() => {
-    isLogining = false;
-    return request.apply(null, arguments);
+  return auth().then(() => {
+    isAuthing = false
+    return request.apply(null, arguments)
   }, (err) => {
-    throw new Error(err);
-  });
-};
+    throw new Error(err)
+  })
+}
 
 /**
  * 根据 methodMap 创建对应的 BaaS Method
@@ -106,7 +108,7 @@ const doCreateRequestMethod = (methodMap) => {
     PUT: constants.STATUS_CODE.UPDATE,
     PATCH: constants.STATUS_CODE.PATCH,
     DELETE: constants.STATUS_CODE.DELETE
-  };
+  }
 
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
@@ -129,29 +131,29 @@ const doCreateRequestMethod = (methodMap) => {
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
               if (res.statusCode == HTTPMethodCodeMap[method]) {
-                resolve(res);
+                resolve(res)
               } else {
-                reject(constants.MSG.STATUS_CODE_ERROR);
+                reject(constants.MSG.STATUS_CODE_ERROR)
               }
             }, (err) => {
-              reject(err);
-            });
-          });
-        };
-      })(k);
+              reject(err)
+            })
+          })
+        }
+      })(k)
     }
   }
-};
+}
 
 /**
  * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
  */
 const createRequestMethod = () => {
-  let methodMapList = BaaS._config.METHOD_MAP_LIST;
+  let methodMapList = BaaS._config.METHOD_MAP_LIST
   methodMapList.map((v) => {
-    doCreateRequestMethod(v);
-  });
-};
+    doCreateRequestMethod(v)
+  })
+}
 
 module.exports = {
   baasRequest,
@@ -159,4 +161,4 @@ module.exports = {
   auth,
   createRequestMethod,
   doCreateRequestMethod
-};
+}

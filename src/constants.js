@@ -5,6 +5,8 @@ module.exports = {
     AUTH_TOKEN: 'auth_token',
     USERINFO: 'userinfo',
     UID: 'uid',
+    OPENID: 'openid',
+    UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
   },
   // 提示信息
