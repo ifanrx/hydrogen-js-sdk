@@ -5,7 +5,6 @@ BaaS.auth = require('./baasRequest').auth
 BaaS.GeoPoint = require('./geoPoint')
 BaaS.GeoPolygon = require('./geoPolygon')
 BaaS.login = require('./user').login
-BaaS.silentLogin = require('./user').silentLogin
 BaaS.logout = require('./user').logout
 BaaS.order = require('./order')
 BaaS.pay = require('./pay')

@@ -8,6 +8,14 @@ const utils = require('./utils')
 
 const API = BaaS._config.API
 
+let isLogining = false
+let loginResolve = []
+let loginReject = []
+let isSilentLogining = false
+let silentLoginResolve = []
+let silentLoginReject = []
+
+
 /**
  * 初始化会话
  * @param  {String} code      wx.login 后返回的 code
@@ -30,7 +38,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       resolve(res)
     } else {
-      throw new Error(constants.MSG.CONFIG_ERROR)
+      reject(constants.MSG.CONFIG_ERROR)
     }
   }, (err) => {
     reject(err)
@@ -56,52 +64,46 @@ const auth = () => {
 
 }
 
+const login = (userInfo = true) => {
+  if (userInfo) {
+    if (storage.get(constants.STORAGE_KEY.USERINFO)) {
+      return new Promise((resolve, reject) => {
+        resolve(makeLoginResponseData())
+      })
+    }
 
-let isLogining = false
-let loginResolve = []
-let loginReject = []
+    if (isLogining) {
+      return new Promise((resolve, reject) => {
+        loginResolve.push(resolve)
+        loginReject.push(reject)
+      })
+    }
 
-const login = () => {
-  if (storage.get(constants.STORAGE_KEY.USERINFO)) {
-    return new Promise((resolve, reject) => {
-      resolve(makeLoginResponseData())
-    })
-  }
+    isLogining = true
 
-  if (isLogining) {
     return new Promise((resolve, reject) => {
       loginResolve.push(resolve)
       loginReject.push(reject)
-    })
-  }
-
-  isLogining = true
-
-  return new Promise((resolve, reject) => {
-    loginResolve.push(resolve)
-    loginReject.push(reject)
-    auth().then(() => {
-      return getUserInfo().then(() => {
-        isLogining = false
-        resolveLoginCallBacks()
-      }, (err) => {
-        isLogining = false
-        rejectLoginCallBacks()
-      }).catch(() => {
-        handleLoginFail()
+      silentLogin().then(() => {
+        return getUserInfo().then(() => {
+          isLogining = false
+          resolveLoginCallBacks()
+        }, (err) => {
+          isLogining = false
+          rejectLoginCallBacks()
+        }).catch(() => {
+          handleLoginFailure()
+        })
+      }, () => {
+        throw new Error(constants.MSG.CONFIG_ERROR)
+      }).catch((err) => {
+        handleLoginFailure(err)
       })
-    }, () => {
-      throw new Error(constants.MSG.CONFIG_ERROR)
-    }).catch((err) => {
-      handleLoginFail(err)
     })
-  })
+  } else {
+    return silentLogin()
+  }
 }
-
-
-let isSilentLogining = false
-let silentLoginResolve = []
-let silentLoginReject = []
 
 const silentLogin = () => {
   if (storage.get(constants.STORAGE_KEY.UID)) {
@@ -122,18 +124,17 @@ const silentLogin = () => {
   return new Promise((resolve, reject) => {
     silentLoginResolve.push(resolve)
     silentLoginReject.push(reject)
-    auth().then(() => {
+    return auth().then(() => {
       isSilentLogining = false
       resolveLoginCallBacks(false)
-    }, () => {
+    }, (rej) => {
       isSilentLogining = false
       rejectLoginCallBacks(false)
     }).catch((err) => {
-      handleLoginFail(false)
+      handleLoginFailure(false)
     })
   })
 }
-
 
 const makeLoginResponseData = (userInfo = true) => {
   if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO)
@@ -167,12 +168,13 @@ const rejectLoginCallBacks = (userInfo = true) => {
     } else {
       while (silentLoginReject.length) {
         silentLoginReject.shift()()
+        throw new Error(constants.MSG.CONFIG_ERROR)
       }
     }
   }, 0)
 }
 
-const handleLoginFail = (userInfo = true) => {
+const handleLoginFailure = (userInfo = true) => {
   if (userInfo) {
     isLogining = false
   } else {
@@ -254,6 +256,5 @@ const authenticate = (data, resolve, reject) => {
 module.exports = {
   auth,
   login,
-  silentLogin,
   logout,
 }

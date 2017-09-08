@@ -5497,86 +5497,14 @@ module.exports = BaaS;
 },{"./constants":36,"./storage":45,"./utils":51,"./version":52,"node.extend":28}],33:[function(require,module,exports){
 'use strict';
 
+var BaaS = require('./baas');
+var constants = require('./constants');
+var extend = require('node.extend');
 var Promise = require('./promise');
 var request = require('./request');
-var extend = require('node.extend');
+var storage = require('./storage');
 var utils = require('./utils');
 var user = require('./user');
-var constants = require('./constants');
-var BaaS = require('./baas');
-var storage = require('./storage');
-
-var isLogining = false;
-var isAuthing = false;
-var authResolve = [];
-var loginResolve = [];
-
-/**
- * auth
- * @return {Promise}
- */
-var auth = function auth() {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
-    return new Promise(function (resolve, reject) {
-      resolve();
-    });
-  }
-  if (isAuthing) {
-    return new Promise(function (resolve, reject) {
-      authResolve.push(resolve);
-    });
-  }
-
-  isAuthing = true;
-  return user.auth().then(function () {
-    setTimeout(function () {
-      while (authResolve.length) {
-        authResolve.shift()();
-      }
-    }, 0);
-    return new Promise(function (resolve, reject) {
-      resolve();
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-/**
- * login
- * @return {Promise}
- */
-var login = function login() {
-  if (BaaS.isLogined()) {
-    return new Promise(function (resolve, reject) {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO));
-    });
-  }
-
-  if (isLogining) {
-    return new Promise(function (resolve, reject) {
-      loginResolve.push(resolve);
-    });
-  }
-
-  isLogining = true;
-  return auth().then(function () {
-    return user.login();
-  }).then(function () {
-    isLogining = false;
-    setTimeout(function () {
-      while (loginResolve.length) {
-        loginResolve.shift()(storage.get(constants.STORAGE_KEY.USERINFO));
-      }
-    }, 0);
-    return new Promise(function (resolve, reject) {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO));
-    });
-  }).catch(function (err) {
-    isLogining = false;
-    throw new Error(err);
-  });
-};
 
 /**
  * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
@@ -5599,8 +5527,7 @@ var baasRequest = function baasRequest(_ref) {
       _ref$dataType = _ref.dataType,
       dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
 
-  return auth().then(function () {
-    isAuthing = false;
+  return user.login(false).then(function () {
     return request.apply(null, _arguments);
   }, function (err) {
     throw new Error(err);
@@ -5667,8 +5594,6 @@ var createRequestMethod = function createRequestMethod() {
 
 module.exports = {
   baasRequest: baasRequest,
-  login: login,
-  auth: auth,
   createRequestMethod: createRequestMethod,
   doCreateRequestMethod: doCreateRequestMethod
 };
@@ -5817,7 +5742,9 @@ module.exports = {
   MSG: {
     STATUS_CODE_ERROR: 'Unexpected API Status Code',
     NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误'
+    ARGS_ERROR: '参数使用错误',
+    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
+    LOGIN_ERROR: '登录失败'
   },
   STATUS_CODE: {
     CREATED: 201,
@@ -5935,7 +5862,7 @@ var BaaS = require('./baas');
 BaaS.auth = require('./baasRequest').auth;
 BaaS.GeoPoint = require('./geoPoint');
 BaaS.GeoPolygon = require('./geoPolygon');
-BaaS.login = require('./baasRequest').login;
+BaaS.login = require('./user').login;
 BaaS.logout = require('./user').logout;
 BaaS.order = require('./order');
 BaaS.pay = require('./pay');
@@ -6739,13 +6666,21 @@ module.exports = uploadFile;
 },{"./baas":32,"./baasRequest":33,"./constants":36,"./promise":42,"./utils":51}],50:[function(require,module,exports){
 'use strict';
 
-var request = require('./request');
 var BaaS = require('./baas');
 var constants = require('./constants');
-var utils = require('./utils');
-var storage = require('./storage');
 var Promise = require('./promise');
+var request = require('./request');
+var storage = require('./storage');
+var utils = require('./utils');
+
 var API = BaaS._config.API;
+
+var isLogining = false;
+var loginResolve = [];
+var loginReject = [];
+var isSilentLogining = false;
+var silentLoginResolve = [];
+var silentLoginReject = [];
 
 /**
  * 初始化会话
@@ -6769,7 +6704,7 @@ var sessionInit = function sessionInit(code, resolve, reject) {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token);
       resolve(res);
     } else {
-      reject(constants.MSG.STATUS_CODE_ERROR);
+      reject(constants.MSG.CONFIG_ERROR);
     }
   }, function (err) {
     reject(err);
@@ -6781,7 +6716,6 @@ var sessionInit = function sessionInit(code, resolve, reject) {
  * @return {Promise}
  */
 var auth = function auth() {
-
   return new Promise(function (resolve, reject) {
     wx.login({
       success: function success(res) {
@@ -6789,6 +6723,177 @@ var auth = function auth() {
       },
       fail: function fail(err) {
         reject(err);
+      }
+    });
+  });
+};
+
+var login = function login() {
+  var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+  if (userInfo) {
+    if (storage.get(constants.STORAGE_KEY.USERINFO)) {
+      return new Promise(function (resolve, reject) {
+        resolve(makeLoginResponseData());
+      });
+    }
+
+    if (isLogining) {
+      return new Promise(function (resolve, reject) {
+        loginResolve.push(resolve);
+        loginReject.push(reject);
+      });
+    }
+
+    isLogining = true;
+
+    return new Promise(function (resolve, reject) {
+      loginResolve.push(resolve);
+      loginReject.push(reject);
+      silentLogin().then(function () {
+        return getUserInfo().then(function () {
+          isLogining = false;
+          resolveLoginCallBacks();
+        }, function (err) {
+          isLogining = false;
+          rejectLoginCallBacks();
+        }).catch(function () {
+          handleLoginFailure();
+        });
+      }, function () {
+        throw new Error(constants.MSG.CONFIG_ERROR);
+      }).catch(function (err) {
+        handleLoginFailure(err);
+      });
+    });
+  } else {
+    return silentLogin();
+  }
+};
+
+var silentLogin = function silentLogin() {
+  if (storage.get(constants.STORAGE_KEY.UID)) {
+    return new Promise(function (resolve, reject) {
+      resolve(makeLoginResponseData(false));
+    });
+  }
+
+  if (isSilentLogining) {
+    return new Promise(function (resolve, reject) {
+      silentLoginResolve.push(resolve);
+      silentLoginReject.push(reject);
+    });
+  }
+
+  isSilentLogining = true;
+
+  return new Promise(function (resolve, reject) {
+    silentLoginResolve.push(resolve);
+    silentLoginReject.push(reject);
+    return auth().then(function () {
+      isSilentLogining = false;
+      resolveLoginCallBacks(false);
+    }, function (rej) {
+      isSilentLogining = false;
+      rejectLoginCallBacks(false);
+    }).catch(function (err) {
+      handleLoginFailure(false);
+    });
+  });
+};
+
+var makeLoginResponseData = function makeLoginResponseData() {
+  var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+  if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO);
+  return {
+    id: storage.get(constants.STORAGE_KEY.UID),
+    openid: storage.get(constants.STORAGE_KEY.OPENID),
+    unionid: storage.get(constants.STORAGE_KEY.UNIONID)
+  };
+};
+
+var resolveLoginCallBacks = function resolveLoginCallBacks() {
+  var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+  setTimeout(function () {
+    if (userInfo) {
+      while (loginResolve.length) {
+        loginResolve.shift()(makeLoginResponseData());
+      }
+    } else {
+      while (silentLoginResolve.length) {
+        silentLoginResolve.shift()(makeLoginResponseData(false));
+      }
+    }
+  }, 0);
+};
+
+var rejectLoginCallBacks = function rejectLoginCallBacks() {
+  var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+  setTimeout(function () {
+    if (userInfo) {
+      while (loginReject.length) {
+        loginReject.shift()(makeLoginResponseData(false));
+      }
+    } else {
+      while (silentLoginReject.length) {
+        silentLoginReject.shift()();
+        throw new Error(constants.MSG.CONFIG_ERROR);
+      }
+    }
+  }, 0);
+};
+
+var handleLoginFailure = function handleLoginFailure() {
+  var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+  if (userInfo) {
+    isLogining = false;
+  } else {
+    isSilentLogining = false;
+  }
+  throw new Error(constants.MSG.CONFIG_ERROR);
+};
+
+var logout = function logout() {
+  BaaS.check();
+
+  return request({ url: API.LOGOUT, method: 'POST' }).then(function (res) {
+    if (res.statusCode == constants.STATUS_CODE.CREATED) {
+      BaaS.clearSession();
+    } else {
+      throw new Error(constants.MSG.STATUS_CODE_ERROR);
+    }
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+var getUserInfo = function getUserInfo() {
+  if (!BaaS.getAuthToken()) {
+    throw new Error('未认证客户端');
+  }
+  return new Promise(function (resolve, reject) {
+    wx.getUserInfo({
+      success: function success(res) {
+        var payload = {
+          rawData: res.rawData,
+          signature: res.signature,
+          encryptedData: res.encryptedData,
+          iv: res.iv
+        };
+        var userInfo = res.userInfo;
+        userInfo.id = storage.get(constants.STORAGE_KEY.UID);
+        userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
+        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
+        storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
+        return authenticate(payload, resolve, reject);
+      },
+      fail: function fail(err) {
+        // 用户拒绝授权也要继续进入下一步流程
+        reject('');
       }
     });
   });
@@ -6818,57 +6923,6 @@ var authenticate = function authenticate(data, resolve, reject) {
   });
 };
 
-/**
- * 登录
- * @return {Promise}
- */
-var login = function login() {
-  if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端');
-  }
-  return new Promise(function (resolve, reject) {
-    wx.getUserInfo({
-      success: function success(res) {
-        var payload = {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv
-        };
-        var userInfo = res.userInfo;
-        userInfo.id = storage.get(constants.STORAGE_KEY.UID);
-        userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
-        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
-        storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
-        return authenticate(payload, resolve, reject);
-      },
-      fail: function fail(err) {
-        // 用户拒绝授权也要继续进入下一步流程
-        resolve('');
-      }
-    });
-  });
-};
-
-/**
- * 退出登录
- * @return {Promise}
- */
-var logout = function logout() {
-
-  BaaS.check();
-
-  return request({ url: API.LOGOUT, method: 'POST' }).then(function (res) {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      BaaS.clearSession();
-    } else {
-      throw new Error(constants.MSG.STATUS_CODE_ERROR);
-    }
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
 module.exports = {
   auth: auth,
   login: login,
@@ -6882,7 +6936,7 @@ var extend = require('node.extend');
 
 var config = void 0;
 try {
-  config = require('./config.dev.js');
+  config = require('./config.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7002,9 +7056,9 @@ module.exports = {
   getFileNameFromPath: getFileNameFromPath
 };
 
-},{"./config.dev":34,"./config.dev.js":34,"node.extend":28}],52:[function(require,module,exports){
+},{"./config.dev":34,"./config.js":35,"node.extend":28}],52:[function(require,module,exports){
 'use strict';
 
-module.exports = 'v1.1.0b';
+module.exports = 'v1.1.0b1';
 
 },{}]},{},[39]);
