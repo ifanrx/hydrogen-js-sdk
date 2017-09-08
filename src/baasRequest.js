@@ -18,7 +18,7 @@ const user = require('./user')
  * @return {Object}                       返回一个 Promise 对象
  */
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
-  return user.login(false).then(() => {
+  return user.silentLogin().then(() => {
     return request.apply(null, arguments)
   }, (err) => {
     throw new Error(err)

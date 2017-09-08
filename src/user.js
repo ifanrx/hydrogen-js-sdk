@@ -30,7 +30,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       resolve(res)
     } else {
-      reject(constants.MSG.CONFIG_ERROR)
+      throw new Error(constants.MSG.CONFIG_ERROR)
     }
   }, (err) => {
     reject(err)
@@ -57,77 +57,128 @@ const auth = () => {
 }
 
 
-let isAuthing = false
-let authResolve = []
-let authReject = []
+let isLogining = false
+let loginResolve = []
+let loginReject = []
 
-const login = (userInfo = true) => {
-  if ((!userInfo && storage.get(constants.STORAGE_KEY.UID))
-      || (userInfo && storage.get(constants.STORAGE_KEY.USERINFO))) {
+const login = () => {
+  if (storage.get(constants.STORAGE_KEY.USERINFO)) {
     return new Promise((resolve, reject) => {
-      resolve()
+      resolve(makeLoginResponseData())
     })
   }
 
-  if (isAuthing) {
+  if (isLogining) {
     return new Promise((resolve, reject) => {
-      authResolve.push(resolve)
-      authReject.push(reject)
+      loginResolve.push(resolve)
+      loginReject.push(reject)
     })
   }
 
-  isAuthing = true
+  isLogining = true
 
   return new Promise((resolve, reject) => {
-    authResolve.push(resolve)
-    authReject.push(reject)
-    if (userInfo) {
-      auth().then(() => {
-        return getUserInfo().then(() => {
-          isAuthing = false
-          resolveLoginCallBacks()
-        }, () => {
-          isAuthing = false
-          rejectLoginCallBacks()
-        }).catch((err) => {
-          handleLoginFail(err)
-        })
-      }).catch((err) => {
-        handleLoginFail(err)
-      })
-    } else {
-      auth().then(() => {
-        isAuthing = false
+    loginResolve.push(resolve)
+    loginReject.push(reject)
+    auth().then(() => {
+      return getUserInfo().then(() => {
+        isLogining = false
         resolveLoginCallBacks()
-      }, () => {
-        isAuthing = false
+      }, (err) => {
+        isLogining = false
         rejectLoginCallBacks()
-      }).catch((err) => {
-        handleLoginFail(err)
+      }).catch(() => {
+        handleLoginFail()
       })
-    }
+    }, () => {
+      throw new Error(constants.MSG.CONFIG_ERROR)
+    }).catch((err) => {
+      handleLoginFail(err)
+    })
   })
 }
 
-const resolveLoginCallBacks = () => {
+
+let isSilentLogining = false
+let silentLoginResolve = []
+let silentLoginReject = []
+
+const silentLogin = () => {
+  if (storage.get(constants.STORAGE_KEY.UID)) {
+    return new Promise((resolve, reject) => {
+      resolve(makeLoginResponseData(false))
+    })
+  }
+
+  if (isSilentLogining) {
+    return new Promise((resolve, reject) => {
+      silentLoginResolve.push(resolve)
+      silentLoginReject.push(reject)
+    })
+  }
+
+  isSilentLogining = true
+
+  return new Promise((resolve, reject) => {
+    silentLoginResolve.push(resolve)
+    silentLoginReject.push(reject)
+    auth().then(() => {
+      isSilentLogining = false
+      resolveLoginCallBacks(false)
+    }, () => {
+      isSilentLogining = false
+      rejectLoginCallBacks(false)
+    }).catch((err) => {
+      handleLoginFail(false)
+    })
+  })
+}
+
+
+const makeLoginResponseData = (userInfo = true) => {
+  if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO)
+  return {
+    uid: storage.get(constants.STORAGE_KEY.UID),
+    openid: storage.get(constants.STORAGE_KEY.OPENID),
+    unionid: storage.get(constants.STORAGE_KEY.UNIONID)
+  }
+}
+
+const resolveLoginCallBacks = (userInfo = true) => {
   setTimeout(() => {
-    while (authResolve.length) {
-      authResolve.shift()()
+    if (userInfo) {
+      while (loginResolve.length) {
+        loginResolve.shift()(makeLoginResponseData())
+      }
+    } else {
+      while (silentLoginResolve.length) {
+        silentLoginResolve.shift()(makeLoginResponseData(false))
+      }
     }
   }, 0)
 }
 
-const rejectLoginCallBacks = () => {
+const rejectLoginCallBacks = (userInfo = true) => {
   setTimeout(() => {
-    while (authReject.length) {
-      authReject.shift()()
+    if (userInfo) {
+      while (loginReject.length) {
+        loginReject.shift()(makeLoginResponseData(false))
+      }
+    } else {
+      while (silentLoginReject.length) {
+        silentLoginReject.shift()()
+      }
     }
   }, 0)
 }
 
-const handleLoginFail = (err) => {
-  isAuthing = false
-  throw new Error(err)
+const handleLoginFail = (userInfo = true) => {
+  if (userInfo) {
+    isLogining = false
+  } else {
+    isSilentLogining = false
+  }
+  throw new Error(constants.MSG.CONFIG_ERROR)
 }
 
 
@@ -203,5 +254,6 @@ const authenticate = (data, resolve, reject) => {
 module.exports = {
   auth,
   login,
+  silentLogin,
   logout,
 }
