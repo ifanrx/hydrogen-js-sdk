@@ -71,6 +71,8 @@ BaaS.clearSession = () => {
   // 清除用户信息
   storage.set(constants.STORAGE_KEY.USERINFO, '');
   storage.set(constants.STORAGE_KEY.UID, '');
+  storage.set(constants.STORAGE_KEY.OPENID, '');
+  storage.set(constants.STORAGE_KEY.OPENID, '');
 };
 
 module.exports = BaaS;
