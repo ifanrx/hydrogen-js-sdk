@@ -59,9 +59,11 @@ const auth = () => {
 
 let isAuthing = false
 let authResolve = []
+let authReject = []
 
 const login = (userInfo = true) => {
-  if (storage.get(constants.STORAGE_KEY.USERINFO)) {
+  if ((!userInfo && storage.get(constants.STORAGE_KEY.UID))
+      || (userInfo && storage.get(constants.STORAGE_KEY.USERINFO))) {
     return new Promise((resolve, reject) => {
       resolve()
     })
@@ -70,25 +72,40 @@ const login = (userInfo = true) => {
   if (isAuthing) {
     return new Promise((resolve, reject) => {
       authResolve.push(resolve)
+      authReject.push(reject)
     })
   }
 
   isAuthing = true
 
-  if (userInfo) {
-    return auth().then(() => {
-      return getUserInfo()
-    }).then(() => {
-      handleLoginSuccess()
-    }).catch((err) => {
-      handleLoginFail(err)
-    })
-  }
-
-  return auth().then(() => {
-    handleLoginSuccess()
-  }).catch((err) => {
-    handleLoginFail(err)
+  return new Promise((resolve, reject) => {
+    authResolve.push(resolve)
+    authReject.push(reject)
+    if (userInfo) {
+      auth().then(() => {
+        return getUserInfo().then(() => {
+          isAuthing = false
+          resolveLoginCallBacks()
+        }, () => {
+          isAuthing = false
+          rejectLoginCallBacks()
+        }).catch((err) => {
+          handleLoginFail(err)
+        })
+      }).catch((err) => {
+        handleLoginFail(err)
+      })
+    } else {
+      auth().then(() => {
+        isAuthing = false
+        resolveLoginCallBacks()
+      }, () => {
+        isAuthing = false
+        rejectLoginCallBacks()
+      }).catch((err) => {
+        handleLoginFail(err)
+      })
+    }
   })
 }
 
@@ -100,9 +117,12 @@ const resolveLoginCallBacks = () => {
   }, 0)
 }
 
-const handleLoginSuccess = () => {
-  isAuthing = false
-  resolveLoginCallBacks()
+const rejectLoginCallBacks = () => {
+  setTimeout(() => {
+    while (authReject.length) {
+      authReject.shift()()
+    }
+  }, 0)
 }
 
 const handleLoginFail = (err) => {
@@ -148,7 +168,7 @@ const getUserInfo = () => {
       },
       fail: (err) => {
         // 用户拒绝授权也要继续进入下一步流程
-        resolve('')
+        reject('')
       },
     })
   })
