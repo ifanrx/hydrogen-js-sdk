@@ -1,83 +1,12 @@
+const BaaS = require('./baas')
+const constants = require('./constants')
+const extend = require('node.extend')
 const Promise = require('./promise')
 const request = require('./request')
-const extend = require('node.extend')
+const storage = require('./storage')
 const utils = require('./utils')
 const user = require('./user')
-const constants = require('./constants')
-const BaaS = require('./baas')
-const storage = require('./storage')
 
-let isLogining = false
-let isAuthing = false
-let authResolve = []
-let loginResolve = []
-
-/**
- * auth
- * @return {Promise}
- */
-const auth = () => {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
-    return new Promise((resolve, reject) => {
-      resolve()
-    })
-  }
-  if (isAuthing) {
-    return new Promise((resolve, reject) => {
-      authResolve.push(resolve)
-    })
-  }
-
-  isAuthing = true
-  return user.auth().then(() => {
-    setTimeout(() => {
-      while (authResolve.length) {
-        authResolve.shift()()
-      }
-    }, 0)
-    return new Promise((resolve, reject) => {
-      resolve()
-    })
-  }, (err) => {
-    throw new Error(err)
-  })
-}
-
-/**
- * login
- * @return {Promise}
- */
-const login = () => {
-  if (BaaS.isLogined()) {
-    return new Promise((resolve, reject) => {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO))
-    })
-  }
-
-  if (isLogining) {
-    return new Promise((resolve, reject) => {
-      loginResolve.push(resolve)
-    })
-  }
-
-  isLogining = true
-  return auth().then(() => {
-    return user.login()
-  }).then(() => {
-    isLogining = false
-    setTimeout(() => {
-      while (loginResolve.length) {
-        loginResolve.shift()(storage.get(constants.STORAGE_KEY.USERINFO))
-      }
-    }, 0)
-    return new Promise((resolve, reject) => {
-      resolve(storage.get(constants.STORAGE_KEY.USERINFO))
-    })
-  }).catch((err) => {
-    isLogining = false
-    throw new Error(err)
-  })
-}
 
 /**
  * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
@@ -89,13 +18,13 @@ const login = () => {
  * @return {Object}                       返回一个 Promise 对象
  */
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
-  return auth().then(() => {
-    isAuthing = false
+  return user.login().then(() => {
     return request.apply(null, arguments)
   }, (err) => {
     throw new Error(err)
   })
 }
+
 
 /**
  * 根据 methodMap 创建对应的 BaaS Method
@@ -145,6 +74,7 @@ const doCreateRequestMethod = (methodMap) => {
   }
 }
 
+
 /**
  * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
  */
@@ -155,10 +85,9 @@ const createRequestMethod = () => {
   })
 }
 
+
 module.exports = {
   baasRequest,
-  login,
-  auth,
   createRequestMethod,
   doCreateRequestMethod
 }

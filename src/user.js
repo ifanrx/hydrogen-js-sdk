@@ -1,9 +1,11 @@
-const request = require('./request')
+
 const BaaS = require('./baas')
 const constants = require('./constants')
-const utils = require('./utils')
-const storage = require('./storage')
 const Promise = require('./promise')
+const request = require('./request')
+const storage = require('./storage')
+const utils = require('./utils')
+
 const API = BaaS._config.API
 
 /**
@@ -28,19 +30,19 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       resolve(res)
     } else {
-      reject(constants.MSG.STATUS_CODE_ERROR)
+      reject(constants.MSG.CONFIG_ERROR)
     }
   }, (err) => {
     reject(err)
   })
 }
 
+
 /**
  * 验证客户端
  * @return {Promise}
  */
 const auth = () => {
-
   return new Promise((resolve, reject) => {
     wx.login({
       success: (res) => {
@@ -54,35 +56,77 @@ const auth = () => {
 
 }
 
-/**
- * 登录 BaaS
- * @param  {Object} data    微信签名等信息
- * @param  {Function} resolve Promise resolve function
- * @param  {Function} reject  Promise reject function
- * @return {Promise}
- */
-const authenticate = (data, resolve, reject) => {
-  return request({
-    url: API.LOGIN,
-    method: 'POST',
-    data: data
-  }).then((res) => {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
-      resolve(res)
-    } else {
-      reject(constants.MSG.STATUS_CODE_ERROR)
-    }
-  }, (err) => {
-    reject(err)
+
+let isAuthing = false
+let authResolve = []
+
+const login = (userInfo = true) => {
+  if (storage.get(constants.STORAGE_KEY.UID)) {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
+
+  if (isAuthing) {
+    return new Promise((resolve, reject) => {
+      authResolve.push(resolve)
+    })
+  }
+
+  isAuthing = true
+
+  if (userInfo) {
+    return auth().then(() => {
+      return getUserWxInfo()
+    }).then(() => {
+      handleLoginSuccess()
+    }).catch(() => {
+      handleLoginFail()
+    })
+  }
+
+  return auth().then(() => {
+    handleLoginSuccess()
+  }).catch(() => {
+    handleLoginFail()
   })
 }
 
-/**
- * 登录
- * @return {Promise}
- */
-const login = () => {
+const resolveLoginCallBacks = () => {
+  setTimeout(() => {
+    while (authResolve.length) {
+      authResolve.shift()()
+    }
+  }, 0)
+}
+
+const handleLoginSuccess = () => {
+  isAuthing = false
+  resolveLoginCallBacks()
+}
+
+const handleLoginFail = () => {
+  isAuthing = false
+  throw new Error(constants.MSG.LOGIN_ERROR)
+}
+
+
+const logout = () => {
+  BaaS.check()
+
+  return request({ url: API.LOGOUT, method: 'POST' }).then((res) => {
+    if (res.statusCode == constants.STATUS_CODE.CREATED) {
+      BaaS.clearSession()
+    } else {
+      throw new Error(constants.MSG.STATUS_CODE_ERROR)
+    }
+  }, (err) => {
+    throw new Error(err)
+  })
+}
+
+
+const getUserWxInfo = () => {
   if (!BaaS.getAuthToken()) {
     throw new Error('未认证客户端')
   }
@@ -110,27 +154,35 @@ const login = () => {
   })
 }
 
+
 /**
- * 退出登录
+ * 登录 BaaS
+ * @param  {Object} data    微信签名等信息
+ * @param  {Function} resolve Promise resolve function
+ * @param  {Function} reject  Promise reject function
  * @return {Promise}
  */
-const logout = () => {
-
-  BaaS.check()
-
-  return request({ url: API.LOGOUT, method: 'POST' }).then((res) => {
+const authenticate = (data, resolve, reject) => {
+  return request({
+    url: API.LOGIN,
+    method: 'POST',
+    data: data
+  }).then((res) => {
     if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      BaaS.clearSession()
+      storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
+      resolve(res)
     } else {
-      throw new Error(constants.MSG.STATUS_CODE_ERROR)
+      reject(constants.MSG.STATUS_CODE_ERROR)
     }
   }, (err) => {
-    throw new Error(err)
+    reject(err)
   })
 }
+
 
 module.exports = {
   auth,
   login,
   logout,
+  getUserWxInfo,
 }

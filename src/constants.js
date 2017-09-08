@@ -13,7 +13,9 @@ module.exports = {
   MSG: {
     STATUS_CODE_ERROR: 'Unexpected API Status Code',
     NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误'
+    ARGS_ERROR: '参数使用错误',
+    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
+    LOGIN_ERROR: '登录失败',
   },
   STATUS_CODE: {
     CREATED: 201,

@@ -6,10 +6,11 @@ describe('baas', () => {
       'request', 'init', 'pay', 'login', 'logout', 'getTableList', 'getTable',
       'getRecordList', 'getRecord', 'createRecord', 'updateRecord', 'deleteRecord',
       'getContentList', 'getContent', 'getContentGroupList', 'getContentGroup',
-      'getContentCategory', 'order', 'uploadFile', 'getUserInfo', 'clearSession', 'test',
+      'getContentCategory', 'order', 'uploadFile', 'getUserInfo', 'getUserWxInfo', 'clearSession', 'test',
       'TableObject', 'Query', 'GeoPoint', 'GeoPolygon', 'wxReportTicket', 'queryRecordList'
     ];
     let len = expectBaaSProperties.length;
+
     expect(Object.getOwnPropertyNames(BaaS).length).to.equal(len);
 
     while (len--) {
