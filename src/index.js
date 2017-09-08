@@ -4,7 +4,6 @@ const BaaS = require('./baas')
 BaaS.auth = require('./baasRequest').auth
 BaaS.GeoPoint = require('./geoPoint')
 BaaS.GeoPolygon = require('./geoPolygon')
-BaaS.getUserWxInfo = require('./user').getUserWxInfo
 BaaS.login = require('./user').login
 BaaS.logout = require('./user').logout
 BaaS.order = require('./order')

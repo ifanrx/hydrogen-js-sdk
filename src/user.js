@@ -61,7 +61,7 @@ let isAuthing = false
 let authResolve = []
 
 const login = (userInfo = true) => {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
+  if (storage.get(constants.STORAGE_KEY.USERINFO)) {
     return new Promise((resolve, reject) => {
       resolve()
     })
@@ -77,18 +77,18 @@ const login = (userInfo = true) => {
 
   if (userInfo) {
     return auth().then(() => {
-      return getUserWxInfo()
+      return getUserInfo()
     }).then(() => {
       handleLoginSuccess()
-    }).catch(() => {
-      handleLoginFail()
+    }).catch((err) => {
+      handleLoginFail(err)
     })
   }
 
   return auth().then(() => {
     handleLoginSuccess()
-  }).catch(() => {
-    handleLoginFail()
+  }).catch((err) => {
+    handleLoginFail(err)
   })
 }
 
@@ -105,9 +105,9 @@ const handleLoginSuccess = () => {
   resolveLoginCallBacks()
 }
 
-const handleLoginFail = () => {
+const handleLoginFail = (err) => {
   isAuthing = false
-  throw new Error(constants.MSG.LOGIN_ERROR)
+  throw new Error(err)
 }
 
 
@@ -126,7 +126,7 @@ const logout = () => {
 }
 
 
-const getUserWxInfo = () => {
+const getUserInfo = () => {
   if (!BaaS.getAuthToken()) {
     throw new Error('未认证客户端')
   }
@@ -184,5 +184,4 @@ module.exports = {
   auth,
   login,
   logout,
-  getUserWxInfo,
 }
