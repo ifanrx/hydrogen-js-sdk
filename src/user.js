@@ -38,7 +38,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       resolve(res)
     } else {
-      reject(constants.MSG.CONFIG_ERROR)
+      reject(new Error(constants.MSG.CONFIG_ERROR))
     }
   }, (err) => {
     reject(err)
@@ -61,83 +61,62 @@ const auth = () => {
       },
     })
   })
-
 }
 
 const login = (userInfo = true) => {
-  if (userInfo) {
+  if (!userInfo) return silentLogin()
+
+  return new Promise((resolve, reject) => {
     if (storage.get(constants.STORAGE_KEY.USERINFO)) {
-      return new Promise((resolve, reject) => {
-        resolve(makeLoginResponseData())
-      })
+      return resolve({isAuth: true, data: makeLoginResponseData(true)})
     }
 
-    if (isLogining) {
-      return new Promise((resolve, reject) => {
-        loginResolve.push(resolve)
-        loginReject.push(reject)
-      })
-    }
+    loginResolve.push(resolve)
+    loginReject.push(reject)
 
-    isLogining = true
+    if (!isLogining) {
+      isLogining = true
 
-    return new Promise((resolve, reject) => {
-      loginResolve.push(resolve)
-      loginReject.push(reject)
       silentLogin().then(() => {
-        return getUserInfo().then(() => {
+        return getUserInfo().then((res) => {
           isLogining = false
-          resolveLoginCallBacks()
-        }, (err) => {
-          isLogining = false
-          rejectLoginCallBacks()
-        }).catch(() => {
-          handleLoginFailure()
+          resolveLoginCallBacks(res, true)
         })
-      }, () => {
-        throw new Error(constants.MSG.CONFIG_ERROR)
       }).catch((err) => {
-        handleLoginFailure(err)
+        isLogining = false
+        rejectLoginCallBacks(err, true)
       })
-    })
-  } else {
-    return silentLogin()
-  }
+    }
+  })
 }
 
 const silentLogin = () => {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
-    return new Promise((resolve, reject) => {
-      resolve(makeLoginResponseData(false))
-    })
-  }
-
-  if (isSilentLogining) {
-    return new Promise((resolve, reject) => {
-      silentLoginResolve.push(resolve)
-      silentLoginReject.push(reject)
-    })
-  }
-
-  isSilentLogining = true
-
   return new Promise((resolve, reject) => {
+    if (storage.get(constants.STORAGE_KEY.UID)) {
+      return resolve({data: makeLoginResponseData(false)})
+    }
+
     silentLoginResolve.push(resolve)
     silentLoginReject.push(reject)
-    return auth().then(() => {
-      isSilentLogining = false
-      resolveLoginCallBacks(false)
-    }, (rej) => {
-      isSilentLogining = false
-      rejectLoginCallBacks(false)
-    }).catch((err) => {
-      handleLoginFailure(false)
-    })
+
+    if (!isSilentLogining) {
+      isSilentLogining = true
+
+      return auth().then(() => {
+        isSilentLogining = false
+        resolveLoginCallBacks({data: makeLoginResponseData(false)}, false)
+      }, (err) => {
+        isSilentLogining = false
+        rejectLoginCallBacks(err, false)
+      })
+    }
   })
 }
 
 const makeLoginResponseData = (userInfo = true) => {
-  if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO)
+  if (userInfo) {
+    return storage.get(constants.STORAGE_KEY.USERINFO)
+  }
   return {
     id: storage.get(constants.STORAGE_KEY.UID),
     openid: storage.get(constants.STORAGE_KEY.OPENID),
@@ -145,44 +124,38 @@ const makeLoginResponseData = (userInfo = true) => {
   }
 }
 
-const resolveLoginCallBacks = (userInfo = true) => {
-  setTimeout(() => {
-    if (userInfo) {
-      while (loginResolve.length) {
-        loginResolve.shift()(makeLoginResponseData())
-      }
-    } else {
-      while (silentLoginResolve.length) {
-        silentLoginResolve.shift()(makeLoginResponseData(false))
-      }
-    }
-  }, 0)
-}
 
-const rejectLoginCallBacks = (userInfo = true) => {
-  setTimeout(() => {
-    if (userInfo) {
-      while (loginReject.length) {
-        loginReject.shift()(makeLoginResponseData(false))
-      }
-    } else {
-      while (silentLoginReject.length) {
-        silentLoginReject.shift()()
-        throw new Error(constants.MSG.CONFIG_ERROR)
-      }
-    }
-  }, 0)
-}
-
-const handleLoginFailure = (userInfo = true) => {
+const resolveLoginCallBacks = (data, userInfo) => {
   if (userInfo) {
-    isLogining = false
+    setTimeout(() => {
+      while (loginResolve.length) {
+        loginResolve.shift()(data)
+      }
+    }, 0)
   } else {
-    isSilentLogining = false
+    setTimeout(() => {
+      while (silentLoginResolve.length) {
+        silentLoginResolve.shift()(data)
+      }
+    }, 0)
   }
-  throw new Error(constants.MSG.CONFIG_ERROR)
 }
 
+const rejectLoginCallBacks = (err, userInfo) => {
+  if (userInfo) {
+    setTimeout(() => {
+      while (loginReject.length) {
+        loginReject.shift()(err)
+      }
+    }, 0)
+  } else {
+    setTimeout(() => {
+      while (silentLoginReject.length) {
+        silentLoginReject.shift()(err)
+      }
+    }, 0)
+  }
+}
 
 const logout = () => {
   BaaS.check()
@@ -221,7 +194,7 @@ const getUserInfo = () => {
       },
       fail: (err) => {
         // 用户拒绝授权也要继续进入下一步流程
-        reject('')
+        resolve({isAuth: false, data: makeLoginResponseData(false)})
       },
     })
   })
@@ -243,12 +216,10 @@ const authenticate = (data, resolve, reject) => {
   }).then((res) => {
     if (res.statusCode == constants.STATUS_CODE.CREATED) {
       storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
-      resolve(res)
+      resolve({isAuth: true, data: makeLoginResponseData(true)})
     } else {
-      reject(constants.MSG.STATUS_CODE_ERROR)
+      reject(new Error(constants.MSG.STATUS_CODE_ERROR))
     }
-  }, (err) => {
-    reject(err)
   })
 }
 
