@@ -6,7 +6,7 @@ const Promise = require('./promise')
 const API = BaaS._config.API
 
 const wxDecryptData = (...params) => {
-  if(!isValidParams(params)) {
+  if(!validateParams(params)) {
     throw new Error(constants.MSG.ARGS_ERROR)
   }
 
@@ -16,21 +16,21 @@ const wxDecryptData = (...params) => {
   }
 
   return baasRequest({
-    url: `${API.DECRYPT}/${params[dataKey]}`,
+    url: API.DECRYPT + params[2] + '/',
     method: 'POST',
     data: paramsObj,
   }).then(function (res) {
-    let status = res.status
+    let status = res.statusCode
     return new Promise((resolve, reject) => {
       if(status === 401) return reject(new Error('用户未登录 or session_key 过期'))
       if(status === 403) return reject(new Error('微信解密插件未开启'))
       if(status === 400) return reject(new Error('提交的解密信息有错'))
-      return res.data
+      return resolve(res.data)
     })
-  });
+  })
 };
 
-const isValidParams = (params) => {
+const validateParams = (params) => {
   if (!params instanceof Array || params.length < 3) return false
 
   const requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number']
