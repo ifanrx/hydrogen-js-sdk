@@ -15,7 +15,7 @@ BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
 BaaS.storage = require('./storage')
 BaaS.TableObject = require('./tableObject')
 BaaS.uploadFile = require('./uploadFile')
-
+BaaS.wechatDecrypt = require('./wechatDecrypt')
 
 // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 require('./baasRequest').createRequestMethod()

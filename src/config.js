@@ -9,6 +9,7 @@ const API = {
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+  DECRYPT: '/hserve/v1/wechat/decrypt/',
 
   // 内容模块
   CONTENT_LIST: '/hserve/v1/content/detail/',
