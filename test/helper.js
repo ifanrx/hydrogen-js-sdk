@@ -16,4 +16,4 @@ const generateRandomArray = (count) => {
 
 module.exports = {
   generateRandomArray
-};
+}

@@ -1,6 +1,7 @@
 const constants = require('./constants')
 const GeoPoint = require('./geoPoint')
 const GeoPolygon = require('./geoPolygon')
+const utils = require('./utils')
 
 class Query {
   constructor() {
@@ -51,32 +52,69 @@ class Query {
       default:
         throw new Error(constants.MSG.ARGS_ERROR)
     }
-    this._addQueryObject(key, op, value)
+    this._addQueryObject(key, {[op]: value})
     return this
   }
 
   contains(key, str) {
-    this._addQueryObject(key, 'contains', str)
-    return this
+    if (str && str instanceof String) {
+      this._addQueryObject(key, {contains: str})
+      return this
+    } else {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
+  }
+
+  matches(key, regExp) {
+    if (regExp && regExp instanceof RegExp) {
+      var result = utils.parseRegExp(regExp)
+
+      if (result.length > 1) {
+        this._addQueryObject(key, {regex: result[0], options: result[1]})
+      } else {
+        this._addQueryObject(key, {regex: result[0]})
+      }
+
+      return this
+    } else {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
   }
 
   in(key, arr) {
-    this._addQueryObject(key, 'in', arr)
-    return this
+    if (arr && arr instanceof Array) {
+      this._addQueryObject(key, {in: arr})
+      return this
+    } else {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
   }
 
   notIn(key, arr) {
-    this._addQueryObject(key, 'nin', arr)
-    return this
+    if (arr && arr instanceof Array) {
+      this._addQueryObject(key, {nin: arr})
+      return this
+    } else {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
+  }
+
+  arrayContains(key, arr) {
+    if (arr && arr instanceof Array) {
+      this._addQueryObject(key, {all: arr})
+      return this
+    } else {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
   }
 
   isNull(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
-        this._addQueryObject(k, 'isnull', true)
+        this._addQueryObject(k, {isnull: true})
       })
     } else {
-      this._addQueryObject(key, 'isnull', true)
+      this._addQueryObject(key, {isnull: true})
     }
     return this
   }
@@ -84,10 +122,32 @@ class Query {
   isNotNull(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
-        this._addQueryObject(k, 'isnull', false)
+        this._addQueryObject(k, {isnull: false})
       })
     } else {
-      this._addQueryObject(key, 'isnull', false)
+      this._addQueryObject(key, {isnull: false})
+    }
+    return this
+  }
+
+  isExist(key) {
+    if (key && key instanceof Array) {
+      key.forEach((k) => {
+        this._addQueryObject(k, {exists: true})
+      })
+    } else {
+      this._addQueryObject(key, {exists: true})
+    }
+    return this
+  }
+
+  isNotExist(key) {
+    if (key && key instanceof Array) {
+      key.forEach((k) => {
+        this._addQueryObject(k, {exists: false})
+      })
+    } else {
+      this._addQueryObject(key, {exists: false})
     }
     return this
   }
@@ -95,7 +155,7 @@ class Query {
   // 在指定多边形集合中找出包含某一点的多边形
   include(key, point) {
     if (point && point instanceof GeoPoint) {
-      this._addQueryObject(key, 'intersects', point.toGeoJSON())
+      this._addQueryObject(key, {intersects: point.toGeoJSON()})
       return this
     } else {
       throw new Error(constants.MSG.ARGS_ERROR)
@@ -105,7 +165,8 @@ class Query {
   // 在指定点集合中，查找包含于指定的多边形区域的点
   within(key, polygon) {
     if (polygon && polygon instanceof GeoPolygon) {
-      this._addQueryObject(key, 'within', polygon.toGeoJSON())
+      this._addQueryObject(key, {within: polygon.toGeoJSON()})
+      return this
     } else {
       throw new Error(constants.MSG.ARGS_ERROR)
     }
@@ -118,7 +179,8 @@ class Query {
         radius: radius,
         coordinates: [point.attitude, point.longitude]
       }
-      this._addQueryObject(key, 'center', data)
+      this._addQueryObject(key, {center: data})
+      return this
     } else {
       throw new Error(constants.MSG.ARGS_ERROR)
     }
@@ -134,7 +196,8 @@ class Query {
       if (maxDistance) {
         data.max_distance = maxDistance
       }
-      this._addQueryObject(key, 'nearsphere', data)
+      this._addQueryObject(key, {nearsphere: data})
+      return this
     } else {
       throw new Error(constants.MSG.ARGS_ERROR)
     }
@@ -144,8 +207,17 @@ class Query {
     this.queryObject = queryObject
   }
 
-  _addQueryObject(key, op, value) {
-    var query = {[key]: {[`$${op}`]: value}}
+  _addQueryObject(key, obj) {
+    if(obj.constructor !== Object) {
+      throw new Error(constants.MSG.ARGS_ERROR)
+    }
+
+    var query = {[key]: {}}
+
+    Object.keys(obj).forEach((k) => {
+      query[key][`$${k}`] = obj[k]
+    })
+
     if(!this.queryObject['$and']) {
       this.queryObject['$and'] = []
     }
