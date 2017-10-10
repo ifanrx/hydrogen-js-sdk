@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "description": "爱范儿知晓云平台 JS SDK",
   "scripts": {
-    "test": "mocha -R mochawesome -t 300000 test/index.js",
+    "test": "mocha",
     "mocha": "mocha test/index.js",
     "dev": "export NODE_ENV=dev && gulp dev",
     "build": "export NODE_ENV=production && gulp release",

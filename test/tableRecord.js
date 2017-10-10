@@ -5,7 +5,7 @@ const GeoPoint = require('../src/geoPoint')
 const GeoPolygon = require('../src/geoPolygon')
 const TableRecord = require('../src/tableRecord')
 const randomOption = config.RANDOM_OPTION
-const helper = require('../helper')
+const helper = require('./helper')
 
 describe('tableRecord', () => {
   let product = null
@@ -53,7 +53,7 @@ describe('tableRecord', () => {
     product.set({'geoPolygon': randomPolygon})
     expect(product._record).to.deep.equal({geoPolygon: {
       'type': 'Polygon',
-      'coordinates': random2DArray
+      'coordinates': [random2DArray]
     }})
   })
 
