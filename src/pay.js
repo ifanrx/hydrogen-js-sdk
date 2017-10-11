@@ -1,6 +1,9 @@
 const baasRequest = require('./baasRequest').baasRequest
 const BaaS = require('./baas')
+const constants = require('./constants')
 const Promise = require('./promise')
+const storage = require('./storage')
+
 const API = BaaS._config.API
 
 /**
@@ -16,6 +19,12 @@ const keysMap = {
 }
 
 const pay = (params) => {
+  if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
+    return new Promise((resolve, reject) => {
+      reject(constants.MSG.UNAUTH_ERROR)
+    })
+  }
+
   var paramsObj = {}
 
   for (let key in params) {

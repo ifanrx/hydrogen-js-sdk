@@ -16,6 +16,7 @@ module.exports = {
     ARGS_ERROR: '参数使用错误',
     CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
     LOGIN_ERROR: '登录失败',
+    UNAUTH_ERROR: '请先完成用户授权'
   },
   STATUS_CODE: {
     CREATED: 201,
