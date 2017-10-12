@@ -54,6 +54,14 @@ const wxUpload = (config, resolve, reject) => {
       let result = {}
       result.status = 'ok'
       result.path = config.destLink
+      result.file = {
+        "id": config.id,
+        "name": config.fileName,
+        "created_at": res.data.time,
+        "mime_type": res.data.mimetype,
+        "cdn_path": res.data.url,
+        "size": res.data.file_size
+      }
 
       delete res.data
       res.data = JSON.stringify(result)
@@ -75,6 +83,8 @@ const uploadFile = (params) => {
 
     return getUploadFileConfig(fileName).then((res) => {
       let config = {
+        id: res.data.id,
+        fileName: fileName,
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,

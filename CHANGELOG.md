@@ -1,5 +1,7 @@
-## 1.1.1 (2017-10-12)
-- [A] 支持 matches、isExist、isNotExist 和 arrayContains 等查询操作
+## 1.1.1 (2017-10-13)
+- [A] 支持 matches、isExist、isNotExist 和 arrayContains 等查询操
+- [A] schema 支持文件类型
+- [F] 调用微信支付前检查是否完成授权
 
 ## 1.1.0（2017-09-13）
 - [A] 支持像操作对象一样对 schema 进行增删改查
