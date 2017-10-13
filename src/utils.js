@@ -1,11 +1,11 @@
-'use strict';
-const extend = require('node.extend');
+'use strict'
+const extend = require('node.extend')
 
-let config;
+let config
 try {
-  config = require('sdk-config');
+  config = require('sdk-config')
 } catch (e) {
-  config = require('./config.dev');
+  config = require('./config.dev')
 }
 
 /**
@@ -13,23 +13,23 @@ try {
  * @return {Object}
  */
 const getConfig = () => {
-  return config;
-};
+  return config
+}
 
 /**
  * 获取系统 Platform 信息
  * @return {String}
  */
 const getSysPlatform = () => {
-  var platform = 'UNKNOWN';
+  var platform = 'UNKNOWN'
   try {
-    var res = wx.getSystemInfoSync();
-    platform = res.platform;
+    var res = wx.getSystemInfoSync()
+    platform = res.platform
   } catch (e) {
     // pass for now
   }
-  return platform;
-};
+  return platform
+}
 
 /**
  * 日志记录
@@ -37,11 +37,11 @@ const getSysPlatform = () => {
  */
 const log = (msg) => {
   if (typeof BaaS !== 'undefined' && BaaS.test || !getConfig().DEBUG) { // 测试环境
-    return;
+    return
   }
   // 记录日志到日志文件
-  console.log('BaaS LOG: ' + msg);
-};
+  console.log('BaaS LOG: ' + msg)
+}
 
 /**
  * 转换 API 参数
@@ -50,15 +50,15 @@ const log = (msg) => {
  * @return {String}        转换参数后的 API URL
  */
 const format = (url, params) => {
-  params = params || {};
+  params = params || {}
   for (var key in params) {
-    var reg = new RegExp(':' + key, 'g');
-    url = url.replace(reg, params[key]);
+    var reg = new RegExp(':' + key, 'g')
+    url = url.replace(reg, params[key])
   }
   return url.replace(/([^:])\/\//g, (m, m1) => {
-    return m1 + '/';
-  });
-};
+    return m1 + '/'
+  })
+}
 
 /**
  * 把 URL 中用于 format URL 的参数移除掉
@@ -69,11 +69,11 @@ const format = (url, params) => {
 const excludeParams = (URL, params) => {
   URL.replace(/:(\w*)/g, (match, m1) => {
     if (params[m1] !== undefined) {
-      delete params[m1];
+      delete params[m1]
     }
-  });
-  return params;
-};
+  })
+  return params
+}
 
 /**
  * 将 URL 中的查询字符串替换为服务端可接受的参数
@@ -110,6 +110,25 @@ const getFileNameFromPath = (path) => {
   return path.slice(index + 1)
 }
 
+/**
+ * 对 RegExp 类型的变量解析出不含左右斜杠和 flag 的正则字符串和 flags
+ * @param  {RegExp} regExp
+ * @return {Array} 包含正则字符串和 flags
+ */
+const parseRegExp = (regExp) => {
+  let result = []
+  let regExpString = regExp.toString()
+  let lastIndex = regExpString.lastIndexOf('/')
+
+  result.push(regExpString.substring(1, lastIndex))
+
+  if (lastIndex !== regExpString.length - 1) {
+    result.push(regExpString.substring(lastIndex + 1))
+  }
+
+  return result
+}
+
 module.exports = {
   log,
   format,
@@ -117,5 +136,6 @@ module.exports = {
   getConfig,
   getSysPlatform,
   replaceQueryParams,
-  getFileNameFromPath
-};
+  getFileNameFromPath,
+  parseRegExp
+}

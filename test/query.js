@@ -2,20 +2,22 @@ const config = require('../src/config')
 const faker = require('faker')
 const GeoPoint = require('../src/geoPoint')
 const GeoPolygon = require('../src/geoPolygon')
+const helper = require('./helper')
 const Query = require('../src/query')
-const util = require('./util')
+const utils = require('../src/utils')
 
 const randomOption = config.RANDOM_OPTION
 
 describe('query', () => {
-  let randomNumber, randomNumber1, randomNumber2, randomString, randomArray
+  let randomNumber, randomNumber1, randomNumber2, randomString, randomArray, regExpString
 
   before(() => {
     randomNumber = faker.random.number()
     randomNumber1 = faker.random.number()
     randomNumber2 = faker.random.number()
     randomString = faker.lorem.words(1)
-    randomArray = util.generateRandomArray()
+    randomArray = helper.generateRandomArray()
+    regExpString = '^[a-zA-Z]+[0-9]*\W?_$'
   })
 
   it('#_setQueryObject', () => {
@@ -38,17 +40,30 @@ describe('query', () => {
 
   it('#_addQueryObject', () => {
     let query = new Query()
-    query._addQueryObject('price', 'gt', randomNumber)
+    query._addQueryObject('price', {gt: randomNumber})
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$gt: randomNumber}}
       ]
     })
-    query._addQueryObject('amount', 'lt', randomNumber)
+    query._addQueryObject('amount', {lt: randomNumber})
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$gt: randomNumber}},
         {amount: {$lt: randomNumber}}
+      ]
+    })
+  })
+
+  it('#_addQueryObject complex', () => {
+    let query = new Query()
+    query._addQueryObject('price', {gt: randomNumber, in: [randomNumber1, randomNumber2]})
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {
+          $gt: randomNumber,
+          $in: [randomNumber1, randomNumber2]
+        }}
       ]
     })
   })
@@ -73,6 +88,33 @@ describe('query', () => {
     })
   })
 
+  it('#matches', () => {
+    let query = new Query()
+
+    query.matches('name', new RegExp(regExpString))
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {name: {
+          $regex: regExpString
+        }}
+      ]
+    })
+  })
+
+  it('#matches complex', () => {
+    let query = new Query()
+
+    query.matches('name', new RegExp(regExpString, 'gi'))
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {name: {
+          $regex: regExpString,
+          $options: 'gi'
+        }}
+      ]
+    })
+  })
+
   it('#in', () => {
     let query = new Query()
     query.in('price', randomArray)
@@ -89,6 +131,16 @@ describe('query', () => {
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$nin: randomArray}}
+      ]
+    })
+  })
+
+  it('#arrayContains', () => {
+    let query = new Query()
+    query.arrayContains('desc', randomArray)
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {desc: {$all: randomArray}}
       ]
     })
   })
@@ -135,6 +187,48 @@ describe('query', () => {
     })
   })
 
+  it('#exists', () => {
+    let query = new Query()
+    query.exists('price')
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$exists: true}}
+      ]
+    })
+  })
+
+  it('#exists array', () => {
+    let query = new Query()
+    query.exists(['price', 'amount'])
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$exists: true}},
+        {amount: {$exists: true}}
+      ]
+    })
+  })
+
+  it('#notExists', () => {
+    let query = new Query()
+    query.notExists('price')
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$exists: false}}
+      ]
+    })
+  })
+
+  it('#notExists array', () => {
+    let query = new Query()
+    query.notExists(['price', 'amount'])
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {price: {$exists: false}},
+        {amount: {$exists: false}}
+      ]
+    })
+  })
+
   it('#include', () => {
     let query = new Query()
     let randomPoint = new GeoPoint(randomNumber1, randomNumber2)
@@ -157,7 +251,7 @@ describe('query', () => {
     let query = new Query()
     var random2DArray = []
     for(var i = 0; i < 5; i++) {
-      random2DArray.push(util.generateRandomArray(2))
+      random2DArray.push(helper.generateRandomArray(2))
     }
     var randomPolygon = new GeoPolygon(random2DArray)
     query.within('geoField', randomPolygon)

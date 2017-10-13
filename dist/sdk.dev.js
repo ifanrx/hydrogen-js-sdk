@@ -5990,6 +5990,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var constants = require('./constants');
 var GeoPoint = require('./geoPoint');
 var GeoPolygon = require('./geoPolygon');
+var utils = require('./utils');
 
 var Query = function () {
   function Query() {
@@ -6024,26 +6025,65 @@ var Query = function () {
         default:
           throw new Error(constants.MSG.ARGS_ERROR);
       }
-      this._addQueryObject(key, op, value);
+      this._addQueryObject(key, _defineProperty({}, op, value));
       return this;
     }
   }, {
     key: 'contains',
     value: function contains(key, str) {
-      this._addQueryObject(key, 'contains', str);
-      return this;
+      if (str && str instanceof String) {
+        this._addQueryObject(key, { contains: str });
+        return this;
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+    }
+  }, {
+    key: 'matches',
+    value: function matches(key, regExp) {
+      if (regExp && regExp instanceof RegExp) {
+        var result = utils.parseRegExp(regExp);
+
+        if (result.length > 1) {
+          this._addQueryObject(key, { regex: result[0], options: result[1] });
+        } else {
+          this._addQueryObject(key, { regex: result[0] });
+        }
+
+        return this;
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
     }
   }, {
     key: 'in',
     value: function _in(key, arr) {
-      this._addQueryObject(key, 'in', arr);
-      return this;
+      if (arr && arr instanceof Array) {
+        this._addQueryObject(key, { in: arr });
+        return this;
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
     }
   }, {
     key: 'notIn',
     value: function notIn(key, arr) {
-      this._addQueryObject(key, 'nin', arr);
-      return this;
+      if (arr && arr instanceof Array) {
+        this._addQueryObject(key, { nin: arr });
+        return this;
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+    }
+  }, {
+    key: 'arrayContains',
+    value: function arrayContains(key, arr) {
+      if (arr && arr instanceof Array) {
+        this._addQueryObject(key, { all: arr });
+        return this;
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
     }
   }, {
     key: 'isNull',
@@ -6052,10 +6092,10 @@ var Query = function () {
 
       if (key && key instanceof Array) {
         key.forEach(function (k) {
-          _this._addQueryObject(k, 'isnull', true);
+          _this._addQueryObject(k, { isnull: true });
         });
       } else {
-        this._addQueryObject(key, 'isnull', true);
+        this._addQueryObject(key, { isnull: true });
       }
       return this;
     }
@@ -6066,10 +6106,38 @@ var Query = function () {
 
       if (key && key instanceof Array) {
         key.forEach(function (k) {
-          _this2._addQueryObject(k, 'isnull', false);
+          _this2._addQueryObject(k, { isnull: false });
         });
       } else {
-        this._addQueryObject(key, 'isnull', false);
+        this._addQueryObject(key, { isnull: false });
+      }
+      return this;
+    }
+  }, {
+    key: 'isExist',
+    value: function isExist(key) {
+      var _this3 = this;
+
+      if (key && key instanceof Array) {
+        key.forEach(function (k) {
+          _this3._addQueryObject(k, { exists: true });
+        });
+      } else {
+        this._addQueryObject(key, { exists: true });
+      }
+      return this;
+    }
+  }, {
+    key: 'isNotExist',
+    value: function isNotExist(key) {
+      var _this4 = this;
+
+      if (key && key instanceof Array) {
+        key.forEach(function (k) {
+          _this4._addQueryObject(k, { exists: false });
+        });
+      } else {
+        this._addQueryObject(key, { exists: false });
       }
       return this;
     }
@@ -6080,7 +6148,7 @@ var Query = function () {
     key: 'include',
     value: function include(key, point) {
       if (point && point instanceof GeoPoint) {
-        this._addQueryObject(key, 'intersects', point.toGeoJSON());
+        this._addQueryObject(key, { intersects: point.toGeoJSON() });
         return this;
       } else {
         throw new Error(constants.MSG.ARGS_ERROR);
@@ -6093,7 +6161,8 @@ var Query = function () {
     key: 'within',
     value: function within(key, polygon) {
       if (polygon && polygon instanceof GeoPolygon) {
-        this._addQueryObject(key, 'within', polygon.toGeoJSON());
+        this._addQueryObject(key, { within: polygon.toGeoJSON() });
+        return this;
       } else {
         throw new Error(constants.MSG.ARGS_ERROR);
       }
@@ -6109,7 +6178,8 @@ var Query = function () {
           radius: radius,
           coordinates: [point.attitude, point.longitude]
         };
-        this._addQueryObject(key, 'center', data);
+        this._addQueryObject(key, { center: data });
+        return this;
       } else {
         throw new Error(constants.MSG.ARGS_ERROR);
       }
@@ -6130,7 +6200,8 @@ var Query = function () {
         if (maxDistance) {
           data.max_distance = maxDistance;
         }
-        this._addQueryObject(key, 'nearsphere', data);
+        this._addQueryObject(key, { nearsphere: data });
+        return this;
       } else {
         throw new Error(constants.MSG.ARGS_ERROR);
       }
@@ -6142,8 +6213,17 @@ var Query = function () {
     }
   }, {
     key: '_addQueryObject',
-    value: function _addQueryObject(key, op, value) {
-      var query = _defineProperty({}, key, _defineProperty({}, '$' + op, value));
+    value: function _addQueryObject(key, obj) {
+      if (obj.constructor !== Object) {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+
+      var query = _defineProperty({}, key, {});
+
+      Object.keys(obj).forEach(function (k) {
+        query[key]['$' + k] = obj[k];
+      });
+
       if (!this.queryObject['$and']) {
         this.queryObject['$and'] = [];
       }
@@ -6155,8 +6235,8 @@ var Query = function () {
       var newQuery = new Query();
       var andQuery = { $and: [] };
 
-      for (var _len = arguments.length, queryObjects = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
-        queryObjects[_key2] = arguments[_key2];
+      for (var _len = arguments.length, queryObjects = Array(_len), _key = 0; _key < _len; _key++) {
+        queryObjects[_key] = arguments[_key];
       }
 
       queryObjects.forEach(function (query) {
@@ -6171,8 +6251,8 @@ var Query = function () {
       var newQuery = new Query();
       var orQuery = { $or: [] };
 
-      for (var _len2 = arguments.length, queryObjects = Array(_len2), _key3 = 0; _key3 < _len2; _key3++) {
-        queryObjects[_key3] = arguments[_key3];
+      for (var _len2 = arguments.length, queryObjects = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        queryObjects[_key2] = arguments[_key2];
       }
 
       queryObjects.forEach(function (query) {
@@ -6188,7 +6268,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./constants":35,"./geoPoint":36,"./geoPolygon":37}],43:[function(require,module,exports){
+},{"./constants":35,"./geoPoint":36,"./geoPolygon":37,"./utils":50}],43:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -6936,7 +7016,7 @@ var extend = require('node.extend');
 
 var config = void 0;
 try {
-  config = require('./config.js');
+  config = require('./config.dev.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7046,6 +7126,25 @@ var getFileNameFromPath = function getFileNameFromPath(path) {
   return path.slice(index + 1);
 };
 
+/**
+ * 对 RegExp 类型的变量解析出不含左右斜杠和 flag 的正则字符串和 flags
+ * @param  {RegExp} regExp
+ * @return {Array} 包含正则字符串和 flags
+ */
+var parseRegExp = function parseRegExp(regExp) {
+  var result = [];
+  var regExpString = regExp.toString();
+  var lastIndex = regExpString.lastIndexOf('/');
+
+  result.push(regExpString.substring(1, lastIndex));
+
+  if (lastIndex !== regExpString.length - 1) {
+    result.push(regExpString.substring(lastIndex + 1));
+  }
+
+  return result;
+};
+
 module.exports = {
   log: log,
   format: format,
@@ -7053,13 +7152,14 @@ module.exports = {
   getConfig: getConfig,
   getSysPlatform: getSysPlatform,
   replaceQueryParams: replaceQueryParams,
-  getFileNameFromPath: getFileNameFromPath
+  getFileNameFromPath: getFileNameFromPath,
+  parseRegExp: parseRegExp
 };
 
-},{"./config.dev":33,"./config.js":34,"node.extend":27}],51:[function(require,module,exports){
+},{"./config.dev":33,"./config.dev.js":33,"node.extend":27}],51:[function(require,module,exports){
 'use strict';
 
-module.exports = 'v1.1.0';
+module.exports = 'v1.1.1';
 
 },{}],52:[function(require,module,exports){
 'use strict';
