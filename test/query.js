@@ -187,9 +187,9 @@ describe('query', () => {
     })
   })
 
-  it('#isExist', () => {
+  it('#exists', () => {
     let query = new Query()
-    query.isExist('price')
+    query.exists('price')
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$exists: true}}
@@ -197,9 +197,9 @@ describe('query', () => {
     })
   })
 
-  it('#isExist array', () => {
+  it('#exists array', () => {
     let query = new Query()
-    query.isExist(['price', 'amount'])
+    query.exists(['price', 'amount'])
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$exists: true}},
@@ -208,9 +208,9 @@ describe('query', () => {
     })
   })
 
-  it('#isNotExist', () => {
+  it('#notExists', () => {
     let query = new Query()
-    query.isNotExist('price')
+    query.notExists('price')
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$exists: false}}
@@ -218,9 +218,9 @@ describe('query', () => {
     })
   })
 
-  it('#isNotExist array', () => {
+  it('#notExists array', () => {
     let query = new Query()
-    query.isNotExist(['price', 'amount'])
+    query.notExists(['price', 'amount'])
     expect(query.queryObject).to.deep.equal({
       $and: [
         {price: {$exists: false}},

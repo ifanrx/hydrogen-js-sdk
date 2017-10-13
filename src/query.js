@@ -131,7 +131,7 @@ class Query {
     return this
   }
 
-  isExist(key) {
+  exists(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
         this._addQueryObject(k, {exists: true})
@@ -142,7 +142,7 @@ class Query {
     return this
   }
 
-  isNotExist(key) {
+  notExists(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
         this._addQueryObject(k, {exists: false})
