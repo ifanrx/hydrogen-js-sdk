@@ -2304,6 +2304,34 @@ var root = freeGlobal || freeSelf || Function('return this')();
 module.exports = root;
 
 },{"./_freeGlobal":16}],20:[function(require,module,exports){
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+var isArray = Array.isArray;
+
+module.exports = isArray;
+
+},{}],21:[function(require,module,exports){
 var toInteger = require('./toInteger');
 
 /**
@@ -2338,7 +2366,7 @@ function isInteger(value) {
 
 module.exports = isInteger;
 
-},{"./toInteger":25}],21:[function(require,module,exports){
+},{"./toInteger":27}],22:[function(require,module,exports){
 /**
  * Checks if `value` is the
  * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
@@ -2371,7 +2399,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -2402,7 +2430,39 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isArray = require('./isArray'),
+    isObjectLike = require('./isObjectLike');
+
+/** `Object#toString` result references. */
+var stringTag = '[object String]';
+
+/**
+ * Checks if `value` is classified as a `String` primitive or object.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a string, else `false`.
+ * @example
+ *
+ * _.isString('abc');
+ * // => true
+ *
+ * _.isString(1);
+ * // => false
+ */
+function isString(value) {
+  return typeof value == 'string' ||
+    (!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
+}
+
+module.exports = isString;
+
+},{"./_baseGetTag":15,"./isArray":20,"./isObjectLike":23}],25:[function(require,module,exports){
 var baseGetTag = require('./_baseGetTag'),
     isObjectLike = require('./isObjectLike');
 
@@ -2433,7 +2493,7 @@ function isSymbol(value) {
 
 module.exports = isSymbol;
 
-},{"./_baseGetTag":15,"./isObjectLike":22}],24:[function(require,module,exports){
+},{"./_baseGetTag":15,"./isObjectLike":23}],26:[function(require,module,exports){
 var toNumber = require('./toNumber');
 
 /** Used as references for various `Number` constants. */
@@ -2477,7 +2537,7 @@ function toFinite(value) {
 
 module.exports = toFinite;
 
-},{"./toNumber":26}],25:[function(require,module,exports){
+},{"./toNumber":28}],27:[function(require,module,exports){
 var toFinite = require('./toFinite');
 
 /**
@@ -2515,7 +2575,7 @@ function toInteger(value) {
 
 module.exports = toInteger;
 
-},{"./toFinite":24}],26:[function(require,module,exports){
+},{"./toFinite":26}],28:[function(require,module,exports){
 var isObject = require('./isObject'),
     isSymbol = require('./isSymbol');
 
@@ -2583,12 +2643,12 @@ function toNumber(value) {
 
 module.exports = toNumber;
 
-},{"./isObject":21,"./isSymbol":23}],27:[function(require,module,exports){
+},{"./isObject":22,"./isSymbol":25}],29:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/extend');
 
-},{"./lib/extend":28}],28:[function(require,module,exports){
+},{"./lib/extend":30}],30:[function(require,module,exports){
 'use strict';
 
 /*!
@@ -2673,7 +2733,7 @@ extend.version = '1.1.3';
  */
 module.exports = extend;
 
-},{"is":1}],29:[function(require,module,exports){
+},{"is":1}],31:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2859,7 +2919,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],30:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
@@ -5408,7 +5468,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":29}],31:[function(require,module,exports){
+},{"_process":31}],33:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5492,7 +5552,7 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constants":35,"./storage":44,"./utils":50,"./version":51,"node.extend":27}],32:[function(require,module,exports){
+},{"./constants":37,"./storage":46,"./utils":52,"./version":53,"node.extend":29}],34:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -5596,7 +5656,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./baas":31,"./constants":35,"./promise":41,"./request":43,"./storage":44,"./user":49,"./utils":50,"node.extend":27}],33:[function(require,module,exports){
+},{"./baas":33,"./constants":37,"./promise":43,"./request":45,"./storage":46,"./user":51,"./utils":52,"node.extend":29}],35:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -5608,7 +5668,7 @@ var devConfig = {
 
 module.exports = extend(config, devConfig);
 
-},{"./config":34,"node.extend":27}],34:[function(require,module,exports){
+},{"./config":36,"node.extend":29}],36:[function(require,module,exports){
 'use strict';
 
 var API_HOST = 'https://sso.ifanr.com';
@@ -5723,7 +5783,7 @@ var RANDOM_OPTION = {
   RANDOM_OPTION: RANDOM_OPTION
 };
 
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 // 常量表
@@ -5743,7 +5803,8 @@ module.exports = {
     NETWORT_ERROR: 'Network Error',
     ARGS_ERROR: '参数使用错误',
     CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
-    LOGIN_ERROR: '登录失败'
+    LOGIN_ERROR: '登录失败',
+    UNAUTH_ERROR: '请先完成用户授权'
   },
   STATUS_CODE: {
     CREATED: 201,
@@ -5765,7 +5826,7 @@ module.exports = {
   }
 };
 
-},{}],36:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5798,7 +5859,7 @@ var GeoPoint = function () {
 
 module.exports = GeoPoint;
 
-},{"lodash.clonedeep":10}],37:[function(require,module,exports){
+},{"lodash.clonedeep":10}],39:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5852,7 +5913,7 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./constants":35,"./geoPoint":36,"lodash.clonedeep":10}],38:[function(require,module,exports){
+},{"./constants":37,"./geoPoint":38,"lodash.clonedeep":10}],40:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas'
@@ -5884,7 +5945,7 @@ BaaS.wxDecryptData = require('./wxDecryptData'
 
 module.exports = BaaS;
 
-},{"./baas":31,"./baasRequest":32,"./geoPoint":36,"./geoPolygon":37,"./order":39,"./pay":40,"./promise":41,"./query":42,"./request":43,"./storage":44,"./tableObject":45,"./templateMessage":47,"./uploadFile":48,"./user":49,"./wxDecryptData":52}],39:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./geoPoint":38,"./geoPolygon":39,"./order":41,"./pay":42,"./promise":43,"./query":44,"./request":45,"./storage":46,"./tableObject":47,"./templateMessage":49,"./uploadFile":50,"./user":51,"./wxDecryptData":54}],41:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -5912,12 +5973,15 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./promise":41,"./utils":50}],40:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./utils":52}],42:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
 var BaaS = require('./baas');
+var constants = require('./constants');
 var Promise = require('./promise');
+var storage = require('./storage');
+
 var API = BaaS._config.API;
 
 /**
@@ -5933,6 +5997,12 @@ var keysMap = {
 };
 
 var pay = function pay(params) {
+  if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
+    return new Promise(function (resolve, reject) {
+      reject(constants.MSG.UNAUTH_ERROR);
+    });
+  }
+
   var paramsObj = {};
 
   for (var key in params) {
@@ -5971,14 +6041,14 @@ var pay = function pay(params) {
 
 module.exports = pay;
 
-},{"./baas":31,"./baasRequest":32,"./promise":41}],41:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./storage":46}],43:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":30}],42:[function(require,module,exports){
+},{"rsvp":32}],44:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5991,6 +6061,7 @@ var constants = require('./constants');
 var GeoPoint = require('./geoPoint');
 var GeoPolygon = require('./geoPolygon');
 var utils = require('./utils');
+var _isString = require('lodash/isString');
 
 var Query = function () {
   function Query() {
@@ -6031,7 +6102,7 @@ var Query = function () {
   }, {
     key: 'contains',
     value: function contains(key, str) {
-      if (str && str instanceof String) {
+      if (str && _isString(str)) {
         this._addQueryObject(key, { contains: str });
         return this;
       } else {
@@ -6114,8 +6185,8 @@ var Query = function () {
       return this;
     }
   }, {
-    key: 'isExist',
-    value: function isExist(key) {
+    key: 'exists',
+    value: function exists(key) {
       var _this3 = this;
 
       if (key && key instanceof Array) {
@@ -6128,8 +6199,8 @@ var Query = function () {
       return this;
     }
   }, {
-    key: 'isNotExist',
-    value: function isNotExist(key) {
+    key: 'notExists',
+    value: function notExists(key) {
       var _this4 = this;
 
       if (key && key instanceof Array) {
@@ -6268,7 +6339,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./constants":35,"./geoPoint":36,"./geoPolygon":37,"./utils":50}],43:[function(require,module,exports){
+},{"./constants":37,"./geoPoint":38,"./geoPolygon":39,"./utils":52,"lodash/isString":24}],45:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -6365,7 +6436,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./baas":31,"./constants":35,"./promise":41,"./storage":44,"./utils":50,"node.extend":27}],44:[function(require,module,exports){
+},{"./baas":33,"./constants":37,"./promise":43,"./storage":46,"./utils":52,"node.extend":29}],46:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -6387,7 +6458,7 @@ module.exports = {
   }
 };
 
-},{}],45:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6498,7 +6569,7 @@ var TableObject = function () {
 
 module.exports = TableObject;
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./query":42,"./tableRecord":46,"lodash.clonedeep":10,"lodash/isInteger":20}],46:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./query":44,"./tableRecord":48,"lodash.clonedeep":10,"lodash/isInteger":21}],48:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6604,7 +6675,7 @@ var TableRecord = function () {
 
 module.exports = TableRecord;
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./geoPoint":36,"./geoPolygon":37,"lodash.clonedeep":10}],47:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./geoPoint":38,"./geoPolygon":39,"lodash.clonedeep":10}],49:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -6649,7 +6720,7 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./promise":41}],48:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43}],50:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -6705,8 +6776,18 @@ var wxUpload = function wxUpload(config, resolve, reject) {
     },
     success: function success(res) {
       var result = {};
+      var data = JSON.parse(res.data);
+
       result.status = 'ok';
       result.path = config.destLink;
+      result.file = {
+        "id": config.id,
+        "name": config.fileName,
+        "created_at": data.time,
+        "mime_type": data.mimetype,
+        "cdn_path": data.url,
+        "size": data.file_size
+      };
 
       delete res.data;
       res.data = JSON.stringify(result);
@@ -6728,6 +6809,8 @@ var uploadFile = function uploadFile(params) {
 
     return getUploadFileConfig(fileName).then(function (res) {
       var config = {
+        id: res.data.id,
+        fileName: fileName,
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
@@ -6743,7 +6826,7 @@ var uploadFile = function uploadFile(params) {
 
 module.exports = uploadFile;
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./promise":41,"./utils":50}],49:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./utils":52}],51:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7009,7 +7092,7 @@ module.exports = {
   logout: logout
 };
 
-},{"./baas":31,"./constants":35,"./promise":41,"./request":43,"./storage":44,"./utils":50}],50:[function(require,module,exports){
+},{"./baas":33,"./constants":37,"./promise":43,"./request":45,"./storage":46,"./utils":52}],52:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -7156,12 +7239,12 @@ module.exports = {
   parseRegExp: parseRegExp
 };
 
-},{"./config.dev":33,"./config.dev.js":33,"node.extend":27}],51:[function(require,module,exports){
+},{"./config.dev":35,"./config.dev.js":35,"node.extend":29}],53:[function(require,module,exports){
 'use strict';
 
 module.exports = 'v1.1.1';
 
-},{}],52:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7210,4 +7293,4 @@ var validateParams = function validateParams(params) {
 
 module.exports = wxDecryptData;
 
-},{"./baas":31,"./baasRequest":32,"./constants":35,"./promise":41}]},{},[38]);
+},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43}]},{},[40]);
