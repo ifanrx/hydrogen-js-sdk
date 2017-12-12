@@ -8,16 +8,10 @@ const extend = require('node.extend');
 const utils = require('./utils');
 const constants = require('./constants');
 const storage = require('./storage');
-const version = require('./version');
 
 const BaaS = global.BaaS || {};
 
-// BASS Config
 BaaS._config = utils.getConfig();
-
-extend(BaaS._config, {
-  VERSION: version
-});
 
 /**
  * 初始化 SDK

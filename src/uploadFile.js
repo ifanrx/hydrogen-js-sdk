@@ -18,7 +18,9 @@ const isAuth = (resolve, reject) => {
 
 
 // get the upload config for upyun from sso
-const getUploadFileConfig = (fileName) => {
+const getUploadFileConfig = (fileName, metaData) => {
+
+
   return baasRequest({
     url: API_HOST + API.UPLOAD,
     method: 'POST',
@@ -76,14 +78,17 @@ const wxUpload = (config, resolve, reject) => {
   })
 }
 
-const uploadFile = (params) => {
+const uploadFile = (params, metaData) => {
+  if(typeof metaData !== 'object' || !metaData['categories']) {
+    throw new Error(constants.MSG.ARGS_ERROR)
+  }
 
   return new Promise((resolve, reject) => {
     isAuth(resolve, reject)
 
     let fileName = utils.getFileNameFromPath(params.filePath)
 
-    return getUploadFileConfig(fileName).then((res) => {
+    return getUploadFileConfig(fileName, metaData).then((res) => {
       let config = {
         id: res.data.id,
         fileName: fileName,

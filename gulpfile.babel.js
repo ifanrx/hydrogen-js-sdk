@@ -14,6 +14,8 @@ import path from 'path';
 import shell from 'gulp-shell';
 import aliasify from 'aliasify';
 
+const config = require('./src/config')
+
 const srcFolder = './src/';
 const distFolder = './dist/';
 const devFile = 'sdk.dev.js';
@@ -86,13 +88,11 @@ gulp.task('js:clean', function () {
 
 // 压缩、打版本
 gulp.task('js:release', ['js:clean', 'js:build'], function () {
-  const version = require('./src/version');
-
   return gulp.src([
       path.join(distFolder, devFile)
     ])
     .pipe(concat('sdk.js'))
-    .pipe(rename({ suffix: '-' + version }))
+    .pipe(rename({ suffix: '-' + config.VERSION }))
     .pipe(uglify()) // 压缩
     .pipe(gulp.dest(distFolder))
     .pipe(notify({ message: 'js:release task is completed!' }));

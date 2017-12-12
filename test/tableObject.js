@@ -9,29 +9,16 @@ const helper = require('./helper')
 
 describe('tableObject', () => {
   let Product = null
-  let randomNumber, randomNumber1, randomNumber2, randomString, randomArray
+  let randomNumber, randomString, randomArray
 
-  before(() => {
+  beforeEach(() => {
     Product = new TableObject(1)
-    randomNumber = faker.random.number(randomOption)
-    randomNumber1 = faker.random.number(randomOption)
-    randomNumber2 = faker.random.number(randomOption)
-    randomString = faker.lorem.words(1)
-    randomArray = helper.generateRandomArray()
   })
 
-  it('#_handleQueryObject', () => {
-    var query = new Query()
-    query.in('price', randomArray)
-    Product.setQuery(query)
-    Product.orderBy('-amount')
-    expect(Product._handleQueryObject()).to.deep.equal({
-      tableID: 1,
-      limit: 20,
-      offset: 0,
-      order_by: '-amount',
-      where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
-    })
+  before(() => {
+    randomNumber = faker.random.number(randomOption)
+    randomString = faker.lorem.words(1)
+    randomArray = helper.generateRandomArray()
   })
 
   it('#create', () => {
@@ -62,51 +49,17 @@ describe('tableObject', () => {
     getRecord.restore()
   })
 
-  it('#setQuery Query', () => {
+  it('#_handleAllQueryConditions', () => {
     var query = new Query()
     query.in('price', randomArray)
     Product.setQuery(query)
-    expect(Product._queryObject).to.deep.equal({
-      $and: [
-        {price: {$in: randomArray}}
-      ]
+    Product.orderBy('-amount')
+    expect(Product._handleAllQueryConditions()).to.deep.equal({
+      tableID: 1,
+      limit: 20,
+      offset: 0,
+      order_by: '-amount',
+      where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
     })
-    query.compare('amount', '<', randomNumber)
-    Product.setQuery(query)
-    expect(Product._queryObject).to.deep.equal({
-      $and: [
-        {price: {$in: randomArray}},
-        {amount: {$lt: randomNumber}}
-      ]
-      })
-  })
-
-  it('#setQuery illegal', () => {
-    expect(() => Product.setQuery('')).to.throw()
-    expect(() => Product.setQuery(1)).to.throw()
-  })
-
-  it('#limit', () => {
-    Product.limit(randomNumber)
-    expect(Product._limit).to.equal(randomNumber)
-    Product.limit(0)
-    expect(Product._limit).to.equal(0)
-  })
-
-  it('#limit illegal', () => {
-    expect(() => Product.limit('')).to.throw()
-    expect(() => Product.limit()).to.throw()
-  })
-
-  it('#offset', () => {
-    Product.offset(randomNumber)
-    expect(Product._offset).to.equal(randomNumber)
-    Product.offset(0)
-    expect(Product._offset).to.equal(0)
-  })
-
-  it('#offset illegal', () => {
-    expect(() => Product.offset('')).to.throw()
-    expect(() => Product.offset()).to.throw()
   })
 })

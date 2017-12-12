@@ -1,6 +1,5 @@
 const API_HOST = 'https://sso.ifanr.com';
 
-// API 配置
 const API = {
   INIT: '/hserve/v1/session/init/',
   LOGIN: '/hserve/v1/session/authenticate/',
@@ -11,13 +10,8 @@ const API = {
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
-  // 内容模块
-  CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
-  // 通用存储模块
+  USER_INFO: '/hserve/v1/user/info/:userID/',
+
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
   RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
@@ -26,8 +20,18 @@ const API = {
   CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  // 用户
-  USER_INFO: '/hserve/v1/user/info/:userID/',
+
+  CONTENT_LIST: '/hserve/v1/content/detail/',
+  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
+  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
+  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
+  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
+
+  FILE_DETAIL: '/hserve/v1/uploaded/:fileID/',
+  FILE_LIST: '/hserve/v1/uploaded/',
+  DELETE_FILE: '/hserve/v1/uploaded/',
+  FILE_CATEGORY_DETAIL: '/hserve/v1/file-category/:directoryID/',
+  FILE_CATEGORY_LIST: '/hserve/v1/file-category/',
 };
 
 const methodMapList = [{
@@ -38,75 +42,87 @@ const methodMapList = [{
     }
   }
 }, {
-  // 获取数据表列表
   getTableList: {
     url: API.TABLE_LIST
   },
-  // 获取数据表详情
   getTable: {
     url: API.TABLE_DETAIL
   },
-  // 获取记录列表
   getRecordList: {
     url: API.RECORD_LIST
   },
-  // 获取记录列表 (增加复杂查询)
   queryRecordList: {
     url: API.QUERY_RECORD_LIST
   },
-  // 获取记录详情
   getRecord: {
     url: API.RECORD_DETAIL
   },
-  // 新增记录
   createRecord: {
     url: API.CREATE_RECORD,
     method: 'POST'
   },
-  // 更新记录
   updateRecord: {
     url: API.UPDATE_RECORD,
     method: 'PUT'
   },
-  // 删除记录
   deleteRecord: {
     url: API.DELETE_RECORD,
     method: 'DELETE'
   }
 }, {
-  // 获取内容列表
   getContentList: {
     url: API.CONTENT_LIST
   },
-  // 获取内容详情
   getContent: {
     url: API.CONTENT_DETAIL
   },
-  // 获取内容库列表
   getContentGroupList: {
     url: API.CONTENT_GROUP_LIST
   },
-  // 获取内容库详情
   getContentGroup: {
     url: API.CONTENT_GROUP_DETAIL
   },
-  // 获取分类详情
   getContentCategory: {
     url: API.CONTENT_CATEGORY_DETAIL
-  }
+  },
+}, {
+  getFile: {
+    url: API.FILE_DETAIL
+  },
+  getFileList: {
+    url: API.FILE_LIST
+  },
+  deleteFile: {
+    url: API.DELETE_FILE,
+    method: 'DELETE'
+  },
+  getFileCategoryDetail: {
+    url: API.FILE_CATEGORY_DETAIL
+  },
+  getFileCategoryList: {
+    url: API.FILE_CATEGORY_LIST
+  },
 },];
 
 const RANDOM_OPTION = {
   max: 100
 }
 
-// 配置
+const requestParamsMap = {
+  contentGroupID: 'content_group_id',
+  categoryID: 'category_id',
+  recordID: 'id',
+  submissionType: 'submission_type',
+  submissionValue: 'submission_value'
+}
+
 module.exports = {
   API_HOST: API_HOST,
-  // API 路径
   API: API,
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
-  RANDOM_OPTION: RANDOM_OPTION
+  RANDOM_OPTION: RANDOM_OPTION,
+  REQUEST_PARAMS_MAP: requestParamsMap,
+  VERSION: 'v1.1.2'
 };
