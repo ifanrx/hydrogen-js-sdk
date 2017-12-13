@@ -84,11 +84,32 @@ const parseRegExp = (regExp) => {
   return result
 }
 
+/**
+ * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
+ */
+const replaceQueryParams = (params = {}) => {
+  let requestParamsMap = config.REQUEST_PARAMS_MAP
+  let copiedParams = extend({}, params)
+
+  Object.keys(params).map(key => {
+    Object.keys(requestParamsMap).map(mapKey => {
+      if (key.startsWith(mapKey)) {
+        var newKey = key.replace(mapKey, requestParamsMap[mapKey])
+        delete copiedParams[key]
+        copiedParams[newKey] = params[key]
+      }
+    })
+  })
+
+  return copiedParams
+}
+
 module.exports = {
   log,
   format,
   getConfig,
   getSysPlatform,
   getFileNameFromPath,
-  parseRegExp
+  parseRegExp,
+  replaceQueryParams,
 }

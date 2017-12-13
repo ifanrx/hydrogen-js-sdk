@@ -86,7 +86,7 @@ const methodMapList = [{
     url: API.CONTENT_CATEGORY_DETAIL
   },
 }, {
-  getFile: {
+  getFileDetail: {
     url: API.FILE_DETAIL
   },
   getFileList: {
@@ -113,7 +113,8 @@ const requestParamsMap = {
   categoryID: 'category_id',
   recordID: 'id',
   submissionType: 'submission_type',
-  submissionValue: 'submission_value'
+  submissionValue: 'submission_value',
+  categoryName: 'category_name',
 }
 
 module.exports = {

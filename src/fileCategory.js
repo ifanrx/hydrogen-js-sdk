@@ -1,17 +1,20 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./baseQuery')
+const Query = require('./query')
 
 class FileCategory extends BaseQuery {
   constructor() {
     super()
   }
 
-  get(directoryID) {
-    return BaaS.getFileCategoryDetail({directoryID})
+  get(categoryID) {
+    return BaaS.getFileCategoryDetail({categoryID})
   }
 
-  getFileList(directoryID) {
-    return BaaS.getFileList({'id__in': directoryID})
+  getFileList(categoryID) {
+    let query = new Query()
+    query.in('category_id', [categoryID])
+    return BaaS.getFileList(query.queryObject)
   }
 
   find() {

@@ -1,10 +1,8 @@
-const utils = require('./utils')
-const baasRequest = require('./baasRequest').baasRequest
 const BaaS = require('./baas')
-const API_HOST = BaaS._config.API_HOST
-const API = BaaS._config.API
+const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const Promise = require('./promise')
+const utils = require('./utils')
 
 const isAuth = (resolve, reject) => {
   if (!BaaS._config.CLIENT_ID) {
@@ -19,12 +17,12 @@ const isAuth = (resolve, reject) => {
 
 // get the upload config for upyun from sso
 const getUploadFileConfig = (fileName, metaData) => {
-
+  metaData.filename = fileName
 
   return baasRequest({
-    url: API_HOST + API.UPLOAD,
+    url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
     method: 'POST',
-    data: {filename: fileName}
+    data: metaData
   }).then((res) => {
     return new Promise((resolve, reject) => {
       return resolve(res)
@@ -64,7 +62,8 @@ const wxUpload = (config, resolve, reject) => {
         "created_at": data.time,
         "mime_type": data.mimetype,
         "cdn_path": data.url,
-        "size": data.file_size
+        "size": data.file_size,
+        "category": data.category,
       }
 
       delete res.data
@@ -78,24 +77,30 @@ const wxUpload = (config, resolve, reject) => {
   })
 }
 
-const uploadFile = (params, metaData) => {
-  if(typeof metaData !== 'object' || !metaData['categories']) {
+const uploadFile = (fileParams, metaData) => {
+  if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new Error(constants.MSG.ARGS_ERROR)
+  }
+
+  if(!metaData) {
+    throw new Error(constants.MSG.ARGS_ERROR)
+  } else if (typeof metaData !== 'object') {
+    metaData = {}
   }
 
   return new Promise((resolve, reject) => {
     isAuth(resolve, reject)
 
-    let fileName = utils.getFileNameFromPath(params.filePath)
+    let fileName = utils.getFileNameFromPath(fileParams.filePath)
 
-    return getUploadFileConfig(fileName, metaData).then((res) => {
+    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then((res) => {
       let config = {
         id: res.data.id,
         fileName: fileName,
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
-        filePath: params.filePath,
+        filePath: fileParams.filePath,
         destLink: res.data.file_link
       }
       return wxUpload(config, resolve, reject)

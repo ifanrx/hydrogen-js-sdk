@@ -8,8 +8,8 @@ class File extends BaseQuery {
     super()
   }
 
-  upload(params, metaData) {
-    return uploadFile(params, metaData)
+  upload(fileParams, metaData) {
+    return uploadFile(fileParams, metaData)
   }
 
   delete(id) {

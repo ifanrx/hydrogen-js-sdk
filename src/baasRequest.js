@@ -49,7 +49,7 @@ const doCreateRequestMethod = (methodMap) => {
           let url = utils.format(methodItem.url, newObjects)
           let data = (newObjects && newObjects.data) || newObjects
           data = excludeParams(methodItem.url, data)
-          data = replaceQueryParams(data)
+          data = utils.replaceQueryParams(data)
 
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
@@ -82,26 +82,6 @@ const excludeParams = (URL, params) => {
 }
 
 /**
- * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg.categoryID => category_id
- */
-const replaceQueryParams = (params = {}) => {
-  let requestParamsMap = config.REQUEST_PARAMS_MAP
-  let copiedParams = extend({}, params)
-
-  Object.keys(params).map(key => {
-    Object.keys(requestParamsMap).map(mapKey => {
-      if (key.startsWith(mapKey)) {
-        var newKey = key.replace(mapKey, requestParamsMap[mapKey])
-        delete copiedParams[key]
-        copiedParams[newKey] = params[key]
-      }
-    })
-  })
-
-  return copiedParams
-}
-
-/**
  * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
  */
 const createRequestMethod = () => {
@@ -115,7 +95,6 @@ const createRequestMethod = () => {
 module.exports = {
   baasRequest,
   excludeParams,
-  replaceQueryParams,
   createRequestMethod,
   doCreateRequestMethod
 }
