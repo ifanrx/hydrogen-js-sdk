@@ -27,11 +27,11 @@ const API = {
   CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
 
-  FILE_DETAIL: '/hserve/v1/uploaded/:fileID/',
-  FILE_LIST: '/hserve/v1/uploaded/',
-  DELETE_FILE: '/hserve/v1/uploaded/',
-  FILE_CATEGORY_DETAIL: '/hserve/v1/file-category/:directoryID/',
-  FILE_CATEGORY_LIST: '/hserve/v1/file-category/',
+  FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
+  FILE_LIST: '/hserve/v1.3/uploaded-file/',
+  DELETE_FILE: '/hserve/v1.3/uploaded-file/',
+  FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
+  FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
 };
 
 const methodMapList = [{

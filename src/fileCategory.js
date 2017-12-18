@@ -14,7 +14,7 @@ class FileCategory extends BaseQuery {
   getFileList(categoryID) {
     let query = new Query()
     query.in('category_id', [categoryID])
-    return BaaS.getFileList(query.queryObject)
+    return BaaS.getFileList({where: JSON.stringify(query.queryObject)})
   }
 
   find() {
