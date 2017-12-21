@@ -29,7 +29,8 @@ const API = {
 
   FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
   FILE_LIST: '/hserve/v1.3/uploaded-file/',
-  DELETE_FILE: '/hserve/v1.3/uploaded-file/',
+  DELETE_FILE: '/hserve/v1.3/uploaded-file/:fileID/',
+  DELETE_FILES: '/hserve/v1.3/uploaded-file/',
   FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
 };
@@ -94,6 +95,10 @@ const methodMapList = [{
   },
   deleteFile: {
     url: API.DELETE_FILE,
+    method: 'DELETE'
+  },
+  deleteFiles: {
+    url: API.DELETE_FILES,
     method: 'DELETE'
   },
   getFileCategoryDetail: {

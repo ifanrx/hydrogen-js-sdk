@@ -83,9 +83,9 @@ const uploadFile = (fileParams, metaData) => {
   }
 
   if(!metaData) {
-    throw new Error(constants.MSG.ARGS_ERROR)
-  } else if (typeof metaData !== 'object') {
     metaData = {}
+  } else if (typeof metaData !== 'object') {
+    throw new Error(constants.MSG.ARGS_ERROR)
   }
 
   return new Promise((resolve, reject) => {

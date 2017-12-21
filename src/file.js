@@ -14,9 +14,9 @@ class File extends BaseQuery {
 
   delete(id) {
     if(id instanceof Array) {
-      return BaaS.deleteFile({'id__in': id.join(',')})
+      return BaaS.deleteFiles({'id__in': id})
     } else {
-      return BaaS.deleteFile({'id__in': id})
+      return BaaS.deleteFile({fileID: id})
     }
   }
 
