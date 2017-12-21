@@ -5482,16 +5482,10 @@ var extend = require('node.extend');
 var utils = require('./utils');
 var constants = require('./constants');
 var storage = require('./storage');
-var version = require('./version');
 
 var BaaS = global.BaaS || {};
 
-// BASS Config
 BaaS._config = utils.getConfig();
-
-extend(BaaS._config, {
-  VERSION: version
-});
 
 /**
  * 初始化 SDK
@@ -5552,26 +5546,20 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constants":37,"./storage":46,"./utils":52,"./version":53,"node.extend":29}],34:[function(require,module,exports){
+},{"./constants":38,"./storage":49,"./utils":55,"node.extend":29}],34:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
+var config = require('./config');
 var constants = require('./constants');
 var extend = require('node.extend');
 var Promise = require('./promise');
 var request = require('./request');
-var storage = require('./storage');
 var utils = require('./utils');
 var user = require('./user'
 
 /**
  * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
- * @param  {String} url                   url地址
- * @param  {String} [method='GET']        请求方法
- * @param  {Object|String} data           请求参数
- * @param  {Object} header                请求头部
- * @param  {String} [dataType='json']     发送数据的类型
- * @return {Object}                       返回一个 Promise 对象
  */
 );var baasRequest = function baasRequest(_ref) {
   var _arguments = arguments;
@@ -5620,8 +5608,8 @@ var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
 
           var url = utils.format(methodItem.url, newObjects);
           var data = newObjects && newObjects.data || newObjects;
-          data = utils.excludeParams(methodItem.url, data);
-          data = utils.replaceQueryParams(url, data);
+          data = excludeParams(methodItem.url, data);
+          data = utils.replaceQueryParams(data);
 
           return new Promise(function (resolve, reject) {
             return baasRequest({ url: url, method: method, data: data }).then(function (res) {
@@ -5641,6 +5629,19 @@ var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
 };
 
 /**
+ * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
+ * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
+ */
+var excludeParams = function excludeParams(URL, params) {
+  URL.replace(/:(\w*)/g, function (match, m1) {
+    if (params[m1] !== undefined) {
+      delete params[m1];
+    }
+  });
+  return params;
+};
+
+/**
  * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
  */
 var createRequestMethod = function createRequestMethod() {
@@ -5652,11 +5653,91 @@ var createRequestMethod = function createRequestMethod() {
 
 module.exports = {
   baasRequest: baasRequest,
+  excludeParams: excludeParams,
   createRequestMethod: createRequestMethod,
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./baas":33,"./constants":37,"./promise":43,"./request":45,"./storage":46,"./user":51,"./utils":52,"node.extend":29}],35:[function(require,module,exports){
+},{"./baas":33,"./config":37,"./constants":38,"./promise":46,"./request":48,"./user":54,"./utils":55,"node.extend":29}],35:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var constants = require('./constants');
+var Query = require('./query');
+var _cloneDeep = require('lodash.clonedeep');
+var _isInteger = require('lodash/isInteger');
+
+var BaseQuery = function () {
+  function BaseQuery() {
+    _classCallCheck(this, BaseQuery);
+
+    this._queryObject = {};
+    this._limit = 20;
+    this._offset = 0;
+    this._orderBy = null;
+  }
+
+  _createClass(BaseQuery, [{
+    key: 'setQuery',
+    value: function setQuery(queryObject) {
+      if (queryObject instanceof Query) {
+        this._queryObject = _cloneDeep(queryObject.queryObject);
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      return this;
+    }
+  }, {
+    key: 'limit',
+    value: function limit(value) {
+      if (!_isInteger(value)) {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      this._limit = value;
+      return this;
+    }
+  }, {
+    key: 'offset',
+    value: function offset(value) {
+      if (!_isInteger(value)) {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      this._offset = value;
+      return this;
+    }
+  }, {
+    key: 'orderBy',
+    value: function orderBy(args) {
+      if (args instanceof Array) {
+        this._orderBy = args.join(',');
+      } else {
+        this._orderBy = args;
+      }
+      return this;
+    }
+  }, {
+    key: '_handleAllQueryConditions',
+    value: function _handleAllQueryConditions() {
+      var conditions = {};
+      conditions.limit = this._limit;
+      conditions.offset = this._offset;
+      if (this._orderBy) {
+        conditions.order_by = this._orderBy;
+      }
+      conditions.where = JSON.stringify(this._queryObject);
+      return conditions;
+    }
+  }]);
+
+  return BaseQuery;
+}();
+
+module.exports = BaseQuery;
+
+},{"./constants":38,"./query":47,"lodash.clonedeep":10,"lodash/isInteger":21}],36:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -5668,12 +5749,11 @@ var devConfig = {
 
 module.exports = extend(config, devConfig);
 
-},{"./config":36,"node.extend":29}],36:[function(require,module,exports){
+},{"./config":37,"node.extend":29}],37:[function(require,module,exports){
 'use strict';
 
 var API_HOST = 'https://sso.ifanr.com';
 
-// API 配置
 var API = {
   INIT: '/hserve/v1/session/init/',
   LOGIN: '/hserve/v1/session/authenticate/',
@@ -5684,13 +5764,8 @@ var API = {
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
-  // 内容模块
-  CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
-  // 通用存储模块
+  USER_INFO: '/hserve/v1/user/info/:userID/',
+
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
   RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
@@ -5699,8 +5774,19 @@ var API = {
   CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  // 用户
-  USER_INFO: '/hserve/v1/user/info/:userID/'
+
+  CONTENT_LIST: '/hserve/v1/content/detail/',
+  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
+  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
+  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
+  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
+
+  FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
+  FILE_LIST: '/hserve/v1.3/uploaded-file/',
+  DELETE_FILE: '/hserve/v1.3/uploaded-file/:fileID/',
+  DELETE_FILES: '/hserve/v1.3/uploaded-file/',
+  FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
+  FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/'
 };
 
 var methodMapList = [{
@@ -5711,79 +5797,97 @@ var methodMapList = [{
     }
   }
 }, {
-  // 获取数据表列表
   getTableList: {
     url: API.TABLE_LIST
   },
-  // 获取数据表详情
   getTable: {
     url: API.TABLE_DETAIL
   },
-  // 获取记录列表
   getRecordList: {
     url: API.RECORD_LIST
   },
-  // 获取记录列表 (增加复杂查询)
   queryRecordList: {
     url: API.QUERY_RECORD_LIST
   },
-  // 获取记录详情
   getRecord: {
     url: API.RECORD_DETAIL
   },
-  // 新增记录
   createRecord: {
     url: API.CREATE_RECORD,
     method: 'POST'
   },
-  // 更新记录
   updateRecord: {
     url: API.UPDATE_RECORD,
     method: 'PUT'
   },
-  // 删除记录
   deleteRecord: {
     url: API.DELETE_RECORD,
     method: 'DELETE'
   }
 }, {
-  // 获取内容列表
   getContentList: {
     url: API.CONTENT_LIST
   },
-  // 获取内容详情
   getContent: {
     url: API.CONTENT_DETAIL
   },
-  // 获取内容库列表
   getContentGroupList: {
     url: API.CONTENT_GROUP_LIST
   },
-  // 获取内容库详情
   getContentGroup: {
     url: API.CONTENT_GROUP_DETAIL
   },
-  // 获取分类详情
   getContentCategory: {
     url: API.CONTENT_CATEGORY_DETAIL
+  }
+}, {
+  getFileDetail: {
+    url: API.FILE_DETAIL
+  },
+  getFileList: {
+    url: API.FILE_LIST
+  },
+  deleteFile: {
+    url: API.DELETE_FILE,
+    method: 'DELETE'
+  },
+  deleteFiles: {
+    url: API.DELETE_FILES,
+    method: 'DELETE'
+  },
+  getFileCategoryDetail: {
+    url: API.FILE_CATEGORY_DETAIL
+  },
+  getFileCategoryList: {
+    url: API.FILE_CATEGORY_LIST
   }
 }];
 
 var RANDOM_OPTION = {
   max: 100
+};
 
-  // 配置
-};module.exports = {
+var requestParamsMap = {
+  contentGroupID: 'content_group_id',
+  categoryID: 'category_id',
+  recordID: 'id',
+  submissionType: 'submission_type',
+  submissionValue: 'submission_value',
+  categoryName: 'category_name'
+};
+
+module.exports = {
   API_HOST: API_HOST,
-  // API 路径
   API: API,
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
-  RANDOM_OPTION: RANDOM_OPTION
+  RANDOM_OPTION: RANDOM_OPTION,
+  REQUEST_PARAMS_MAP: requestParamsMap,
+  VERSION: 'v1.1.2'
 };
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 // 常量表
@@ -5826,7 +5930,111 @@ module.exports = {
   }
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BaaS = require('./baas');
+var BaseQuery = require('./baseQuery');
+var baasRequest = require('./baasRequest').baasRequest;
+var uploadFile = require('./uploadFile');
+
+var File = function (_BaseQuery) {
+  _inherits(File, _BaseQuery);
+
+  function File() {
+    _classCallCheck(this, File);
+
+    return _possibleConstructorReturn(this, (File.__proto__ || Object.getPrototypeOf(File)).call(this));
+  }
+
+  _createClass(File, [{
+    key: 'upload',
+    value: function upload(fileParams, metaData) {
+      return uploadFile(fileParams, metaData, 'json');
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(id) {
+      if (id instanceof Array) {
+        return BaaS.deleteFiles({ 'id__in': id });
+      } else {
+        return BaaS.deleteFile({ fileID: id });
+      }
+    }
+  }, {
+    key: 'get',
+    value: function get(fileID) {
+      return BaaS.getFileDetail({ fileID: fileID });
+    }
+  }, {
+    key: 'find',
+    value: function find() {
+      return BaaS.getFileList(this._handleAllQueryConditions());
+    }
+  }]);
+
+  return File;
+}(BaseQuery);
+
+module.exports = File;
+
+},{"./baas":33,"./baasRequest":34,"./baseQuery":35,"./uploadFile":53}],40:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BaaS = require('./baas');
+var BaseQuery = require('./baseQuery');
+var Query = require('./query');
+
+var FileCategory = function (_BaseQuery) {
+  _inherits(FileCategory, _BaseQuery);
+
+  function FileCategory() {
+    _classCallCheck(this, FileCategory);
+
+    return _possibleConstructorReturn(this, (FileCategory.__proto__ || Object.getPrototypeOf(FileCategory)).call(this));
+  }
+
+  _createClass(FileCategory, [{
+    key: 'get',
+    value: function get(categoryID) {
+      return BaaS.getFileCategoryDetail({ categoryID: categoryID });
+    }
+  }, {
+    key: 'getFileList',
+    value: function getFileList(categoryID) {
+      var query = new Query();
+      query.in('category_id', [categoryID]);
+      return BaaS.getFileList({ where: JSON.stringify(query.queryObject) });
+    }
+  }, {
+    key: 'find',
+    value: function find() {
+      return BaaS.getFileCategoryList(this._handleAllQueryConditions());
+    }
+  }]);
+
+  return FileCategory;
+}(BaseQuery);
+
+module.exports = FileCategory;
+
+},{"./baas":33,"./baseQuery":35,"./query":47}],41:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5859,7 +6067,7 @@ var GeoPoint = function () {
 
 module.exports = GeoPoint;
 
-},{"lodash.clonedeep":10}],39:[function(require,module,exports){
+},{"lodash.clonedeep":10}],42:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5913,13 +6121,15 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./constants":37,"./geoPoint":38,"lodash.clonedeep":10}],40:[function(require,module,exports){
+},{"./constants":38,"./geoPoint":41,"lodash.clonedeep":10}],43:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas'
 
 // 暴露指定 BaaS 方法
 );BaaS.auth = require('./baasRequest').auth;
+BaaS.File = require('./file');
+BaaS.FileCategory = require('./fileCategory');
 BaaS.GeoPoint = require('./geoPoint');
 BaaS.GeoPolygon = require('./geoPolygon');
 BaaS.login = require('./user').login;
@@ -5929,14 +6139,14 @@ BaaS.pay = require('./pay');
 BaaS.Promise = require('./promise');
 BaaS.Query = require('./query');
 BaaS.request = require('./request');
-BaaS.wxReportTicket = require('./templateMessage').wxReportTicket;
 BaaS.storage = require('./storage');
 BaaS.TableObject = require('./tableObject');
 BaaS.uploadFile = require('./uploadFile');
-BaaS.wxDecryptData = require('./wxDecryptData'
+BaaS.wxDecryptData = require('./wxDecryptData');
+BaaS.wxReportTicket = require('./templateMessage').wxReportTicket;
 
 // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
-);require('./baasRequest').createRequestMethod
+require('./baasRequest').createRequestMethod
 
 // 暴露 BaaS 到小程序环境
 ();if (typeof wx !== 'undefined') {
@@ -5945,7 +6155,7 @@ BaaS.wxDecryptData = require('./wxDecryptData'
 
 module.exports = BaaS;
 
-},{"./baas":33,"./baasRequest":34,"./geoPoint":38,"./geoPolygon":39,"./order":41,"./pay":42,"./promise":43,"./query":44,"./request":45,"./storage":46,"./tableObject":47,"./templateMessage":49,"./uploadFile":50,"./user":51,"./wxDecryptData":54}],41:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./file":39,"./fileCategory":40,"./geoPoint":41,"./geoPolygon":42,"./order":44,"./pay":45,"./promise":46,"./query":47,"./request":48,"./storage":49,"./tableObject":50,"./templateMessage":52,"./uploadFile":53,"./user":54,"./wxDecryptData":56}],44:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -5973,7 +6183,7 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./utils":52}],42:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./utils":55}],45:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -6041,14 +6251,14 @@ var pay = function pay(params) {
 
 module.exports = pay;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./storage":46}],43:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./storage":49}],46:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":32}],44:[function(require,module,exports){
+},{"rsvp":32}],47:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6339,7 +6549,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./constants":37,"./geoPoint":38,"./geoPolygon":39,"./utils":52,"lodash/isString":24}],45:[function(require,module,exports){
+},{"./constants":38,"./geoPoint":41,"./geoPolygon":42,"./utils":55,"lodash/isString":24}],48:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -6436,7 +6646,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./baas":33,"./constants":37,"./promise":43,"./storage":46,"./utils":52,"node.extend":29}],46:[function(require,module,exports){
+},{"./baas":33,"./constants":38,"./promise":46,"./storage":49,"./utils":55,"node.extend":29}],49:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -6458,48 +6668,36 @@ module.exports = {
   }
 };
 
-},{}],47:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var BaaS = require('./baas');
-var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
-var Query = require('./query');
+var BaseQuery = require('./baseQuery');
 var TableRecord = require('./tableRecord');
-var _cloneDeep = require('lodash.clonedeep');
-var _isInteger = require('lodash/isInteger');
 
-var API = BaaS._config.API;
+var TableObject = function (_BaseQuery) {
+  _inherits(TableObject, _BaseQuery);
 
-var TableObject = function () {
   function TableObject(tableID) {
     _classCallCheck(this, TableObject);
 
-    this._tableID = tableID;
-    this._queryObject = {};
-    this._limit = 20;
-    this._offset = 0;
-    this._orderBy = null;
+    var _this = _possibleConstructorReturn(this, (TableObject.__proto__ || Object.getPrototypeOf(TableObject)).call(this));
+
+    _this._tableID = tableID;
+    return _this;
   }
 
   _createClass(TableObject, [{
-    key: '_handleQueryObject',
-    value: function _handleQueryObject() {
-      var conditions = {};
-      conditions.tableID = this._tableID;
-      conditions.limit = this._limit;
-      conditions.offset = this._offset;
-      if (this._orderBy) {
-        conditions.order_by = this._orderBy;
-      }
-      conditions.where = JSON.stringify(this._queryObject);
-      return conditions;
-    }
-  }, {
     key: 'create',
     value: function create() {
       return new TableRecord(this._tableID);
@@ -6520,56 +6718,25 @@ var TableObject = function () {
       return BaaS.getRecord({ tableID: this._tableID, recordID: recordID });
     }
   }, {
-    key: 'setQuery',
-    value: function setQuery(queryObject) {
-      if (queryObject instanceof Query) {
-        this._queryObject = _cloneDeep(queryObject.queryObject);
-      } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      return this;
-    }
-  }, {
-    key: 'limit',
-    value: function limit(value) {
-      if (!_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      this._limit = value;
-      return this;
-    }
-  }, {
-    key: 'offset',
-    value: function offset(value) {
-      if (!_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      this._offset = value;
-      return this;
-    }
-  }, {
-    key: 'orderBy',
-    value: function orderBy(args) {
-      if (args instanceof Array) {
-        this._orderBy = args.join(',');
-      } else {
-        this._orderBy = args;
-      }
-      return this;
+    key: '_handleAllQueryConditions',
+    value: function _handleAllQueryConditions() {
+      var condition = _get(TableObject.prototype.__proto__ || Object.getPrototypeOf(TableObject.prototype), '_handleAllQueryConditions', this).call(this);
+      condition.tableID = this._tableID;
+      return condition;
     }
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.queryRecordList(this._handleQueryObject());
+      return BaaS.queryRecordList(this._handleAllQueryConditions());
     }
   }]);
 
   return TableObject;
-}();
+}(BaseQuery);
 
 module.exports = TableObject;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./query":44,"./tableRecord":48,"lodash.clonedeep":10,"lodash/isInteger":21}],48:[function(require,module,exports){
+},{"./baas":33,"./baseQuery":35,"./tableRecord":51}],51:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6675,7 +6842,7 @@ var TableRecord = function () {
 
 module.exports = TableRecord;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./geoPoint":38,"./geoPolygon":39,"lodash.clonedeep":10}],49:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./geoPoint":41,"./geoPolygon":42,"lodash.clonedeep":10}],52:[function(require,module,exports){
 'use strict';
 
 var baasRequest = require('./baasRequest').baasRequest;
@@ -6720,16 +6887,16 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43}],50:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46}],53:[function(require,module,exports){
 'use strict';
 
-var utils = require('./utils');
-var baasRequest = require('./baasRequest').baasRequest;
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var BaaS = require('./baas');
-var API_HOST = BaaS._config.API_HOST;
-var API = BaaS._config.API;
+var baasRequest = require('./baasRequest').baasRequest;
 var constants = require('./constants');
 var Promise = require('./promise');
+var utils = require('./utils');
 
 var isAuth = function isAuth(resolve, reject) {
   if (!BaaS._config.CLIENT_ID) {
@@ -6742,11 +6909,13 @@ var isAuth = function isAuth(resolve, reject) {
 };
 
 // get the upload config for upyun from sso
-var getUploadFileConfig = function getUploadFileConfig(fileName) {
+var getUploadFileConfig = function getUploadFileConfig(fileName, metaData) {
+  metaData.filename = fileName;
+
   return baasRequest({
-    url: API_HOST + API.UPLOAD,
+    url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
     method: 'POST',
-    data: { filename: fileName }
+    data: metaData
   }).then(function (res) {
     return new Promise(function (resolve, reject) {
       return resolve(res);
@@ -6758,7 +6927,7 @@ var getUploadFileConfig = function getUploadFileConfig(fileName) {
   });
 };
 
-var wxUpload = function wxUpload(config, resolve, reject) {
+var wxUpload = function wxUpload(config, resolve, reject, type) {
   return wx.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
@@ -6790,7 +6959,12 @@ var wxUpload = function wxUpload(config, resolve, reject) {
       };
 
       delete res.data;
-      res.data = JSON.stringify(result);
+
+      if (type && type === 'json') {
+        res.data = result;
+      } else {
+        res.data = JSON.stringify(result);
+      }
 
       resolve(res);
     },
@@ -6800,24 +6974,33 @@ var wxUpload = function wxUpload(config, resolve, reject) {
   });
 };
 
-var uploadFile = function uploadFile(params) {
+var uploadFile = function uploadFile(fileParams, metaData, type) {
+  if (!fileParams || (typeof fileParams === 'undefined' ? 'undefined' : _typeof(fileParams)) !== 'object' || !fileParams.filePath) {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
+
+  if (!metaData) {
+    metaData = {};
+  } else if ((typeof metaData === 'undefined' ? 'undefined' : _typeof(metaData)) !== 'object') {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
 
   return new Promise(function (resolve, reject) {
     isAuth(resolve, reject);
 
-    var fileName = utils.getFileNameFromPath(params.filePath);
+    var fileName = utils.getFileNameFromPath(fileParams.filePath);
 
-    return getUploadFileConfig(fileName).then(function (res) {
+    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(function (res) {
       var config = {
         id: res.data.id,
         fileName: fileName,
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
-        filePath: params.filePath,
+        filePath: fileParams.filePath,
         destLink: res.data.file_link
       };
-      return wxUpload(config, resolve, reject);
+      return wxUpload(config, resolve, reject, type);
     });
   }, function (err) {
     throw new Error(err);
@@ -6826,7 +7009,7 @@ var uploadFile = function uploadFile(params) {
 
 module.exports = uploadFile;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43,"./utils":52}],51:[function(require,module,exports){
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./utils":55}],54:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7092,14 +7275,14 @@ module.exports = {
   logout: logout
 };
 
-},{"./baas":33,"./constants":37,"./promise":43,"./request":45,"./storage":46,"./utils":52}],52:[function(require,module,exports){
+},{"./baas":33,"./constants":38,"./promise":46,"./request":48,"./storage":49,"./utils":55}],55:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
 
 var config = void 0;
 try {
-  config = require('./config.dev.js');
+  config = require('./config.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7157,53 +7340,6 @@ var format = function format(url, params) {
   });
 };
 
-/**
- * 把 URL 中用于 format URL 的参数移除掉
- * @param  {String} URL    URL 链接
- * @param  {Object} params 参数对象
- * @return {Object}
- */
-var excludeParams = function excludeParams(URL, params) {
-  URL.replace(/:(\w*)/g, function (match, m1) {
-    if (params[m1] !== undefined) {
-      delete params[m1];
-    }
-  });
-  return params;
-};
-
-/**
- * 将 URL 中的查询字符串替换为服务端可接受的参数
- * @param  {String} URL    URL 链接
- * @param  {Object} params 参数对象
- * @return {Object}
- */
-var replaceQueryParams = function replaceQueryParams(URL) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  var paramsMap = {
-    contentGroupID: 'content_group_id',
-    categoryID: 'category_id',
-    recordID: 'id',
-    submissionType: 'submission_type',
-    submissionValue: 'submission_value'
-  };
-
-  var copiedParams = extend({}, params);
-
-  Object.keys(params).map(function (key) {
-    Object.keys(paramsMap).map(function (mapKey) {
-      if (key.startsWith(mapKey)) {
-        var newKey = key.replace(mapKey, paramsMap[mapKey]);
-        delete copiedParams[key];
-        copiedParams[newKey] = params[key];
-      }
-    });
-  });
-
-  return copiedParams;
-};
-
 var getFileNameFromPath = function getFileNameFromPath(path) {
   var index = path.lastIndexOf('/');
   return path.slice(index + 1);
@@ -7228,23 +7364,39 @@ var parseRegExp = function parseRegExp(regExp) {
   return result;
 };
 
+/**
+ * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
+ */
+var replaceQueryParams = function replaceQueryParams() {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var requestParamsMap = config.REQUEST_PARAMS_MAP;
+  var copiedParams = extend({}, params);
+
+  Object.keys(params).map(function (key) {
+    Object.keys(requestParamsMap).map(function (mapKey) {
+      if (key.startsWith(mapKey)) {
+        var newKey = key.replace(mapKey, requestParamsMap[mapKey]);
+        delete copiedParams[key];
+        copiedParams[newKey] = params[key];
+      }
+    });
+  });
+
+  return copiedParams;
+};
+
 module.exports = {
   log: log,
   format: format,
-  excludeParams: excludeParams,
   getConfig: getConfig,
   getSysPlatform: getSysPlatform,
-  replaceQueryParams: replaceQueryParams,
   getFileNameFromPath: getFileNameFromPath,
-  parseRegExp: parseRegExp
+  parseRegExp: parseRegExp,
+  replaceQueryParams: replaceQueryParams
 };
 
-},{"./config.dev":35,"./config.dev.js":35,"node.extend":29}],53:[function(require,module,exports){
-'use strict';
-
-module.exports = 'v1.1.1';
-
-},{}],54:[function(require,module,exports){
+},{"./config.dev":36,"./config.js":37,"node.extend":29}],56:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7293,4 +7445,4 @@ var validateParams = function validateParams(params) {
 
 module.exports = wxDecryptData;
 
-},{"./baas":33,"./baasRequest":34,"./constants":37,"./promise":43}]},{},[40]);
+},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46}]},{},[43]);
