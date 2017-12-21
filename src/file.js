@@ -9,7 +9,7 @@ class File extends BaseQuery {
   }
 
   upload(fileParams, metaData) {
-    return uploadFile(fileParams, metaData)
+    return uploadFile(fileParams, metaData, 'json')
   }
 
   delete(id) {

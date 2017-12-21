@@ -34,7 +34,7 @@ const getUploadFileConfig = (fileName, metaData) => {
   })
 }
 
-const wxUpload = (config, resolve, reject) => {
+const wxUpload = (config, resolve, reject, type) => {
   return wx.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
@@ -67,7 +67,12 @@ const wxUpload = (config, resolve, reject) => {
       }
 
       delete res.data
-      res.data = JSON.stringify(result)
+
+      if (type && type === 'json') {
+        res.data = result
+      } else {
+        res.data = JSON.stringify(result)
+      }
 
       resolve(res)
     },
@@ -77,7 +82,7 @@ const wxUpload = (config, resolve, reject) => {
   })
 }
 
-const uploadFile = (fileParams, metaData) => {
+const uploadFile = (fileParams, metaData, type) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new Error(constants.MSG.ARGS_ERROR)
   }
@@ -103,7 +108,7 @@ const uploadFile = (fileParams, metaData) => {
         filePath: fileParams.filePath,
         destLink: res.data.file_link
       }
-      return wxUpload(config, resolve, reject)
+      return wxUpload(config, resolve, reject, type)
     })
   }, (err) => {
     throw new Error(err)
