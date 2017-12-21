@@ -63,7 +63,6 @@ const wxUpload = (config, resolve, reject, type) => {
         "mime_type": data.mimetype,
         "cdn_path": data.url,
         "size": data.file_size,
-        "category": data.category,
       }
 
       delete res.data
