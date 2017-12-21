@@ -19,8 +19,11 @@ BaaS.test = {
 }
 
 // 引入待测试模块
-require('./baas')
+require('./baseQuery')
+require('./baasRequest')
 require('./content')
+require('./file')
+require('./fileCategory')
 require('./geoPoint')
 require('./geoPolygon')
 require('./query')
@@ -28,7 +31,7 @@ require('./request')
 require('./schema')
 require('./storage')
 require('./tableObject')
+require('./templateMessage')
+require('./templateMessage')
 require('./utils')
-require('./templateMessage')
-require('./templateMessage')
 require('./wxDecryptData')

@@ -60,51 +60,6 @@ const format = (url, params) => {
   })
 }
 
-/**
- * 把 URL 中用于 format URL 的参数移除掉
- * @param  {String} URL    URL 链接
- * @param  {Object} params 参数对象
- * @return {Object}
- */
-const excludeParams = (URL, params) => {
-  URL.replace(/:(\w*)/g, (match, m1) => {
-    if (params[m1] !== undefined) {
-      delete params[m1]
-    }
-  })
-  return params
-}
-
-/**
- * 将 URL 中的查询字符串替换为服务端可接受的参数
- * @param  {String} URL    URL 链接
- * @param  {Object} params 参数对象
- * @return {Object}
- */
-const replaceQueryParams = (URL, params = {}) => {
-  const paramsMap = {
-    contentGroupID: 'content_group_id',
-    categoryID: 'category_id',
-    recordID: 'id',
-    submissionType: 'submission_type',
-    submissionValue: 'submission_value'
-  }
-
-  let copiedParams = extend({}, params)
-
-  Object.keys(params).map(key => {
-    Object.keys(paramsMap).map(mapKey => {
-      if (key.startsWith(mapKey)) {
-        var newKey = key.replace(mapKey, paramsMap[mapKey])
-        delete copiedParams[key]
-        copiedParams[newKey] = params[key]
-      }
-    })
-  })
-
-  return copiedParams
-}
-
 const getFileNameFromPath = (path) => {
   let index = path.lastIndexOf('/')
   return path.slice(index + 1)
@@ -129,13 +84,32 @@ const parseRegExp = (regExp) => {
   return result
 }
 
+/**
+ * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
+ */
+const replaceQueryParams = (params = {}) => {
+  let requestParamsMap = config.REQUEST_PARAMS_MAP
+  let copiedParams = extend({}, params)
+
+  Object.keys(params).map(key => {
+    Object.keys(requestParamsMap).map(mapKey => {
+      if (key.startsWith(mapKey)) {
+        var newKey = key.replace(mapKey, requestParamsMap[mapKey])
+        delete copiedParams[key]
+        copiedParams[newKey] = params[key]
+      }
+    })
+  })
+
+  return copiedParams
+}
+
 module.exports = {
   log,
   format,
-  excludeParams,
   getConfig,
   getSysPlatform,
-  replaceQueryParams,
   getFileNameFromPath,
-  parseRegExp
+  parseRegExp,
+  replaceQueryParams,
 }

@@ -34,4 +34,13 @@ describe('utils', () => {
 
     expect(result).to.deep.equal([regExpString, 'gi'])
   })
+
+  it('replaceQueryParams', () => {
+    const requestParams = {
+      categoryID: 12,
+      otherData: 100
+    }
+    let result = utils.replaceQueryParams(requestParams)
+    expect(result).to.deep.equal({'category_id': 12, otherData: 100})
+  });
 })
