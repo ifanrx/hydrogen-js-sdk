@@ -1,6 +1,6 @@
 const constants = require('./constants')
-const GeoPoint = require('./geoPoint')
-const GeoPolygon = require('./geoPolygon')
+const GeoPoint = require('./GeoPoint')
+const GeoPolygon = require('./GeoPolygon')
 const utils = require('./utils')
 const _isString = require('lodash/isString')
 

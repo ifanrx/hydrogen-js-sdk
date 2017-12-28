@@ -1,6 +1,6 @@
 const BaaS = require('./baas')
-const BaseQuery = require('./baseQuery')
-const TableRecord = require('./tableRecord')
+const BaseQuery = require('./BaseQuery')
+const TableRecord = require('./TableRecord')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {

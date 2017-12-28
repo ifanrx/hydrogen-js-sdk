@@ -11,6 +11,9 @@ const API = {
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
   USER_INFO: '/hserve/v1/user/info/:userID/',
+  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
+  USER_LIST: '/hserve/v1.3/user/info/',
+  UPDATE_USER: '/hserve/v1.3/user/info/',
 
   TABLE_LIST: '/hserve/v1/table/',
   TABLE_DETAIL: '/hserve/v1/table/:tableID/',
@@ -21,10 +24,11 @@ const API = {
   UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
 
-  CONTENT_LIST: '/hserve/v1/content/detail/',
+  CONTENT_LIST: '/hserve/v1.3/content/detail/',
   CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
+  CONTENT_DETAIL: '/hserve/v1.3/content/detail/:richTextID/',
   CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
+  CONTENT_CATEGORY_LIST: '/hserve/v1/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
 
   FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
@@ -41,7 +45,16 @@ const methodMapList = [{
     defaultParams: {
       userID: '',
     }
-  }
+  },
+  getUserDetail: {
+    url: API.USER_DETAIL,
+  },
+  getUserList: {
+    url: API.USER_LIST,
+  },
+  updateUser: {
+    url: API.UPDATE_USER,
+  },
 }, {
   getTableList: {
     url: API.TABLE_LIST
@@ -82,6 +95,9 @@ const methodMapList = [{
   },
   getContentGroup: {
     url: API.CONTENT_GROUP_DETAIL
+  },
+  getContentCategoryList: {
+    url: API.CONTENT_CATEGORY_LIST
   },
   getContentCategory: {
     url: API.CONTENT_CATEGORY_DETAIL
@@ -130,5 +146,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.2'
+  VERSION: 'v1.1.3'
 };

@@ -1,6 +1,6 @@
-const GeoPoint = require('../src/geoPoint')
+const GeoPoint = require('../src/GeoPoint')
 
-describe('geoPoint', () => {
+describe('GeoPoint', () => {
   it('#new', () => {
     var point = new GeoPoint(10, 20)
     expect(point.attitude).to.equal(10)

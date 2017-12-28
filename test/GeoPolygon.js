@@ -1,7 +1,7 @@
-const GeoPoint = require('../src/geoPoint')
-const GeoPolygon = require('../src/geoPolygon')
+const GeoPoint = require('../src/GeoPoint')
+const GeoPolygon = require('../src/GeoPolygon')
 
-describe('geoPolygon', () => {
+describe('GeoPolygon', () => {
   it('#new with 2D array', () => {
     var face = [[1, 1], [1, 1], [1, 1], [1, 1]]
     var polygon = new GeoPolygon(face)

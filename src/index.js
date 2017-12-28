@@ -2,20 +2,22 @@ const BaaS = require('./baas')
 
 // 暴露指定 BaaS 方法
 BaaS.auth = require('./baasRequest').auth
-BaaS.File = require('./file')
-BaaS.FileCategory = require('./fileCategory')
-BaaS.GeoPoint = require('./geoPoint')
-BaaS.GeoPolygon = require('./geoPolygon')
-BaaS.login = require('./user').login
-BaaS.logout = require('./user').logout
+BaaS.Content = require('./Content')
+BaaS.File = require('./File')
+BaaS.FileCategory = require('./FileCategory')
+BaaS.GeoPoint = require('./GeoPoint')
+BaaS.GeoPolygon = require('./GeoPolygon')
+BaaS.login = require('./auth').login
+BaaS.logout = require('./auth').logout
 BaaS.order = require('./order')
 BaaS.pay = require('./pay')
 BaaS.Promise = require('./promise')
-BaaS.Query = require('./query')
+BaaS.Query = require('./Query')
 BaaS.request = require('./request')
 BaaS.storage = require('./storage')
-BaaS.TableObject = require('./tableObject')
+BaaS.TableObject = require('./TableObject')
 BaaS.uploadFile = require('./uploadFile')
+BaaS.User = require('./user')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
 

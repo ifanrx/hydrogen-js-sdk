@@ -1,5 +1,5 @@
 const constants = require('./constants')
-const Query = require('./query')
+const Query = require('./Query')
 const _cloneDeep = require('lodash.clonedeep')
 const _isInteger = require('lodash/isInteger')
 

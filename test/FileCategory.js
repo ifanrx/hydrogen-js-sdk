@@ -1,16 +1,16 @@
 require('../src/baasRequest').createRequestMethod()
 const config = require('../src/config')
 const faker = require('faker')
-const File = require('../src/file')
-const Query = require('../src/query')
+const FileCategory = require('../src/FileCategory')
+const Query = require('../src/Query')
 const helper = require('./helper')
 
-describe('file', () => {
-  let file = null
+describe('FileCategory', () => {
+  let fileCategory = null
   let randomArray
 
   beforeEach(() => {
-    file = new File()
+    fileCategory = new FileCategory()
   })
 
   before(() => {
@@ -20,13 +20,13 @@ describe('file', () => {
   it('#_handleAllQueryConditions', () => {
     var query = new Query()
     query.in('id', randomArray)
-    file.setQuery(query)
-    file.orderBy(['-name', 'size'])
-    file.limit(10)
-    expect(file._handleAllQueryConditions()).to.deep.equal({
+    fileCategory.setQuery(query)
+    fileCategory.orderBy(['-name', 'created_at'])
+    fileCategory.limit(10)
+    expect(fileCategory._handleAllQueryConditions()).to.deep.equal({
       limit: 10,
       offset: 0,
-      order_by: '-name,size',
+      order_by: '-name,created_at',
       where: `{"$and":[{"id":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })

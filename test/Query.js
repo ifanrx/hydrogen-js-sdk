@@ -1,14 +1,14 @@
 const config = require('../src/config')
 const faker = require('faker')
-const GeoPoint = require('../src/geoPoint')
-const GeoPolygon = require('../src/geoPolygon')
+const GeoPoint = require('../src/GeoPoint')
+const GeoPolygon = require('../src/GeoPolygon')
 const helper = require('./helper')
-const Query = require('../src/query')
+const Query = require('../src/Query')
 const utils = require('../src/utils')
 
 const randomOption = config.RANDOM_OPTION
 
-describe('query', () => {
+describe('Query', () => {
   let randomNumber, randomNumber1, randomNumber2, randomString, randomArray, regExpString
 
   before(() => {

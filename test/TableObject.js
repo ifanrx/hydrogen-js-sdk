@@ -1,13 +1,13 @@
 require('../src/baasRequest').createRequestMethod()
 const config = require('../src/config')
 const faker = require('faker')
-const Query = require('../src/query')
-const TableObject = require('../src/tableObject')
-const TableRecord = require('../src/tableRecord')
+const Query = require('../src/Query')
+const TableObject = require('../src/TableObject')
+const TableRecord = require('../src/TableRecord')
 const randomOption = config.RANDOM_OPTION
 const helper = require('./helper')
 
-describe('tableObject', () => {
+describe('TableObject', () => {
   let Product = null
   let randomNumber, randomString, randomArray
 
