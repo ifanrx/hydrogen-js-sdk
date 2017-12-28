@@ -6,15 +6,14 @@ const UserRecord = require('./UserRecord')
 class User extends BaseQuery {
   constructor() {
     super()
-    this.userID = null
   }
 
-  get(userID) {
-    return BaaS.getUserDetail({userID})
+  get(id) {
+    return BaaS.getUserDetail({id})
   }
 
-  getWithoutData(userID) {
-    return new UserRecord(userID)
+  getWithoutData(id) {
+    return new UserRecord(id)
   }
 
   find() {

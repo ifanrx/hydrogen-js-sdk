@@ -11,7 +11,7 @@ const API = {
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
   USER_INFO: '/hserve/v1/user/info/:userID/',
-  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
+  USER_DETAIL: '/hserve/v1.3/user/info/:id/',
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
@@ -24,6 +24,7 @@ const API = {
   UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
 
+  LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
   CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
   CONTENT_DETAIL: '/hserve/v1.3/content/detail/:richTextID/',
@@ -54,6 +55,7 @@ const methodMapList = [{
   },
   updateUser: {
     url: API.UPDATE_USER,
+    method: 'PUT'
   },
 }, {
   getTableList: {
@@ -85,6 +87,9 @@ const methodMapList = [{
   }
 }, {
   getContentList: {
+    url: API.LAGECY_CONTENT_LIST
+  },
+  getContentList2: {
     url: API.CONTENT_LIST
   },
   getContent: {

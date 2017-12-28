@@ -1,6 +1,6 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
-const baasRequest = require('./baasRequest').baasRequest
+const Query = require('./Query')
 
 class ContentGroup extends BaseQuery {
   constructor(contentGroupID) {
@@ -13,15 +13,19 @@ class ContentGroup extends BaseQuery {
   }
 
   find() {
-    return BaaS.getContentList(this._handleAllQueryConditions())
+    let condition = this._handleAllQueryConditions()
+    condition.contentGroupID = this._contentGroupID
+    return BaaS.getContentList2(condition)
   }
 
   getCategoryList() {
-    return BaaS.getContentCategoryList({contentGroupID})
+    return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID})
   }
 
   getCategory(categoryID) {
-    return BaaS.getContentCategory({categoryID})
+    let query = new Query()
+    query.compare('group_id', '=', this._contentGroupID)
+    return BaaS.getContentCategory({categoryID, where: JSON.stringify(query.queryObject)})
   }
 }
 

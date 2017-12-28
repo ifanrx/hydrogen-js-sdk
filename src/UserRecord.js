@@ -9,14 +9,14 @@ const _cloneDeep = require('lodash.clonedeep')
 const API = BaaS._config.API
 
 class UserRecord extends BaseRecord {
-  constructor(userID) {
-    super(userID)
+  constructor(id) {
+    super(id)
   }
 
   update() {
     var record = _cloneDeep(this._record)
     this._record = {}
-    return BaaS.updateUser({userID: this._recordID, data: record})
+    return BaaS.updateUser({id: this._recordID, data: record})
   }
 }
 
