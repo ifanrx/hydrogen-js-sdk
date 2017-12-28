@@ -21,7 +21,7 @@ BaaS.test = {
 // 引入待测试模块
 require('./BaseQuery')
 require('./baasRequest')
-require('./Content')
+require('./ContentGroup')
 require('./File')
 require('./FileCategory')
 require('./GeoPoint')

@@ -2,7 +2,7 @@ const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
 const baasRequest = require('./baasRequest').baasRequest
 
-class Content extends BaseQuery {
+class ContentGroup extends BaseQuery {
   constructor(contentGroupID) {
     super()
     this._contentGroupID = contentGroupID
@@ -25,4 +25,4 @@ class Content extends BaseQuery {
   }
 }
 
-module.exports = Content
+module.exports = ContentGroup

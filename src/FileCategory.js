@@ -1,5 +1,5 @@
 const BaaS = require('./baas')
-const BaseQuery = require('./baseQuery')
+const BaseQuery = require('./BaseQuery')
 const Query = require('./Query')
 
 class FileCategory extends BaseQuery {
