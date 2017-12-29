@@ -4,7 +4,7 @@ const GeoPolygon = require('./GeoPolygon')
 
 class BaseRecord {
   constructor(recordID) {
-    this.recordID = recordID
+    this._recordID = recordID
     this._record = {}
   }
 

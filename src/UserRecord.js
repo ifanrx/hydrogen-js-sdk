@@ -3,8 +3,8 @@ const BaseRecord = require('./BaseRecord')
 const _cloneDeep = require('lodash.clonedeep')
 
 class UserRecord extends BaseRecord {
-  constructor(userID) {
-    super(userID)
+  constructor() {
+    super()
   }
 
   update() {

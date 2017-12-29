@@ -11,8 +11,8 @@ class User extends BaseQuery {
     return BaaS.getUserDetail({userID})
   }
 
-  getWithoutData(userID) {
-    return new UserRecord(userID)
+  getCurrentUserWithoutData() {
+    return new UserRecord()
   }
 
   find() {

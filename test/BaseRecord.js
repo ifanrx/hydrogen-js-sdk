@@ -23,6 +23,10 @@ describe('BaseRecord', () => {
     product = new BaseRecord(randomNumber)
   })
 
+  it('#_recordID', () => {
+    expect(product._recordID).to.equal(randomNumber)
+  })
+
   it('#set key && value', () => {
     product.set('price', randomNumber1)
     product.set('amount', randomNumber2)

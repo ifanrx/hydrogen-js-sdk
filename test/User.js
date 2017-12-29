@@ -10,7 +10,7 @@ const randomOption = config.RANDOM_OPTION
 
 describe('User', () => {
   let user = null
-  let randomNumber, randomString
+  let randomNumber, getCurrentUserWithoutDatarandomString
 
   beforeEach(() => {
     user = new User()
@@ -30,8 +30,8 @@ describe('User', () => {
     getUserDetail.restore()
   })
 
-  it('#getWithoutData', () => {
-    var someone = user.getWithoutData(randomNumber)
+  it('#getCurrentUserWithoutData', () => {
+    var someone = user.getCurrentUserWithoutData()
     expect(someone instanceof UserRecord).to.be.true
   })
 

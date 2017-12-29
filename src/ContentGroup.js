@@ -19,7 +19,7 @@ class ContentGroup extends BaseQuery {
   }
 
   getCategoryList() {
-    return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID})
+    return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID, limit: 100})
   }
 
   getCategory(categoryID) {
