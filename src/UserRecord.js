@@ -16,7 +16,7 @@ class UserRecord extends BaseRecord {
   update() {
     var record = _cloneDeep(this._record)
     this._record = {}
-    return BaaS.updateUser({id: this._recordID, data: record})
+    return BaaS.updateUser({data: record})
   }
 }
 

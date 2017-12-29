@@ -10,7 +10,7 @@ const API = {
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
-  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
+  USER_DETAIL: '/hserve/v1.3/user/info/',
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
