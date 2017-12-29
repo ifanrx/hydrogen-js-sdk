@@ -1,12 +1,6 @@
 const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
-const baasRequest = require('./baasRequest').baasRequest
-const constants = require('./constants')
-const GeoPoint = require('./GeoPoint')
-const GeoPolygon = require('./GeoPolygon')
 const _cloneDeep = require('lodash.clonedeep')
-
-const API = BaaS._config.API
 
 class TableRecord  extends BaseRecord {
   constructor(tableID, recordID) {

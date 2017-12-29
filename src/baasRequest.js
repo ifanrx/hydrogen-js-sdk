@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const config = require('./config')
 const constants = require('./constants')
 const extend = require('node.extend')
 const Promise = require('./promise')

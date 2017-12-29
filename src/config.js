@@ -1,4 +1,4 @@
-const API_HOST = 'https://sso.ifanr.com';
+const API_HOST = 'https://sso.ifanr.com'
 
 const API = {
   INIT: '/hserve/v1/session/init/',
@@ -37,7 +37,7 @@ const API = {
   DELETE_FILES: '/hserve/v1.3/uploaded-file/',
   FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
-};
+}
 
 const methodMapList = [{
   getUserInfo: {
@@ -127,7 +127,7 @@ const methodMapList = [{
   getFileCategoryList: {
     url: API.FILE_CATEGORY_LIST
   },
-},];
+},]
 
 const RANDOM_OPTION = {
   max: 100
@@ -151,4 +151,4 @@ module.exports = {
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
   VERSION: 'v1.1.3'
-};
+}

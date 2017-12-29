@@ -32,26 +32,26 @@ class Query {
   compare(key, operator, value) {
     var op = 'eq'
     switch(operator) {
-      case '=':
-        op = 'eq'
-        break
-      case '!=':
-        op = 'ne'
-        break
-      case '<':
-        op = 'lt'
-        break
-      case '<=':
-        op = 'lte'
-        break
-      case '>':
-        op = 'gt'
-        break
-      case '>=':
-        op = 'gte'
-        break
-      default:
-        throw new Error(constants.MSG.ARGS_ERROR)
+    case '=':
+      op = 'eq'
+      break
+    case '!=':
+      op = 'ne'
+      break
+    case '<':
+      op = 'lt'
+      break
+    case '<=':
+      op = 'lte'
+      break
+    case '>':
+      op = 'gt'
+      break
+    case '>=':
+      op = 'gte'
+      break
+    default:
+      throw new Error(constants.MSG.ARGS_ERROR)
     }
     this._addQueryObject(key, {[op]: value})
     return this

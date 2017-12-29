@@ -57,12 +57,12 @@ const wxUpload = (config, resolve, reject, type) => {
       result.status = 'ok'
       result.path = config.destLink
       result.file = {
-        "id": config.id,
-        "name": config.fileName,
-        "created_at": data.time,
-        "mime_type": data.mimetype,
-        "cdn_path": data.url,
-        "size": data.file_size,
+        'id': config.id,
+        'name': config.fileName,
+        'created_at': data.time,
+        'mime_type': data.mimetype,
+        'cdn_path': data.url,
+        'size': data.file_size,
       }
 
       delete res.data
