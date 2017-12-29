@@ -8,7 +8,7 @@ class ContentGroup extends BaseQuery {
     this._contentGroupID = contentGroupID
   }
 
-  get(richTextID) {
+  getContent(richTextID) {
     return BaaS.getContent({richTextID})
   }
 
