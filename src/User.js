@@ -8,12 +8,12 @@ class User extends BaseQuery {
     super()
   }
 
-  get(id) {
-    return BaaS.getUserDetail({id})
+  get(userID) {
+    return BaaS.getUserDetail({userID})
   }
 
-  getWithoutData(id) {
-    return new UserRecord(id)
+  getWithoutData(userID) {
+    return new UserRecord(userID)
   }
 
   find() {

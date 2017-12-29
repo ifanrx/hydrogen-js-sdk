@@ -17,7 +17,7 @@ BaaS.request = require('./request')
 BaaS.storage = require('./storage')
 BaaS.TableObject = require('./TableObject')
 BaaS.uploadFile = require('./uploadFile')
-BaaS.User = require('./user')
+BaaS.User = require('./User')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
 

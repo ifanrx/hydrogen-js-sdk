@@ -10,8 +10,7 @@ const API = {
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
 
-  USER_INFO: '/hserve/v1/user/info/:userID/',
-  USER_DETAIL: '/hserve/v1.3/user/info/:id/',
+  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
@@ -42,7 +41,7 @@ const API = {
 
 const methodMapList = [{
   getUserInfo: {
-    url: API.USER_INFO,
+    url: API.USER_DETAIL,
     defaultParams: {
       userID: '',
     }
