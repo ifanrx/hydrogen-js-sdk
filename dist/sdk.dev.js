@@ -5469,196 +5469,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":31}],33:[function(require,module,exports){
-(function (global){
-'use strict';
-
-/**
- * 挂在 BaaS 对象的方法和属性都会被暴露到客户端环境，所以要注意保持 BaaS 对象的干净、安全
- * @author Paco
- * @since 1.0.0
- */
-
-var extend = require('node.extend');
-var utils = require('./utils');
-var constants = require('./constants');
-var storage = require('./storage');
-
-var BaaS = global.BaaS || {};
-
-BaaS._config = utils.getConfig();
-
-/**
- * 初始化 SDK
- * @param  {[type]} clientID [description]
- */
-BaaS.init = function (clientID) {
-  if (Object.prototype.toString.apply(clientID) !== '[object String]') {
-    throw new Error('非法 clientID');
-  }
-
-  BaaS._config.CLIENT_ID = clientID;
-};
-
-/**
- * 获取客户端认证 Token
- * @return {String}
- */
-BaaS.getAuthToken = function () {
-  return storage.get(constants.STORAGE_KEY.AUTH_TOKEN);
-};
-
-/**
- * 获取 BaaS 登录状态
- * @return {Boolean}
- */
-BaaS.isLogined = function () {
-  return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS);
-};
-
-/**
- * 检测 BaaS 当前状态
- */
-BaaS.check = function () {
-  if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端');
-  }
-
-  if (!BaaS.isLogined()) {
-    throw new Error('未登录');
-  }
-};
-
-/**
- * 清楚认证信息、登录状态、用户信息
- */
-BaaS.clearSession = function () {
-  // 清除客户端认证 Token
-  storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '');
-  // 清除 BaaS 登录状态
-  storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '');
-  // 清除用户信息
-  storage.set(constants.STORAGE_KEY.USERINFO, '');
-  storage.set(constants.STORAGE_KEY.UID, '');
-  storage.set(constants.STORAGE_KEY.OPENID, '');
-  storage.set(constants.STORAGE_KEY.OPENID, '');
-};
-
-module.exports = BaaS;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constants":38,"./storage":49,"./utils":55,"node.extend":29}],34:[function(require,module,exports){
-'use strict';
-
-var BaaS = require('./baas');
-var config = require('./config');
-var constants = require('./constants');
-var extend = require('node.extend');
-var Promise = require('./promise');
-var request = require('./request');
-var utils = require('./utils');
-var user = require('./user'
-
-/**
- * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
- */
-);var baasRequest = function baasRequest(_ref) {
-  var _arguments = arguments;
-  var url = _ref.url,
-      _ref$method = _ref.method,
-      method = _ref$method === undefined ? 'GET' : _ref$method,
-      _ref$data = _ref.data,
-      data = _ref$data === undefined ? {} : _ref$data,
-      _ref$header = _ref.header,
-      header = _ref$header === undefined ? {} : _ref$header,
-      _ref$dataType = _ref.dataType,
-      dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
-
-  return user.login(false).then(function () {
-    return request.apply(null, _arguments);
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-/**
- * 根据 methodMap 创建对应的 BaaS Method
- * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
- */
-var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
-  var HTTPMethodCodeMap = {
-    GET: constants.STATUS_CODE.SUCCESS,
-    POST: constants.STATUS_CODE.CREATED,
-    PUT: constants.STATUS_CODE.UPDATE,
-    PATCH: constants.STATUS_CODE.PATCH,
-    DELETE: constants.STATUS_CODE.DELETE
-  };
-
-  for (var k in methodMap) {
-    if (methodMap.hasOwnProperty(k)) {
-      BaaS[k] = function (k) {
-        var methodItem = methodMap[k];
-        return function (objects) {
-          var newObjects = extend(true, {}, objects);
-          var method = methodItem.method || 'GET';
-
-          if (methodItem.defaultParams) {
-            var defaultParamsCopy = extend({}, methodItem.defaultParams);
-            newObjects = extend(defaultParamsCopy, newObjects);
-          }
-
-          var url = utils.format(methodItem.url, newObjects);
-          var data = newObjects && newObjects.data || newObjects;
-          data = excludeParams(methodItem.url, data);
-          data = utils.replaceQueryParams(data);
-
-          return new Promise(function (resolve, reject) {
-            return baasRequest({ url: url, method: method, data: data }).then(function (res) {
-              if (res.statusCode == HTTPMethodCodeMap[method]) {
-                resolve(res);
-              } else {
-                reject(constants.MSG.STATUS_CODE_ERROR);
-              }
-            }, function (err) {
-              reject(err);
-            });
-          });
-        };
-      }(k);
-    }
-  }
-};
-
-/**
- * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
- * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
- */
-var excludeParams = function excludeParams(URL, params) {
-  URL.replace(/:(\w*)/g, function (match, m1) {
-    if (params[m1] !== undefined) {
-      delete params[m1];
-    }
-  });
-  return params;
-};
-
-/**
- * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
- */
-var createRequestMethod = function createRequestMethod() {
-  var methodMapList = BaaS._config.METHOD_MAP_LIST;
-  methodMapList.map(function (v) {
-    doCreateRequestMethod(v);
-  });
-};
-
-module.exports = {
-  baasRequest: baasRequest,
-  excludeParams: excludeParams,
-  createRequestMethod: createRequestMethod,
-  doCreateRequestMethod: doCreateRequestMethod
-};
-
-},{"./baas":33,"./config":37,"./constants":38,"./promise":46,"./request":48,"./user":54,"./utils":55,"node.extend":29}],35:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5666,7 +5476,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var constants = require('./constants');
-var Query = require('./query');
+var Query = require('./Query');
 var _cloneDeep = require('lodash.clonedeep');
 var _isInteger = require('lodash/isInteger');
 
@@ -5737,200 +5547,93 @@ var BaseQuery = function () {
 
 module.exports = BaseQuery;
 
-},{"./constants":38,"./query":47,"lodash.clonedeep":10,"lodash/isInteger":21}],36:[function(require,module,exports){
+},{"./Query":40,"./constants":50,"lodash.clonedeep":10,"lodash/isInteger":21}],34:[function(require,module,exports){
 'use strict';
 
-var extend = require('node.extend');
-var config = require('./config');
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var devConfig = {
-  DEBUG: true
-};
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-module.exports = extend(config, devConfig);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-},{"./config":37,"node.extend":29}],37:[function(require,module,exports){
-'use strict';
+var constants = require('./constants');
+var GeoPoint = require('./GeoPoint');
+var GeoPolygon = require('./GeoPolygon');
 
-var API_HOST = 'https://sso.ifanr.com';
+var BaseRecord = function () {
+  function BaseRecord(recordID) {
+    _classCallCheck(this, BaseRecord);
 
-var API = {
-  INIT: '/hserve/v1/session/init/',
-  LOGIN: '/hserve/v1/session/authenticate/',
-  LOGOUT: '/hserve/v1/session/destroy/',
-  PAY: '/hserve/v1/wechat/pay/order/',
-  ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
-  UPLOAD: '/hserve/v1/upload/',
-  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
-  DECRYPT: '/hserve/v1/wechat/decrypt/',
+    this._recordID = recordID;
+    this._record = {};
+  }
 
-  USER_INFO: '/hserve/v1/user/info/:userID/',
+  _createClass(BaseRecord, [{
+    key: 'set',
+    value: function set() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
 
-  TABLE_LIST: '/hserve/v1/table/',
-  TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-
-  CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
-
-  FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
-  FILE_LIST: '/hserve/v1.3/uploaded-file/',
-  DELETE_FILE: '/hserve/v1.3/uploaded-file/:fileID/',
-  DELETE_FILES: '/hserve/v1.3/uploaded-file/',
-  FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
-  FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/'
-};
-
-var methodMapList = [{
-  getUserInfo: {
-    url: API.USER_INFO,
-    defaultParams: {
-      userID: ''
+      if (args.length === 1) {
+        if (_typeof(args[0]) === 'object') {
+          var objectArg = args[0];
+          var record = {};
+          Object.keys(args[0]).forEach(function (key) {
+            record[key] = objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon ? objectArg[key].toGeoJSON() : objectArg[key];
+          });
+          this._record = record;
+        } else {
+          throw new Error(constants.MSG.ARGS_ERROR);
+        }
+      } else if (args.length === 2) {
+        this._record[args[0]] = args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon ? args[1].toGeoJSON() : args[1];
+      } else {
+        throw new Error(constants.MSG.ARGS_ERROR);
+      }
+      return this;
     }
-  }
-}, {
-  getTableList: {
-    url: API.TABLE_LIST
-  },
-  getTable: {
-    url: API.TABLE_DETAIL
-  },
-  getRecordList: {
-    url: API.RECORD_LIST
-  },
-  queryRecordList: {
-    url: API.QUERY_RECORD_LIST
-  },
-  getRecord: {
-    url: API.RECORD_DETAIL
-  },
-  createRecord: {
-    url: API.CREATE_RECORD,
-    method: 'POST'
-  },
-  updateRecord: {
-    url: API.UPDATE_RECORD,
-    method: 'PUT'
-  },
-  deleteRecord: {
-    url: API.DELETE_RECORD,
-    method: 'DELETE'
-  }
-}, {
-  getContentList: {
-    url: API.CONTENT_LIST
-  },
-  getContent: {
-    url: API.CONTENT_DETAIL
-  },
-  getContentGroupList: {
-    url: API.CONTENT_GROUP_LIST
-  },
-  getContentGroup: {
-    url: API.CONTENT_GROUP_DETAIL
-  },
-  getContentCategory: {
-    url: API.CONTENT_CATEGORY_DETAIL
-  }
-}, {
-  getFileDetail: {
-    url: API.FILE_DETAIL
-  },
-  getFileList: {
-    url: API.FILE_LIST
-  },
-  deleteFile: {
-    url: API.DELETE_FILE,
-    method: 'DELETE'
-  },
-  deleteFiles: {
-    url: API.DELETE_FILES,
-    method: 'DELETE'
-  },
-  getFileCategoryDetail: {
-    url: API.FILE_CATEGORY_DETAIL
-  },
-  getFileCategoryList: {
-    url: API.FILE_CATEGORY_LIST
-  }
-}];
+  }, {
+    key: 'incrementBy',
+    value: function incrementBy(key, value) {
+      this._record[key] = { $incr_by: value };
+      return this;
+    }
+  }, {
+    key: 'append',
+    value: function append(key, value) {
+      if (!(value instanceof Array)) {
+        value = [value];
+      }
+      this._record[key] = { $append: value };
+      return this;
+    }
+  }, {
+    key: 'uAppend',
+    value: function uAppend(key, value) {
+      if (!(value instanceof Array)) {
+        value = [value];
+      }
+      this._record[key] = { $append_unique: value };
+      return this;
+    }
+  }, {
+    key: 'remove',
+    value: function remove(key, value) {
+      if (!(value instanceof Array)) {
+        value = [value];
+      }
+      this._record[key] = { $remove: value };
+      return this;
+    }
+  }]);
 
-var RANDOM_OPTION = {
-  max: 100
-};
+  return BaseRecord;
+}();
 
-var requestParamsMap = {
-  contentGroupID: 'content_group_id',
-  categoryID: 'category_id',
-  recordID: 'id',
-  submissionType: 'submission_type',
-  submissionValue: 'submission_value',
-  categoryName: 'category_name'
-};
+module.exports = BaseRecord;
 
-module.exports = {
-  API_HOST: API_HOST,
-  API: API,
-  AUTH_PREFIX: 'Hydrogen-r1',
-  METHOD_MAP_LIST: methodMapList,
-  DEBUG: false,
-  RANDOM_OPTION: RANDOM_OPTION,
-  REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.2'
-};
-
-},{}],38:[function(require,module,exports){
-'use strict';
-
-// 常量表
-module.exports = {
-  // 存储信息
-  STORAGE_KEY: {
-    AUTH_TOKEN: 'auth_token',
-    USERINFO: 'userinfo',
-    UID: 'uid',
-    OPENID: 'openid',
-    UNIONID: 'unionid',
-    IS_LOGINED_BAAS: 'is_logined_baas'
-  },
-  // 提示信息
-  MSG: {
-    STATUS_CODE_ERROR: 'Unexpected API Status Code',
-    NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误',
-    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
-    LOGIN_ERROR: '登录失败',
-    UNAUTH_ERROR: '请先完成用户授权'
-  },
-  STATUS_CODE: {
-    CREATED: 201,
-    SUCCESS: 200,
-    UPDATE: 200,
-    PATCH: 200,
-    DELETE: 204,
-    UNAUTHORIZED: 401,
-    NOT_FOUND: 404,
-    SERVER_ERROR: 500
-  },
-
-  UPLOAD: {
-    UPLOAD_FILE_KEY: 'file',
-    HEADER_AUTH: 'Authorization',
-    HEADER_CLIENT: 'X-Hydrogen-Client-ID',
-    HEADER_AUTH_VALUE: 'Hydrogen-r1 ',
-    UA: 'Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
-  }
-};
-
-},{}],39:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./constants":50}],35:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5942,8 +5645,65 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BaaS = require('./baas');
-var BaseQuery = require('./baseQuery');
-var baasRequest = require('./baasRequest').baasRequest;
+var BaseQuery = require('./BaseQuery');
+var Query = require('./Query');
+
+var ContentGroup = function (_BaseQuery) {
+  _inherits(ContentGroup, _BaseQuery);
+
+  function ContentGroup(contentGroupID) {
+    _classCallCheck(this, ContentGroup);
+
+    var _this = _possibleConstructorReturn(this, (ContentGroup.__proto__ || Object.getPrototypeOf(ContentGroup)).call(this));
+
+    _this._contentGroupID = contentGroupID;
+    return _this;
+  }
+
+  _createClass(ContentGroup, [{
+    key: 'getContent',
+    value: function getContent(richTextID) {
+      return BaaS.getContent({ richTextID: richTextID });
+    }
+  }, {
+    key: 'find',
+    value: function find() {
+      var condition = this._handleAllQueryConditions();
+      condition.contentGroupID = this._contentGroupID;
+      return BaaS.getContentList2(condition);
+    }
+  }, {
+    key: 'getCategoryList',
+    value: function getCategoryList() {
+      return BaaS.getContentCategoryList({ contentGroupID: this._contentGroupID, limit: 100 });
+    }
+  }, {
+    key: 'getCategory',
+    value: function getCategory(categoryID) {
+      var query = new Query();
+      query.compare('group_id', '=', this._contentGroupID);
+      return BaaS.getContentCategory({ categoryID: categoryID, where: JSON.stringify(query.queryObject) });
+    }
+  }]);
+
+  return ContentGroup;
+}(BaseQuery);
+
+module.exports = ContentGroup;
+
+},{"./BaseQuery":33,"./Query":40,"./baas":46}],36:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BaaS = require('./baas');
+var BaseQuery = require('./BaseQuery');
 var uploadFile = require('./uploadFile');
 
 var File = function (_BaseQuery) {
@@ -5986,7 +5746,7 @@ var File = function (_BaseQuery) {
 
 module.exports = File;
 
-},{"./baas":33,"./baasRequest":34,"./baseQuery":35,"./uploadFile":53}],40:[function(require,module,exports){
+},{"./BaseQuery":33,"./baas":46,"./uploadFile":58}],37:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5998,8 +5758,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BaaS = require('./baas');
-var BaseQuery = require('./baseQuery');
-var Query = require('./query');
+var BaseQuery = require('./BaseQuery');
+var Query = require('./Query');
 
 var FileCategory = function (_BaseQuery) {
   _inherits(FileCategory, _BaseQuery);
@@ -6034,7 +5794,7 @@ var FileCategory = function (_BaseQuery) {
 
 module.exports = FileCategory;
 
-},{"./baas":33,"./baseQuery":35,"./query":47}],41:[function(require,module,exports){
+},{"./BaseQuery":33,"./Query":40,"./baas":46}],38:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6067,14 +5827,14 @@ var GeoPoint = function () {
 
 module.exports = GeoPoint;
 
-},{"lodash.clonedeep":10}],42:[function(require,module,exports){
+},{"lodash.clonedeep":10}],39:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GeoPoint = require('./geoPoint');
+var GeoPoint = require('./GeoPoint');
 var _cloneDeep = require('lodash.clonedeep');
 var constants = require('./constants');
 
@@ -6121,144 +5881,7 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./constants":38,"./geoPoint":41,"lodash.clonedeep":10}],43:[function(require,module,exports){
-'use strict';
-
-var BaaS = require('./baas'
-
-// 暴露指定 BaaS 方法
-);BaaS.auth = require('./baasRequest').auth;
-BaaS.File = require('./file');
-BaaS.FileCategory = require('./fileCategory');
-BaaS.GeoPoint = require('./geoPoint');
-BaaS.GeoPolygon = require('./geoPolygon');
-BaaS.login = require('./user').login;
-BaaS.logout = require('./user').logout;
-BaaS.order = require('./order');
-BaaS.pay = require('./pay');
-BaaS.Promise = require('./promise');
-BaaS.Query = require('./query');
-BaaS.request = require('./request');
-BaaS.storage = require('./storage');
-BaaS.TableObject = require('./tableObject');
-BaaS.uploadFile = require('./uploadFile');
-BaaS.wxDecryptData = require('./wxDecryptData');
-BaaS.wxReportTicket = require('./templateMessage').wxReportTicket;
-
-// 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
-require('./baasRequest').createRequestMethod
-
-// 暴露 BaaS 到小程序环境
-();if (typeof wx !== 'undefined') {
-  wx.BaaS = BaaS;
-}
-
-module.exports = BaaS;
-
-},{"./baas":33,"./baasRequest":34,"./file":39,"./fileCategory":40,"./geoPoint":41,"./geoPolygon":42,"./order":44,"./pay":45,"./promise":46,"./query":47,"./request":48,"./storage":49,"./tableObject":50,"./templateMessage":52,"./uploadFile":53,"./user":54,"./wxDecryptData":56}],44:[function(require,module,exports){
-'use strict';
-
-var baasRequest = require('./baasRequest').baasRequest;
-var BaaS = require('./baas');
-var API = BaaS._config.API;
-var constants = require('./constants');
-var utils = require('./utils');
-var Promise = require('./promise');
-
-var order = function order(params) {
-  var url = utils.format(API.ORDER, { transactionID: params.transactionID });
-
-  return baasRequest({
-    url: url
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-module.exports = order;
-
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./utils":55}],45:[function(require,module,exports){
-'use strict';
-
-var baasRequest = require('./baasRequest').baasRequest;
-var BaaS = require('./baas');
-var constants = require('./constants');
-var Promise = require('./promise');
-var storage = require('./storage');
-
-var API = BaaS._config.API;
-
-/**
- * @description payment
- * @return {Promise} The result of the payment transaction, is a Promise object
- */
-var keysMap = {
-  merchandiseSchemaID: 'merchandise_schema_id', // optional
-  merchandiseRecordID: 'merchandise_record_id', // optional
-  merchandiseSnapshot: 'merchandise_snapshot', // optional
-  merchandiseDescription: 'merchandise_description', // required
-  totalCost: 'total_cost' // required
-};
-
-var pay = function pay(params) {
-  if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
-    return new Promise(function (resolve, reject) {
-      reject(constants.MSG.UNAUTH_ERROR);
-    });
-  }
-
-  var paramsObj = {};
-
-  for (var key in params) {
-    paramsObj[keysMap[key]] = params[key];
-  }
-
-  return baasRequest({
-    url: API.PAY,
-    method: 'POST',
-    data: paramsObj
-  }).then(function (res) {
-    var data = res.data || {};
-    return new Promise(function (resolve, reject) {
-      wx.requestPayment({
-        appId: data.appId,
-        timeStamp: data.timeStamp,
-        nonceStr: data.nonceStr,
-        package: data.package,
-        signType: 'MD5',
-        paySign: data.paySign,
-        success: function success(res) {
-          res.transaction_no = data.transaction_no;
-          return resolve(res);
-        },
-        fail: function fail(err) {
-          return reject(err);
-        }
-      });
-    }, function (err) {
-      throw new Error(err);
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-module.exports = pay;
-
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./storage":49}],46:[function(require,module,exports){
-'use strict';
-
-var Promise = require('rsvp').Promise;
-
-module.exports = Promise;
-
-},{"rsvp":32}],47:[function(require,module,exports){
+},{"./GeoPoint":38,"./constants":50,"lodash.clonedeep":10}],40:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6268,8 +5891,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var constants = require('./constants');
-var GeoPoint = require('./geoPoint');
-var GeoPolygon = require('./geoPolygon');
+var GeoPoint = require('./GeoPoint');
+var GeoPolygon = require('./GeoPolygon');
 var utils = require('./utils');
 var _isString = require('lodash/isString');
 
@@ -6549,126 +6172,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./constants":38,"./geoPoint":41,"./geoPolygon":42,"./utils":55,"lodash/isString":24}],48:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./promise');
-var extend = require('node.extend');
-var utils = require('./utils');
-var constants = require('./constants');
-var BaaS = require('./baas');
-var storage = require('./storage');
-
-/**
- * 设置请求头
- * @param  {Object} header 自定义请求头
- * @return {Object}        扩展后的请求
- */
-var builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization'];
-
-var setHeader = function setHeader(header) {
-  var extendHeader = {
-    'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
-    'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': utils.getSysPlatform()
-  };
-
-  var getAuthToken = BaaS.getAuthToken();
-  if (getAuthToken) {
-    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + getAuthToken;
-  }
-
-  if (header) {
-    builtInHeader.map(function (key) {
-      if (header.hasOwnProperty(key)) {
-        delete header[key];
-      }
-    });
-  }
-
-  return extend(extendHeader, header || {});
-};
-
-/**
- * 用于网络请求
- * @param  {String} url                   url地址
- * @param  {String} [method='GET']        请求方法
- * @param  {Object|String} data           请求参数
- * @param  {Object} header                请求头部
- * @param  {String} [dataType='json']     发送数据的类型
- * @return {Object}                       返回一个 Promise 对象
- */
-var request = function request(_ref) {
-  var url = _ref.url,
-      _ref$method = _ref.method,
-      method = _ref$method === undefined ? 'GET' : _ref$method,
-      _ref$data = _ref.data,
-      data = _ref$data === undefined ? {} : _ref$data,
-      _ref$header = _ref.header,
-      header = _ref$header === undefined ? {} : _ref$header,
-      _ref$dataType = _ref.dataType,
-      dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
-
-
-  return new Promise(function (resolve, reject) {
-
-    if (!BaaS._config.CLIENT_ID) {
-      reject('未初始化客户端');
-    }
-
-    var headers = setHeader(header);
-
-    if (!/https:\/\//.test(url)) {
-      url = BaaS._config.API_HOST + url;
-    }
-
-    wx.request({
-      method: method,
-      url: url,
-      data: data,
-      header: headers,
-      dataType: dataType,
-      success: function success(res) {
-        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
-          BaaS.clearSession();
-        }
-        resolve(res);
-      },
-      fail: function fail(err) {
-        throw new Error(err.errMsg);
-        reject(err);
-      }
-    });
-
-    utils.log('Request => ' + url);
-  });
-};
-
-module.exports = request;
-
-},{"./baas":33,"./constants":38,"./promise":46,"./storage":49,"./utils":55,"node.extend":29}],49:[function(require,module,exports){
-'use strict';
-
-var storageKeyPrefix = 'ifx_baas_';
-
-module.exports = {
-  set: function set(key, value) {
-    try {
-      wx.setStorageSync(storageKeyPrefix + key, value);
-    } catch (e) {
-      throw new Error(e);
-    }
-  },
-  get: function get(key) {
-    try {
-      return wx.getStorageSync(storageKeyPrefix + key);
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-};
-
-},{}],50:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./constants":50,"./utils":59,"lodash/isString":24}],41:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6682,8 +6186,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BaaS = require('./baas');
-var BaseQuery = require('./baseQuery');
-var TableRecord = require('./tableRecord');
+var BaseQuery = require('./BaseQuery');
+var TableRecord = require('./TableRecord');
 
 var TableObject = function (_BaseQuery) {
   _inherits(TableObject, _BaseQuery);
@@ -6736,59 +6240,34 @@ var TableObject = function (_BaseQuery) {
 
 module.exports = TableObject;
 
-},{"./baas":33,"./baseQuery":35,"./tableRecord":51}],51:[function(require,module,exports){
+},{"./BaseQuery":33,"./TableRecord":42,"./baas":46}],42:[function(require,module,exports){
 'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var BaaS = require('./baas');
-var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
-var GeoPoint = require('./geoPoint');
-var GeoPolygon = require('./geoPolygon');
+var BaseRecord = require('./BaseRecord');
 var _cloneDeep = require('lodash.clonedeep');
 
-var API = BaaS._config.API;
+var TableRecord = function (_BaseRecord) {
+  _inherits(TableRecord, _BaseRecord);
 
-var TableRecord = function () {
   function TableRecord(tableID, recordID) {
     _classCallCheck(this, TableRecord);
 
-    this._tableID = tableID;
-    this._recordID = recordID;
-    this._record = {};
+    var _this = _possibleConstructorReturn(this, (TableRecord.__proto__ || Object.getPrototypeOf(TableRecord)).call(this, recordID));
+
+    _this._tableID = tableID;
+    return _this;
   }
 
   _createClass(TableRecord, [{
-    key: 'set',
-    value: function set() {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      if (args.length === 1) {
-        if (_typeof(args[0]) === 'object') {
-          var objectArg = args[0];
-          var record = {};
-          Object.keys(args[0]).forEach(function (key) {
-            record[key] = objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon ? objectArg[key].toGeoJSON() : objectArg[key];
-          });
-          this._record = record;
-        } else {
-          throw new Error(constants.MSG.ARGS_ERROR);
-        }
-      } else if (args.length === 2) {
-        this._record[args[0]] = args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon ? args[1].toGeoJSON() : args[1];
-      } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
-      }
-      return this;
-    }
-  }, {
     key: 'save',
     value: function save() {
       var record = _cloneDeep(this._record);
@@ -6802,214 +6281,98 @@ var TableRecord = function () {
       this._record = {};
       return BaaS.updateRecord({ tableID: this._tableID, recordID: this._recordID, data: record });
     }
-  }, {
-    key: 'incrementBy',
-    value: function incrementBy(key, value) {
-      this._record[key] = { $incr_by: value };
-      return this;
-    }
-  }, {
-    key: 'append',
-    value: function append(key, value) {
-      if (!(value instanceof Array)) {
-        value = [value];
-      }
-      this._record[key] = { $append: value };
-      return this;
-    }
-  }, {
-    key: 'uAppend',
-    value: function uAppend(key, value) {
-      if (!(value instanceof Array)) {
-        value = [value];
-      }
-      this._record[key] = { $append_unique: value };
-      return this;
-    }
-  }, {
-    key: 'remove',
-    value: function remove(key, value) {
-      if (!(value instanceof Array)) {
-        value = [value];
-      }
-      this._record[key] = { $remove: value };
-      return this;
-    }
   }]);
 
   return TableRecord;
-}();
+}(BaseRecord);
 
 module.exports = TableRecord;
 
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./geoPoint":41,"./geoPolygon":42,"lodash.clonedeep":10}],52:[function(require,module,exports){
+},{"./BaseRecord":34,"./baas":46,"lodash.clonedeep":10}],43:[function(require,module,exports){
 'use strict';
 
-var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
-var BaaS = require('./baas');
-var Promise = require('./promise');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var API = BaaS._config.API;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function makeParams(formID) {
-  if (!formID) {
-    throw new Error(constants.MSG.ARGS_ERROR);
-  }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  var paramsObj = {};
-  paramsObj['submission_type'] = 'form_id';
-  paramsObj['submission_value'] = formID;
-
-  return paramsObj;
-}
-
-var wxReportTicket = function wxReportTicket(formID) {
-  var paramsObj = makeParams(formID);
-
-  return baasRequest({
-    url: API.TEMPLATE_MESSAGE,
-    method: 'POST',
-    data: paramsObj
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-module.exports = {
-  makeParams: makeParams,
-  wxReportTicket: wxReportTicket
-};
-
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46}],53:[function(require,module,exports){
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BaaS = require('./baas');
-var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
-var Promise = require('./promise');
-var utils = require('./utils');
+var BaseQuery = require('./BaseQuery');
+var UserRecord = require('./UserRecord');
 
-var isAuth = function isAuth(resolve, reject) {
-  if (!BaaS._config.CLIENT_ID) {
-    reject('未初始化客户端');
+var User = function (_BaseQuery) {
+  _inherits(User, _BaseQuery);
+
+  function User() {
+    _classCallCheck(this, User);
+
+    return _possibleConstructorReturn(this, (User.__proto__ || Object.getPrototypeOf(User)).call(this));
   }
 
-  if (!BaaS.getAuthToken()) {
-    reject('未认证，请先完成用户登录');
-  }
-};
-
-// get the upload config for upyun from sso
-var getUploadFileConfig = function getUploadFileConfig(fileName, metaData) {
-  metaData.filename = fileName;
-
-  return baasRequest({
-    url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
-    method: 'POST',
-    data: metaData
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-var wxUpload = function wxUpload(config, resolve, reject, type) {
-  return wx.uploadFile({
-    url: config.uploadUrl,
-    filePath: config.filePath,
-    name: constants.UPLOAD.UPLOAD_FILE_KEY,
-    formData: {
-      authorization: config.authorization,
-      policy: config.policy
-    },
-    header: {
-      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + BaaS.getAuthToken(),
-      'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-      'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
-      'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
-      'User-Agent': constants.UPLOAD.UA
-    },
-    success: function success(res) {
-      var result = {};
-      var data = JSON.parse(res.data);
-
-      result.status = 'ok';
-      result.path = config.destLink;
-      result.file = {
-        "id": config.id,
-        "name": config.fileName,
-        "created_at": data.time,
-        "mime_type": data.mimetype,
-        "cdn_path": data.url,
-        "size": data.file_size
-      };
-
-      delete res.data;
-
-      if (type && type === 'json') {
-        res.data = result;
-      } else {
-        res.data = JSON.stringify(result);
-      }
-
-      resolve(res);
-    },
-    fail: function fail(err) {
-      reject(err);
+  _createClass(User, [{
+    key: 'get',
+    value: function get(userID) {
+      return BaaS.getUserDetail({ userID: userID });
     }
-  });
-};
+  }, {
+    key: 'getCurrentUserWithoutData',
+    value: function getCurrentUserWithoutData() {
+      return new UserRecord();
+    }
+  }, {
+    key: 'find',
+    value: function find() {
+      return BaaS.getUserList(this._handleAllQueryConditions());
+    }
+  }]);
 
-var uploadFile = function uploadFile(fileParams, metaData, type) {
-  if (!fileParams || (typeof fileParams === 'undefined' ? 'undefined' : _typeof(fileParams)) !== 'object' || !fileParams.filePath) {
-    throw new Error(constants.MSG.ARGS_ERROR);
+  return User;
+}(BaseQuery);
+
+module.exports = User;
+
+},{"./BaseQuery":33,"./UserRecord":44,"./baas":46}],44:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BaaS = require('./baas');
+var BaseRecord = require('./BaseRecord');
+var _cloneDeep = require('lodash.clonedeep');
+
+var UserRecord = function (_BaseRecord) {
+  _inherits(UserRecord, _BaseRecord);
+
+  function UserRecord() {
+    _classCallCheck(this, UserRecord);
+
+    return _possibleConstructorReturn(this, (UserRecord.__proto__ || Object.getPrototypeOf(UserRecord)).call(this));
   }
 
-  if (!metaData) {
-    metaData = {};
-  } else if ((typeof metaData === 'undefined' ? 'undefined' : _typeof(metaData)) !== 'object') {
-    throw new Error(constants.MSG.ARGS_ERROR);
-  }
+  _createClass(UserRecord, [{
+    key: 'update',
+    value: function update() {
+      var record = _cloneDeep(this._record);
+      this._record = {};
+      return BaaS.updateUser({ data: record });
+    }
+  }]);
 
-  return new Promise(function (resolve, reject) {
-    isAuth(resolve, reject);
+  return UserRecord;
+}(BaseRecord);
 
-    var fileName = utils.getFileNameFromPath(fileParams.filePath);
+module.exports = UserRecord;
 
-    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(function (res) {
-      var config = {
-        id: res.data.id,
-        fileName: fileName,
-        policy: res.data.policy,
-        authorization: res.data.authorization,
-        uploadUrl: res.data.upload_url,
-        filePath: fileParams.filePath,
-        destLink: res.data.file_link
-      };
-      return wxUpload(config, resolve, reject, type);
-    });
-  }, function (err) {
-    throw new Error(err);
-  });
-};
-
-module.exports = uploadFile;
-
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46,"./utils":55}],54:[function(require,module,exports){
+},{"./BaseRecord":34,"./baas":46,"lodash.clonedeep":10}],45:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7017,7 +6380,6 @@ var constants = require('./constants');
 var Promise = require('./promise');
 var request = require('./request');
 var storage = require('./storage');
-var utils = require('./utils');
 
 var API = BaaS._config.API;
 
@@ -7275,14 +6637,839 @@ module.exports = {
   logout: logout
 };
 
-},{"./baas":33,"./constants":38,"./promise":46,"./request":48,"./storage":49,"./utils":55}],55:[function(require,module,exports){
+},{"./baas":46,"./constants":50,"./promise":54,"./request":55,"./storage":56}],46:[function(require,module,exports){
+(function (global){
+'use strict';
+
+/**
+ * 挂在 BaaS 对象的方法和属性都会被暴露到客户端环境，所以要注意保持 BaaS 对象的干净、安全
+ * @author Paco
+ * @since 1.0.0
+ */
+
+var extend = require('node.extend');
+var utils = require('./utils');
+var constants = require('./constants');
+var storage = require('./storage');
+
+var BaaS = global.BaaS || {};
+
+BaaS._config = utils.getConfig
+
+/**
+ * 初始化 SDK
+ * @param  {[type]} clientID [description]
+ */
+();BaaS.init = function (clientID) {
+  if (Object.prototype.toString.apply(clientID) !== '[object String]') {
+    throw new Error('非法 clientID');
+  }
+
+  BaaS._config.CLIENT_ID = clientID;
+};
+
+/**
+ * 获取客户端认证 Token
+ * @return {String}
+ */
+BaaS.getAuthToken = function () {
+  return storage.get(constants.STORAGE_KEY.AUTH_TOKEN);
+};
+
+/**
+ * 获取 BaaS 登录状态
+ * @return {Boolean}
+ */
+BaaS.isLogined = function () {
+  return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS);
+};
+
+/**
+ * 检测 BaaS 当前状态
+ */
+BaaS.check = function () {
+  if (!BaaS.getAuthToken()) {
+    throw new Error('未认证客户端');
+  }
+
+  if (!BaaS.isLogined()) {
+    throw new Error('未登录');
+  }
+};
+
+/**
+ * 清楚认证信息、登录状态、用户信息
+ */
+BaaS.clearSession = function () {
+  // 清除客户端认证 Token
+  storage.set(constants.STORAGE_KEY.AUTH_TOKEN, ''
+  // 清除 BaaS 登录状态
+  );storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, ''
+  // 清除用户信息
+  );storage.set(constants.STORAGE_KEY.USERINFO, '');
+  storage.set(constants.STORAGE_KEY.UID, '');
+  storage.set(constants.STORAGE_KEY.OPENID, '');
+  storage.set(constants.STORAGE_KEY.OPENID, '');
+};
+
+module.exports = BaaS;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./constants":50,"./storage":56,"./utils":59,"node.extend":29}],47:[function(require,module,exports){
+'use strict';
+
+var BaaS = require('./baas');
+var constants = require('./constants');
+var extend = require('node.extend');
+var Promise = require('./promise');
+var request = require('./request');
+var utils = require('./utils');
+var auth = require('./auth'
+
+/**
+ * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
+ */
+);var baasRequest = function baasRequest(_ref) {
+  var _arguments = arguments;
+  var url = _ref.url,
+      _ref$method = _ref.method,
+      method = _ref$method === undefined ? 'GET' : _ref$method,
+      _ref$data = _ref.data,
+      data = _ref$data === undefined ? {} : _ref$data,
+      _ref$header = _ref.header,
+      header = _ref$header === undefined ? {} : _ref$header,
+      _ref$dataType = _ref.dataType,
+      dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
+
+  return auth.login(false).then(function () {
+    return request.apply(null, _arguments);
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+/**
+ * 根据 methodMap 创建对应的 BaaS Method
+ * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
+ */
+var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
+  var HTTPMethodCodeMap = {
+    GET: constants.STATUS_CODE.SUCCESS,
+    POST: constants.STATUS_CODE.CREATED,
+    PUT: constants.STATUS_CODE.UPDATE,
+    PATCH: constants.STATUS_CODE.PATCH,
+    DELETE: constants.STATUS_CODE.DELETE
+  };
+
+  for (var k in methodMap) {
+    if (methodMap.hasOwnProperty(k)) {
+      BaaS[k] = function (k) {
+        var methodItem = methodMap[k];
+        return function (objects) {
+          var newObjects = extend(true, {}, objects);
+          var method = methodItem.method || 'GET';
+
+          if (methodItem.defaultParams) {
+            var defaultParamsCopy = extend({}, methodItem.defaultParams);
+            newObjects = extend(defaultParamsCopy, newObjects);
+          }
+
+          var url = utils.format(methodItem.url, newObjects);
+          var data = newObjects && newObjects.data || newObjects;
+          data = excludeParams(methodItem.url, data);
+          data = utils.replaceQueryParams(data);
+
+          return new Promise(function (resolve, reject) {
+            return baasRequest({ url: url, method: method, data: data }).then(function (res) {
+              if (res.statusCode == HTTPMethodCodeMap[method]) {
+                resolve(res);
+              } else {
+                reject(constants.MSG.STATUS_CODE_ERROR);
+              }
+            }, function (err) {
+              reject(err);
+            });
+          });
+        };
+      }(k);
+    }
+  }
+};
+
+/**
+ * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
+ * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
+ */
+var excludeParams = function excludeParams(URL, params) {
+  URL.replace(/:(\w*)/g, function (match, m1) {
+    if (params[m1] !== undefined) {
+      delete params[m1];
+    }
+  });
+  return params;
+};
+
+/**
+ * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
+ */
+var createRequestMethod = function createRequestMethod() {
+  var methodMapList = BaaS._config.METHOD_MAP_LIST;
+  methodMapList.map(function (v) {
+    doCreateRequestMethod(v);
+  });
+};
+
+module.exports = {
+  baasRequest: baasRequest,
+  excludeParams: excludeParams,
+  createRequestMethod: createRequestMethod,
+  doCreateRequestMethod: doCreateRequestMethod
+};
+
+},{"./auth":45,"./baas":46,"./constants":50,"./promise":54,"./request":55,"./utils":59,"node.extend":29}],48:[function(require,module,exports){
+'use strict';
+
+var extend = require('node.extend');
+var config = require('./config');
+
+var devConfig = {
+  DEBUG: true
+};
+
+module.exports = extend(config, devConfig);
+
+},{"./config":49,"node.extend":29}],49:[function(require,module,exports){
+'use strict';
+
+var API_HOST = 'https://sso.ifanr.com';
+
+var API = {
+  INIT: '/hserve/v1/session/init/',
+  LOGIN: '/hserve/v1/session/authenticate/',
+  LOGOUT: '/hserve/v1/session/destroy/',
+  PAY: '/hserve/v1/wechat/pay/order/',
+  ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
+  UPLOAD: '/hserve/v1/upload/',
+  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+  DECRYPT: '/hserve/v1/wechat/decrypt/',
+
+  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
+  USER_LIST: '/hserve/v1.3/user/info/',
+  UPDATE_USER: '/hserve/v1.3/user/info/',
+
+  TABLE_LIST: '/hserve/v1/table/',
+  TABLE_DETAIL: '/hserve/v1/table/:tableID/',
+  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+
+  LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
+  CONTENT_LIST: '/hserve/v1.3/content/detail/',
+  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
+  CONTENT_DETAIL: '/hserve/v1.3/content/detail/:richTextID/',
+  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
+  CONTENT_CATEGORY_LIST: '/hserve/v1/content/category/',
+  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
+
+  FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
+  FILE_LIST: '/hserve/v1.3/uploaded-file/',
+  DELETE_FILE: '/hserve/v1.3/uploaded-file/:fileID/',
+  DELETE_FILES: '/hserve/v1.3/uploaded-file/',
+  FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
+  FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/'
+};
+
+var methodMapList = [{
+  getUserInfo: {
+    url: API.USER_DETAIL,
+    defaultParams: {
+      userID: ''
+    }
+  },
+  getUserDetail: {
+    url: API.USER_DETAIL
+  },
+  getUserList: {
+    url: API.USER_LIST
+  },
+  updateUser: {
+    url: API.UPDATE_USER,
+    method: 'PUT'
+  }
+}, {
+  getTableList: {
+    url: API.TABLE_LIST
+  },
+  getTable: {
+    url: API.TABLE_DETAIL
+  },
+  getRecordList: {
+    url: API.RECORD_LIST
+  },
+  queryRecordList: {
+    url: API.QUERY_RECORD_LIST
+  },
+  getRecord: {
+    url: API.RECORD_DETAIL
+  },
+  createRecord: {
+    url: API.CREATE_RECORD,
+    method: 'POST'
+  },
+  updateRecord: {
+    url: API.UPDATE_RECORD,
+    method: 'PUT'
+  },
+  deleteRecord: {
+    url: API.DELETE_RECORD,
+    method: 'DELETE'
+  }
+}, {
+  getContentList: {
+    url: API.LAGECY_CONTENT_LIST
+  },
+  getContentList2: {
+    url: API.CONTENT_LIST
+  },
+  getContent: {
+    url: API.CONTENT_DETAIL
+  },
+  getContentGroupList: {
+    url: API.CONTENT_GROUP_LIST
+  },
+  getContentGroup: {
+    url: API.CONTENT_GROUP_DETAIL
+  },
+  getContentCategoryList: {
+    url: API.CONTENT_CATEGORY_LIST
+  },
+  getContentCategory: {
+    url: API.CONTENT_CATEGORY_DETAIL
+  }
+}, {
+  getFileDetail: {
+    url: API.FILE_DETAIL
+  },
+  getFileList: {
+    url: API.FILE_LIST
+  },
+  deleteFile: {
+    url: API.DELETE_FILE,
+    method: 'DELETE'
+  },
+  deleteFiles: {
+    url: API.DELETE_FILES,
+    method: 'DELETE'
+  },
+  getFileCategoryDetail: {
+    url: API.FILE_CATEGORY_DETAIL
+  },
+  getFileCategoryList: {
+    url: API.FILE_CATEGORY_LIST
+  }
+}];
+
+var RANDOM_OPTION = {
+  max: 100
+};
+
+var requestParamsMap = {
+  contentGroupID: 'content_group_id',
+  categoryID: 'category_id',
+  recordID: 'id',
+  submissionType: 'submission_type',
+  submissionValue: 'submission_value',
+  categoryName: 'category_name'
+};
+
+module.exports = {
+  API_HOST: API_HOST,
+  API: API,
+  AUTH_PREFIX: 'Hydrogen-r1',
+  METHOD_MAP_LIST: methodMapList,
+  DEBUG: false,
+  RANDOM_OPTION: RANDOM_OPTION,
+  REQUEST_PARAMS_MAP: requestParamsMap,
+  VERSION: 'v1.1.3'
+};
+
+},{}],50:[function(require,module,exports){
+'use strict';
+
+// 常量表
+module.exports = {
+  // 存储信息
+  STORAGE_KEY: {
+    AUTH_TOKEN: 'auth_token',
+    USERINFO: 'userinfo',
+    UID: 'uid',
+    OPENID: 'openid',
+    UNIONID: 'unionid',
+    IS_LOGINED_BAAS: 'is_logined_baas'
+  },
+  // 提示信息
+  MSG: {
+    STATUS_CODE_ERROR: 'Unexpected API Status Code',
+    NETWORT_ERROR: 'Network Error',
+    ARGS_ERROR: '参数使用错误',
+    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
+    LOGIN_ERROR: '登录失败',
+    UNAUTH_ERROR: '请先完成用户授权'
+  },
+  STATUS_CODE: {
+    CREATED: 201,
+    SUCCESS: 200,
+    UPDATE: 200,
+    PATCH: 200,
+    DELETE: 204,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
+    SERVER_ERROR: 500
+  },
+
+  UPLOAD: {
+    UPLOAD_FILE_KEY: 'file',
+    HEADER_AUTH: 'Authorization',
+    HEADER_CLIENT: 'X-Hydrogen-Client-ID',
+    HEADER_AUTH_VALUE: 'Hydrogen-r1 ',
+    UA: 'Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
+  }
+};
+
+},{}],51:[function(require,module,exports){
+'use strict';
+
+var BaaS = require('./baas'
+
+// 暴露指定 BaaS 方法
+);BaaS.auth = require('./baasRequest').auth;
+BaaS.ContentGroup = require('./ContentGroup');
+BaaS.File = require('./File');
+BaaS.FileCategory = require('./FileCategory');
+BaaS.GeoPoint = require('./GeoPoint');
+BaaS.GeoPolygon = require('./GeoPolygon');
+BaaS.login = require('./auth').login;
+BaaS.logout = require('./auth').logout;
+BaaS.order = require('./order');
+BaaS.pay = require('./pay');
+BaaS.Promise = require('./promise');
+BaaS.Query = require('./Query');
+BaaS.request = require('./request');
+BaaS.storage = require('./storage');
+BaaS.TableObject = require('./TableObject');
+BaaS.uploadFile = require('./uploadFile');
+BaaS.User = require('./User');
+BaaS.wxDecryptData = require('./wxDecryptData');
+BaaS.wxReportTicket = require('./templateMessage').wxReportTicket;
+
+// 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
+require('./baasRequest').createRequestMethod
+
+// 暴露 BaaS 到小程序环境
+();if (typeof wx !== 'undefined') {
+  wx.BaaS = BaaS;
+}
+
+module.exports = BaaS;
+
+},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":40,"./TableObject":41,"./User":43,"./auth":45,"./baas":46,"./baasRequest":47,"./order":52,"./pay":53,"./promise":54,"./request":55,"./storage":56,"./templateMessage":57,"./uploadFile":58,"./wxDecryptData":60}],52:[function(require,module,exports){
+'use strict';
+
+var baasRequest = require('./baasRequest').baasRequest;
+var BaaS = require('./baas');
+var API = BaaS._config.API;
+var utils = require('./utils');
+var Promise = require('./promise');
+
+var order = function order(params) {
+  var url = utils.format(API.ORDER, { transactionID: params.transactionID });
+
+  return baasRequest({
+    url: url
+  }).then(function (res) {
+    return new Promise(function (resolve, reject) {
+      return resolve(res);
+    }, function (err) {
+      return reject(err);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+module.exports = order;
+
+},{"./baas":46,"./baasRequest":47,"./promise":54,"./utils":59}],53:[function(require,module,exports){
+'use strict';
+
+var baasRequest = require('./baasRequest').baasRequest;
+var BaaS = require('./baas');
+var constants = require('./constants');
+var Promise = require('./promise');
+var storage = require('./storage');
+
+var API = BaaS._config.API;
+
+/**
+ * @description payment
+ * @return {Promise} The result of the payment transaction, is a Promise object
+ */
+var keysMap = {
+  merchandiseSchemaID: 'merchandise_schema_id', // optional
+  merchandiseRecordID: 'merchandise_record_id', // optional
+  merchandiseSnapshot: 'merchandise_snapshot', // optional
+  merchandiseDescription: 'merchandise_description', // required
+  totalCost: 'total_cost' // required
+};
+
+var pay = function pay(params) {
+  if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
+    return new Promise(function (resolve, reject) {
+      reject(constants.MSG.UNAUTH_ERROR);
+    });
+  }
+
+  var paramsObj = {};
+
+  for (var key in params) {
+    paramsObj[keysMap[key]] = params[key];
+  }
+
+  return baasRequest({
+    url: API.PAY,
+    method: 'POST',
+    data: paramsObj
+  }).then(function (res) {
+    var data = res.data || {};
+    return new Promise(function (resolve, reject) {
+      wx.requestPayment({
+        appId: data.appId,
+        timeStamp: data.timeStamp,
+        nonceStr: data.nonceStr,
+        package: data.package,
+        signType: 'MD5',
+        paySign: data.paySign,
+        success: function success(res) {
+          res.transaction_no = data.transaction_no;
+          return resolve(res);
+        },
+        fail: function fail(err) {
+          return reject(err);
+        }
+      });
+    }, function (err) {
+      throw new Error(err);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+module.exports = pay;
+
+},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54,"./storage":56}],54:[function(require,module,exports){
+'use strict';
+
+var Promise = require('rsvp').Promise;
+
+module.exports = Promise;
+
+},{"rsvp":32}],55:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./promise');
+var extend = require('node.extend');
+var utils = require('./utils');
+var constants = require('./constants');
+var BaaS = require('./baas'
+
+/**
+ * 设置请求头
+ * @param  {Object} header 自定义请求头
+ * @return {Object}        扩展后的请求
+ */
+);var builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization'];
+
+var setHeader = function setHeader(header) {
+  var extendHeader = {
+    'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+    'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+    'X-Hydrogen-Client-Platform': utils.getSysPlatform()
+  };
+
+  var getAuthToken = BaaS.getAuthToken();
+  if (getAuthToken) {
+    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + getAuthToken;
+  }
+
+  if (header) {
+    builtInHeader.map(function (key) {
+      if (header.hasOwnProperty(key)) {
+        delete header[key];
+      }
+    });
+  }
+
+  return extend(extendHeader, header || {});
+};
+
+/**
+ * 用于网络请求
+ * @param  {String} url                   url地址
+ * @param  {String} [method='GET']        请求方法
+ * @param  {Object|String} data           请求参数
+ * @param  {Object} header                请求头部
+ * @param  {String} [dataType='json']     发送数据的类型
+ * @return {Object}                       返回一个 Promise 对象
+ */
+var request = function request(_ref) {
+  var url = _ref.url,
+      _ref$method = _ref.method,
+      method = _ref$method === undefined ? 'GET' : _ref$method,
+      _ref$data = _ref.data,
+      data = _ref$data === undefined ? {} : _ref$data,
+      _ref$header = _ref.header,
+      header = _ref$header === undefined ? {} : _ref$header,
+      _ref$dataType = _ref.dataType,
+      dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
+
+
+  return new Promise(function (resolve, reject) {
+
+    if (!BaaS._config.CLIENT_ID) {
+      reject('未初始化客户端');
+    }
+
+    var headers = setHeader(header);
+
+    if (!/https:\/\//.test(url)) {
+      url = BaaS._config.API_HOST + url;
+    }
+
+    wx.request({
+      method: method,
+      url: url,
+      data: data,
+      header: headers,
+      dataType: dataType,
+      success: function success(res) {
+        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
+          BaaS.clearSession();
+        }
+        resolve(res);
+      },
+      fail: function fail(err) {
+        throw new Error(err.errMsg);
+        reject(err);
+      }
+    });
+
+    utils.log('Request => ' + url);
+  });
+};
+
+module.exports = request;
+
+},{"./baas":46,"./constants":50,"./promise":54,"./utils":59,"node.extend":29}],56:[function(require,module,exports){
+'use strict';
+
+var storageKeyPrefix = 'ifx_baas_';
+
+module.exports = {
+  set: function set(key, value) {
+    try {
+      wx.setStorageSync(storageKeyPrefix + key, value);
+    } catch (e) {
+      throw new Error(e);
+    }
+  },
+  get: function get(key) {
+    try {
+      return wx.getStorageSync(storageKeyPrefix + key);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+};
+
+},{}],57:[function(require,module,exports){
+'use strict';
+
+var baasRequest = require('./baasRequest').baasRequest;
+var constants = require('./constants');
+var BaaS = require('./baas');
+var Promise = require('./promise');
+
+var API = BaaS._config.API;
+
+function makeParams(formID) {
+  if (!formID) {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
+
+  var paramsObj = {};
+  paramsObj['submission_type'] = 'form_id';
+  paramsObj['submission_value'] = formID;
+
+  return paramsObj;
+}
+
+var wxReportTicket = function wxReportTicket(formID) {
+  var paramsObj = makeParams(formID);
+
+  return baasRequest({
+    url: API.TEMPLATE_MESSAGE,
+    method: 'POST',
+    data: paramsObj
+  }).then(function (res) {
+    return new Promise(function (resolve, reject) {
+      return resolve(res);
+    }, function (err) {
+      return reject(err);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+module.exports = {
+  makeParams: makeParams,
+  wxReportTicket: wxReportTicket
+};
+
+},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54}],58:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var BaaS = require('./baas');
+var baasRequest = require('./baasRequest').baasRequest;
+var constants = require('./constants');
+var Promise = require('./promise');
+var utils = require('./utils');
+
+var isAuth = function isAuth(resolve, reject) {
+  if (!BaaS._config.CLIENT_ID) {
+    reject('未初始化客户端');
+  }
+
+  if (!BaaS.getAuthToken()) {
+    reject('未认证，请先完成用户登录');
+  }
+};
+
+// get the upload config for upyun from sso
+var getUploadFileConfig = function getUploadFileConfig(fileName, metaData) {
+  metaData.filename = fileName;
+
+  return baasRequest({
+    url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
+    method: 'POST',
+    data: metaData
+  }).then(function (res) {
+    return new Promise(function (resolve, reject) {
+      return resolve(res);
+    }, function (err) {
+      return reject(err);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+var wxUpload = function wxUpload(config, resolve, reject, type) {
+  return wx.uploadFile({
+    url: config.uploadUrl,
+    filePath: config.filePath,
+    name: constants.UPLOAD.UPLOAD_FILE_KEY,
+    formData: {
+      authorization: config.authorization,
+      policy: config.policy
+    },
+    header: {
+      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + BaaS.getAuthToken(),
+      'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+      'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+      'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+      'User-Agent': constants.UPLOAD.UA
+    },
+    success: function success(res) {
+      var result = {};
+      var data = JSON.parse(res.data);
+
+      result.status = 'ok';
+      result.path = config.destLink;
+      result.file = {
+        'id': config.id,
+        'name': config.fileName,
+        'created_at': data.time,
+        'mime_type': data.mimetype,
+        'cdn_path': data.url,
+        'size': data.file_size
+      };
+
+      delete res.data;
+
+      if (type && type === 'json') {
+        res.data = result;
+      } else {
+        res.data = JSON.stringify(result);
+      }
+
+      resolve(res);
+    },
+    fail: function fail(err) {
+      reject(err);
+    }
+  });
+};
+
+var uploadFile = function uploadFile(fileParams, metaData, type) {
+  if (!fileParams || (typeof fileParams === 'undefined' ? 'undefined' : _typeof(fileParams)) !== 'object' || !fileParams.filePath) {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
+
+  if (!metaData) {
+    metaData = {};
+  } else if ((typeof metaData === 'undefined' ? 'undefined' : _typeof(metaData)) !== 'object') {
+    throw new Error(constants.MSG.ARGS_ERROR);
+  }
+
+  return new Promise(function (resolve, reject) {
+    isAuth(resolve, reject);
+
+    var fileName = utils.getFileNameFromPath(fileParams.filePath);
+
+    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(function (res) {
+      var config = {
+        id: res.data.id,
+        fileName: fileName,
+        policy: res.data.policy,
+        authorization: res.data.authorization,
+        uploadUrl: res.data.upload_url,
+        filePath: fileParams.filePath,
+        destLink: res.data.file_link
+      };
+      return wxUpload(config, resolve, reject, type);
+    });
+  }, function (err) {
+    throw new Error(err);
+  });
+};
+
+module.exports = uploadFile;
+
+},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54,"./utils":59}],59:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
 
 var config = void 0;
 try {
-  config = require('./config.js');
+  config = require('./config.dev.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7396,7 +7583,7 @@ module.exports = {
   replaceQueryParams: replaceQueryParams
 };
 
-},{"./config.dev":36,"./config.js":37,"node.extend":29}],56:[function(require,module,exports){
+},{"./config.dev":48,"./config.dev.js":48,"node.extend":29}],60:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7436,7 +7623,7 @@ var wxDecryptData = function wxDecryptData() {
 };
 
 var validateParams = function validateParams(params) {
-  if (!params instanceof Array || params.length < 3) return false;
+  if (!(params instanceof Array) || params.length < 3) return false;
 
   var requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number'];
 
@@ -7445,4 +7632,4 @@ var validateParams = function validateParams(params) {
 
 module.exports = wxDecryptData;
 
-},{"./baas":33,"./baasRequest":34,"./constants":38,"./promise":46}]},{},[43]);
+},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54}]},{},[51]);
