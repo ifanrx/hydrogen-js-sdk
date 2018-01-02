@@ -1,15 +1,9 @@
-const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
-const GeoPoint = require('./geoPoint')
-const GeoPolygon = require('./geoPolygon')
-const _cloneDeep = require('lodash.clonedeep')
+const GeoPoint = require('./GeoPoint')
+const GeoPolygon = require('./GeoPolygon')
 
-const API = BaaS._config.API
-
-class TableRecord {
-  constructor(tableID, recordID) {
-    this._tableID = tableID
+class BaseRecord {
+  constructor(recordID) {
     this._recordID = recordID
     this._record = {}
   }
@@ -32,18 +26,6 @@ class TableRecord {
       throw new Error(constants.MSG.ARGS_ERROR)
     }
     return this
-  }
-
-  save() {
-    var record = _cloneDeep(this._record)
-    this._record = {}
-    return BaaS.createRecord({tableID: this._tableID, data: record})
-  }
-
-  update() {
-    var record = _cloneDeep(this._record)
-    this._record = {}
-    return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
   }
 
   incrementBy(key, value) {
@@ -76,4 +58,4 @@ class TableRecord {
   }
 }
 
-module.exports = TableRecord
+module.exports = BaseRecord

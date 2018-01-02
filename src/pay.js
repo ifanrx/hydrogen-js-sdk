@@ -52,7 +52,7 @@ const pay = (params) => {
         fail: function (err) {
           return reject(err)
         },
-      });
+      })
 
     }, (err) => {
       throw new Error(err)
@@ -60,7 +60,7 @@ const pay = (params) => {
 
   }, function (err) {
     throw new Error(err)
-  });
-};
+  })
+}
 
 module.exports = pay

@@ -1,3 +1,3 @@
-var Promise = require('rsvp').Promise;
+var Promise = require('rsvp').Promise
 
-module.exports = Promise;
+module.exports = Promise

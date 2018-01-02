@@ -1,9 +1,8 @@
-const Promise = require('./promise');
-const extend = require('node.extend');
-const utils = require('./utils');
-const constants = require('./constants');
-const BaaS = require('./baas');
-const storage = require('./storage');
+const Promise = require('./promise')
+const extend = require('node.extend')
+const utils = require('./utils')
+const constants = require('./constants')
+const BaaS = require('./baas')
 
 /**
  * 设置请求头

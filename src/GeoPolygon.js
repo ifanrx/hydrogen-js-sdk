@@ -1,4 +1,4 @@
-const GeoPoint = require('./geoPoint')
+const GeoPoint = require('./GeoPoint')
 const _cloneDeep = require('lodash.clonedeep')
 const constants = require('./constants')
 

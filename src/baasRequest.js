@@ -1,18 +1,17 @@
 const BaaS = require('./baas')
-const config = require('./config')
 const constants = require('./constants')
 const extend = require('node.extend')
 const Promise = require('./promise')
 const request = require('./request')
 const utils = require('./utils')
-const user = require('./user')
+const auth = require('./auth')
 
 
 /**
  * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
  */
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
-  return user.login(false).then(() => {
+  return auth.login(false).then(() => {
     return request.apply(null, arguments)
   }, (err) => {
     throw new Error(err)

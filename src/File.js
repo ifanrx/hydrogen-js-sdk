@@ -1,6 +1,5 @@
 const BaaS = require('./baas')
-const BaseQuery = require('./baseQuery')
-const baasRequest = require('./baasRequest').baasRequest
+const BaseQuery = require('./BaseQuery')
 const uploadFile = require('./uploadFile')
 
 class File extends BaseQuery {

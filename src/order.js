@@ -1,7 +1,6 @@
 const baasRequest = require('./baasRequest').baasRequest
 const BaaS = require('./baas')
 const API = BaaS._config.API
-const constants = require('./constants')
 const utils = require('./utils')
 const Promise = require('./promise')
 

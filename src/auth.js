@@ -4,7 +4,6 @@ const constants = require('./constants')
 const Promise = require('./promise')
 const request = require('./request')
 const storage = require('./storage')
-const utils = require('./utils')
 
 const API = BaaS._config.API
 
