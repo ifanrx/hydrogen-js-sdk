@@ -10,8 +10,8 @@ class Query {
   }
 
   static and(...queryObjects) {
-    var newQuery = new Query()
-    var andQuery = {$and: []}
+    let newQuery = new Query()
+    let andQuery = {$and: []}
     queryObjects.forEach(function(query) {
       andQuery['$and'].push(query.queryObject)
     })
@@ -20,8 +20,8 @@ class Query {
   }
 
   static or(...queryObjects) {
-    var newQuery = new Query()
-    var orQuery = {$or: []}
+    let newQuery = new Query()
+    let orQuery = {$or: []}
     queryObjects.forEach(function(query) {
       orQuery['$or'].push(query.queryObject)
     })
@@ -30,7 +30,7 @@ class Query {
   }
 
   compare(key, operator, value) {
-    var op = 'eq'
+    let op = 'eq'
     switch(operator) {
     case '=':
       op = 'eq'
@@ -68,7 +68,7 @@ class Query {
 
   matches(key, regExp) {
     if (regExp && regExp instanceof RegExp) {
-      var result = utils.parseRegExp(regExp)
+      let result = utils.parseRegExp(regExp)
 
       if (result.length > 1) {
         this._addQueryObject(key, {regex: result[0], options: result[1]})
@@ -176,7 +176,7 @@ class Query {
   // 在指定点集合中，查找包含在指定圆心和指定半径所构成的圆形区域中的点
   withinCircle(key, point, radius) {
     if (point && point instanceof GeoPoint) {
-      var data = {
+      let data = {
         radius: radius,
         coordinates: [point.attitude, point.longitude]
       }
@@ -190,7 +190,7 @@ class Query {
   // 在指定点集合中，查找包含在以某点为起点的最大和最小距离所构成的圆环区域中的点
   withinRegion(key, point, maxDistance, minDistance = 0) {
     if (point && point instanceof GeoPoint) {
-      var data = {
+      let data = {
         geometry: point.toGeoJSON(),
         min_distance: minDistance
       }
@@ -213,7 +213,7 @@ class Query {
       throw new Error(constants.MSG.ARGS_ERROR)
     }
 
-    var query = {[key]: {}}
+    let query = {[key]: {}}
 
     Object.keys(obj).forEach((k) => {
       query[key][`$${k}`] = obj[k]

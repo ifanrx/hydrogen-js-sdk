@@ -11,8 +11,8 @@ class BaseRecord {
   set(...args) {
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
-        var objectArg = args[0]
-        var record = {}
+        let objectArg = args[0]
+        let record = {}
         Object.keys(args[0]).forEach((key) => {
           record[key] = (objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon) ? objectArg[key].toGeoJSON(): objectArg[key]
         })

@@ -1,4 +1,3 @@
-
 const BaaS = require('./baas')
 const constants = require('./constants')
 const Promise = require('./promise')
@@ -14,14 +13,21 @@ let isSilentLogining = false
 let silentLoginResolve = []
 let silentLoginReject = []
 
+// 获取登录凭证 code, 进而换取用户登录态信息
+const auth = () => {
+  return new Promise((resolve, reject) => {
+    wx.login({
+      success: (res) => {
+        return sessionInit(res.code, resolve, reject)
+      },
+      fail: (err) => {
+        reject(err)
+      },
+    })
+  })
+}
 
-/**
- * 初始化会话
- * @param  {String} code      wx.login 后返回的 code
- * @param  {Function} resolve Promise resolve function
- * @param  {Function} reject  Promise reject function
- * @return {Promise}
- */
+// code 换取 session_key
 const sessionInit = (code, resolve, reject) => {
   return request({
     url: API.INIT,
@@ -44,29 +50,10 @@ const sessionInit = (code, resolve, reject) => {
   })
 }
 
-
-/**
- * 验证客户端
- * @return {Promise}
- */
-const auth = () => {
-  return new Promise((resolve, reject) => {
-    wx.login({
-      success: (res) => {
-        return sessionInit(res.code, resolve, reject)
-      },
-      fail: (err) => {
-        reject(err)
-      },
-    })
-  })
-
-}
-
 const login = (userInfo = true) => {
   if (userInfo) {
     if (storage.get(constants.STORAGE_KEY.USERINFO)) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         resolve(makeLoginResponseData())
       })
     }
@@ -87,7 +74,7 @@ const login = (userInfo = true) => {
         return getUserInfo().then(() => {
           isLogining = false
           resolveLoginCallBacks()
-        }, (err) => {
+        }, () => {
           isLogining = false
           rejectLoginCallBacks()
         }).catch(() => {
@@ -106,7 +93,7 @@ const login = (userInfo = true) => {
 
 const silentLogin = () => {
   if (storage.get(constants.STORAGE_KEY.UID)) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       resolve(makeLoginResponseData(false))
     })
   }
@@ -126,10 +113,10 @@ const silentLogin = () => {
     return auth().then(() => {
       isSilentLogining = false
       resolveLoginCallBacks(false)
-    }, (rej) => {
+    }, () => {
       isSilentLogining = false
       rejectLoginCallBacks(false)
-    }).catch((err) => {
+    }).catch(() => {
       handleLoginFailure(false)
     })
   })
@@ -197,7 +184,6 @@ const logout = () => {
   })
 }
 
-
 const getUserInfo = () => {
   if (!BaaS.getAuthToken()) {
     throw new Error('未认证客户端')
@@ -216,9 +202,9 @@ const getUserInfo = () => {
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
         storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
-        return authenticate(payload, resolve, reject)
+        return baasLogin(payload, resolve, reject)
       },
-      fail: (err) => {
+      fail: () => {
         // 用户拒绝授权也要继续进入下一步流程
         reject('')
       },
@@ -226,15 +212,8 @@ const getUserInfo = () => {
   })
 }
 
-
-/**
- * 登录 BaaS
- * @param  {Object} data    微信签名等信息
- * @param  {Function} resolve Promise resolve function
- * @param  {Function} reject  Promise reject function
- * @return {Promise}
- */
-const authenticate = (data, resolve, reject) => {
+// 登录 BaaS
+const baasLogin = (data, resolve, reject) => {
   return request({
     url: API.LOGIN,
     method: 'POST',
@@ -250,7 +229,6 @@ const authenticate = (data, resolve, reject) => {
     reject(err)
   })
 }
-
 
 module.exports = {
   auth,

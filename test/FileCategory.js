@@ -1,9 +1,7 @@
 require('../src/baasRequest').createRequestMethod()
-const config = require('../src/config')
-const faker = require('faker')
 const FileCategory = require('../src/FileCategory')
-const Query = require('../src/Query')
 const helper = require('./helper')
+const Query = require('../src/Query')
 
 describe('FileCategory', () => {
   let fileCategory = null
@@ -18,7 +16,7 @@ describe('FileCategory', () => {
   })
 
   it('#_handleAllQueryConditions', () => {
-    var query = new Query()
+    let query = new Query()
     query.in('id', randomArray)
     fileCategory.setQuery(query)
     fileCategory.orderBy(['-name', 'created_at'])

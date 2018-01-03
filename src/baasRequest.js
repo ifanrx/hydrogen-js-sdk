@@ -1,15 +1,14 @@
+const auth = require('./auth')
 const BaaS = require('./baas')
 const constants = require('./constants')
 const extend = require('node.extend')
 const Promise = require('./promise')
 const request = require('./request')
 const utils = require('./utils')
-const auth = require('./auth')
 
 
-/**
- * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
- */
+// BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
+// eslint-disable-next-line no-unused-vars
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
   return auth.login(false).then(() => {
     return request.apply(null, arguments)
@@ -80,16 +79,13 @@ const excludeParams = (URL, params) => {
   return params
 }
 
-/**
- * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
- */
+// 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
 const createRequestMethod = () => {
   let methodMapList = BaaS._config.METHOD_MAP_LIST
   methodMapList.map((v) => {
     doCreateRequestMethod(v)
   })
 }
-
 
 module.exports = {
   baasRequest,

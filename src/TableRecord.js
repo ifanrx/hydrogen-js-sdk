@@ -9,13 +9,13 @@ class TableRecord  extends BaseRecord {
   }
 
   save() {
-    var record = _cloneDeep(this._record)
+    let record = _cloneDeep(this._record)
     this._record = {}
     return BaaS.createRecord({tableID: this._tableID, data: record})
   }
 
   update() {
-    var record = _cloneDeep(this._record)
+    let record = _cloneDeep(this._record)
     this._record = {}
     return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
   }

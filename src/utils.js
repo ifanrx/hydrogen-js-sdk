@@ -21,9 +21,9 @@ const getConfig = () => {
  * @return {String}
  */
 const getSysPlatform = () => {
-  var platform = 'UNKNOWN'
+  let platform = 'UNKNOWN'
   try {
-    var res = wx.getSystemInfoSync()
+    let res = wx.getSystemInfoSync()
     platform = res.platform
   } catch (e) {
     // pass for now
@@ -40,7 +40,7 @@ const log = (msg) => {
     return
   }
   // 记录日志到日志文件
-  console.log('BaaS LOG: ' + msg)
+  console.log('BaaS LOG: ' + msg) // eslint-disable-line no-console
 }
 
 /**
@@ -51,8 +51,8 @@ const log = (msg) => {
  */
 const format = (url, params) => {
   params = params || {}
-  for (var key in params) {
-    var reg = new RegExp(':' + key, 'g')
+  for (let key in params) {
+    let reg = new RegExp(':' + key, 'g')
     url = url.replace(reg, params[key])
   }
   return url.replace(/([^:])\/\//g, (m, m1) => {
@@ -94,7 +94,7 @@ const replaceQueryParams = (params = {}) => {
   Object.keys(params).map(key => {
     Object.keys(requestParamsMap).map(mapKey => {
       if (key.startsWith(mapKey)) {
-        var newKey = key.replace(mapKey, requestParamsMap[mapKey])
+        let newKey = key.replace(mapKey, requestParamsMap[mapKey])
         delete copiedParams[key]
         copiedParams[newKey] = params[key]
       }

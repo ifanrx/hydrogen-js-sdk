@@ -23,14 +23,6 @@ const getUploadFileConfig = (fileName, metaData) => {
     url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
     method: 'POST',
     data: metaData
-  }).then((res) => {
-    return new Promise((resolve, reject) => {
-      return resolve(res)
-    }, (err) => {
-      return reject(err)
-    })
-  }, (err) => {
-    throw new Error(err)
   })
 }
 

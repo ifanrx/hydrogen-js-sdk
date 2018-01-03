@@ -8,8 +8,7 @@ const Query = require('../src/Query')
 const randomOption = config.RANDOM_OPTION
 
 describe('ContentGroup', () => {
-  let contentGroup = null
-  let randomArray
+  let randomArray, randomNumber
 
   before(() => {
     randomNumber = faker.random.number(randomOption)

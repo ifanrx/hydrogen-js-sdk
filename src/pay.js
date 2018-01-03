@@ -1,15 +1,12 @@
-const baasRequest = require('./baasRequest').baasRequest
 const BaaS = require('./baas')
+const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const Promise = require('./promise')
 const storage = require('./storage')
 
 const API = BaaS._config.API
 
-/**
- * @description payment
- * @return {Promise} The result of the payment transaction, is a Promise object
- */
+
 const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
   merchandiseRecordID: 'merchandise_record_id', // optional
@@ -25,7 +22,7 @@ const pay = (params) => {
     })
   }
 
-  var paramsObj = {}
+  let paramsObj = {}
 
   for (let key in params) {
     paramsObj[keysMap[key]] = params[key]
@@ -36,7 +33,7 @@ const pay = (params) => {
     method: 'POST',
     data: paramsObj,
   }).then(function (res) {
-    var data = res.data || {}
+    let data = res.data || {}
     return new Promise((resolve, reject) => {
       wx.requestPayment({
         appId: data.appId,

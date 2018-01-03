@@ -2,9 +2,9 @@ require('../src/baasRequest').createRequestMethod()
 const BaseRecord = require('../src/BaseRecord')
 const config = require('../src/config')
 const faker = require('faker')
-const helper = require('./helper')
 const GeoPoint = require('../src/GeoPoint')
 const GeoPolygon = require('../src/GeoPolygon')
+const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION
 
@@ -40,7 +40,7 @@ describe('BaseRecord', () => {
   })
 
   it('#set GeoPoint', () => {
-    var randomPoint = new GeoPoint(randomNumber1, randomNumber2)
+    let randomPoint = new GeoPoint(randomNumber1, randomNumber2)
     product.set({'geoPoint': randomPoint})
     expect(product._record).to.deep.equal({geoPoint: {
       'type': 'Point',
@@ -49,11 +49,11 @@ describe('BaseRecord', () => {
   })
 
   it('#set GeoPolygon', () => {
-    var random2DArray = []
-    for(var i = 0; i < 5; i++) {
+    let random2DArray = []
+    for(let i = 0; i < 5; i++) {
       random2DArray.push(helper.generateRandomArray(2))
     }
-    var randomPolygon = new GeoPolygon(random2DArray)
+    let randomPolygon = new GeoPolygon(random2DArray)
     product.set({'geoPolygon': randomPolygon})
     expect(product._record).to.deep.equal({geoPolygon: {
       'type': 'Polygon',
@@ -81,7 +81,7 @@ describe('BaseRecord', () => {
   it('#uAppend', () => {
     product.uAppend('arr', randomNumber)
     expect(product._record).to.deep.equal({arr: {$append_unique: [randomNumber]}})
-    var randomArray = []
+    let randomArray = []
     product.uAppend('arr', randomArray)
     expect(product._record).to.deep.equal({arr: {$append_unique: randomArray}})
   })

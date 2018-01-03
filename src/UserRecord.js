@@ -8,7 +8,7 @@ class UserRecord extends BaseRecord {
   }
 
   update() {
-    var record = _cloneDeep(this._record)
+    let record = _cloneDeep(this._record)
     this._record = {}
     return BaaS.updateUser({data: record})
   }

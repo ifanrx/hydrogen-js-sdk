@@ -8,11 +8,11 @@ describe('templateMessage', () => {
   })
 
   it('#makeParams error', () => {
-    expect(() => Product.makeParams()).to.throw()
+    expect(() => makeParams()).to.throw()
   })
 
   it('#makeParams', () => {
-    var result1 = makeParams(randomString)
+    let result1 = makeParams(randomString)
     expect(result1).to.deep.equal({'submission_type': 'form_id', submission_value: randomString})
   })
 })

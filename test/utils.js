@@ -29,7 +29,7 @@ describe('utils', () => {
   })
 
   it('#parseRegExp', () => {
-    let regExpString = '^[a-zA-Z]+[0-9]*\W?_$'
+    let regExpString = '^[a-zA-Z]+[0-9]*\\W?_$'
     let result = utils.parseRegExp(new RegExp(regExpString, 'gi'))
 
     expect(result).to.deep.equal([regExpString, 'gi'])
@@ -42,5 +42,5 @@ describe('utils', () => {
     }
     let result = utils.replaceQueryParams(requestParams)
     expect(result).to.deep.equal({'category_id': 12, otherData: 100})
-  });
+  })
 })

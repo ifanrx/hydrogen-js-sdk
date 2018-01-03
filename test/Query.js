@@ -4,7 +4,6 @@ const GeoPoint = require('../src/GeoPoint')
 const GeoPolygon = require('../src/GeoPolygon')
 const helper = require('./helper')
 const Query = require('../src/Query')
-const utils = require('../src/utils')
 
 const randomOption = config.RANDOM_OPTION
 
@@ -12,12 +11,12 @@ describe('Query', () => {
   let randomNumber, randomNumber1, randomNumber2, randomString, randomArray, regExpString
 
   before(() => {
-    randomNumber = faker.random.number()
-    randomNumber1 = faker.random.number()
-    randomNumber2 = faker.random.number()
+    randomNumber = faker.random.number(randomOption)
+    randomNumber1 = faker.random.number(randomOption)
+    randomNumber2 = faker.random.number(randomOption)
     randomString = faker.lorem.words(1)
     randomArray = helper.generateRandomArray()
-    regExpString = '^[a-zA-Z]+[0-9]*\W?_$'
+    regExpString = '^[a-zA-Z]+[0-9]*\\W?_$'
   })
 
   it('#_setQueryObject', () => {
@@ -238,7 +237,7 @@ describe('Query', () => {
         {
           geoField: {
             $intersects: {
-              type: "Point",
+              type: 'Point',
               coordinates: [randomNumber1, randomNumber2],
             }
           }
@@ -249,18 +248,18 @@ describe('Query', () => {
 
   it('#within', () => {
     let query = new Query()
-    var random2DArray = []
-    for(var i = 0; i < 5; i++) {
+    let random2DArray = []
+    for(let i = 0; i < 5; i++) {
       random2DArray.push(helper.generateRandomArray(2))
     }
-    var randomPolygon = new GeoPolygon(random2DArray)
+    let randomPolygon = new GeoPolygon(random2DArray)
     query.within('geoField', randomPolygon)
     expect(query.queryObject).to.deep.equal({
       $and: [
         {
           geoField: {
             $within: {
-              type: "Polygon",
+              type: 'Polygon',
               coordinates: [random2DArray],
             }
           }
@@ -297,7 +296,7 @@ describe('Query', () => {
           geoField: {
             $nearsphere: {
               geometry: {
-                type: "Point",
+                type: 'Point',
                 coordinates: [randomNumber1, randomNumber2]
               },
               min_distance: 0

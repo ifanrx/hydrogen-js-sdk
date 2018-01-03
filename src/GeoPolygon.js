@@ -20,8 +20,8 @@ class GeoPolygon {
   }
 
   toGeoJSON() {
-    var coordinates = this.geoJSON.coordinates
-    var face = []
+    let coordinates = this.geoJSON.coordinates
+    let face = []
     this.points.forEach((point) => {
       if (point instanceof GeoPoint) {
         face.push([point.attitude, point.longitude])

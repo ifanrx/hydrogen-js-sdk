@@ -1,7 +1,7 @@
-var extend = require('node.extend')
-var config = require('./config')
+const extend = require('node.extend')
+const config = require('./config')
 
-var devConfig = {
+let devConfig = {
   DEBUG: true,
 }
 

@@ -8,7 +8,8 @@
     "test-dev": "mocha test/index.js",
     "dev": "export NODE_ENV=dev && gulp dev",
     "build": "export NODE_ENV=production && gulp release",
-    "lock": "npm prune && npm shrinkwrap --dev"
+    "lock": "npm prune && npm shrinkwrap --dev",
+    "lint": "eslint test/**/*.js src/**/*.js"
   },
   "repository": {
     "type": "git",

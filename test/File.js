@@ -1,9 +1,7 @@
 require('../src/baasRequest').createRequestMethod()
-const config = require('../src/config')
-const faker = require('faker')
 const File = require('../src/File')
-const Query = require('../src/Query')
 const helper = require('./helper')
+const Query = require('../src/Query')
 
 describe('File', () => {
   let file = null
@@ -18,7 +16,7 @@ describe('File', () => {
   })
 
   it('#_handleAllQueryConditions', () => {
-    var query = new Query()
+    let query = new Query()
     query.in('id', randomArray)
     file.setQuery(query)
     file.orderBy(['-name', 'size'])

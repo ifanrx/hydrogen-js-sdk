@@ -4,11 +4,11 @@ const faker = require('faker')
 const randomOption = config.RANDOM_OPTION
 
 const generateRandomArray = (count) => {
-  var len = 5, result = []
+  let len = 5, result = []
   if (count) {
     len = count
   }
-  for (var i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     result.push(faker.random.number(randomOption))
   }
   return result

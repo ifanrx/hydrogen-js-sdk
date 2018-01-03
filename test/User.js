@@ -1,7 +1,6 @@
 require('../src/baasRequest').createRequestMethod()
 const config = require('../src/config')
 const faker = require('faker')
-const helper = require('./helper')
 const Query = require('../src/Query')
 const User = require('../src/User')
 const UserRecord = require('../src/UserRecord')
@@ -10,7 +9,7 @@ const randomOption = config.RANDOM_OPTION
 
 describe('User', () => {
   let user = null
-  let randomNumber, getCurrentUserWithoutDatarandomString
+  let randomNumber, randomString
 
   beforeEach(() => {
     user = new User()
@@ -31,12 +30,12 @@ describe('User', () => {
   })
 
   it('#getCurrentUserWithoutData', () => {
-    var someone = user.getCurrentUserWithoutData()
+    let someone = user.getCurrentUserWithoutData()
     expect(someone instanceof UserRecord).to.be.true
   })
 
   it('#_handleAllQueryConditions', () => {
-    var query = new Query()
+    let query = new Query()
     query.compare('age', '>', randomNumber)
     user.setQuery(query)
     user.orderBy('-age')

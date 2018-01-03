@@ -46,7 +46,7 @@ class BaseQuery {
   }
 
   _handleAllQueryConditions() {
-    var conditions = {}
+    let conditions = {}
     conditions.limit = this._limit
     conditions.offset = this._offset
     if (this._orderBy) {

@@ -1,4 +1,3 @@
-// 常量表
 module.exports = {
   // 存储信息
   STORAGE_KEY: {

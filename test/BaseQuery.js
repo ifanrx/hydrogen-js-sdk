@@ -7,7 +7,7 @@ const Query = require('../src/Query')
 const randomOption = config.RANDOM_OPTION
 
 describe('BaseQuery', () => {
-  let bnpmaseQuery = null
+  let baseQuery = null
   let randomNumber, randomArray
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('BaseQuery', () => {
   })
 
   it('#setQuery Query', () => {
-    var query = new Query()
+    let query = new Query()
     query.in('price', randomArray)
     baseQuery.setQuery(query)
     expect(baseQuery._queryObject).to.deep.equal({
@@ -35,7 +35,7 @@ describe('BaseQuery', () => {
         {price: {$in: randomArray}},
         {amount: {$lt: randomNumber}}
       ]
-      })
+    })
   })
 
   it('#setQuery illegal', () => {
@@ -78,7 +78,7 @@ describe('BaseQuery', () => {
   })
 
   it('#_handleAllQueryConditions', () => {
-    var query = new Query()
+    let query = new Query()
     query.in('price', randomArray)
     baseQuery.setQuery(query)
     baseQuery.orderBy('-amount')

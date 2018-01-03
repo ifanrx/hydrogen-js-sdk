@@ -1,3 +1,3 @@
-var Promise = require('rsvp').Promise
+const Promise = require('rsvp').Promise
 
 module.exports = Promise

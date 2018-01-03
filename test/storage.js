@@ -1,16 +1,16 @@
-const storage = require('../src/storage');
+const storage = require('../src/storage')
 
 describe('storage', () => {
-  let key = 'key';
-  let value = 'vaule';
+  let key = 'key'
+  let value = 'vaule'
 
   it('#set()', () => {
-    expect(storage.set).to.be.a('function');
-    storage.set(key, value);
-  });
+    expect(storage.set).to.be.a('function')
+    storage.set(key, value)
+  })
 
   it('#get()', () => {
-    expect(storage.get).to.be.a('function');
-    expect(storage.get(key)).to.equal(value);
-  });
-});
+    expect(storage.get).to.be.a('function')
+    expect(storage.get(key)).to.equal(value)
+  })
+})

@@ -26,7 +26,7 @@ describe('TableObject', () => {
   })
 
   it('#create', () => {
-    var product = Product.create()
+    let product = Product.create()
     expect(product instanceof TableRecord).to.be.true
   })
 
@@ -40,7 +40,7 @@ describe('TableObject', () => {
   })
 
   it('#getWithoutData', () => {
-    var product = Product.getWithoutData(randomNumber)
+    let product = Product.getWithoutData(randomNumber)
     expect(product instanceof TableRecord).to.be.true
   })
 
@@ -54,7 +54,7 @@ describe('TableObject', () => {
   })
 
   it('#_handleAllQueryConditions', () => {
-    var query = new Query()
+    let query = new Query()
     query.in('price', randomArray)
     Product.setQuery(query)
     Product.orderBy('-amount')

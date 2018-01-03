@@ -1,7 +1,6 @@
+const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
-const BaaS = require('./baas')
-const Promise = require('./promise')
 
 const API = BaaS._config.API
 
@@ -10,7 +9,7 @@ function makeParams(formID) {
     throw new Error(constants.MSG.ARGS_ERROR)
   }
 
-  var paramsObj = {}
+  let paramsObj = {}
   paramsObj['submission_type'] = 'form_id'
   paramsObj['submission_value'] = formID
 
@@ -18,20 +17,12 @@ function makeParams(formID) {
 }
 
 const wxReportTicket = (formID) => {
-  var paramsObj = makeParams(formID)
+  let paramsObj = makeParams(formID)
 
   return baasRequest({
     url: API.TEMPLATE_MESSAGE,
     method: 'POST',
     data: paramsObj,
-  }).then((res) => {
-    return new Promise((resolve, reject) => {
-      return resolve(res)
-    }, (err) => {
-      return reject(err)
-    })
-  }, (err) => {
-    throw new Error(err)
   })
 }
 
