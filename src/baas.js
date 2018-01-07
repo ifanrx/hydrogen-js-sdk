@@ -3,17 +3,18 @@
  */
 
 const constants = require('./constants')
+const HError = require('./HError')
 const storage = require('./storage')
 const utils = require('./utils')
+const _isString = require('lodash/isString')
 
 const BaaS = global.BaaS || {}
 
 BaaS._config = utils.getConfig()
 
-// 初始化 SDK
 BaaS.init = (clientID) => {
-  if (Object.prototype.toString.apply(clientID) !== '[object String]') {
-    throw new Error('非法 clientID')
+  if (!_isString(clientID)) {
+    throw new HError(605)
   }
 
   BaaS._config.CLIENT_ID = clientID
@@ -30,11 +31,11 @@ BaaS.isLogined = () => {
 // 检测 BaaS 当前状态
 BaaS.check = () => {
   if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端')
+    throw new HError(602)
   }
 
   if (!BaaS.isLogined()) {
-    throw new Error('未登录')
+    throw new HError(604)
   }
 }
 

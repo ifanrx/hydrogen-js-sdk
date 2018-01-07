@@ -2,6 +2,7 @@ const auth = require('./auth')
 const BaaS = require('./baas')
 const constants = require('./constants')
 const extend = require('node.extend')
+const HError = require('./HError')
 const Promise = require('./promise')
 const request = require('./request')
 const utils = require('./utils')
@@ -12,8 +13,6 @@ const utils = require('./utils')
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
   return auth.login(false).then(() => {
     return request.apply(null, arguments)
-  }, (err) => {
-    throw new Error(err)
   })
 }
 
@@ -54,9 +53,17 @@ const doCreateRequestMethod = (methodMap) => {
               if (res.statusCode == HTTPMethodCodeMap[method]) {
                 resolve(res)
               } else {
-                reject(constants.MSG.STATUS_CODE_ERROR)
+                let errorMsg = ''
+                if (res.statusCode === 404) {
+                  errorMsg = 'not found'
+                } else if (res.data.error_msg) {
+                  errorMsg = res.data.error_msg
+                } else if (res.data.message) {
+                  errorMsg = res.data.message
+                }
+                reject(new HError(res.statusCode, errorMsg))
               }
-            }, (err) => {
+            }, err => {
               reject(err)
             })
           })

@@ -1,12 +1,12 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
-const constants = require('./constants')
+const HError = require('./HError')
 
 const API = BaaS._config.API
 
 function makeParams(formID) {
   if (!formID) {
-    throw new Error(constants.MSG.ARGS_ERROR)
+    throw new HError(605)
   }
 
   let paramsObj = {}

@@ -8,15 +8,6 @@ module.exports = {
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
   },
-  // 提示信息
-  MSG: {
-    STATUS_CODE_ERROR: 'Unexpected API Status Code',
-    NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误',
-    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
-    LOGIN_ERROR: '登录失败',
-    UNAUTH_ERROR: '请先完成用户授权'
-  },
   STATUS_CODE: {
     CREATED: 201,
     SUCCESS: 200,

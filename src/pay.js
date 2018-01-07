@@ -1,6 +1,7 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
+const HError = require('./HError')
 const Promise = require('./promise')
 const storage = require('./storage')
 
@@ -18,7 +19,7 @@ const keysMap = {
 const pay = (params) => {
   if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
     return new Promise((resolve, reject) => {
-      reject(constants.MSG.UNAUTH_ERROR)
+      reject(new HError(603))
     })
   }
 
@@ -46,17 +47,20 @@ const pay = (params) => {
           res.transaction_no = data.transaction_no
           return resolve(res)
         },
+        complete: function (res) {
+          if (res.errMsg == 'requestPayment:fail cancel') {
+            reject(new HError(607))
+          }
+        },
         fail: function (err) {
-          return reject(err)
+          if (err.errMsg == 'requestPayment:fail cancel') {
+            reject(new HError(607))
+          } else {
+            reject(new HError(608, err.errMsg))
+          }
         },
       })
-
-    }, (err) => {
-      throw new Error(err)
     })
-
-  }, function (err) {
-    throw new Error(err)
   })
 }
 

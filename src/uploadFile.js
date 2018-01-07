@@ -1,19 +1,19 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
+const HError = require('./HError')
 const Promise = require('./promise')
 const utils = require('./utils')
 
 const isAuth = (resolve, reject) => {
   if (!BaaS._config.CLIENT_ID) {
-    reject('未初始化客户端')
+    reject(new HError(606))
   }
 
   if (!BaaS.getAuthToken()) {
-    reject('未认证，请先完成用户登录')
+    reject(new HError(602))
   }
 }
-
 
 // get the upload config for upyun from sso
 const getUploadFileConfig = (fileName, metaData) => {
@@ -67,21 +67,21 @@ const wxUpload = (config, resolve, reject, type) => {
 
       resolve(res)
     },
-    fail: (err) => {
-      reject(err)
+    fail: () => {
+      utils.wxRequestFail(reject)
     }
   })
 }
 
 const uploadFile = (fileParams, metaData, type) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
-    throw new Error(constants.MSG.ARGS_ERROR)
+    throw new HError(605)
   }
 
   if(!metaData) {
     metaData = {}
   } else if (typeof metaData !== 'object') {
-    throw new Error(constants.MSG.ARGS_ERROR)
+    throw new HError(605)
   }
 
   return new Promise((resolve, reject) => {
@@ -89,7 +89,7 @@ const uploadFile = (fileParams, metaData, type) => {
 
     let fileName = utils.getFileNameFromPath(fileParams.filePath)
 
-    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then((res) => {
+    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
       let config = {
         id: res.data.id,
         fileName: fileName,
@@ -101,8 +101,6 @@ const uploadFile = (fileParams, metaData, type) => {
       }
       return wxUpload(config, resolve, reject, type)
     })
-  }, (err) => {
-    throw new Error(err)
   })
 }
 

@@ -1,4 +1,4 @@
-const constants = require('./constants')
+const HError = require('./HError')
 const Query = require('./Query')
 const _cloneDeep = require('lodash.clonedeep')
 const _isInteger = require('lodash/isInteger')
@@ -15,14 +15,14 @@ class BaseQuery {
     if (queryObject instanceof Query) {
       this._queryObject = _cloneDeep(queryObject.queryObject)
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
     return this
   }
 
   limit(value) {
     if (!_isInteger(value)) {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
     this._limit = value
     return this
@@ -30,7 +30,7 @@ class BaseQuery {
 
   offset(value) {
     if (!_isInteger(value)) {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
     this._offset = value
     return this

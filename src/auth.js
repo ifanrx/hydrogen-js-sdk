@@ -1,8 +1,10 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
+const HError = require('./HError')
 const Promise = require('./promise')
 const request = require('./request')
 const storage = require('./storage')
+const utils = require('./utils')
 
 const API = BaaS._config.API
 
@@ -17,11 +19,11 @@ let silentLoginReject = []
 const auth = () => {
   return new Promise((resolve, reject) => {
     wx.login({
-      success: (res) => {
+      success: res => {
         return sessionInit(res.code, resolve, reject)
       },
-      fail: (err) => {
-        reject(err)
+      fail: () => {
+        utils.wxRequestFail(reject)
       },
     })
   })
@@ -35,17 +37,13 @@ const sessionInit = (code, resolve, reject) => {
     data: {
       code: code
     }
-  }).then((res) => {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-      storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
-      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      resolve(res)
-    } else {
-      reject(constants.MSG.CONFIG_ERROR)
-    }
-  }, (err) => {
+  }).then(res => {
+    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+    storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
+    storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
+    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    resolve(res)
+  }, err => {
     reject(err)
   })
 }
@@ -74,16 +72,10 @@ const login = (userInfo = true) => {
         return getUserInfo().then(() => {
           isLogining = false
           resolveLoginCallBacks()
-        }, () => {
-          isLogining = false
-          rejectLoginCallBacks()
-        }).catch(() => {
-          handleLoginFailure()
         })
-      }, () => {
-        throw new Error(constants.MSG.CONFIG_ERROR)
-      }).catch((err) => {
-        handleLoginFailure(err)
+      }).catch(err => {
+        handleLoginFailure()
+        rejectLoginCallBacks(true, err)
       })
     })
   } else {
@@ -113,11 +105,9 @@ const silentLogin = () => {
     return auth().then(() => {
       isSilentLogining = false
       resolveLoginCallBacks(false)
-    }, () => {
+    }, err => {
       isSilentLogining = false
-      rejectLoginCallBacks(false)
-    }).catch(() => {
-      handleLoginFailure(false)
+      rejectLoginCallBacks(false, err)
     })
   })
 }
@@ -145,16 +135,15 @@ const resolveLoginCallBacks = (userInfo = true) => {
   }, 0)
 }
 
-const rejectLoginCallBacks = (userInfo = true) => {
+const rejectLoginCallBacks = (userInfo = true, err) => {
   setTimeout(() => {
     if (userInfo) {
       while (loginReject.length) {
-        loginReject.shift()(makeLoginResponseData(false))
+        loginReject.shift()(err)
       }
     } else {
       while (silentLoginReject.length) {
-        silentLoginReject.shift()()
-        throw new Error(constants.MSG.CONFIG_ERROR)
+        silentLoginReject.shift()(err)
       }
     }
   }, 0)
@@ -166,27 +155,24 @@ const handleLoginFailure = (userInfo = true) => {
   } else {
     isSilentLogining = false
   }
-  throw new Error(constants.MSG.CONFIG_ERROR)
 }
-
 
 const logout = () => {
   BaaS.check()
 
-  return request({ url: API.LOGOUT, method: 'POST' }).then((res) => {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
+  return new Promise((resolve, reject) => {
+    request({ url: API.LOGOUT, method: 'POST' }).then(() => {
       BaaS.clearSession()
-    } else {
-      throw new Error(constants.MSG.STATUS_CODE_ERROR)
-    }
-  }, (err) => {
-    throw new Error(err)
+      resolve()
+    }, err => {
+      reject(err)
+    })
   })
 }
 
 const getUserInfo = () => {
   if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端')
+    throw new HError(602)
   }
   return new Promise((resolve, reject) => {
     wx.getUserInfo({
@@ -205,8 +191,7 @@ const getUserInfo = () => {
         return baasLogin(payload, resolve, reject)
       },
       fail: () => {
-        // 用户拒绝授权也要继续进入下一步流程
-        reject('')
+        reject(new HError(603))
       },
     })
   })
@@ -219,12 +204,8 @@ const baasLogin = (data, resolve, reject) => {
     method: 'POST',
     data: data
   }).then((res) => {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
-      resolve(res)
-    } else {
-      reject(constants.MSG.STATUS_CODE_ERROR)
-    }
+    storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
+    resolve(res)
   }, (err) => {
     reject(err)
   })

@@ -1,6 +1,7 @@
 const constants = require('./constants')
 const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
+const HError = require('./HError')
 const utils = require('./utils')
 const _isString = require('lodash/isString')
 
@@ -51,7 +52,7 @@ class Query {
       op = 'gte'
       break
     default:
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
     this._addQueryObject(key, {[op]: value})
     return this
@@ -62,7 +63,7 @@ class Query {
       this._addQueryObject(key, {contains: str})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -78,7 +79,7 @@ class Query {
 
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -87,7 +88,7 @@ class Query {
       this._addQueryObject(key, {in: arr})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -96,7 +97,7 @@ class Query {
       this._addQueryObject(key, {nin: arr})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -105,7 +106,7 @@ class Query {
       this._addQueryObject(key, {all: arr})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -159,7 +160,7 @@ class Query {
       this._addQueryObject(key, {intersects: point.toGeoJSON()})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -169,7 +170,7 @@ class Query {
       this._addQueryObject(key, {within: polygon.toGeoJSON()})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -183,7 +184,7 @@ class Query {
       this._addQueryObject(key, {center: data})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -200,7 +201,7 @@ class Query {
       this._addQueryObject(key, {nearsphere: data})
       return this
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
   }
 
@@ -210,7 +211,7 @@ class Query {
 
   _addQueryObject(key, obj) {
     if(obj.constructor !== Object) {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
 
     let query = {[key]: {}}

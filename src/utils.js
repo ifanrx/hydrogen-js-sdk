@@ -1,5 +1,6 @@
 'use strict'
 const extend = require('node.extend')
+const HError = require('./HError')
 
 let config
 try {
@@ -104,6 +105,18 @@ const replaceQueryParams = (params = {}) => {
   return copiedParams
 }
 
+const wxRequestFail = (reject) => {
+  wx.getNetworkType({
+    success: function(res) {
+      if (res.networkType === 'none') {
+        reject(new HError(600)) // 断网
+      } else {
+        reject(new HError(601)) // 网络超时
+      }
+    }
+  })
+}
+
 module.exports = {
   log,
   format,
@@ -112,4 +125,5 @@ module.exports = {
   getFileNameFromPath,
   parseRegExp,
   replaceQueryParams,
+  wxRequestFail,
 }
