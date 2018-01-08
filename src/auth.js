@@ -38,11 +38,15 @@ const sessionInit = (code, resolve, reject) => {
       code: code
     }
   }).then(res => {
-    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-    storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-    storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-    resolve(res)
+    if (res.statusCode == constants.STATUS_CODE.CREATED) {
+      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
+      storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
+      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      resolve(res)
+    } else {
+      reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
+    }
   }, err => {
     reject(err)
   })
@@ -69,7 +73,7 @@ const login = (userInfo = true) => {
       loginResolve.push(resolve)
       loginReject.push(reject)
       silentLogin().then(() => {
-        return getUserInfo().then(() => {
+        getUserInfo().then(() => {
           isLogining = false
           resolveLoginCallBacks()
         })
@@ -102,7 +106,7 @@ const silentLogin = () => {
   return new Promise((resolve, reject) => {
     silentLoginResolve.push(resolve)
     silentLoginReject.push(reject)
-    return auth().then(() => {
+    auth().then(() => {
       isSilentLogining = false
       resolveLoginCallBacks(false)
     }, err => {

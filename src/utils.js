@@ -117,6 +117,18 @@ const wxRequestFail = (reject) => {
   })
 }
 
+const extractErrorMsg = (res) => {
+  let errorMsg = ''
+  if (res.statusCode === 404) {
+    errorMsg = 'not found'
+  } else if (res.data.error_msg) {
+    errorMsg = res.data.error_msg
+  } else if (res.data.message) {
+    errorMsg = res.data.message
+  }
+  return errorMsg
+}
+
 module.exports = {
   log,
   format,
@@ -126,4 +138,5 @@ module.exports = {
   parseRegExp,
   replaceQueryParams,
   wxRequestFail,
+  extractErrorMsg,
 }

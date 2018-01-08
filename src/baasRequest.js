@@ -22,13 +22,7 @@ const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dat
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
 const doCreateRequestMethod = (methodMap) => {
-  const HTTPMethodCodeMap = {
-    GET: constants.STATUS_CODE.SUCCESS,
-    POST: constants.STATUS_CODE.CREATED,
-    PUT: constants.STATUS_CODE.UPDATE,
-    PATCH: constants.STATUS_CODE.PATCH,
-    DELETE: constants.STATUS_CODE.DELETE
-  }
+
 
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
@@ -50,18 +44,10 @@ const doCreateRequestMethod = (methodMap) => {
 
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
-              if (res.statusCode == HTTPMethodCodeMap[method]) {
+              if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res)
               } else {
-                let errorMsg = ''
-                if (res.statusCode === 404) {
-                  errorMsg = 'not found'
-                } else if (res.data.error_msg) {
-                  errorMsg = res.data.error_msg
-                } else if (res.data.message) {
-                  errorMsg = res.data.message
-                }
-                reject(new HError(res.statusCode, errorMsg))
+                reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
               }
             }, err => {
               reject(err)
