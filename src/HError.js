@@ -12,25 +12,23 @@ class HError {
   mapErrorMessage(code) {
     switch (code) {
     case 600:
-      return 'network disconnect'
+      return 'network disconnected'
     case 601:
       return 'request timeout'
     case 602:
-      return 'uncertificated'   // 在 storage 中未找到 token
+      return 'uninitialized' // 未调用 BaaS.init()
     case 603:
-      return 'unauthorization'  // 用户拒绝授权
+      return 'unauthorized'  // 用户尚未授权
     case 604:
-      return 'not logged in'
+      return 'session missing' // 用户尚未登录
     case 605:
       return 'incorrect parameter type'
-    case 606:
-      return 'uninitialized'
     case 607:
-      return 'cancel the payment'
+      return 'payment cancelled'
     case 608:
-      return 'payment fail'   // error message 会被重写为微信返回的错误信息
+      return 'payment failed'   // error message 会被重写为微信返回的错误信息
     default:
-      return 'unknow error'
+      return 'unknown error'
     }
   }
 }

@@ -1,4 +1,3 @@
-const constants = require('./constants')
 const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 const HError = require('./HError')

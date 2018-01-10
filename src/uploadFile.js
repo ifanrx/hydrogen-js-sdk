@@ -5,16 +5,6 @@ const HError = require('./HError')
 const Promise = require('./promise')
 const utils = require('./utils')
 
-const isAuth = (resolve, reject) => {
-  if (!BaaS._config.CLIENT_ID) {
-    reject(new HError(606))
-  }
-
-  if (!BaaS.getAuthToken()) {
-    reject(new HError(602))
-  }
-}
-
 // get the upload config for upyun from sso
 const getUploadFileConfig = (fileName, metaData) => {
   metaData.filename = fileName
@@ -85,8 +75,6 @@ const uploadFile = (fileParams, metaData, type) => {
   }
 
   return new Promise((resolve, reject) => {
-    isAuth(resolve, reject)
-
     let fileName = utils.getFileNameFromPath(fileParams.filePath)
 
     return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {

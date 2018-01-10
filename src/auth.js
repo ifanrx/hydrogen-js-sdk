@@ -175,9 +175,6 @@ const logout = () => {
 }
 
 const getUserInfo = () => {
-  if (!BaaS.getAuthToken()) {
-    throw new HError(602)
-  }
   return new Promise((resolve, reject) => {
     wx.getUserInfo({
       success: (res) => {
