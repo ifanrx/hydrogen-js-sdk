@@ -2,6 +2,7 @@ const auth = require('./auth')
 const BaaS = require('./baas')
 const constants = require('./constants')
 const extend = require('node.extend')
+const HError = require('./HError')
 const Promise = require('./promise')
 const request = require('./request')
 const utils = require('./utils')
@@ -12,8 +13,6 @@ const utils = require('./utils')
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
   return auth.login(false).then(() => {
     return request.apply(null, arguments)
-  }, (err) => {
-    throw new Error(err)
   })
 }
 
@@ -23,13 +22,7 @@ const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dat
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
 const doCreateRequestMethod = (methodMap) => {
-  const HTTPMethodCodeMap = {
-    GET: constants.STATUS_CODE.SUCCESS,
-    POST: constants.STATUS_CODE.CREATED,
-    PUT: constants.STATUS_CODE.UPDATE,
-    PATCH: constants.STATUS_CODE.PATCH,
-    DELETE: constants.STATUS_CODE.DELETE
-  }
+
 
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
@@ -51,12 +44,12 @@ const doCreateRequestMethod = (methodMap) => {
 
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
-              if (res.statusCode == HTTPMethodCodeMap[method]) {
+              if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res)
               } else {
-                reject(constants.MSG.STATUS_CODE_ERROR)
+                reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
               }
-            }, (err) => {
+            }, err => {
               reject(err)
             })
           })

@@ -8,15 +8,6 @@ module.exports = {
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
   },
-  // 提示信息
-  MSG: {
-    STATUS_CODE_ERROR: 'Unexpected API Status Code',
-    NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误',
-    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
-    LOGIN_ERROR: '登录失败',
-    UNAUTH_ERROR: '请先完成用户授权'
-  },
   STATUS_CODE: {
     CREATED: 201,
     SUCCESS: 200,
@@ -35,4 +26,12 @@ module.exports = {
     HEADER_AUTH_VALUE: 'Hydrogen-r1 ',
     UA: 'Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30',
   },
+
+  httpMethodCodeMap: {
+    GET: 200,
+    POST: 201,
+    PUT: 200,
+    PATCH: 200,
+    DELETE: 204,
+  }
 }

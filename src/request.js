@@ -1,6 +1,7 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
 const extend = require('node.extend')
+const HError = require('./HError')
 const Promise = require('./promise')
 const utils = require('./utils')
 
@@ -40,7 +41,7 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
   return new Promise((resolve, reject) => {
 
     if (!BaaS._config.CLIENT_ID) {
-      reject('未初始化客户端')
+      reject(new HError(602))
     }
 
     let headers = setHeader(header)
@@ -61,8 +62,8 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
         }
         resolve(res)
       },
-      fail: (err) => {
-        throw new Error(err.errMsg)
+      fail: () => {
+        utils.wxRequestFail(reject)
       }
     })
 

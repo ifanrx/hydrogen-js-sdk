@@ -1,4 +1,4 @@
-const constants = require('./constants')
+const HError = require('./HError')
 const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 
@@ -18,12 +18,12 @@ class BaseRecord {
         })
         this._record = record
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR)
+        throw new HError(605)
       }
     } else if (args.length === 2) {
       this._record[args[0]] = (args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon) ? args[1].toGeoJSON() : args[1]
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR)
+      throw new HError(605)
     }
     return this
   }
