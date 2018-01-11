@@ -5475,7 +5475,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var constants = require('./constants');
+var HError = require('./HError');
 var Query = require('./Query');
 var _cloneDeep = require('lodash.clonedeep');
 var _isInteger = require('lodash/isInteger');
@@ -5496,7 +5496,7 @@ var BaseQuery = function () {
       if (queryObject instanceof Query) {
         this._queryObject = _cloneDeep(queryObject.queryObject);
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
       return this;
     }
@@ -5504,7 +5504,7 @@ var BaseQuery = function () {
     key: 'limit',
     value: function limit(value) {
       if (!_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
       this._limit = value;
       return this;
@@ -5513,7 +5513,7 @@ var BaseQuery = function () {
     key: 'offset',
     value: function offset(value) {
       if (!_isInteger(value)) {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
       this._offset = value;
       return this;
@@ -5547,7 +5547,7 @@ var BaseQuery = function () {
 
 module.exports = BaseQuery;
 
-},{"./Query":40,"./constants":50,"lodash.clonedeep":10,"lodash/isInteger":21}],34:[function(require,module,exports){
+},{"./HError":40,"./Query":41,"lodash.clonedeep":10,"lodash/isInteger":21}],34:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -5556,7 +5556,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var constants = require('./constants');
+var HError = require('./HError');
 var GeoPoint = require('./GeoPoint');
 var GeoPolygon = require('./GeoPolygon');
 
@@ -5584,12 +5584,12 @@ var BaseRecord = function () {
           });
           this._record = record;
         } else {
-          throw new Error(constants.MSG.ARGS_ERROR);
+          throw new HError(605);
         }
       } else if (args.length === 2) {
         this._record[args[0]] = args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon ? args[1].toGeoJSON() : args[1];
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
       return this;
     }
@@ -5633,7 +5633,7 @@ var BaseRecord = function () {
 
 module.exports = BaseRecord;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./constants":50}],35:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40}],35:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5691,7 +5691,7 @@ var ContentGroup = function (_BaseQuery) {
 
 module.exports = ContentGroup;
 
-},{"./BaseQuery":33,"./Query":40,"./baas":46}],36:[function(require,module,exports){
+},{"./BaseQuery":33,"./Query":41,"./baas":47}],36:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5746,7 +5746,7 @@ var File = function (_BaseQuery) {
 
 module.exports = File;
 
-},{"./BaseQuery":33,"./baas":46,"./uploadFile":58}],37:[function(require,module,exports){
+},{"./BaseQuery":33,"./baas":47,"./uploadFile":59}],37:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5794,7 +5794,7 @@ var FileCategory = function (_BaseQuery) {
 
 module.exports = FileCategory;
 
-},{"./BaseQuery":33,"./Query":40,"./baas":46}],38:[function(require,module,exports){
+},{"./BaseQuery":33,"./Query":41,"./baas":47}],38:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5835,8 +5835,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GeoPoint = require('./GeoPoint');
+var HError = require('./HError');
 var _cloneDeep = require('lodash.clonedeep');
-var constants = require('./constants');
 
 var GeoPolygon = function () {
   function GeoPolygon(args) {
@@ -5844,7 +5844,7 @@ var GeoPolygon = function () {
 
     if (args && args instanceof Array) {
       if (args.length < 4) {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       } else {
         this.points = args;
         this.geoJSON = {
@@ -5853,7 +5853,7 @@ var GeoPolygon = function () {
         };
       }
     } else {
-      throw new Error(constants.MSG.ARGS_ERROR);
+      throw new HError(605);
     }
   }
 
@@ -5868,7 +5868,7 @@ var GeoPolygon = function () {
         } else if (point instanceof Array && point.length === 2) {
           face.push(point);
         } else {
-          throw new Error(constants.MSG.ARGS_ERROR);
+          throw new HError(605);
         }
       });
       coordinates.push(face);
@@ -5881,7 +5881,60 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./GeoPoint":38,"./constants":50,"lodash.clonedeep":10}],40:[function(require,module,exports){
+},{"./GeoPoint":38,"./HError":40,"lodash.clonedeep":10}],40:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HError = function () {
+  function HError(code, msg) {
+    _classCallCheck(this, HError);
+
+    var error = new Error();
+
+    error.code = code;
+    error.message = msg ? code + ': ' + msg : code + ': ' + this.mapErrorMessage(code);
+
+    return error;
+  }
+
+  // 前端错误信息定义
+
+
+  _createClass(HError, [{
+    key: 'mapErrorMessage',
+    value: function mapErrorMessage(code) {
+      switch (code) {
+        case 600:
+          return 'network disconnected';
+        case 601:
+          return 'request timeout';
+        case 602:
+          return 'uninitialized'; // 未调用 BaaS.init()
+        case 603:
+          return 'unauthorized'; // 用户尚未授权
+        case 604:
+          return 'session missing'; // 用户尚未登录
+        case 605:
+          return 'incorrect parameter type';
+        case 607:
+          return 'payment cancelled';
+        case 608:
+          return 'payment failed'; // error message 会被重写为微信返回的错误信息
+        default:
+          return 'unknown error';
+      }
+    }
+  }]);
+
+  return HError;
+}();
+
+module.exports = HError;
+
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5890,9 +5943,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var constants = require('./constants');
 var GeoPoint = require('./GeoPoint');
 var GeoPolygon = require('./GeoPolygon');
+var HError = require('./HError');
 var utils = require('./utils');
 var _isString = require('lodash/isString');
 
@@ -5927,7 +5980,7 @@ var Query = function () {
           op = 'gte';
           break;
         default:
-          throw new Error(constants.MSG.ARGS_ERROR);
+          throw new HError(605);
       }
       this._addQueryObject(key, _defineProperty({}, op, value));
       return this;
@@ -5939,7 +5992,7 @@ var Query = function () {
         this._addQueryObject(key, { contains: str });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -5956,7 +6009,7 @@ var Query = function () {
 
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -5966,7 +6019,7 @@ var Query = function () {
         this._addQueryObject(key, { in: arr });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -5976,7 +6029,7 @@ var Query = function () {
         this._addQueryObject(key, { nin: arr });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -5986,7 +6039,7 @@ var Query = function () {
         this._addQueryObject(key, { all: arr });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -6055,7 +6108,7 @@ var Query = function () {
         this._addQueryObject(key, { intersects: point.toGeoJSON() });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
 
@@ -6068,7 +6121,7 @@ var Query = function () {
         this._addQueryObject(key, { within: polygon.toGeoJSON() });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
 
@@ -6085,7 +6138,7 @@ var Query = function () {
         this._addQueryObject(key, { center: data });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
 
@@ -6107,7 +6160,7 @@ var Query = function () {
         this._addQueryObject(key, { nearsphere: data });
         return this;
       } else {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
     }
   }, {
@@ -6119,7 +6172,7 @@ var Query = function () {
     key: '_addQueryObject',
     value: function _addQueryObject(key, obj) {
       if (obj.constructor !== Object) {
-        throw new Error(constants.MSG.ARGS_ERROR);
+        throw new HError(605);
       }
 
       var query = _defineProperty({}, key, {});
@@ -6172,7 +6225,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./constants":50,"./utils":59,"lodash/isString":24}],41:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":60,"lodash/isString":24}],42:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6240,7 +6293,7 @@ var TableObject = function (_BaseQuery) {
 
 module.exports = TableObject;
 
-},{"./BaseQuery":33,"./TableRecord":42,"./baas":46}],42:[function(require,module,exports){
+},{"./BaseQuery":33,"./TableRecord":43,"./baas":47}],43:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6288,7 +6341,7 @@ var TableRecord = function (_BaseRecord) {
 
 module.exports = TableRecord;
 
-},{"./BaseRecord":34,"./baas":46,"lodash.clonedeep":10}],43:[function(require,module,exports){
+},{"./BaseRecord":34,"./baas":47,"lodash.clonedeep":10}],44:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6334,7 +6387,7 @@ var User = function (_BaseQuery) {
 
 module.exports = User;
 
-},{"./BaseQuery":33,"./UserRecord":44,"./baas":46}],44:[function(require,module,exports){
+},{"./BaseQuery":33,"./UserRecord":45,"./baas":47}],45:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6372,14 +6425,16 @@ var UserRecord = function (_BaseRecord) {
 
 module.exports = UserRecord;
 
-},{"./BaseRecord":34,"./baas":46,"lodash.clonedeep":10}],45:[function(require,module,exports){
+},{"./BaseRecord":34,"./baas":47,"lodash.clonedeep":10}],46:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
 var constants = require('./constants');
+var HError = require('./HError');
 var Promise = require('./promise');
 var request = require('./request');
 var storage = require('./storage');
+var utils = require('./utils');
 
 var API = BaaS._config.API;
 
@@ -6390,13 +6445,21 @@ var isSilentLogining = false;
 var silentLoginResolve = [];
 var silentLoginReject = [];
 
-/**
- * 初始化会话
- * @param  {String} code      wx.login 后返回的 code
- * @param  {Function} resolve Promise resolve function
- * @param  {Function} reject  Promise reject function
- * @return {Promise}
- */
+// 获取登录凭证 code, 进而换取用户登录态信息
+var auth = function auth() {
+  return new Promise(function (resolve, reject) {
+    wx.login({
+      success: function success(res) {
+        return sessionInit(res.code, resolve, reject);
+      },
+      fail: function fail() {
+        utils.wxRequestFail(reject);
+      }
+    });
+  });
+};
+
+// code 换取 session_key
 var sessionInit = function sessionInit(code, resolve, reject) {
   return request({
     url: API.INIT,
@@ -6412,27 +6475,10 @@ var sessionInit = function sessionInit(code, resolve, reject) {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token);
       resolve(res);
     } else {
-      reject(constants.MSG.CONFIG_ERROR);
+      reject(new HError(res.statusCode, utils.extractErrorMsg(res)));
     }
   }, function (err) {
     reject(err);
-  });
-};
-
-/**
- * 验证客户端
- * @return {Promise}
- */
-var auth = function auth() {
-  return new Promise(function (resolve, reject) {
-    wx.login({
-      success: function success(res) {
-        return sessionInit(res.code, resolve, reject);
-      },
-      fail: function fail(err) {
-        reject(err);
-      }
-    });
   });
 };
 
@@ -6441,7 +6487,7 @@ var login = function login() {
 
   if (userInfo) {
     if (storage.get(constants.STORAGE_KEY.USERINFO)) {
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve) {
         resolve(makeLoginResponseData());
       });
     }
@@ -6459,19 +6505,13 @@ var login = function login() {
       loginResolve.push(resolve);
       loginReject.push(reject);
       silentLogin().then(function () {
-        return getUserInfo().then(function () {
+        getUserInfo().then(function () {
           isLogining = false;
           resolveLoginCallBacks();
-        }, function (err) {
-          isLogining = false;
-          rejectLoginCallBacks();
-        }).catch(function () {
-          handleLoginFailure();
         });
-      }, function () {
-        throw new Error(constants.MSG.CONFIG_ERROR);
       }).catch(function (err) {
-        handleLoginFailure(err);
+        handleLoginFailure();
+        rejectLoginCallBacks(true, err);
       });
     });
   } else {
@@ -6481,7 +6521,7 @@ var login = function login() {
 
 var silentLogin = function silentLogin() {
   if (storage.get(constants.STORAGE_KEY.UID)) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       resolve(makeLoginResponseData(false));
     });
   }
@@ -6498,14 +6538,12 @@ var silentLogin = function silentLogin() {
   return new Promise(function (resolve, reject) {
     silentLoginResolve.push(resolve);
     silentLoginReject.push(reject);
-    return auth().then(function () {
+    auth().then(function () {
       isSilentLogining = false;
       resolveLoginCallBacks(false);
-    }, function (rej) {
+    }, function (err) {
       isSilentLogining = false;
-      rejectLoginCallBacks(false);
-    }).catch(function (err) {
-      handleLoginFailure(false);
+      rejectLoginCallBacks(false, err);
     });
   });
 };
@@ -6539,16 +6577,16 @@ var resolveLoginCallBacks = function resolveLoginCallBacks() {
 
 var rejectLoginCallBacks = function rejectLoginCallBacks() {
   var userInfo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var err = arguments[1];
 
   setTimeout(function () {
     if (userInfo) {
       while (loginReject.length) {
-        loginReject.shift()(makeLoginResponseData(false));
+        loginReject.shift()(err);
       }
     } else {
       while (silentLoginReject.length) {
-        silentLoginReject.shift()();
-        throw new Error(constants.MSG.CONFIG_ERROR);
+        silentLoginReject.shift()(err);
       }
     }
   }, 0);
@@ -6562,27 +6600,22 @@ var handleLoginFailure = function handleLoginFailure() {
   } else {
     isSilentLogining = false;
   }
-  throw new Error(constants.MSG.CONFIG_ERROR);
 };
 
 var logout = function logout() {
   BaaS.check();
 
-  return request({ url: API.LOGOUT, method: 'POST' }).then(function (res) {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
+  return new Promise(function (resolve, reject) {
+    request({ url: API.LOGOUT, method: 'POST' }).then(function () {
       BaaS.clearSession();
-    } else {
-      throw new Error(constants.MSG.STATUS_CODE_ERROR);
-    }
-  }, function (err) {
-    throw new Error(err);
+      resolve();
+    }, function (err) {
+      reject(err);
+    });
   });
 };
 
 var getUserInfo = function getUserInfo() {
-  if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端');
-  }
   return new Promise(function (resolve, reject) {
     wx.getUserInfo({
       success: function success(res) {
@@ -6597,35 +6630,24 @@ var getUserInfo = function getUserInfo() {
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
         storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
-        return authenticate(payload, resolve, reject);
+        return baasLogin(payload, resolve, reject);
       },
-      fail: function fail(err) {
-        // 用户拒绝授权也要继续进入下一步流程
-        reject('');
+      fail: function fail() {
+        reject(new HError(603));
       }
     });
   });
 };
 
-/**
- * 登录 BaaS
- * @param  {Object} data    微信签名等信息
- * @param  {Function} resolve Promise resolve function
- * @param  {Function} reject  Promise reject function
- * @return {Promise}
- */
-var authenticate = function authenticate(data, resolve, reject) {
+// 登录 BaaS
+var baasLogin = function baasLogin(data, resolve, reject) {
   return request({
     url: API.LOGIN,
     method: 'POST',
     data: data
   }).then(function (res) {
-    if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1');
-      resolve(res);
-    } else {
-      reject(constants.MSG.STATUS_CODE_ERROR);
-    }
+    storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1');
+    resolve(res);
   }, function (err) {
     reject(err);
   });
@@ -6637,69 +6659,51 @@ module.exports = {
   logout: logout
 };
 
-},{"./baas":46,"./constants":50,"./promise":54,"./request":55,"./storage":56}],46:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":55,"./request":56,"./storage":57,"./utils":60}],47:[function(require,module,exports){
 (function (global){
 'use strict';
 
 /**
  * 挂在 BaaS 对象的方法和属性都会被暴露到客户端环境，所以要注意保持 BaaS 对象的干净、安全
- * @author Paco
- * @since 1.0.0
  */
 
-var extend = require('node.extend');
-var utils = require('./utils');
 var constants = require('./constants');
+var HError = require('./HError');
 var storage = require('./storage');
+var utils = require('./utils');
+var _isString = require('lodash/isString');
 
 var BaaS = global.BaaS || {};
 
-BaaS._config = utils.getConfig
+BaaS._config = utils.getConfig();
 
-/**
- * 初始化 SDK
- * @param  {[type]} clientID [description]
- */
-();BaaS.init = function (clientID) {
-  if (Object.prototype.toString.apply(clientID) !== '[object String]') {
-    throw new Error('非法 clientID');
+BaaS.init = function (clientID) {
+  if (!_isString(clientID)) {
+    throw new HError(605);
   }
 
   BaaS._config.CLIENT_ID = clientID;
 };
 
-/**
- * 获取客户端认证 Token
- * @return {String}
- */
 BaaS.getAuthToken = function () {
   return storage.get(constants.STORAGE_KEY.AUTH_TOKEN);
 };
 
-/**
- * 获取 BaaS 登录状态
- * @return {Boolean}
- */
 BaaS.isLogined = function () {
   return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS);
 };
 
-/**
- * 检测 BaaS 当前状态
- */
+// 检测 BaaS 当前状态
 BaaS.check = function () {
   if (!BaaS.getAuthToken()) {
-    throw new Error('未认证客户端');
+    throw new HError(602);
   }
 
   if (!BaaS.isLogined()) {
-    throw new Error('未登录');
+    throw new HError(604);
   }
 };
 
-/**
- * 清楚认证信息、登录状态、用户信息
- */
 BaaS.clearSession = function () {
   // 清除客户端认证 Token
   storage.set(constants.STORAGE_KEY.AUTH_TOKEN, ''
@@ -6715,20 +6719,20 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constants":50,"./storage":56,"./utils":59,"node.extend":29}],47:[function(require,module,exports){
+},{"./HError":40,"./constants":51,"./storage":57,"./utils":60,"lodash/isString":24}],48:[function(require,module,exports){
 'use strict';
 
+var auth = require('./auth');
 var BaaS = require('./baas');
 var constants = require('./constants');
 var extend = require('node.extend');
+var HError = require('./HError');
 var Promise = require('./promise');
 var request = require('./request');
-var utils = require('./utils');
-var auth = require('./auth'
+var utils = require('./utils'
 
-/**
- * BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
- */
+// BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
+// eslint-disable-next-line no-unused-vars
 );var baasRequest = function baasRequest(_ref) {
   var _arguments = arguments;
   var url = _ref.url,
@@ -6743,8 +6747,6 @@ var auth = require('./auth'
 
   return auth.login(false).then(function () {
     return request.apply(null, _arguments);
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
@@ -6753,13 +6755,6 @@ var auth = require('./auth'
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
 var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
-  var HTTPMethodCodeMap = {
-    GET: constants.STATUS_CODE.SUCCESS,
-    POST: constants.STATUS_CODE.CREATED,
-    PUT: constants.STATUS_CODE.UPDATE,
-    PATCH: constants.STATUS_CODE.PATCH,
-    DELETE: constants.STATUS_CODE.DELETE
-  };
 
   for (var k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
@@ -6781,10 +6776,10 @@ var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
 
           return new Promise(function (resolve, reject) {
             return baasRequest({ url: url, method: method, data: data }).then(function (res) {
-              if (res.statusCode == HTTPMethodCodeMap[method]) {
+              if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res);
               } else {
-                reject(constants.MSG.STATUS_CODE_ERROR);
+                reject(new HError(res.statusCode, utils.extractErrorMsg(res)));
               }
             }, function (err) {
               reject(err);
@@ -6809,9 +6804,7 @@ var excludeParams = function excludeParams(URL, params) {
   return params;
 };
 
-/**
- * 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
- */
+// 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
 var createRequestMethod = function createRequestMethod() {
   var methodMapList = BaaS._config.METHOD_MAP_LIST;
   methodMapList.map(function (v) {
@@ -6826,7 +6819,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./auth":45,"./baas":46,"./constants":50,"./promise":54,"./request":55,"./utils":59,"node.extend":29}],48:[function(require,module,exports){
+},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":55,"./request":56,"./utils":60,"node.extend":29}],49:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -6838,7 +6831,7 @@ var devConfig = {
 
 module.exports = extend(config, devConfig);
 
-},{"./config":49,"node.extend":29}],49:[function(require,module,exports){
+},{"./config":50,"node.extend":29}],50:[function(require,module,exports){
 'use strict';
 
 var API_HOST = 'https://sso.ifanr.com';
@@ -6993,13 +6986,12 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.3'
+  VERSION: 'v1.1.4'
 };
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
-// 常量表
 module.exports = {
   // 存储信息
   STORAGE_KEY: {
@@ -7009,15 +7001,6 @@ module.exports = {
     OPENID: 'openid',
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
-  },
-  // 提示信息
-  MSG: {
-    STATUS_CODE_ERROR: 'Unexpected API Status Code',
-    NETWORT_ERROR: 'Network Error',
-    ARGS_ERROR: '参数使用错误',
-    CONFIG_ERROR: '认证失败，请检查 AppID、ClientID 配置',
-    LOGIN_ERROR: '登录失败',
-    UNAUTH_ERROR: '请先完成用户授权'
   },
   STATUS_CODE: {
     CREATED: 201,
@@ -7036,10 +7019,18 @@ module.exports = {
     HEADER_CLIENT: 'X-Hydrogen-Client-ID',
     HEADER_AUTH_VALUE: 'Hydrogen-r1 ',
     UA: 'Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
+  },
+
+  httpMethodCodeMap: {
+    GET: 200,
+    POST: 201,
+    PUT: 200,
+    PATCH: 200,
+    DELETE: 204
   }
 };
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas'
@@ -7075,48 +7066,37 @@ require('./baasRequest').createRequestMethod
 
 module.exports = BaaS;
 
-},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":40,"./TableObject":41,"./User":43,"./auth":45,"./baas":46,"./baasRequest":47,"./order":52,"./pay":53,"./promise":54,"./request":55,"./storage":56,"./templateMessage":57,"./uploadFile":58,"./wxDecryptData":60}],52:[function(require,module,exports){
+},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./order":53,"./pay":54,"./promise":55,"./request":56,"./storage":57,"./templateMessage":58,"./uploadFile":59,"./wxDecryptData":61}],53:[function(require,module,exports){
 'use strict';
 
-var baasRequest = require('./baasRequest').baasRequest;
 var BaaS = require('./baas');
-var API = BaaS._config.API;
+var baasRequest = require('./baasRequest').baasRequest;
 var utils = require('./utils');
-var Promise = require('./promise');
+
+var API = BaaS._config.API;
 
 var order = function order(params) {
   var url = utils.format(API.ORDER, { transactionID: params.transactionID });
 
   return baasRequest({
     url: url
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
 module.exports = order;
 
-},{"./baas":46,"./baasRequest":47,"./promise":54,"./utils":59}],53:[function(require,module,exports){
+},{"./baas":47,"./baasRequest":48,"./utils":60}],54:[function(require,module,exports){
 'use strict';
 
-var baasRequest = require('./baasRequest').baasRequest;
 var BaaS = require('./baas');
+var baasRequest = require('./baasRequest').baasRequest;
 var constants = require('./constants');
+var HError = require('./HError');
 var Promise = require('./promise');
 var storage = require('./storage');
 
 var API = BaaS._config.API;
 
-/**
- * @description payment
- * @return {Promise} The result of the payment transaction, is a Promise object
- */
 var keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
   merchandiseRecordID: 'merchandise_record_id', // optional
@@ -7128,7 +7108,7 @@ var keysMap = {
 var pay = function pay(params) {
   if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
     return new Promise(function (resolve, reject) {
-      reject(constants.MSG.UNAUTH_ERROR);
+      reject(new HError(603));
     });
   }
 
@@ -7156,35 +7136,43 @@ var pay = function pay(params) {
           res.transaction_no = data.transaction_no;
           return resolve(res);
         },
+        complete: function complete(res) {
+          // 兼容：微信 6.5.2 及之前版本中，用户取消支付不会触发 fail 回调，只会触发 complete 回调，回调 errMsg 为 'requestPayment:cancel'
+          if (res.errMsg == 'requestPayment:fail cancel') {
+            reject(new HError(607));
+          }
+        },
         fail: function fail(err) {
-          return reject(err);
+          // 微信不使用状态码来区分支付取消和支付失败，这里返回自定义状态码和微信的错误信息，便于用户判断和排错
+          if (err.errMsg == 'requestPayment:fail cancel') {
+            reject(new HError(607));
+          } else {
+            reject(new HError(608, err.errMsg));
+          }
         }
       });
-    }, function (err) {
-      throw new Error(err);
     });
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
 module.exports = pay;
 
-},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54,"./storage":56}],54:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":55,"./storage":57}],55:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":32}],55:[function(require,module,exports){
+},{"rsvp":32}],56:[function(require,module,exports){
 'use strict';
 
-var Promise = require('./promise');
-var extend = require('node.extend');
-var utils = require('./utils');
+var BaaS = require('./baas');
 var constants = require('./constants');
-var BaaS = require('./baas'
+var extend = require('node.extend');
+var HError = require('./HError');
+var Promise = require('./promise');
+var utils = require('./utils'
 
 /**
  * 设置请求头
@@ -7216,15 +7204,6 @@ var setHeader = function setHeader(header) {
   return extend(extendHeader, header || {});
 };
 
-/**
- * 用于网络请求
- * @param  {String} url                   url地址
- * @param  {String} [method='GET']        请求方法
- * @param  {Object|String} data           请求参数
- * @param  {Object} header                请求头部
- * @param  {String} [dataType='json']     发送数据的类型
- * @return {Object}                       返回一个 Promise 对象
- */
 var request = function request(_ref) {
   var url = _ref.url,
       _ref$method = _ref.method,
@@ -7240,7 +7219,7 @@ var request = function request(_ref) {
   return new Promise(function (resolve, reject) {
 
     if (!BaaS._config.CLIENT_ID) {
-      reject('未初始化客户端');
+      reject(new HError(602));
     }
 
     var headers = setHeader(header);
@@ -7261,9 +7240,8 @@ var request = function request(_ref) {
         }
         resolve(res);
       },
-      fail: function fail(err) {
-        throw new Error(err.errMsg);
-        reject(err);
+      fail: function fail() {
+        utils.wxRequestFail(reject);
       }
     });
 
@@ -7273,41 +7251,32 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./baas":46,"./constants":50,"./promise":54,"./utils":59,"node.extend":29}],56:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":55,"./utils":60,"node.extend":29}],57:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
 
 module.exports = {
   set: function set(key, value) {
-    try {
-      wx.setStorageSync(storageKeyPrefix + key, value);
-    } catch (e) {
-      throw new Error(e);
-    }
+    wx.setStorageSync(storageKeyPrefix + key, value);
   },
   get: function get(key) {
-    try {
-      return wx.getStorageSync(storageKeyPrefix + key);
-    } catch (e) {
-      throw new Error(e);
-    }
+    return wx.getStorageSync(storageKeyPrefix + key);
   }
 };
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
-var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
 var BaaS = require('./baas');
-var Promise = require('./promise');
+var baasRequest = require('./baasRequest').baasRequest;
+var HError = require('./HError');
 
 var API = BaaS._config.API;
 
 function makeParams(formID) {
   if (!formID) {
-    throw new Error(constants.MSG.ARGS_ERROR);
+    throw new HError(605);
   }
 
   var paramsObj = {};
@@ -7324,14 +7293,6 @@ var wxReportTicket = function wxReportTicket(formID) {
     url: API.TEMPLATE_MESSAGE,
     method: 'POST',
     data: paramsObj
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
@@ -7340,7 +7301,7 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54}],58:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48}],59:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7348,35 +7309,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var BaaS = require('./baas');
 var baasRequest = require('./baasRequest').baasRequest;
 var constants = require('./constants');
+var HError = require('./HError');
 var Promise = require('./promise');
-var utils = require('./utils');
-
-var isAuth = function isAuth(resolve, reject) {
-  if (!BaaS._config.CLIENT_ID) {
-    reject('未初始化客户端');
-  }
-
-  if (!BaaS.getAuthToken()) {
-    reject('未认证，请先完成用户登录');
-  }
-};
+var utils = require('./utils'
 
 // get the upload config for upyun from sso
-var getUploadFileConfig = function getUploadFileConfig(fileName, metaData) {
+);var getUploadFileConfig = function getUploadFileConfig(fileName, metaData) {
   metaData.filename = fileName;
 
   return baasRequest({
     url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
     method: 'POST',
     data: metaData
-  }).then(function (res) {
-    return new Promise(function (resolve, reject) {
-      return resolve(res);
-    }, function (err) {
-      return reject(err);
-    });
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
@@ -7421,26 +7365,24 @@ var wxUpload = function wxUpload(config, resolve, reject, type) {
 
       resolve(res);
     },
-    fail: function fail(err) {
-      reject(err);
+    fail: function fail() {
+      utils.wxRequestFail(reject);
     }
   });
 };
 
 var uploadFile = function uploadFile(fileParams, metaData, type) {
   if (!fileParams || (typeof fileParams === 'undefined' ? 'undefined' : _typeof(fileParams)) !== 'object' || !fileParams.filePath) {
-    throw new Error(constants.MSG.ARGS_ERROR);
+    throw new HError(605);
   }
 
   if (!metaData) {
     metaData = {};
   } else if ((typeof metaData === 'undefined' ? 'undefined' : _typeof(metaData)) !== 'object') {
-    throw new Error(constants.MSG.ARGS_ERROR);
+    throw new HError(605);
   }
 
   return new Promise(function (resolve, reject) {
-    isAuth(resolve, reject);
-
     var fileName = utils.getFileNameFromPath(fileParams.filePath);
 
     return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(function (res) {
@@ -7455,17 +7397,16 @@ var uploadFile = function uploadFile(fileParams, metaData, type) {
       };
       return wxUpload(config, resolve, reject, type);
     });
-  }, function (err) {
-    throw new Error(err);
   });
 };
 
 module.exports = uploadFile;
 
-},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54,"./utils":59}],59:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":55,"./utils":60}],60:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
+var HError = require('./HError');
 
 var config = void 0;
 try {
@@ -7507,7 +7448,8 @@ var log = function log(msg) {
     return;
   }
   // 记录日志到日志文件
-  console.log('BaaS LOG: ' + msg);
+  console.log('BaaS LOG: ' + msg // eslint-disable-line no-console
+  );
 };
 
 /**
@@ -7573,6 +7515,32 @@ var replaceQueryParams = function replaceQueryParams() {
   return copiedParams;
 };
 
+var wxRequestFail = function wxRequestFail(reject) {
+  wx.getNetworkType({
+    success: function success(res) {
+      if (res.networkType === 'none') {
+        reject(new HError(600) // 断网
+        );
+      } else {
+        reject(new HError(601) // 网络超时
+        );
+      }
+    }
+  });
+};
+
+var extractErrorMsg = function extractErrorMsg(res) {
+  var errorMsg = '';
+  if (res.statusCode === 404) {
+    errorMsg = 'not found';
+  } else if (res.data.error_msg) {
+    errorMsg = res.data.error_msg;
+  } else if (res.data.message) {
+    errorMsg = res.data.message;
+  }
+  return errorMsg;
+};
+
 module.exports = {
   log: log,
   format: format,
@@ -7580,16 +7548,17 @@ module.exports = {
   getSysPlatform: getSysPlatform,
   getFileNameFromPath: getFileNameFromPath,
   parseRegExp: parseRegExp,
-  replaceQueryParams: replaceQueryParams
+  replaceQueryParams: replaceQueryParams,
+  wxRequestFail: wxRequestFail,
+  extractErrorMsg: extractErrorMsg
 };
 
-},{"./config.dev":48,"./config.dev.js":48,"node.extend":29}],60:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.dev.js":49,"node.extend":29}],61:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
 var baasRequest = require('./baasRequest').baasRequest;
-var constants = require('./constants');
-var Promise = require('./promise');
+var HError = require('./HError');
 
 var API = BaaS._config.API;
 
@@ -7599,7 +7568,7 @@ var wxDecryptData = function wxDecryptData() {
   }
 
   if (!validateParams(params)) {
-    throw new Error(constants.MSG.ARGS_ERROR);
+    throw new HError(605);
   }
 
   var paramsObj = {
@@ -7607,17 +7576,19 @@ var wxDecryptData = function wxDecryptData() {
     iv: params[1]
   };
 
-  return baasRequest({
-    url: API.DECRYPT + params[2] + '/',
-    method: 'POST',
-    data: paramsObj
-  }).then(function (res) {
-    var status = res.statusCode;
-    return new Promise(function (resolve, reject) {
-      if (status === 401) return reject(new Error('用户未登录 or session_key 过期'));
-      if (status === 403) return reject(new Error('微信解密插件未开启'));
-      if (status === 400) return reject(new Error('提交的解密信息有错'));
+  return new Promise(function (resolve, reject) {
+    baasRequest({
+      url: API.DECRYPT + params[2] + '/',
+      method: 'POST',
+      data: paramsObj
+    }).then(function (res) {
+      var status = res.statusCode;
+      if (status === 401) return reject(new HError(401, res.data.message));
+      if (status === 403) return reject(new HError(403, '微信解密插件未开启'));
+      if (status === 400) return reject(new HError(400, res.data.message));
       return resolve(res.data);
+    }, function (err) {
+      reject(err);
     });
   });
 };
@@ -7632,4 +7603,4 @@ var validateParams = function validateParams(params) {
 
 module.exports = wxDecryptData;
 
-},{"./baas":46,"./baasRequest":47,"./constants":50,"./promise":54}]},{},[51]);
+},{"./HError":40,"./baas":47,"./baasRequest":48}]},{},[52]);
