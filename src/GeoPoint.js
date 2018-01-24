@@ -1,12 +1,12 @@
 const _cloneDeep = require('lodash.clonedeep')
 
 class GeoPoint {
-  constructor(attitude, longitude) {
-    this.attitude = attitude
+  constructor(longitude, latitude) {
     this.longitude = longitude
+    this.latitude = latitude
     this.geoJSON = {
       'type': 'Point',
-      'coordinates': [this.attitude, this.longitude]
+      'coordinates': [this.longitude, this.latitude]
     }
   }
 

@@ -178,7 +178,7 @@ class Query {
     if (point && point instanceof GeoPoint) {
       let data = {
         radius: radius,
-        coordinates: [point.attitude, point.longitude]
+        coordinates: [point.longitude, point.latitude]
       }
       this._addQueryObject(key, {center: data})
       return this

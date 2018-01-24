@@ -24,7 +24,7 @@ class GeoPolygon {
     let face = []
     this.points.forEach((point) => {
       if (point instanceof GeoPoint) {
-        face.push([point.attitude, point.longitude])
+        face.push([point.longitude, point.latitude])
       } else if (point instanceof Array && point.length === 2) {
         face.push(point)
       } else {

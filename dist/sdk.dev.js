@@ -5804,14 +5804,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var _cloneDeep = require('lodash.clonedeep');
 
 var GeoPoint = function () {
-  function GeoPoint(attitude, longitude) {
+  function GeoPoint(longitude, latitude) {
     _classCallCheck(this, GeoPoint);
 
-    this.attitude = attitude;
     this.longitude = longitude;
+    this.latitude = latitude;
     this.geoJSON = {
       'type': 'Point',
-      'coordinates': [this.attitude, this.longitude]
+      'coordinates': [this.longitude, this.latitude]
     };
   }
 
@@ -5864,7 +5864,7 @@ var GeoPolygon = function () {
       var face = [];
       this.points.forEach(function (point) {
         if (point instanceof GeoPoint) {
-          face.push([point.attitude, point.longitude]);
+          face.push([point.longitude, point.latitude]);
         } else if (point instanceof Array && point.length === 2) {
           face.push(point);
         } else {
@@ -6133,7 +6133,7 @@ var Query = function () {
       if (point && point instanceof GeoPoint) {
         var data = {
           radius: radius,
-          coordinates: [point.attitude, point.longitude]
+          coordinates: [point.longitude, point.latitude]
         };
         this._addQueryObject(key, { center: data });
         return this;
@@ -7410,7 +7410,7 @@ var HError = require('./HError');
 
 var config = void 0;
 try {
-  config = require('./config.dev.js');
+  config = require('./config.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7553,7 +7553,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.dev.js":49,"node.extend":29}],61:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],61:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
