@@ -73,7 +73,7 @@ const login = (userInfo = true) => {
       loginResolve.push(resolve)
       loginReject.push(reject)
       silentLogin().then(() => {
-        getUserInfo().then(() => {
+        return getUserInfo().then(() => {
           isLogining = false
           resolveLoginCallBacks()
         })
@@ -188,8 +188,7 @@ const getUserInfo = () => {
         userInfo.id = storage.get(constants.STORAGE_KEY.UID)
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-        storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
-        return baasLogin(payload, resolve, reject)
+        return baasLogin(payload, resolve, reject, userInfo)
       },
       fail: () => {
         reject(new HError(603))
@@ -199,13 +198,18 @@ const getUserInfo = () => {
 }
 
 // 登录 BaaS
-const baasLogin = (data, resolve, reject) => {
+const baasLogin = (data, resolve, reject, userInfo) => {
   return request({
     url: API.LOGIN,
     method: 'POST',
     data: data
   }).then((res) => {
     storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
+    if (!userInfo.unionid && res.data.unionid) {
+      userInfo.unionid = res.data.unionid
+      storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid)
+    }
+    storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
     resolve(res)
   }, (err) => {
     reject(err)
