@@ -6505,7 +6505,7 @@ var login = function login() {
       loginResolve.push(resolve);
       loginReject.push(reject);
       silentLogin().then(function () {
-        getUserInfo().then(function () {
+        return getUserInfo().then(function () {
           isLogining = false;
           resolveLoginCallBacks();
         });
@@ -6629,8 +6629,7 @@ var getUserInfo = function getUserInfo() {
         userInfo.id = storage.get(constants.STORAGE_KEY.UID);
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
-        storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
-        return baasLogin(payload, resolve, reject);
+        return baasLogin(payload, resolve, reject, userInfo);
       },
       fail: function fail() {
         reject(new HError(603));
@@ -6640,13 +6639,18 @@ var getUserInfo = function getUserInfo() {
 };
 
 // 登录 BaaS
-var baasLogin = function baasLogin(data, resolve, reject) {
+var baasLogin = function baasLogin(data, resolve, reject, userInfo) {
   return request({
     url: API.LOGIN,
     method: 'POST',
     data: data
   }).then(function (res) {
     storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1');
+    if (!userInfo.unionid && res.data.unionid) {
+      userInfo.unionid = res.data.unionid;
+      storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid);
+    }
+    storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
     resolve(res);
   }, function (err) {
     reject(err);
@@ -6986,7 +6990,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.4'
+  VERSION: 'v1.1.5'
 };
 
 },{}],51:[function(require,module,exports){
