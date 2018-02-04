@@ -6632,7 +6632,7 @@ var getUserInfo = function getUserInfo() {
         return baasLogin(payload, resolve, reject, userInfo);
       },
       fail: function fail() {
-        reject(new HError(603));
+        reject(makeLoginResponseData(false));
       }
     });
   });
@@ -6990,7 +6990,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.5'
+  VERSION: 'v1.1.6'
 };
 
 },{}],51:[function(require,module,exports){
