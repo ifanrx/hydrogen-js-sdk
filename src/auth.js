@@ -191,7 +191,7 @@ const getUserInfo = () => {
         return baasLogin(payload, resolve, reject, userInfo)
       },
       fail: () => {
-        reject(new HError(603))
+        reject(makeLoginResponseData(false))
       },
     })
   })
