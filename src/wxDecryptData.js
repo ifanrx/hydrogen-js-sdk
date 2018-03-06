@@ -36,7 +36,7 @@ const validateParams = (params) => {
 
   const requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number']
 
-  return requiredDataKeys.includes(params[2])
+  return requiredDataKeys.indexOf(params[2]) !== -1
 }
 
 module.exports = wxDecryptData

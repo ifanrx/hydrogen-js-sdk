@@ -1,3 +1,5 @@
+const rewire = require('rewire')
+
 const wechatDecrypt = rewire('../src/wxDecryptData')
 const validateParams = wechatDecrypt.__get__('validateParams')
 

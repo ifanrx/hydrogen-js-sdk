@@ -1,14 +1,15 @@
-const API_HOST = 'https://sso.ifanr.com'
+const API_HOST = 'https://xiaoapp.io'
 
 const API = {
-  INIT: '/hserve/v1/session/init/',
-  LOGIN: '/hserve/v1/session/authenticate/',
+  LOGIN: '/hserve/v1/session/init/',
+  AUTHENTICATE: '/hserve/v1/session/authenticate/',
   LOGOUT: '/hserve/v1/session/destroy/',
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
+  WXACODE: '/hserve/v1.3/miniappcode/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
   USER_LIST: '/hserve/v1.3/user/info/',
@@ -150,5 +151,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.6'
+  VERSION: 'v1.2.0'
 }

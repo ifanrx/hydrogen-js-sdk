@@ -2,7 +2,6 @@
 
 if (typeof require !== 'undefined') {
   global.expect = require('chai').expect
-  global.rewire = require('rewire')
   global.BaaS = require('../src')
   // 模拟 wx 方法
   global.wx = require('./wechat-mock')
@@ -26,6 +25,7 @@ require('./File')
 require('./FileCategory')
 require('./GeoPoint')
 require('./GeoPolygon')
+require('./getWXACode')
 require('./Query')
 require('./storage')
 require('./TableObject')

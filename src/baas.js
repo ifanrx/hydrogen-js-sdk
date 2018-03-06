@@ -28,17 +28,6 @@ BaaS.isLogined = () => {
   return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS)
 }
 
-// 检测 BaaS 当前状态
-BaaS.check = () => {
-  if (!BaaS.getAuthToken()) {
-    throw new HError(602)
-  }
-
-  if (!BaaS.isLogined()) {
-    throw new HError(604)
-  }
-}
-
 BaaS.clearSession = () => {
   // 清除客户端认证 Token
   storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')
@@ -48,7 +37,7 @@ BaaS.clearSession = () => {
   storage.set(constants.STORAGE_KEY.USERINFO, '')
   storage.set(constants.STORAGE_KEY.UID, '')
   storage.set(constants.STORAGE_KEY.OPENID, '')
-  storage.set(constants.STORAGE_KEY.OPENID, '')
+  storage.set(constants.STORAGE_KEY.UNIONID, '')
 }
 
 module.exports = BaaS

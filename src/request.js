@@ -37,7 +37,6 @@ const setHeader = (header) => {
 }
 
 const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) => {
-
   return new Promise((resolve, reject) => {
 
     if (!BaaS._config.CLIENT_ID) {
@@ -57,6 +56,7 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
       header: headers,
       dataType: dataType,
       success: res => {
+        // 后端设置的 token 过期时间很长，因此不考虑 token 过期情况，只考虑是否携带有效 token 即可
         if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
           BaaS.clearSession()
         }

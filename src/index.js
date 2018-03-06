@@ -7,6 +7,7 @@ BaaS.File = require('./File')
 BaaS.FileCategory = require('./FileCategory')
 BaaS.GeoPoint = require('./GeoPoint')
 BaaS.GeoPolygon = require('./GeoPolygon')
+BaaS.getWXACode = require('./getWXACode')
 BaaS.login = require('./auth').login
 BaaS.logout = require('./auth').logout
 BaaS.order = require('./order')
