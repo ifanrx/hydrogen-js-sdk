@@ -18,6 +18,7 @@ BaaS.init = (clientID) => {
   }
 
   BaaS._config.CLIENT_ID = clientID
+  BaaS._config.API_HOST = `https://${clientID}.xiaoapp.io`
 }
 
 BaaS.getAuthToken = () => {

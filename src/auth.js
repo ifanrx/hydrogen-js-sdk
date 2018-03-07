@@ -206,5 +206,6 @@ const getSensitiveData = (data, resolve, reject, userInfo) => {
 module.exports = {
   auth,
   login,
+  silentLogin,
   logout,
 }

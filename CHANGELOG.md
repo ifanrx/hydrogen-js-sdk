@@ -1,7 +1,7 @@
 ## 1.2.0 (2018-02-09)
 - [A] 数据表操作支持根据数据表名进行表操作
 - [A] 增加获取小程序码接口 wx.BaaS.getWXACode
-- [C] 替换接口请求域名 sso.ifanr.com 为 xiaoapp.io
+- [C] 替换接口请求域名 sso.ifanr.com 为 ${clientID}.xiaoapp.io
 - [C] 请求 wx.BaaS.login 成功后返回的用户 id 由 String 类型改为 Number 类型
 - [C] wx.BaaS.login 和 wx.BaaS.logout 接口去掉是否已登录检查
 - [F] 修复 es6 语法 array includes 不兼容 ios8 问题
