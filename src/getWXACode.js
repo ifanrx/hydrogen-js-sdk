@@ -37,7 +37,7 @@ const makeRealParams = (type, params) => {
     realParams.scene = params.scene
 
     if (params.hasOwnProperty('page')) {
-      realParams.page = params.page
+      realParams.path = params.page
     }
   }
 

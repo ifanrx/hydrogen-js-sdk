@@ -63,7 +63,7 @@ describe('getWXACode', () => {
     const realParams = {
       code_type: 'miniapp_temporary',
       scene: 'scene',
-      page: 'page',
+      path: 'page',
       options: {
         width: 100,
         auto_color: false,
