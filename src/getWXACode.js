@@ -12,18 +12,18 @@ const makeRealParams = (type, params) => {
   const typeIndex = validateTypes.indexOf(type)
 
   if (!_isString(type)  || typeIndex === -1) {
-    throw new HError(605)
+    throw new HError(605, 'type 为字符串类型且只接受 "wxacode", "wxacodeunlimit", "wxaqrcode" 其中一种')
   }
 
   realParams.code_type = realTypeNames[typeIndex]
 
   if(!params || params.constructor !== Object) {
-    throw new HError(605)
+    throw new HError(605, 'params 为 Object 类型')
   }
 
   if (type === 'wxacode' || type === 'wxaqrcode') {
     if (!params.hasOwnProperty('path')) {
-      throw new HError(605)
+      throw new HError(605, '当 type 为 "wxacode" 或 "wxaqrcode" 时，params 中必须带有 "path" 属性')
     }
 
     realParams.path = params.path
@@ -31,7 +31,7 @@ const makeRealParams = (type, params) => {
 
   if (type === 'wxacodeunlimit') {
     if (!params.hasOwnProperty('scene')) {
-      throw new HError(605)
+      throw new HError(605, '当 type 为 "wxacodeunlimit" 时，params 中必须带有 "scene" 属性')
     }
 
     realParams.scene = params.scene

@@ -6,27 +6,31 @@ const makeRealParams = getWXACode.__get__('makeRealParams')
 describe('getWXACode', () => {
   const line_color = {'r': '0', 'g': '0', 'b': '0'}
 
-  it('#makeRealParams type no string', () => {
+  it('#makeRealParams type is not string', () => {
     expect(() => makeRealParams(12, {scene: ''})).to.throw()
   })
 
-  it('#makeRealParams type no allowed', () => {
+  it('#makeRealParams params is not object', () => {
+    expect(() => makeRealParams('wxacode', 123)).to.throw()
+  })
+
+  it('#makeRealParams type value is not allowed', () => {
     expect(() => makeRealParams('xxx', {path: '', scene: ''})).to.throw()
   })
 
-  it('#makeRealParams params no allowed when type = "wxacode"', () => {
+  it('#makeRealParams params value is not allowed when type = "wxacode"', () => {
     expect(() => makeRealParams('wxacode', {scene: ''})).to.throw()
   })
 
-  it('#makeRealParams params no allowed when type = "wxacodeunlimit"', () => {
+  it('#makeRealParams params is not allowed when type = "wxacodeunlimit"', () => {
     expect(() => makeRealParams('wxacodeunlimit', {path: ''})).to.throw()
   })
 
-  it('#makeRealParams params no allowed when type = "wxaqrcode"', () => {
+  it('#makeRealParams params is not allowed when type = "wxaqrcode"', () => {
     expect(() => makeRealParams('wxaqrcode', {scene: ''})).to.throw()
   })
 
-  it('#makeRealParams params no allowed when type = "wxaqrcode"', () => {
+  it('#makeRealParams params is not allowed when type = "wxaqrcode"', () => {
     expect(() => makeRealParams('wxaqrcode', {scene: ''})).to.throw()
   })
 
@@ -36,6 +40,28 @@ describe('getWXACode', () => {
       width: 100,
       auto_color: false,
       line_color
+    }
+
+    const realParams = {
+      code_type: 'miniapp_permanent',
+      path: 'path',
+      options: {
+        width: 100,
+        auto_color: false,
+        line_color: line_color,
+      }
+    }
+
+    expect(makeRealParams('wxacode', params)).to.deep.equal(realParams)
+  })
+
+  it('#makeRealParams type = "wxacode" and add invalid values ', () => {
+    const params = {
+      path: 'path',
+      width: 100,
+      auto_color: false,
+      line_color,
+      height: 100,
     }
 
     const realParams = {
