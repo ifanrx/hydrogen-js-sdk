@@ -1,8 +1,8 @@
 const API_HOST = 'https://xiaoapp.io'
 
 const API = {
-  LOGIN: '/hserve/v1/session/init/',
-  AUTHENTICATE: '/hserve/v1/session/authenticate/',
+  LOGIN: '/hserve/v1.4/session/init/',
+  AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
   LOGOUT: '/hserve/v1/session/destroy/',
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
@@ -15,14 +15,14 @@ const API = {
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
-  TABLE_LIST: '/hserve/v1/table/',
-  TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  TABLE_LIST: '/hserve/v1.4/table/',
+  TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
+  RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',

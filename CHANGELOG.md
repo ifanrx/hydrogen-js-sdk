@@ -1,4 +1,4 @@
-## 1.2.0 (2018-02-09)
+## 1.2.0 (2018-03-09)
 - [A] 数据表操作支持根据数据表名进行表操作
 - [A] 增加获取小程序码接口 wx.BaaS.getWXACode
 - [C] 替换接口请求域名 sso.ifanr.com 为 ${clientID}.xiaoapp.io
