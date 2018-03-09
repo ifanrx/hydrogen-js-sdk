@@ -3,7 +3,7 @@
 - [A] 增加获取小程序码接口 wx.BaaS.getWXACode
 - [C] 替换接口请求域名 sso.ifanr.com 为 ${clientID}.xiaoapp.io
 - [C] 请求 wx.BaaS.login 成功后返回的用户 id 由 String 类型改为 Number 类型
-- [C] wx.BaaS.login 和 wx.BaaS.logout 接口去掉是否已登录检查
+- [C] wx.BaaS.logout 接口去掉是否已登录检查
 - [F] 修复 Array.prototype.includes() 不兼容 ios8 问题
 
 ## 1.1.6 (2018-02-04)

@@ -54,6 +54,12 @@ const sessionInit = (code, resolve, reject) => {
 
 const login = (userInfo = true) => {
   if (userInfo) {
+    if (storage.get(constants.STORAGE_KEY.USERINFO)) {
+      return new Promise(resolve => {
+        resolve(makeLoginResponseData())
+      })
+    }
+
     if (isLogining) {
       return new Promise((resolve, reject) => {
         loginResolve.push(resolve)
@@ -82,6 +88,12 @@ const login = (userInfo = true) => {
 }
 
 const silentLogin = () => {
+  if (storage.get(constants.STORAGE_KEY.UID)) {
+    return new Promise(resolve => {
+      resolve(makeLoginResponseData(false))
+    })
+  }
+
   if (isSilentLogining) {
     return new Promise((resolve, reject) => {
       silentLoginResolve.push(resolve)
