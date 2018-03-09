@@ -5746,7 +5746,7 @@ var File = function (_BaseQuery) {
 
 module.exports = File;
 
-},{"./BaseQuery":33,"./baas":47,"./uploadFile":59}],37:[function(require,module,exports){
+},{"./BaseQuery":33,"./baas":47,"./uploadFile":60}],37:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6225,7 +6225,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":60,"lodash/isString":24}],42:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":61,"lodash/isString":24}],42:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6459,10 +6459,10 @@ var auth = function auth() {
   });
 };
 
-// code 换取 session_key
+// code 换取 session_key，生成并获取 3rd_session 即 token
 var sessionInit = function sessionInit(code, resolve, reject) {
   return request({
-    url: API.INIT,
+    url: API.LOGIN,
     method: 'POST',
     data: {
       code: code
@@ -6603,9 +6603,8 @@ var handleLoginFailure = function handleLoginFailure() {
 };
 
 var logout = function logout() {
-  BaaS.check();
-
   return new Promise(function (resolve, reject) {
+    // API.LOGOUT 接口不做 token 检查
     request({ url: API.LOGOUT, method: 'POST' }).then(function () {
       BaaS.clearSession();
       resolve();
@@ -6629,7 +6628,7 @@ var getUserInfo = function getUserInfo() {
         userInfo.id = storage.get(constants.STORAGE_KEY.UID);
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
-        return baasLogin(payload, resolve, reject, userInfo);
+        return getSensitiveData(payload, resolve, reject, userInfo);
       },
       fail: function fail() {
         reject(makeLoginResponseData(false));
@@ -6638,10 +6637,10 @@ var getUserInfo = function getUserInfo() {
   });
 };
 
-// 登录 BaaS
-var baasLogin = function baasLogin(data, resolve, reject, userInfo) {
+// 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
+var getSensitiveData = function getSensitiveData(data, resolve, reject, userInfo) {
   return request({
-    url: API.LOGIN,
+    url: API.AUTHENTICATE,
     method: 'POST',
     data: data
   }).then(function (res) {
@@ -6660,10 +6659,11 @@ var baasLogin = function baasLogin(data, resolve, reject, userInfo) {
 module.exports = {
   auth: auth,
   login: login,
+  silentLogin: silentLogin,
   logout: logout
 };
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":55,"./request":56,"./storage":57,"./utils":60}],47:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":56,"./request":57,"./storage":58,"./utils":61}],47:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6687,6 +6687,7 @@ BaaS.init = function (clientID) {
   }
 
   BaaS._config.CLIENT_ID = clientID;
+  BaaS._config.API_HOST = 'https://' + clientID + '.xiaoapp.io';
 };
 
 BaaS.getAuthToken = function () {
@@ -6695,17 +6696,6 @@ BaaS.getAuthToken = function () {
 
 BaaS.isLogined = function () {
   return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS);
-};
-
-// 检测 BaaS 当前状态
-BaaS.check = function () {
-  if (!BaaS.getAuthToken()) {
-    throw new HError(602);
-  }
-
-  if (!BaaS.isLogined()) {
-    throw new HError(604);
-  }
 };
 
 BaaS.clearSession = function () {
@@ -6717,13 +6707,13 @@ BaaS.clearSession = function () {
   );storage.set(constants.STORAGE_KEY.USERINFO, '');
   storage.set(constants.STORAGE_KEY.UID, '');
   storage.set(constants.STORAGE_KEY.OPENID, '');
-  storage.set(constants.STORAGE_KEY.OPENID, '');
+  storage.set(constants.STORAGE_KEY.UNIONID, '');
 };
 
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./HError":40,"./constants":51,"./storage":57,"./utils":60,"lodash/isString":24}],48:[function(require,module,exports){
+},{"./HError":40,"./constants":51,"./storage":58,"./utils":61,"lodash/isString":24}],48:[function(require,module,exports){
 'use strict';
 
 var auth = require('./auth');
@@ -6749,9 +6739,13 @@ var utils = require('./utils'
       _ref$dataType = _ref.dataType,
       dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
 
-  return auth.login(false).then(function () {
-    return request.apply(null, _arguments);
-  });
+  if (BaaS.getAuthToken()) {
+    return request.apply(null, arguments);
+  } else {
+    return auth.silentLogin().then(function () {
+      return request.apply(null, _arguments);
+    });
+  }
 };
 
 /**
@@ -6823,7 +6817,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":55,"./request":56,"./utils":60,"node.extend":29}],49:[function(require,module,exports){
+},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":56,"./request":57,"./utils":61,"node.extend":29}],49:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -6838,30 +6832,31 @@ module.exports = extend(config, devConfig);
 },{"./config":50,"node.extend":29}],50:[function(require,module,exports){
 'use strict';
 
-var API_HOST = 'https://sso.ifanr.com';
+var API_HOST = 'https://xiaoapp.io';
 
 var API = {
-  INIT: '/hserve/v1/session/init/',
-  LOGIN: '/hserve/v1/session/authenticate/',
+  LOGIN: '/hserve/v1.4/session/init/',
+  AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
   LOGOUT: '/hserve/v1/session/destroy/',
   PAY: '/hserve/v1/wechat/pay/order/',
   ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
+  WXACODE: '/hserve/v1.3/miniappcode/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
-  TABLE_LIST: '/hserve/v1/table/',
-  TABLE_DETAIL: '/hserve/v1/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.1/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.2/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.2/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
-  DELETE_RECORD: '/hserve/v1.2/table/:tableID/record/:recordID/',
+  TABLE_LIST: '/hserve/v1.4/table/',
+  TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
+  RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
@@ -6990,7 +6985,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.1.6'
+  VERSION: 'v1.2.0'
 };
 
 },{}],51:[function(require,module,exports){
@@ -7006,6 +7001,7 @@ module.exports = {
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
   },
+
   STATUS_CODE: {
     CREATED: 201,
     SUCCESS: 200,
@@ -7037,6 +7033,88 @@ module.exports = {
 },{}],52:[function(require,module,exports){
 'use strict';
 
+var BaaS = require('./baas');
+var baasRequest = require('./baasRequest').baasRequest;
+var HError = require('./HError');
+var _isString = require('lodash/isString');
+
+var API = BaaS._config.API;
+
+var makeRealParams = function makeRealParams(type, params) {
+  var validateTypes = ['wxacode', 'wxacodeunlimit', 'wxaqrcode'];
+  var realTypeNames = ['miniapp_permanent', 'miniapp_temporary', 'miniapp_qr'];
+  var realParams = {};
+  var typeIndex = validateTypes.indexOf(type);
+
+  if (!_isString(type) || typeIndex === -1) {
+    throw new HError(605, 'type 为字符串类型且只接受 "wxacode", "wxacodeunlimit", "wxaqrcode" 其中一种');
+  }
+
+  realParams.code_type = realTypeNames[typeIndex];
+
+  if (!params || params.constructor !== Object) {
+    throw new HError(605, 'params 为 Object 类型');
+  }
+
+  if (type === 'wxacode' || type === 'wxaqrcode') {
+    if (!params.hasOwnProperty('path')) {
+      throw new HError(605, '当 type 为 "wxacode" 或 "wxaqrcode" 时，params 中必须带有 "path" 属性');
+    }
+
+    realParams.path = params.path;
+  }
+
+  if (type === 'wxacodeunlimit') {
+    if (!params.hasOwnProperty('scene')) {
+      throw new HError(605, '当 type 为 "wxacodeunlimit" 时，params 中必须带有 "scene" 属性');
+    }
+
+    realParams.scene = params.scene;
+
+    if (params.hasOwnProperty('page')) {
+      realParams.path = params.page;
+    }
+  }
+
+  realParams.options = {};
+
+  if (params.hasOwnProperty('width')) {
+    realParams.options.width = params.width;
+  }
+
+  if (params.hasOwnProperty('auto_color')) {
+    realParams.options.auto_color = params.auto_color;
+  }
+
+  if (params.hasOwnProperty('line_color')) {
+    realParams.options.line_color = params.line_color;
+  }
+
+  return realParams;
+};
+
+var getWXACode = function getWXACode(type, params) {
+  var realParams = makeRealParams(type, params);
+
+  return new Promise(function (resolve, reject) {
+    baasRequest({
+      url: API.WXACODE,
+      method: 'POST',
+      data: realParams
+    }).then(function (res) {
+      if (res.statusCode === 400) return reject(new HError(400, res.data.message));
+      return resolve(res.data);
+    }, function (err) {
+      reject(err);
+    });
+  });
+};
+
+module.exports = getWXACode;
+
+},{"./HError":40,"./baas":47,"./baasRequest":48,"lodash/isString":24}],53:[function(require,module,exports){
+'use strict';
+
 var BaaS = require('./baas'
 
 // 暴露指定 BaaS 方法
@@ -7046,6 +7124,7 @@ BaaS.File = require('./File');
 BaaS.FileCategory = require('./FileCategory');
 BaaS.GeoPoint = require('./GeoPoint');
 BaaS.GeoPolygon = require('./GeoPolygon');
+BaaS.getWXACode = require('./getWXACode');
 BaaS.login = require('./auth').login;
 BaaS.logout = require('./auth').logout;
 BaaS.order = require('./order');
@@ -7070,7 +7149,7 @@ require('./baasRequest').createRequestMethod
 
 module.exports = BaaS;
 
-},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./order":53,"./pay":54,"./promise":55,"./request":56,"./storage":57,"./templateMessage":58,"./uploadFile":59,"./wxDecryptData":61}],53:[function(require,module,exports){
+},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./getWXACode":52,"./order":54,"./pay":55,"./promise":56,"./request":57,"./storage":58,"./templateMessage":59,"./uploadFile":60,"./wxDecryptData":62}],54:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7089,7 +7168,7 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":47,"./baasRequest":48,"./utils":60}],54:[function(require,module,exports){
+},{"./baas":47,"./baasRequest":48,"./utils":61}],55:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7161,14 +7240,14 @@ var pay = function pay(params) {
 
 module.exports = pay;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":55,"./storage":57}],55:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":56,"./storage":58}],56:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":32}],56:[function(require,module,exports){
+},{"rsvp":32}],57:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7219,7 +7298,6 @@ var request = function request(_ref) {
       _ref$dataType = _ref.dataType,
       dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
 
-
   return new Promise(function (resolve, reject) {
 
     if (!BaaS._config.CLIENT_ID) {
@@ -7239,6 +7317,7 @@ var request = function request(_ref) {
       header: headers,
       dataType: dataType,
       success: function success(res) {
+        // 后端设置的 token 过期时间很长，因此不考虑 token 过期情况，只考虑是否携带有效 token 即可
         if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
           BaaS.clearSession();
         }
@@ -7255,7 +7334,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":55,"./utils":60,"node.extend":29}],57:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":56,"./utils":61,"node.extend":29}],58:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -7269,7 +7348,7 @@ module.exports = {
   }
 };
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7305,7 +7384,7 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}],59:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48}],60:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7406,7 +7485,7 @@ var uploadFile = function uploadFile(fileParams, metaData, type) {
 
 module.exports = uploadFile;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":55,"./utils":60}],60:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":56,"./utils":61}],61:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -7557,7 +7636,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],61:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],62:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7602,9 +7681,9 @@ var validateParams = function validateParams(params) {
 
   var requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number'];
 
-  return requiredDataKeys.includes(params[2]);
+  return requiredDataKeys.indexOf(params[2]) !== -1;
 };
 
 module.exports = wxDecryptData;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}]},{},[52]);
+},{"./HError":40,"./baas":47,"./baasRequest":48}]},{},[53]);
