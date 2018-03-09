@@ -29,10 +29,10 @@ const auth = () => {
   })
 }
 
-// code 换取 session_key
+// code 换取 session_key，生成并获取 3rd_session 即 token
 const sessionInit = (code, resolve, reject) => {
   return request({
-    url: API.INIT,
+    url: API.LOGIN,
     method: 'POST',
     data: {
       code: code
@@ -162,9 +162,8 @@ const handleLoginFailure = (userInfo = true) => {
 }
 
 const logout = () => {
-  BaaS.check()
-
   return new Promise((resolve, reject) => {
+    // API.LOGOUT 接口不做 token 检查
     request({ url: API.LOGOUT, method: 'POST' }).then(() => {
       BaaS.clearSession()
       resolve()
@@ -188,7 +187,7 @@ const getUserInfo = () => {
         userInfo.id = storage.get(constants.STORAGE_KEY.UID)
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-        return baasLogin(payload, resolve, reject, userInfo)
+        return getSensitiveData(payload, resolve, reject, userInfo)
       },
       fail: () => {
         reject(makeLoginResponseData(false))
@@ -197,10 +196,10 @@ const getUserInfo = () => {
   })
 }
 
-// 登录 BaaS
-const baasLogin = (data, resolve, reject, userInfo) => {
+// 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
+const getSensitiveData = (data, resolve, reject, userInfo) => {
   return request({
-    url: API.LOGIN,
+    url: API.AUTHENTICATE,
     method: 'POST',
     data: data
   }).then((res) => {
@@ -219,5 +218,6 @@ const baasLogin = (data, resolve, reject, userInfo) => {
 module.exports = {
   auth,
   login,
+  silentLogin,
   logout,
 }

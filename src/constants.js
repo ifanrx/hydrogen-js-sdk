@@ -8,6 +8,7 @@ module.exports = {
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas'
   },
+
   STATUS_CODE: {
     CREATED: 201,
     SUCCESS: 200,
