@@ -6739,13 +6739,9 @@ var utils = require('./utils'
       _ref$dataType = _ref.dataType,
       dataType = _ref$dataType === undefined ? 'json' : _ref$dataType;
 
-  if (BaaS.getAuthToken()) {
-    return request.apply(null, arguments);
-  } else {
-    return auth.silentLogin().then(function () {
-      return request.apply(null, _arguments);
-    });
-  }
+  return auth.silentLogin().then(function () {
+    return request.apply(null, _arguments);
+  });
 };
 
 /**
@@ -7493,7 +7489,7 @@ var HError = require('./HError');
 
 var config = void 0;
 try {
-  config = require('./config.js');
+  config = require('./config.dev.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7636,7 +7632,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],62:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.dev.js":49,"node.extend":29}],62:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');

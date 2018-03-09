@@ -11,13 +11,9 @@ const utils = require('./utils')
 // BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
 // eslint-disable-next-line no-unused-vars
 const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
-  if (BaaS.getAuthToken()) {
+  return auth.silentLogin().then(() => {
     return request.apply(null, arguments)
-  } else {
-    return auth.silentLogin().then(() => {
-      return request.apply(null, arguments)
-    })
-  }
+  })
 }
 
 
