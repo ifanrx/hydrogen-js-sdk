@@ -6763,10 +6763,20 @@ var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
             newObjects = extend(defaultParamsCopy, newObjects);
           }
 
+          // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
           var url = utils.format(methodItem.url, newObjects);
-          var data = newObjects && newObjects.data || newObjects;
-          data = excludeParams(methodItem.url, data);
-          data = utils.replaceQueryParams(data);
+
+          var data = {};
+          if (newObjects.data) {
+            // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
+            data = newObjects.data;
+          } else {
+            // 从用户输入的数据中，剔除 tableID, recordID 等用于 url 的数据
+            data = excludeParams(methodItem.url, newObjects
+
+            // 将用户输入的数据中，部分变量名替换为后端可接受的名字，如 categoryID 替换为 category_id
+            );data = utils.replaceQueryParams(data);
+          }
 
           return new Promise(function (resolve, reject) {
             return baasRequest({ url: url, method: method, data: data }).then(function (res) {
@@ -6981,7 +6991,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.2.0'
+  VERSION: 'v1.2.1'
 };
 
 },{}],51:[function(require,module,exports){
@@ -7489,7 +7499,7 @@ var HError = require('./HError');
 
 var config = void 0;
 try {
-  config = require('./config.dev.js');
+  config = require('./config.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7632,7 +7642,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.dev.js":49,"node.extend":29}],62:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],62:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
