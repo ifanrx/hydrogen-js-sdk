@@ -14,7 +14,7 @@ const invokeFunction = (functionName, params, sync=true) => {
     sync,
   }
 
-  if (params) {
+  if (params !== undefined) {
     data.data = params
   }
 
