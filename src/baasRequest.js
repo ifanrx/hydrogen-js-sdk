@@ -40,11 +40,17 @@ const doCreateRequestMethod = (methodMap) => {
           // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
           let url = utils.format(methodItem.url, newObjects)
 
-          // 从用户输入的数据中，剔除 tableID, recordID 等用于 url 的数据
-          let data = excludeParams(methodItem.url, newObjects)
+          let data = {}
+          if(newObjects.data) {
+            // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
+            data = newObjects.data
+          } else {
+            // 从用户输入的数据中，剔除 tableID, recordID 等用于 url 的数据
+            data = excludeParams(methodItem.url, newObjects)
 
-          // 将部分变量名替换为后端可接受的名字，如 categoryID 替换为 category_id
-          data = utils.replaceQueryParams(data)
+            // 将用户输入的数据中，部分变量名替换为后端可接受的名字，如 categoryID 替换为 category_id
+            data = utils.replaceQueryParams(data)
+          }
 
           // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
           data = (data && data.data) || data
