@@ -52,9 +52,6 @@ const doCreateRequestMethod = (methodMap) => {
             data = utils.replaceQueryParams(data)
           }
 
-          // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
-          data = (data && data.data) || data
-
           return new Promise((resolve, reject) => {
             return baasRequest({ url, method, data }).then((res) => {
               if (res.statusCode == constants.httpMethodCodeMap[method]) {
