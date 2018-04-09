@@ -5,7 +5,7 @@ const _isString = require('lodash/isString')
 
 const API = BaaS._config.API
 
-const makeRealParams = (type, params) => {
+const makeRealParams = (type, params, cdn, categoryName) => {
   const validateTypes = ['wxacode', 'wxacodeunlimit', 'wxaqrcode']
   const realTypeNames = ['miniapp_permanent', 'miniapp_temporary', 'miniapp_qr']
   let realParams = {}
@@ -55,11 +55,20 @@ const makeRealParams = (type, params) => {
     realParams.options.line_color = params.line_color
   }
 
+  if (cdn === true) {
+    realParams.upload_to_cdn = true
+    if (categoryName) {
+      realParams.category_name = categoryName
+    }
+  } else {
+    realParams.upload_to_cdn = false
+  }
+
   return realParams
 }
 
-const getWXACode = (type, params) => {
-  let realParams = makeRealParams(type, params)
+const getWXACode = (type, params, cdn, categoryName) => {
+  let realParams = makeRealParams(type, params, cdn, categoryName)
 
   return new Promise((resolve, reject) => {
     baasRequest({
