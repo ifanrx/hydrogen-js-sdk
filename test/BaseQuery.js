@@ -87,6 +87,16 @@ describe('BaseQuery', () => {
     expect(baseQuery._keys).to.equal('amount,-price')
   })
 
+  it('#expand', () => {
+    baseQuery.expand('created_by')
+    expect(baseQuery._expand).to.equal('created_by')
+  })
+
+  it('#expand array args', () => {
+    baseQuery.expand(['created_by', 'test'])
+    expect(baseQuery._expand).to.equal('created_by,test')
+  })
+
   it('#_handleAllQueryConditions', () => {
     let query = new Query()
     query.in('price', randomArray)

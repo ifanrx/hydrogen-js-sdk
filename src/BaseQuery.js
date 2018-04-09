@@ -45,12 +45,20 @@ class BaseQuery {
     }
     return this
   }
-
   select(args) {
     if (args instanceof Array) {
       this._keys = args.join(',')
     } else {
       this._keys = args
+    }
+    return this
+  }
+
+  expand(args) {
+    if (args instanceof Array) {
+      this._expand = args.join(',')
+    } else {
+      this._expand = args
     }
     return this
   }
@@ -64,6 +72,10 @@ class BaseQuery {
     }
     if (this._keys) {
       conditions.keys = this._keys
+    }
+
+    if (this._expand) {
+      conditions.expand = this._expand
     }
     conditions.where = JSON.stringify(this._queryObject)
     return conditions
