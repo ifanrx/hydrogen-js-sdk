@@ -9,6 +9,7 @@ class BaseQuery {
     this._limit = 20
     this._offset = 0
     this._orderBy = null
+    this._keys = null
   }
 
   setQuery(queryObject) {
@@ -45,12 +46,24 @@ class BaseQuery {
     return this
   }
 
+  select(args) {
+    if (args instanceof Array) {
+      this._keys = args.join(',')
+    } else {
+      this._keys = args
+    }
+    return this
+  }
+
   _handleAllQueryConditions() {
     let conditions = {}
     conditions.limit = this._limit
     conditions.offset = this._offset
     if (this._orderBy) {
       conditions.order_by = this._orderBy
+    }
+    if (this._keys) {
+      conditions.keys = this._keys
     }
     conditions.where = JSON.stringify(this._queryObject)
     return conditions
