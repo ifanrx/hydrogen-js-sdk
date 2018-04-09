@@ -60,8 +60,6 @@ const makeRealParams = (type, params, cdn, categoryName) => {
     if (categoryName) {
       realParams.category_name = categoryName
     }
-  } else {
-    realParams.upload_to_cdn = false
   }
 
   return realParams

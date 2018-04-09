@@ -9,7 +9,7 @@ const API = {
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
-  WXACODE: '/hserve/v1.3/miniappcode/',
+  WXACODE: '/hserve/v1.4/miniappcode/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
