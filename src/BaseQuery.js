@@ -45,6 +45,15 @@ class BaseQuery {
     return this
   }
 
+  expand(args) {
+    if (args instanceof Array) {
+      this._expand = args.join(',')
+    } else {
+      this._expand = args
+    }
+    return this
+  }
+
   _handleAllQueryConditions() {
     let conditions = {}
     conditions.limit = this._limit
@@ -52,6 +61,11 @@ class BaseQuery {
     if (this._orderBy) {
       conditions.order_by = this._orderBy
     }
+
+    if (this._expand) {
+      conditions.expand = this._expand
+    }
+
     conditions.where = JSON.stringify(this._queryObject)
     return conditions
   }
