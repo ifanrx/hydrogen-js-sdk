@@ -19,7 +19,7 @@ const API = {
   TABLE_LIST: '/hserve/v1.4/table/',
   TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
   RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/',
   RECORD_DETAIL: '/hserve/v1.4/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
