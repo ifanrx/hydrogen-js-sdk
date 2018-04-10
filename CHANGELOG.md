@@ -1,5 +1,8 @@
-## 1.3.0a (2018-03-20)
+## 1.3.0 (2018-04-10)
 - [A] 增加触发知晓云云函数接口 invokeFunction
+- [A] 数据表支持字段过滤返回
+- [A] 数据表支持 expand 查询操作，获取 created_by 用户信息
+- [A] 获取二维码接口 getWXACode 支持将二维码上传 CDN
 
 ## 1.2.1 (2018-03-19)
 - [F] 修复数据表字段名为 categoryID 和 categoryName 时，调用查询和创建 record 时出现异常问题
