@@ -25,6 +25,9 @@ class TableObject extends BaseQuery {
     if (this._expand) {
       params.expand = this._expand
     }
+    if (this._keys) {
+      params.keys = this._keys
+    }
     return BaaS.getRecord(params)
   }
 
