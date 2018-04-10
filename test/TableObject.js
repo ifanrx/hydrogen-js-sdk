@@ -53,6 +53,15 @@ describe('TableObject', () => {
     getRecord.restore()
   })
 
+  it('#get expand created_by', () => {
+    let getRecord = sinon.stub(BaaS, 'getRecord')
+    getRecord.callsFake(function (params) {
+      expect(params.expand).to.equal('created_by')
+    })
+    Product.expand('created_by').get(randomNumber)
+    getRecord.restore()
+  })
+
   it('#_handleAllQueryConditions', () => {
     let query = new Query()
     query.in('price', randomArray)

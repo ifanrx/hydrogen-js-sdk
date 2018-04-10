@@ -21,7 +21,11 @@ class TableObject extends BaseQuery {
   }
 
   get(recordID) {
-    return BaaS.getRecord({tableID: this._tableID, recordID})
+    let params = {tableID: this._tableID, recordID}
+    if (this._expand) {
+      params.expand = this._expand
+    }
+    return BaaS.getRecord(params)
   }
 
   _handleAllQueryConditions() {

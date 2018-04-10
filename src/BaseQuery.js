@@ -10,6 +10,7 @@ class BaseQuery {
     this._offset = 0
     this._orderBy = null
     this._keys = null
+    this._expand = null
   }
 
   setQuery(queryObject) {
