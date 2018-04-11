@@ -93,4 +93,14 @@ describe('TableObject', () => {
       where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })
+
+  it('clear query params when get', () => {
+    Product.expand('created_by').get(randomNumber)
+    expect(Product._expand).to.equal(null)
+  })
+
+  it('clear query params when query', () => {
+    Product.expand('created_by').limit(10).find()
+    expect(Product._limit).to.equal(20)
+  })
 })

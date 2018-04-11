@@ -24,7 +24,9 @@ class File extends BaseQuery {
   }
 
   find() {
-    return BaaS.getFileList(this._handleAllQueryConditions())
+    let condition = this._handleAllQueryConditions()
+    this._initQueryParams()
+    return BaaS.getFileList(condition)
   }
 }
 

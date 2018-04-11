@@ -28,4 +28,9 @@ describe('File', () => {
       where: `{"$and":[{"id":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })
+
+  it('clear query params when query', () => {
+    file.limit(10).find()
+    expect(file._limit).to.equal(20)
+  })
 })

@@ -5,6 +5,10 @@ const _isInteger = require('lodash/isInteger')
 
 class BaseQuery {
   constructor() {
+    this._initQueryParams()
+  }
+
+  _initQueryParams() {
     this._queryObject = {}
     this._limit = 20
     this._offset = 0
@@ -46,6 +50,7 @@ class BaseQuery {
     }
     return this
   }
+
   select(args) {
     if (args instanceof Array) {
       this._keys = args.join(',')

@@ -28,4 +28,9 @@ describe('FileCategory', () => {
       where: `{"$and":[{"id":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })
+
+  it('clear query params when query', () => {
+    fileCategory.limit(10).find()
+    expect(fileCategory._limit).to.equal(20)
+  })
 })
