@@ -5484,13 +5484,20 @@ var BaseQuery = function () {
   function BaseQuery() {
     _classCallCheck(this, BaseQuery);
 
-    this._queryObject = {};
-    this._limit = 20;
-    this._offset = 0;
-    this._orderBy = null;
+    this._initQueryParams();
   }
 
   _createClass(BaseQuery, [{
+    key: '_initQueryParams',
+    value: function _initQueryParams() {
+      this._queryObject = {};
+      this._limit = 20;
+      this._offset = 0;
+      this._orderBy = null;
+      this._keys = null;
+      this._expand = null;
+    }
+  }, {
     key: 'setQuery',
     value: function setQuery(queryObject) {
       if (queryObject instanceof Query) {
@@ -5529,6 +5536,26 @@ var BaseQuery = function () {
       return this;
     }
   }, {
+    key: 'select',
+    value: function select(args) {
+      if (args instanceof Array) {
+        this._keys = args.join(',');
+      } else {
+        this._keys = args;
+      }
+      return this;
+    }
+  }, {
+    key: 'expand',
+    value: function expand(args) {
+      if (args instanceof Array) {
+        this._expand = args.join(',');
+      } else {
+        this._expand = args;
+      }
+      return this;
+    }
+  }, {
     key: '_handleAllQueryConditions',
     value: function _handleAllQueryConditions() {
       var conditions = {};
@@ -5536,6 +5563,13 @@ var BaseQuery = function () {
       conditions.offset = this._offset;
       if (this._orderBy) {
         conditions.order_by = this._orderBy;
+      }
+      if (this._keys) {
+        conditions.keys = this._keys;
+      }
+
+      if (this._expand) {
+        conditions.expand = this._expand;
       }
       conditions.where = JSON.stringify(this._queryObject);
       return conditions;
@@ -5670,6 +5704,9 @@ var ContentGroup = function (_BaseQuery) {
     value: function find() {
       var condition = this._handleAllQueryConditions();
       condition.contentGroupID = this._contentGroupID;
+
+      this._initQueryParams();
+
       return BaaS.getContentList2(condition);
     }
   }, {
@@ -5737,7 +5774,9 @@ var File = function (_BaseQuery) {
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.getFileList(this._handleAllQueryConditions());
+      var condition = this._handleAllQueryConditions();
+      this._initQueryParams();
+      return BaaS.getFileList(condition);
     }
   }]);
 
@@ -5785,7 +5824,9 @@ var FileCategory = function (_BaseQuery) {
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.getFileCategoryList(this._handleAllQueryConditions());
+      var condition = this._handleAllQueryConditions();
+      this._initQueryParams();
+      return BaaS.getFileCategoryList(condition);
     }
   }]);
 
@@ -6272,7 +6313,19 @@ var TableObject = function (_BaseQuery) {
   }, {
     key: 'get',
     value: function get(recordID) {
-      return BaaS.getRecord({ tableID: this._tableID, recordID: recordID });
+      var params = { tableID: this._tableID, recordID: recordID };
+
+      if (this._expand) {
+        params.expand = this._expand;
+      }
+
+      if (this._keys) {
+        params.keys = this._keys;
+      }
+
+      this._initQueryParams();
+
+      return BaaS.getRecord(params);
     }
   }, {
     key: '_handleAllQueryConditions',
@@ -6284,7 +6337,9 @@ var TableObject = function (_BaseQuery) {
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.queryRecordList(this._handleAllQueryConditions());
+      var condition = this._handleAllQueryConditions();
+      this._initQueryParams();
+      return BaaS.queryRecordList(condition);
     }
   }]);
 
@@ -6378,7 +6433,9 @@ var User = function (_BaseQuery) {
   }, {
     key: 'find',
     value: function find() {
-      return BaaS.getUserList(this._handleAllQueryConditions());
+      var condition = this._handleAllQueryConditions();
+      this._initQueryParams();
+      return BaaS.getUserList(condition);
     }
   }]);
 
@@ -6849,7 +6906,7 @@ var API = {
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
-  WXACODE: '/hserve/v1.3/miniappcode/',
+  WXACODE: '/hserve/v1.4/miniappcode/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
@@ -6859,8 +6916,8 @@ var API = {
   TABLE_LIST: '/hserve/v1.4/table/',
   TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
   RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  QUERY_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.5/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
@@ -6992,7 +7049,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.3.0a'
+  VERSION: 'v1.3.0'
 };
 
 },{}],51:[function(require,module,exports){
@@ -7047,7 +7104,7 @@ var _isString = require('lodash/isString');
 
 var API = BaaS._config.API;
 
-var makeRealParams = function makeRealParams(type, params) {
+var makeRealParams = function makeRealParams(type, params, cdn, categoryName) {
   var validateTypes = ['wxacode', 'wxacodeunlimit', 'wxaqrcode'];
   var realTypeNames = ['miniapp_permanent', 'miniapp_temporary', 'miniapp_qr'];
   var realParams = {};
@@ -7097,11 +7154,18 @@ var makeRealParams = function makeRealParams(type, params) {
     realParams.options.line_color = params.line_color;
   }
 
+  if (cdn === true) {
+    realParams.upload_to_cdn = true;
+    if (categoryName) {
+      realParams.category_name = categoryName;
+    }
+  }
+
   return realParams;
 };
 
-var getWXACode = function getWXACode(type, params) {
-  var realParams = makeRealParams(type, params);
+var getWXACode = function getWXACode(type, params, cdn, categoryName) {
+  var realParams = makeRealParams(type, params, cdn, categoryName);
 
   return new Promise(function (resolve, reject) {
     baasRequest({
