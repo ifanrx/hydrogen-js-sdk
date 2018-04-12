@@ -5746,7 +5746,7 @@ var File = function (_BaseQuery) {
 
 module.exports = File;
 
-},{"./BaseQuery":33,"./baas":47,"./uploadFile":60}],37:[function(require,module,exports){
+},{"./BaseQuery":33,"./baas":47,"./uploadFile":61}],37:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6225,7 +6225,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":61,"lodash/isString":24}],42:[function(require,module,exports){
+},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":62,"lodash/isString":24}],42:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6663,7 +6663,7 @@ module.exports = {
   logout: logout
 };
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":56,"./request":57,"./storage":58,"./utils":61}],47:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":57,"./request":58,"./storage":59,"./utils":62}],47:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6713,7 +6713,7 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./HError":40,"./constants":51,"./storage":58,"./utils":61,"lodash/isString":24}],48:[function(require,module,exports){
+},{"./HError":40,"./constants":51,"./storage":59,"./utils":62,"lodash/isString":24}],48:[function(require,module,exports){
 'use strict';
 
 var auth = require('./auth');
@@ -6823,7 +6823,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":56,"./request":57,"./utils":61,"node.extend":29}],49:[function(require,module,exports){
+},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":57,"./request":58,"./utils":62,"node.extend":29}],49:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -6850,6 +6850,7 @@ var API = {
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
   WXACODE: '/hserve/v1.3/miniappcode/',
+  CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
   USER_LIST: '/hserve/v1.3/user/info/',
@@ -6991,7 +6992,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.2.1'
+  VERSION: 'v1.3.0a'
 };
 
 },{}],51:[function(require,module,exports){
@@ -7131,6 +7132,7 @@ BaaS.FileCategory = require('./FileCategory');
 BaaS.GeoPoint = require('./GeoPoint');
 BaaS.GeoPolygon = require('./GeoPolygon');
 BaaS.getWXACode = require('./getWXACode');
+BaaS.invokeFunction = require('./invokeFunction');
 BaaS.login = require('./auth').login;
 BaaS.logout = require('./auth').logout;
 BaaS.order = require('./order');
@@ -7155,7 +7157,47 @@ require('./baasRequest').createRequestMethod
 
 module.exports = BaaS;
 
-},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./getWXACode":52,"./order":54,"./pay":55,"./promise":56,"./request":57,"./storage":58,"./templateMessage":59,"./uploadFile":60,"./wxDecryptData":62}],54:[function(require,module,exports){
+},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./getWXACode":52,"./invokeFunction":54,"./order":55,"./pay":56,"./promise":57,"./request":58,"./storage":59,"./templateMessage":60,"./uploadFile":61,"./wxDecryptData":63}],54:[function(require,module,exports){
+'use strict';
+
+var BaaS = require('./baas');
+var baasRequest = require('./baasRequest').baasRequest;
+var HError = require('./HError');
+
+var API = BaaS._config.API;
+
+var invokeFunction = function invokeFunction(functionName, params) {
+  var sync = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+  if (!functionName) {
+    throw new HError(605);
+  }
+
+  var data = {
+    function_name: functionName,
+    sync: sync
+  };
+
+  if (params !== undefined) {
+    data.data = params;
+  }
+
+  return new Promise(function (resolve, reject) {
+    return baasRequest({
+      url: API.CLOUD_FUNCTION,
+      method: 'POST',
+      data: data
+    }).then(function (res) {
+      resolve(res.data);
+    }, function (err) {
+      reject(err);
+    });
+  });
+};
+
+module.exports = invokeFunction;
+
+},{"./HError":40,"./baas":47,"./baasRequest":48}],55:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7174,7 +7216,7 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":47,"./baasRequest":48,"./utils":61}],55:[function(require,module,exports){
+},{"./baas":47,"./baasRequest":48,"./utils":62}],56:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7246,14 +7288,14 @@ var pay = function pay(params) {
 
 module.exports = pay;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":56,"./storage":58}],56:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":57,"./storage":59}],57:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":32}],57:[function(require,module,exports){
+},{"rsvp":32}],58:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7340,7 +7382,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":56,"./utils":61,"node.extend":29}],58:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./constants":51,"./promise":57,"./utils":62,"node.extend":29}],59:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -7354,7 +7396,7 @@ module.exports = {
   }
 };
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7390,7 +7432,7 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}],60:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48}],61:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7491,7 +7533,7 @@ var uploadFile = function uploadFile(fileParams, metaData, type) {
 
 module.exports = uploadFile;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":56,"./utils":61}],61:[function(require,module,exports){
+},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":57,"./utils":62}],62:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -7642,7 +7684,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],62:[function(require,module,exports){
+},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],63:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');

@@ -18,7 +18,9 @@ class FileCategory extends BaseQuery {
   }
 
   find() {
-    return BaaS.getFileCategoryList(this._handleAllQueryConditions())
+    let condition = this._handleAllQueryConditions()
+    this._initQueryParams()
+    return BaaS.getFileCategoryList(condition)
   }
 }
 

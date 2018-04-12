@@ -21,7 +21,19 @@ class TableObject extends BaseQuery {
   }
 
   get(recordID) {
-    return BaaS.getRecord({tableID: this._tableID, recordID})
+    let params = {tableID: this._tableID, recordID}
+
+    if (this._expand) {
+      params.expand = this._expand
+    }
+
+    if (this._keys) {
+      params.keys = this._keys
+    }
+
+    this._initQueryParams()
+
+    return BaaS.getRecord(params)
   }
 
   _handleAllQueryConditions() {
@@ -31,7 +43,9 @@ class TableObject extends BaseQuery {
   }
 
   find() {
-    return BaaS.queryRecordList(this._handleAllQueryConditions())
+    let condition = this._handleAllQueryConditions()
+    this._initQueryParams()
+    return BaaS.queryRecordList(condition)
   }
 }
 

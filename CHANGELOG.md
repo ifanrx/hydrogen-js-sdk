@@ -1,3 +1,10 @@
+## 1.3.0 (2018-04-12)
+- [A] 增加触发知晓云云函数接口 invokeFunction
+- [A] 数据表支持字段过滤返回 select 操作
+- [A] 数据表支持 expand 查询操作，获取 created_by 用户信息
+- [A] 获取二维码接口 getWXACode 支持将二维码上传 CDN
+- [F] 修复在同一个 TableObject （或 User, ContentGroup, File）实例上设置 limit 和 offset 后进行 find 操作，在进行下一次 find 操作时，之前设置的 limit 和 offset 未被清除问题
+
 ## 1.2.1 (2018-03-19)
 - [F] 修复数据表字段名为 categoryID 和 categoryName 时，调用查询和创建 record 时出现异常问题
 

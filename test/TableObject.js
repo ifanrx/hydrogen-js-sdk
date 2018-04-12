@@ -53,6 +53,33 @@ describe('TableObject', () => {
     getRecord.restore()
   })
 
+  it('#get expand created_by', () => {
+    let getRecord = sinon.stub(BaaS, 'getRecord')
+    getRecord.callsFake(function (params) {
+      expect(params.expand).to.equal('created_by')
+    })
+    Product.expand('created_by').get(randomNumber)
+    getRecord.restore()
+  })
+
+  it('#get keys one', () => {
+    let getRecord = sinon.stub(BaaS, 'getRecord')
+    getRecord.callsFake(function (params) {
+      expect(params.keys).to.equal('created_by')
+    })
+    Product.select('created_by').get(randomNumber)
+    getRecord.restore()
+  })
+
+  it('#get keys more', () => {
+    let getRecord = sinon.stub(BaaS, 'getRecord')
+    getRecord.callsFake(function (params) {
+      expect(params.keys).to.equal('-created_by,-created_at')
+    })
+    Product.select(['-created_by', '-created_at']).get(randomNumber)
+    getRecord.restore()
+  })
+
   it('#_handleAllQueryConditions', () => {
     let query = new Query()
     query.in('price', randomArray)
@@ -65,5 +92,15 @@ describe('TableObject', () => {
       order_by: '-amount',
       where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
     })
+  })
+
+  it('clear query params when get', () => {
+    Product.expand('created_by').get(randomNumber)
+    expect(Product._expand).to.equal(null)
+  })
+
+  it('clear query params when query', () => {
+    Product.expand('created_by').limit(10).find()
+    expect(Product._limit).to.equal(20)
   })
 })

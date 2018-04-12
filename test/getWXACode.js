@@ -116,4 +116,58 @@ describe('getWXACode', () => {
 
     expect(makeRealParams('wxaqrcode', params)).to.deep.equal(realParams)
   })
+
+  it('#set cdn', () => {
+    const params = {
+      path: 'path',
+      width: 100,
+    }
+
+    const realParams = {
+      code_type: 'miniapp_qr',
+      upload_to_cdn: true,
+      path: 'path',
+      options: {
+        width: 100,
+      }
+    }
+
+    expect(makeRealParams('wxaqrcode', params, true)).to.deep.equal(realParams)
+  })
+
+  it('#set cdn and categoryName', () => {
+    const params = {
+      path: 'path',
+      width: 100,
+    }
+
+    const realParams = {
+      code_type: 'miniapp_qr',
+      upload_to_cdn: true,
+      category_name: 'folder',
+      path: 'path',
+      options: {
+        width: 100,
+      }
+    }
+
+    expect(makeRealParams('wxaqrcode', params, true, 'folder')).to.deep.equal(realParams)
+  })
+
+  it('#set categoryName without cdn', () => {
+    const params = {
+      path: 'path',
+      width: 100,
+    }
+
+    const realParams = {
+      code_type: 'miniapp_qr',
+      path: 'path',
+      options: {
+        width: 100,
+      }
+    }
+
+    expect(makeRealParams('wxaqrcode', params, false, 'folder')).to.deep.equal(realParams)
+  })
 })

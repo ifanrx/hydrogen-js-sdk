@@ -46,4 +46,9 @@ describe('User', () => {
       where: `{"$and":[{"age":{"$gt":${randomNumber}}}]}`
     })
   })
+
+  it('clear query params when query', () => {
+    user.limit(10).find()
+    expect(user._limit).to.equal(20)
+  })
 })

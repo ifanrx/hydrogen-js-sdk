@@ -16,7 +16,9 @@ class User extends BaseQuery {
   }
 
   find() {
-    return BaaS.getUserList(this._handleAllQueryConditions())
+    let condition = this._handleAllQueryConditions()
+    this._initQueryParams()
+    return BaaS.getUserList(condition)
   }
 }
 

@@ -9,7 +9,8 @@ const API = {
   UPLOAD: '/hserve/v1/upload/',
   TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
   DECRYPT: '/hserve/v1/wechat/decrypt/',
-  WXACODE: '/hserve/v1.3/miniappcode/',
+  WXACODE: '/hserve/v1.4/miniappcode/',
+  CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
   USER_LIST: '/hserve/v1.3/user/info/',
@@ -18,8 +19,8 @@ const API = {
   TABLE_LIST: '/hserve/v1.4/table/',
   TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
   RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  QUERY_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/',
+  RECORD_DETAIL: '/hserve/v1.5/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
   DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
@@ -151,5 +152,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.2.1'
+  VERSION: 'v1.3.0'
 }
