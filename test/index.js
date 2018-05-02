@@ -18,6 +18,7 @@ BaaS.test = {
 }
 
 // 引入待测试模块
+require('./auth')
 require('./BaseQuery')
 require('./baasRequest')
 require('./ContentGroup')

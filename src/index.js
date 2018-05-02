@@ -2,6 +2,7 @@ const BaaS = require('./baas')
 
 // 暴露指定 BaaS 方法
 BaaS.auth = require('./baasRequest').auth
+BaaS.handleUserInfo = require('./auth').handleUserInfo
 BaaS.ContentGroup = require('./ContentGroup')
 BaaS.File = require('./File')
 BaaS.FileCategory = require('./FileCategory')
