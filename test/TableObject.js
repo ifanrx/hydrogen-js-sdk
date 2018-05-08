@@ -30,7 +30,18 @@ describe('TableObject', () => {
     expect(product instanceof TableRecord).to.be.true
   })
 
-  it('#delete', () => {
+  it('#createMany', () => {
+    let createRecordList = sinon.stub(BaaS, 'createRecordList').callsFake(args => {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        data: randomArray
+      })
+    })
+    Product.createMany(randomArray)
+    createRecordList.restore()
+  })
+
+  it('#delete one', () => {
     let deleteRecord = sinon.stub(BaaS, 'deleteRecord')
     deleteRecord.returnsPromise().resolves(randomString)
     Product.get(randomNumber).then((res) => {
@@ -39,9 +50,46 @@ describe('TableObject', () => {
     deleteRecord.restore()
   })
 
-  it('#getWithoutData', () => {
+  it('#delete more', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 500,
+        offset: 0
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).limit(500).delete(query)
+    expect(Product._limit).to.be.equal(20)
+    deleteRecordList.restore()
+  })
+
+  it('#getWithoutData one', () => {
     let product = Product.getWithoutData(randomNumber)
     expect(product instanceof TableRecord).to.be.true
+  })
+
+  it('#getWithoutData more', () => {
+    let query = new Query()
+    query.in('price', randomArray)
+    let records = Product.limit(350).offset(10).getWithoutData(query)
+    expect(records instanceof TableRecord).to.be.true
+    expect(records._queryObject).to.deep.equal({
+      where: {
+        '$and': [
+          {
+            'price': {'$in': randomArray}
+          }
+        ]
+      },
+      offset: 10,
+      limit: 350
+    })
+    expect(records._recordID).to.be.null
+    expect(Product._limit).to.be.equal(20)
+    expect(Product._offset).to.be.equal(0)
   })
 
   it('#get', () => {

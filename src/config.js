@@ -23,7 +23,9 @@ const API = {
   RECORD_DETAIL: '/hserve/v1.5/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  UPDATE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
   DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  DELETE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
@@ -78,12 +80,24 @@ const methodMapList = [{
     url: API.CREATE_RECORD,
     method: 'POST'
   },
+  createRecordList: {
+    url: API.QUERY_RECORD_LIST,
+    method: 'POST'
+  },
   updateRecord: {
     url: API.UPDATE_RECORD,
     method: 'PUT'
   },
+  updateRecordList: {
+    url: API.UPDATE_RECORD_LIST,
+    method: 'PUT'
+  },
   deleteRecord: {
     url: API.DELETE_RECORD,
+    method: 'DELETE'
+  },
+  deleteRecordList: {
+    url: API.DELETE_RECORD_LIST,
     method: 'DELETE'
   }
 }, {

@@ -3,9 +3,10 @@ const BaseRecord = require('./BaseRecord')
 const _cloneDeep = require('lodash.clonedeep')
 
 class TableRecord  extends BaseRecord {
-  constructor(tableID, recordID) {
+  constructor(tableID, recordID, queryObject = {}) {
     super(recordID)
     this._tableID = tableID
+    this._queryObject = queryObject
   }
 
   save() {
@@ -17,7 +18,19 @@ class TableRecord  extends BaseRecord {
   update() {
     let record = _cloneDeep(this._record)
     this._record = {}
-    return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
+    if (this._recordID) {
+      return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
+    } else {
+      const params = {
+        tableID: this._tableID,
+        data: record,
+        where: JSON.stringify(this._queryObject.where),
+        limit: this._queryObject.limit,
+        offset: this._queryObject.offset
+      }
+      this._queryObject = {}
+      return BaaS.updateRecordList(params)
+    }
   }
 }
 
