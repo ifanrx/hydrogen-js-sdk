@@ -56,6 +56,9 @@ const doCreateRequestMethod = (methodMap) => {
             return baasRequest({ url, method, data }).then((res) => {
               if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res)
+                } else if (k === 'deleteRecordList' && res.statusCode == constants.httpMethodCodeMap['PUT']) {
+                // 批量删除操作后端返回的状态码为 200
+                resolve(res)
               } else {
                 reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
               }

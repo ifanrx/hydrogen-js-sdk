@@ -2,6 +2,8 @@ require('../src/baasRequest').createRequestMethod()
 const config = require('../src/config')
 const faker = require('faker')
 const TableRecord = require('../src/TableRecord')
+const Query = require('../src/Query')
+const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION
 
@@ -31,7 +33,7 @@ describe('TableRecord', () => {
     createRecord.restore()
   })
 
-  it('#update', () => {
+  it('#update one', () => {
     product = new TableRecord(randomNumber1, randomNumber2)
     let updateRecord = sinon.stub(BaaS, 'updateRecord')
     updateRecord.returnsPromise().resolves(randomString)
@@ -41,5 +43,31 @@ describe('TableRecord', () => {
     })
     expect(product._record).to.deep.equal({})
     updateRecord.restore()
+  })
+
+  it('#update more', () => {
+    let query = new Query()
+    const randomArray = helper.generateRandomArray()
+    query.in('price', randomArray)
+    const queryObject = {
+      where: query.queryObject,
+      limit: 20,
+      offset: 0
+    }
+    let records = new TableRecord(randomNumber1, null, queryObject)
+    records.set('price', 6)
+    expect(records._recordID).to.be.equal.null
+    const updateRecordList = sinon.stub(BaaS, 'updateRecordList').callsFake(args => {
+      expect(args).to.deep.equal({
+        tableID: randomNumber1,
+        data: {'price': 6},
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        offset: 0,
+        limit: 20
+      })
+    })
+    records.update()
+    expect(records._queryObject).to.deep.equal({})
+    updateRecordList.restore()
   })
 })
