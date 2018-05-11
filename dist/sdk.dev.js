@@ -2366,7 +2366,47 @@ function isInteger(value) {
 
 module.exports = isInteger;
 
-},{"./toInteger":27}],22:[function(require,module,exports){
+},{"./toInteger":28}],22:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isObjectLike = require('./isObjectLike');
+
+/** `Object#toString` result references. */
+var numberTag = '[object Number]';
+
+/**
+ * Checks if `value` is classified as a `Number` primitive or object.
+ *
+ * **Note:** To exclude `Infinity`, `-Infinity`, and `NaN`, which are
+ * classified as numbers, use the `_.isFinite` method.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a number, else `false`.
+ * @example
+ *
+ * _.isNumber(3);
+ * // => true
+ *
+ * _.isNumber(Number.MIN_VALUE);
+ * // => true
+ *
+ * _.isNumber(Infinity);
+ * // => true
+ *
+ * _.isNumber('3');
+ * // => false
+ */
+function isNumber(value) {
+  return typeof value == 'number' ||
+    (isObjectLike(value) && baseGetTag(value) == numberTag);
+}
+
+module.exports = isNumber;
+
+},{"./_baseGetTag":15,"./isObjectLike":24}],23:[function(require,module,exports){
 /**
  * Checks if `value` is the
  * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
@@ -2399,7 +2439,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -2430,7 +2470,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var baseGetTag = require('./_baseGetTag'),
     isArray = require('./isArray'),
     isObjectLike = require('./isObjectLike');
@@ -2462,7 +2502,7 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"./_baseGetTag":15,"./isArray":20,"./isObjectLike":23}],25:[function(require,module,exports){
+},{"./_baseGetTag":15,"./isArray":20,"./isObjectLike":24}],26:[function(require,module,exports){
 var baseGetTag = require('./_baseGetTag'),
     isObjectLike = require('./isObjectLike');
 
@@ -2493,7 +2533,7 @@ function isSymbol(value) {
 
 module.exports = isSymbol;
 
-},{"./_baseGetTag":15,"./isObjectLike":23}],26:[function(require,module,exports){
+},{"./_baseGetTag":15,"./isObjectLike":24}],27:[function(require,module,exports){
 var toNumber = require('./toNumber');
 
 /** Used as references for various `Number` constants. */
@@ -2537,7 +2577,7 @@ function toFinite(value) {
 
 module.exports = toFinite;
 
-},{"./toNumber":28}],27:[function(require,module,exports){
+},{"./toNumber":29}],28:[function(require,module,exports){
 var toFinite = require('./toFinite');
 
 /**
@@ -2575,7 +2615,7 @@ function toInteger(value) {
 
 module.exports = toInteger;
 
-},{"./toFinite":26}],28:[function(require,module,exports){
+},{"./toFinite":27}],29:[function(require,module,exports){
 var isObject = require('./isObject'),
     isSymbol = require('./isSymbol');
 
@@ -2643,12 +2683,12 @@ function toNumber(value) {
 
 module.exports = toNumber;
 
-},{"./isObject":22,"./isSymbol":25}],29:[function(require,module,exports){
+},{"./isObject":23,"./isSymbol":26}],30:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/extend');
 
-},{"./lib/extend":30}],30:[function(require,module,exports){
+},{"./lib/extend":31}],31:[function(require,module,exports){
 'use strict';
 
 /*!
@@ -2733,7 +2773,7 @@ extend.version = '1.1.3';
  */
 module.exports = extend;
 
-},{"is":1}],31:[function(require,module,exports){
+},{"is":1}],32:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2919,7 +2959,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
@@ -5468,7 +5508,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":31}],33:[function(require,module,exports){
+},{"_process":32}],34:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5581,7 +5621,7 @@ var BaseQuery = function () {
 
 module.exports = BaseQuery;
 
-},{"./HError":40,"./Query":41,"lodash.clonedeep":10,"lodash/isInteger":21}],34:[function(require,module,exports){
+},{"./HError":41,"./Query":42,"lodash.clonedeep":10,"lodash/isInteger":21}],35:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -5667,7 +5707,7 @@ var BaseRecord = function () {
 
 module.exports = BaseRecord;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40}],35:[function(require,module,exports){
+},{"./GeoPoint":39,"./GeoPolygon":40,"./HError":41}],36:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5728,7 +5768,7 @@ var ContentGroup = function (_BaseQuery) {
 
 module.exports = ContentGroup;
 
-},{"./BaseQuery":33,"./Query":41,"./baas":47}],36:[function(require,module,exports){
+},{"./BaseQuery":34,"./Query":42,"./baas":48}],37:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5785,7 +5825,7 @@ var File = function (_BaseQuery) {
 
 module.exports = File;
 
-},{"./BaseQuery":33,"./baas":47,"./uploadFile":61}],37:[function(require,module,exports){
+},{"./BaseQuery":34,"./baas":48,"./uploadFile":62}],38:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5835,7 +5875,7 @@ var FileCategory = function (_BaseQuery) {
 
 module.exports = FileCategory;
 
-},{"./BaseQuery":33,"./Query":41,"./baas":47}],38:[function(require,module,exports){
+},{"./BaseQuery":34,"./Query":42,"./baas":48}],39:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5868,7 +5908,7 @@ var GeoPoint = function () {
 
 module.exports = GeoPoint;
 
-},{"lodash.clonedeep":10}],39:[function(require,module,exports){
+},{"lodash.clonedeep":10}],40:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5922,7 +5962,7 @@ var GeoPolygon = function () {
 
 module.exports = GeoPolygon;
 
-},{"./GeoPoint":38,"./HError":40,"lodash.clonedeep":10}],40:[function(require,module,exports){
+},{"./GeoPoint":39,"./HError":41,"lodash.clonedeep":10}],41:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5975,7 +6015,7 @@ var HError = function () {
 
 module.exports = HError;
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6266,7 +6306,7 @@ var Query = function () {
 
 module.exports = Query;
 
-},{"./GeoPoint":38,"./GeoPolygon":39,"./HError":40,"./utils":62,"lodash/isString":24}],42:[function(require,module,exports){
+},{"./GeoPoint":39,"./GeoPolygon":40,"./HError":41,"./utils":63,"lodash/isString":25}],43:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6281,7 +6321,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var BaaS = require('./baas');
 var BaseQuery = require('./BaseQuery');
+var Query = require('./Query');
 var TableRecord = require('./TableRecord');
+var _isString = require('lodash/isString');
+var _isNumber = require('lodash/isNumber');
+var _isArray = require('lodash/isArray');
+var _cloneDeep = require('lodash.clonedeep');
+var HError = require('./HError');
 
 var TableObject = function (_BaseQuery) {
   _inherits(TableObject, _BaseQuery);
@@ -6301,14 +6347,51 @@ var TableObject = function (_BaseQuery) {
       return new TableRecord(this._tableID);
     }
   }, {
+    key: 'createMany',
+    value: function createMany(args) {
+      if (_isArray(args)) {
+        var params = {
+          tableID: this._tableID,
+          data: args
+        };
+        return BaaS.createRecordList(params);
+      } else {
+        throw new HError(605);
+      }
+    }
+  }, {
     key: 'delete',
-    value: function _delete(recordID) {
-      return BaaS.deleteRecord({ tableID: this._tableID, recordID: recordID });
+    value: function _delete(args) {
+      if (_isString(args) || _isNumber(args)) {
+        return BaaS.deleteRecord({ tableID: this._tableID, recordID: args });
+      } else if (args instanceof Query) {
+        var params = {
+          tableID: this._tableID,
+          limit: this._limit,
+          offset: this._offset,
+          where: JSON.stringify(args.queryObject)
+        };
+        this._initQueryParams();
+        return BaaS.deleteRecordList(params);
+      } else {
+        throw new HError(605);
+      }
     }
   }, {
     key: 'getWithoutData',
-    value: function getWithoutData(recordID) {
-      return new TableRecord(this._tableID, recordID);
+    value: function getWithoutData(args) {
+      if (_isString(args) || _isNumber(args)) {
+        return new TableRecord(this._tableID, args);
+      } else if (args instanceof Query) {
+        var queryObject = {};
+        queryObject.limit = this._limit;
+        queryObject.offset = this._offset;
+        queryObject.where = _cloneDeep(args.queryObject);
+        this._initQueryParams();
+        return new TableRecord(this._tableID, null, queryObject);
+      } else {
+        throw new HError(605);
+      }
     }
   }, {
     key: 'get',
@@ -6348,7 +6431,7 @@ var TableObject = function (_BaseQuery) {
 
 module.exports = TableObject;
 
-},{"./BaseQuery":33,"./TableRecord":43,"./baas":47}],43:[function(require,module,exports){
+},{"./BaseQuery":34,"./HError":41,"./Query":42,"./TableRecord":44,"./baas":48,"lodash.clonedeep":10,"lodash/isArray":20,"lodash/isNumber":22,"lodash/isString":25}],44:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6367,11 +6450,14 @@ var TableRecord = function (_BaseRecord) {
   _inherits(TableRecord, _BaseRecord);
 
   function TableRecord(tableID, recordID) {
+    var queryObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
     _classCallCheck(this, TableRecord);
 
     var _this = _possibleConstructorReturn(this, (TableRecord.__proto__ || Object.getPrototypeOf(TableRecord)).call(this, recordID));
 
     _this._tableID = tableID;
+    _this._queryObject = queryObject;
     return _this;
   }
 
@@ -6387,7 +6473,19 @@ var TableRecord = function (_BaseRecord) {
     value: function update() {
       var record = _cloneDeep(this._record);
       this._record = {};
-      return BaaS.updateRecord({ tableID: this._tableID, recordID: this._recordID, data: record });
+      if (this._recordID) {
+        return BaaS.updateRecord({ tableID: this._tableID, recordID: this._recordID, data: record });
+      } else {
+        var params = {
+          tableID: this._tableID,
+          data: record,
+          where: JSON.stringify(this._queryObject.where),
+          limit: this._queryObject.limit,
+          offset: this._queryObject.offset
+        };
+        this._queryObject = {};
+        return BaaS.updateRecordList(params);
+      }
     }
   }]);
 
@@ -6396,7 +6494,7 @@ var TableRecord = function (_BaseRecord) {
 
 module.exports = TableRecord;
 
-},{"./BaseRecord":34,"./baas":47,"lodash.clonedeep":10}],44:[function(require,module,exports){
+},{"./BaseRecord":35,"./baas":48,"lodash.clonedeep":10}],45:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6444,7 +6542,7 @@ var User = function (_BaseQuery) {
 
 module.exports = User;
 
-},{"./BaseQuery":33,"./UserRecord":45,"./baas":47}],45:[function(require,module,exports){
+},{"./BaseQuery":34,"./UserRecord":46,"./baas":48}],46:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6482,7 +6580,7 @@ var UserRecord = function (_BaseRecord) {
 
 module.exports = UserRecord;
 
-},{"./BaseRecord":34,"./baas":47,"lodash.clonedeep":10}],46:[function(require,module,exports){
+},{"./BaseRecord":35,"./baas":48,"lodash.clonedeep":10}],47:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -6694,6 +6792,40 @@ var getUserInfo = function getUserInfo() {
   });
 };
 
+// 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+var handleUserInfo = function handleUserInfo(res) {
+  if (!res || !res.detail) {
+    throw new HError(603);
+  }
+
+  var detail = res.detail;
+
+  return new Promise(function (resolve, reject) {
+    return silentLogin().then(function () {
+      // 用户拒绝授权，仅返回 uid, openid 和 unionid
+      if (!detail.userInfo) {
+        reject(makeLoginResponseData(false));
+      }
+
+      var payload = {
+        rawData: detail.rawData,
+        signature: detail.signature,
+        encryptedData: detail.encryptedData,
+        iv: detail.iv
+      };
+
+      var userInfo = detail.userInfo;
+      userInfo.id = storage.get(constants.STORAGE_KEY.UID);
+      userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID);
+      userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID);
+
+      return getSensitiveData(payload, resolve, reject, userInfo);
+    }, function (err) {
+      reject(err);
+    });
+  });
+};
+
 // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
 var getSensitiveData = function getSensitiveData(data, resolve, reject, userInfo) {
   return request({
@@ -6707,7 +6839,7 @@ var getSensitiveData = function getSensitiveData(data, resolve, reject, userInfo
       storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid);
     }
     storage.set(constants.STORAGE_KEY.USERINFO, userInfo);
-    resolve(res);
+    resolve(makeLoginResponseData());
   }, function (err) {
     reject(err);
   });
@@ -6715,12 +6847,13 @@ var getSensitiveData = function getSensitiveData(data, resolve, reject, userInfo
 
 module.exports = {
   auth: auth,
+  handleUserInfo: handleUserInfo,
   login: login,
-  silentLogin: silentLogin,
-  logout: logout
+  logout: logout,
+  silentLogin: silentLogin
 };
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":57,"./request":58,"./storage":59,"./utils":62}],47:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./constants":52,"./promise":58,"./request":59,"./storage":60,"./utils":63}],48:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6770,7 +6903,7 @@ BaaS.clearSession = function () {
 module.exports = BaaS;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./HError":40,"./constants":51,"./storage":59,"./utils":62,"lodash/isString":24}],48:[function(require,module,exports){
+},{"./HError":41,"./constants":52,"./storage":60,"./utils":63,"lodash/isString":25}],49:[function(require,module,exports){
 'use strict';
 
 var auth = require('./auth');
@@ -6839,6 +6972,9 @@ var doCreateRequestMethod = function doCreateRequestMethod(methodMap) {
             return baasRequest({ url: url, method: method, data: data }).then(function (res) {
               if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res);
+              } else if (k === 'deleteRecordList' && res.statusCode == constants.httpMethodCodeMap['PUT']) {
+                // 批量删除操作后端返回的状态码为 200
+                resolve(res);
               } else {
                 reject(new HError(res.statusCode, utils.extractErrorMsg(res)));
               }
@@ -6880,7 +7016,7 @@ module.exports = {
   doCreateRequestMethod: doCreateRequestMethod
 };
 
-},{"./HError":40,"./auth":46,"./baas":47,"./constants":51,"./promise":57,"./request":58,"./utils":62,"node.extend":29}],49:[function(require,module,exports){
+},{"./HError":41,"./auth":47,"./baas":48,"./constants":52,"./promise":58,"./request":59,"./utils":63,"node.extend":30}],50:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -6892,7 +7028,7 @@ var devConfig = {
 
 module.exports = extend(config, devConfig);
 
-},{"./config":50,"node.extend":29}],50:[function(require,module,exports){
+},{"./config":51,"node.extend":30}],51:[function(require,module,exports){
 'use strict';
 
 var API_HOST = 'https://xiaoapp.io';
@@ -6920,7 +7056,9 @@ var API = {
   RECORD_DETAIL: '/hserve/v1.5/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  UPDATE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
   DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
+  DELETE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
@@ -6975,12 +7113,24 @@ var methodMapList = [{
     url: API.CREATE_RECORD,
     method: 'POST'
   },
+  createRecordList: {
+    url: API.QUERY_RECORD_LIST,
+    method: 'POST'
+  },
   updateRecord: {
     url: API.UPDATE_RECORD,
     method: 'PUT'
   },
+  updateRecordList: {
+    url: API.UPDATE_RECORD_LIST,
+    method: 'PUT'
+  },
   deleteRecord: {
     url: API.DELETE_RECORD,
+    method: 'DELETE'
+  },
+  deleteRecordList: {
+    url: API.DELETE_RECORD_LIST,
     method: 'DELETE'
   }
 }, {
@@ -7049,10 +7199,10 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.3.0'
+  VERSION: 'v1.4.0'
 };
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -7094,7 +7244,7 @@ module.exports = {
   }
 };
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7183,13 +7333,14 @@ var getWXACode = function getWXACode(type, params, cdn, categoryName) {
 
 module.exports = getWXACode;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"lodash/isString":24}],53:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./baasRequest":49,"lodash/isString":25}],54:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas'
 
 // 暴露指定 BaaS 方法
 );BaaS.auth = require('./baasRequest').auth;
+BaaS.handleUserInfo = require('./auth').handleUserInfo;
 BaaS.ContentGroup = require('./ContentGroup');
 BaaS.File = require('./File');
 BaaS.FileCategory = require('./FileCategory');
@@ -7221,7 +7372,7 @@ require('./baasRequest').createRequestMethod
 
 module.exports = BaaS;
 
-},{"./ContentGroup":35,"./File":36,"./FileCategory":37,"./GeoPoint":38,"./GeoPolygon":39,"./Query":41,"./TableObject":42,"./User":44,"./auth":46,"./baas":47,"./baasRequest":48,"./getWXACode":52,"./invokeFunction":54,"./order":55,"./pay":56,"./promise":57,"./request":58,"./storage":59,"./templateMessage":60,"./uploadFile":61,"./wxDecryptData":63}],54:[function(require,module,exports){
+},{"./ContentGroup":36,"./File":37,"./FileCategory":38,"./GeoPoint":39,"./GeoPolygon":40,"./Query":42,"./TableObject":43,"./User":45,"./auth":47,"./baas":48,"./baasRequest":49,"./getWXACode":53,"./invokeFunction":55,"./order":56,"./pay":57,"./promise":58,"./request":59,"./storage":60,"./templateMessage":61,"./uploadFile":62,"./wxDecryptData":64}],55:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7261,7 +7412,7 @@ var invokeFunction = function invokeFunction(functionName, params) {
 
 module.exports = invokeFunction;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}],55:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./baasRequest":49}],56:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7280,7 +7431,7 @@ var order = function order(params) {
 
 module.exports = order;
 
-},{"./baas":47,"./baasRequest":48,"./utils":62}],56:[function(require,module,exports){
+},{"./baas":48,"./baasRequest":49,"./utils":63}],57:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7352,14 +7503,14 @@ var pay = function pay(params) {
 
 module.exports = pay;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":57,"./storage":59}],57:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./baasRequest":49,"./constants":52,"./promise":58,"./storage":60}],58:[function(require,module,exports){
 'use strict';
 
 var Promise = require('rsvp').Promise;
 
 module.exports = Promise;
 
-},{"rsvp":32}],58:[function(require,module,exports){
+},{"rsvp":33}],59:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7446,7 +7597,7 @@ var request = function request(_ref) {
 
 module.exports = request;
 
-},{"./HError":40,"./baas":47,"./constants":51,"./promise":57,"./utils":62,"node.extend":29}],59:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./constants":52,"./promise":58,"./utils":63,"node.extend":30}],60:[function(require,module,exports){
 'use strict';
 
 var storageKeyPrefix = 'ifx_baas_';
@@ -7460,7 +7611,7 @@ module.exports = {
   }
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7496,7 +7647,7 @@ module.exports = {
   wxReportTicket: wxReportTicket
 };
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}],61:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./baasRequest":49}],62:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7597,7 +7748,7 @@ var uploadFile = function uploadFile(fileParams, metaData, type) {
 
 module.exports = uploadFile;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48,"./constants":51,"./promise":57,"./utils":62}],62:[function(require,module,exports){
+},{"./HError":41,"./baas":48,"./baasRequest":49,"./constants":52,"./promise":58,"./utils":63}],63:[function(require,module,exports){
 'use strict';
 
 var extend = require('node.extend');
@@ -7748,7 +7899,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":40,"./config.dev":49,"./config.js":50,"node.extend":29}],63:[function(require,module,exports){
+},{"./HError":41,"./config.dev":50,"./config.js":51,"node.extend":30}],64:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
@@ -7798,4 +7949,4 @@ var validateParams = function validateParams(params) {
 
 module.exports = wxDecryptData;
 
-},{"./HError":40,"./baas":47,"./baasRequest":48}]},{},[53]);
+},{"./HError":41,"./baas":48,"./baasRequest":49}]},{},[54]);
