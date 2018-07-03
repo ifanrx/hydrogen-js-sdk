@@ -7199,7 +7199,7 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.4.0'
+  VERSION: 'v1.5.0'
 };
 
 },{}],52:[function(require,module,exports){
@@ -7302,6 +7302,10 @@ var makeRealParams = function makeRealParams(type, params, cdn, categoryName) {
 
   if (params.hasOwnProperty('line_color')) {
     realParams.options.line_color = params.line_color;
+  }
+
+  if (params.hasOwnProperty('is_hyaline')) {
+    realParams.options.is_hyaline = params.is_hyaline;
   }
 
   if (cdn === true) {
@@ -7452,12 +7456,6 @@ var keysMap = {
 };
 
 var pay = function pay(params) {
-  if (!storage.get(constants.STORAGE_KEY.USERINFO)) {
-    return new Promise(function (resolve, reject) {
-      reject(new HError(603));
-    });
-  }
-
   var paramsObj = {};
 
   for (var key in params) {
@@ -7531,7 +7529,8 @@ var setHeader = function setHeader(header) {
   var extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': utils.getSysPlatform()
+    'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+    'X-Hydrogen-Client-SDK-Type': 'file'
   };
 
   var getAuthToken = BaaS.getAuthToken();
@@ -7756,7 +7755,7 @@ var HError = require('./HError');
 
 var config = void 0;
 try {
-  config = require('./config.js');
+  config = require('./config.dev.js');
 } catch (e) {
   config = require('./config.dev');
 }
@@ -7899,7 +7898,7 @@ module.exports = {
   extractErrorMsg: extractErrorMsg
 };
 
-},{"./HError":41,"./config.dev":50,"./config.js":51,"node.extend":30}],64:[function(require,module,exports){
+},{"./HError":41,"./config.dev":50,"./config.dev.js":50,"node.extend":30}],64:[function(require,module,exports){
 'use strict';
 
 var BaaS = require('./baas');
