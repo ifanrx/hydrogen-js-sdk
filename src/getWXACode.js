@@ -55,6 +55,10 @@ const makeRealParams = (type, params, cdn, categoryName) => {
     realParams.options.line_color = params.line_color
   }
 
+  if (params.hasOwnProperty('is_hyaline')) {
+    realParams.options.is_hyaline = params.is_hyaline
+  }
+
   if (cdn === true) {
     realParams.upload_to_cdn = true
     if (categoryName) {
