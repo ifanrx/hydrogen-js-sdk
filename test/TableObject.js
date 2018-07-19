@@ -186,7 +186,7 @@ describe('TableObject', () => {
     let query = new Query()
     query.compare('price', '=', 1)
 
-    Product.setAggregation(aggregation).limit(10).offset(2).orderBy(['created_by', 'updated_at'])
+    Product.setQuery(query).setAggregation(aggregation).limit(10).offset(2).orderBy(['created_by', 'updated_at'])
     expect(Product._handleAllQueryConditions()).to.deep.equal({
       tableID: randomNumber,
       limit: 10,
