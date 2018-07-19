@@ -1,5 +1,6 @@
 const HError = require('./HError')
 const Query = require('./Query')
+const Aggregation = require('./Aggregation')
 const _cloneDeep = require('lodash.clonedeep')
 const _isInteger = require('lodash/isInteger')
 
@@ -15,11 +16,21 @@ class BaseQuery {
     this._orderBy = null
     this._keys = null
     this._expand = null
+    this._aggregation = null
   }
 
   setQuery(queryObject) {
     if (queryObject instanceof Query) {
       this._queryObject = _cloneDeep(queryObject.queryObject)
+    } else {
+      throw new HError(605)
+    }
+    return this
+  }
+
+  setAggregation(aggregation) {
+    if (aggregation instanceof Aggregation) {
+      this._aggregation = _cloneDeep(aggregation._pipeline)
     } else {
       throw new HError(605)
     }

@@ -1,6 +1,7 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
 const Query = require('./Query')
+const Aggregation = require('./Aggregation')
 const TableRecord = require('./TableRecord')
 const _isString = require('lodash/isString')
 const _isNumber = require('lodash/isNumber')
@@ -87,7 +88,13 @@ class TableObject extends BaseQuery {
   find() {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.queryRecordList(condition)
+    if (this._aggregation) {
+      delete condition.where
+      condition.aggregation = this._aggregation
+      return BaaS.queryRecordList(condition)
+    } else {
+      return BaaS.queryRecordList(condition)
+    }
   }
 }
 

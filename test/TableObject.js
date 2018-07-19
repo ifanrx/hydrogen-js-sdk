@@ -4,6 +4,7 @@ const faker = require('faker')
 const Query = require('../src/Query')
 const TableObject = require('../src/TableObject')
 const TableRecord = require('../src/TableRecord')
+const Aggregation = require('../src/Aggregation')
 const randomOption = config.RANDOM_OPTION
 const helper = require('./helper')
 
@@ -150,5 +151,13 @@ describe('TableObject', () => {
   it('clear query params when query', () => {
     Product.expand('created_by').limit(10).find()
     expect(Product._limit).to.equal(20)
+  })
+
+  it('clear query params when aggregate', () => {
+    let aggregation = new Aggregation()
+    aggregation.sample(10).count()
+    Product.setAggregation(aggregation).limit(10).find()
+    expect(Product._limit).to.equal(20)
+    expect(Product._aggregation).to.equal(null)
   })
 })
