@@ -155,9 +155,69 @@ describe('TableObject', () => {
 
   it('clear query params when aggregate', () => {
     let aggregation = new Aggregation()
-    aggregation.sample(10).count()
+    aggregation.sample(10).count('count')
     Product.setAggregation(aggregation).limit(10).find()
     expect(Product._limit).to.equal(20)
     expect(Product._aggregation).to.equal(null)
+  })
+
+  it('#check aggregation params', () => {
+    let aggregation = new Aggregation()
+    aggregation
+      .sample(10)
+      .group({
+        _id: '$status',
+        count: {
+          $sum: 1
+        },
+        totalAmount: {
+          $sum: '$amount'
+        },
+        avgAmount: {
+          $avg: '$amount'
+        }
+      })
+      .project({
+        _id: 0,
+        newFieldName: ['$x', '$y']
+      })
+      .count('count')
+
+    let query = new Query()
+    query.compare('price', '=', 1)
+
+    Product.setAggregation(aggregation).limit(10).offset(2).orderBy(['created_by', 'updated_at'])
+    expect(Product._handleAllQueryConditions()).to.deep.equal({
+      tableID: randomNumber,
+      limit: 10,
+      offset: 2,
+      order_by: 'created_by,updated_at',
+      aggregate: JSON.stringify([{
+          $sample: {
+            size: 10
+          }
+        }, {
+          $group: {
+            _id: '$status',
+            count: {
+              $sum: 1
+            },
+            totalAmount: {
+              $sum: '$amount'
+            },
+            avgAmount: {
+              $avg: '$amount'
+            }
+          }
+        }, {
+          $project: {
+            _id: 0,
+            newFieldName: ['$x', '$y']
+          }
+        }, {
+          $count: 'count'
+        }]
+      )
+    })
   })
 })

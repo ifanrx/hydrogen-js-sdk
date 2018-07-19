@@ -30,7 +30,7 @@ class BaseQuery {
 
   setAggregation(aggregation) {
     if (aggregation instanceof Aggregation) {
-      this._aggregation = _cloneDeep(aggregation.getPipeline())
+      this._aggregation = aggregation
     } else {
       throw new HError(605)
     }
@@ -96,10 +96,10 @@ class BaseQuery {
     }
 
     if (this._aggregation) {
-      conditions.aggregate = JSON.stringify(this._aggregation)
+      conditions.aggregate = JSON.stringify(this._aggregation.getPipeline())
+    } else {
+      conditions.where = JSON.stringify(this._queryObject)
     }
-
-    conditions.where = JSON.stringify(this._queryObject)
     return conditions
   }
 }

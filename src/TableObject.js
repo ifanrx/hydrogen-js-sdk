@@ -88,12 +88,7 @@ class TableObject extends BaseQuery {
   find() {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    if (condition.aggregate) {
-      delete condition.where
-      return BaaS.queryRecordList(condition)
-    } else {
-      return BaaS.queryRecordList(condition)
-    }
+    return BaaS.queryRecordList(condition)
   }
 }
 
