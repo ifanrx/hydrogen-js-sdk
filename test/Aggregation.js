@@ -45,7 +45,7 @@ describe('Aggregation', () => {
 
   it('#group', () => {
     aggregation.group({
-      _id: {month: {$month: "$date"}, day: {$dayOfMonth: "$date"}, year: {$year: "$date"}},
+      _id: '$item',
       totalPrice: {$sum: {$multiply: ["$price", "$quantity"]}},
       averageQuantity: {$avg: "$quantity"},
       count: {$sum: 1}
@@ -53,7 +53,7 @@ describe('Aggregation', () => {
 
     expect(aggregation.getPipeline()).deep.equal([{
       $group: {
-        _id: {month: {$month: "$date"}, day: {$dayOfMonth: "$date"}, year: {$year: "$date"}},
+        _id: '$item',
         totalPrice: {$sum: {$multiply: ["$price", "$quantity"]}},
         averageQuantity: {$avg: "$quantity"},
         count: {$sum: 1}
