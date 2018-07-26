@@ -1,6 +1,7 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
 const Query = require('./Query')
+const Aggregation = require('./Aggregation')
 const TableRecord = require('./TableRecord')
 const _isString = require('lodash/isString')
 const _isNumber = require('lodash/isNumber')
