@@ -384,4 +384,50 @@ describe('Query', () => {
       ]
     })
   })
+
+  it('#object - hasKey', () => {
+    let query = new Query()
+    query.hasKey('objectField', 'key1')
+
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {
+          objectField: {
+            $has_key: 'key1'
+          }
+        }
+      ]
+    })
+  })
+
+  it('#object - eq', () => {
+    let query = new Query()
+    query.compare('objectField', '=', {a: randomArray, b: randomNumber})
+
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {
+          objectField: {
+            $eq: {a: randomArray, b: randomNumber}
+          }
+        }
+      ]
+    })
+  })
+
+  it('#object - isnull', () => {
+    let query = new Query()
+    query.isNull('objectField')
+
+    expect(query.queryObject).to.deep.equal({
+      $and: [
+        {
+          objectField: {
+            $isnull: true
+          }
+        }
+      ]
+    })
+  })
+
 })

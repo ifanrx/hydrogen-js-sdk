@@ -30,13 +30,15 @@ describe('BaseRecord', () => {
   it('#set key && value', () => {
     product.set('price', randomNumber1)
     product.set('amount', randomNumber2)
-    expect(product._record).to.deep.equal({price: randomNumber1, amount: randomNumber2})
+    product.set('obj1', {a: randomNumber1, b: randomArray})
+    expect(product._record).to.deep.equal({price: randomNumber1, amount: randomNumber2, obj1: {a:randomNumber1, b:randomArray}})
   })
 
   it('#set object', () => {
     product.set({price: randomNumber1})
     product.set({amount: randomNumber2})
-    expect(product._record).to.deep.equal({amount: randomNumber2})
+    product.set({obj1: {a:randomNumber1, b:randomArray}})
+    expect(product._record).to.deep.equal({obj1: {a:randomNumber1, b:randomArray}})
   })
 
   it('#set GeoPoint', () => {
@@ -91,5 +93,10 @@ describe('BaseRecord', () => {
     expect(product._record).to.deep.equal({arr: {$remove: [randomNumber]}})
     product.remove('arr', randomArray)
     expect(product._record).to.deep.equal({arr: {$remove: randomArray}})
+  })
+
+  it('#patchObject',() => {
+    product.patchObject('obj1', {a:randomArray, b:randomNumber})
+    expect(product._record).to.deep.equal({obj1: {$update: {a:randomArray, b:randomNumber}}})
   })
 })
