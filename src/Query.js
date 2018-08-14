@@ -204,6 +204,15 @@ class Query {
     }
   }
 
+  hasKey(key, fieldName) {
+    if(typeof key !== 'string' || typeof fieldName !== 'string'){
+      throw HError(605)
+    }
+
+    this._addQueryObject(key, {has_key: fieldName})
+    return this
+  }
+
   _setQueryObject(queryObject) {
     this.queryObject = queryObject
   }

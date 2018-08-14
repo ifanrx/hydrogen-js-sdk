@@ -56,6 +56,15 @@ class BaseRecord {
     this._record[key] = {$remove: value}
     return this
   }
+
+  patchObject(key, value) {
+    if (Object.prototype.toString.call(value) !== '[object Object]') {
+      throw new HError(605)
+    }
+
+    this._record[key] = {$update: value}
+    return this
+  }
 }
 
 module.exports = BaseRecord
