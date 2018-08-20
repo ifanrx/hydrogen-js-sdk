@@ -2,7 +2,6 @@ const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 const HError = require('./HError')
 const utils = require('./utils')
-const _isString = require('lodash/isString')
 
 class Query {
   constructor() {
@@ -58,7 +57,7 @@ class Query {
   }
 
   contains(key, str) {
-    if (str && _isString(str)) {
+    if (str && utils.isString(str)) {
       this._addQueryObject(key, {contains: str})
       return this
     } else {

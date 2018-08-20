@@ -1,9 +1,7 @@
 const auth = require('./auth')
 const BaaS = require('./baas')
 const constants = require('./constants')
-const extend = require('node.extend')
 const HError = require('./HError')
-const Promise = require('./promise')
 const request = require('./request')
 const utils = require('./utils')
 
@@ -22,26 +20,24 @@ const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dat
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
 const doCreateRequestMethod = (methodMap) => {
-
-
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
       BaaS[k] = ((k) => {
         let methodItem = methodMap[k]
         return (objects) => {
-          let newObjects = extend(true, {}, objects)
+          let newObjects = utils.cloneDeep(objects)
           let method = methodItem.method || 'GET'
 
           if (methodItem.defaultParams) {
-            let defaultParamsCopy = extend({}, methodItem.defaultParams)
-            newObjects = extend(defaultParamsCopy, newObjects)
+            let defaultParamsCopy = utils.cloneDeep(methodItem.defaultParams)
+            newObjects = utils.extend(defaultParamsCopy, newObjects)
           }
 
           // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
           let url = utils.format(methodItem.url, newObjects)
 
           let data = {}
-          if(newObjects.data) {
+          if (newObjects.data) {
             // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
             data = newObjects.data
           } else {
@@ -56,7 +52,7 @@ const doCreateRequestMethod = (methodMap) => {
             return baasRequest({ url, method, data }).then((res) => {
               if (res.statusCode == constants.httpMethodCodeMap[method]) {
                 resolve(res)
-                } else if (k === 'deleteRecordList' && res.statusCode == constants.httpMethodCodeMap['PUT']) {
+              } else if (k === 'deleteRecordList' && res.statusCode == constants.httpMethodCodeMap['PUT']) {
                 // 批量删除操作后端返回的状态码为 200
                 resolve(res)
               } else {

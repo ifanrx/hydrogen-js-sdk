@@ -1,6 +1,6 @@
 const GeoPoint = require('./GeoPoint')
 const HError = require('./HError')
-const _cloneDeep = require('lodash.clonedeep')
+const utils = require('./utils')
 
 class GeoPolygon {
   constructor(args) {
@@ -32,7 +32,7 @@ class GeoPolygon {
       }
     })
     coordinates.push(face)
-    return _cloneDeep(this.geoJSON)
+    return utils.cloneDeep(this.geoJSON)
   }
 }
 

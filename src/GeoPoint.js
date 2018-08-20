@@ -1,4 +1,4 @@
-const _cloneDeep = require('lodash.clonedeep')
+const utils = require('./utils')
 
 class GeoPoint {
   constructor(longitude, latitude) {
@@ -11,7 +11,7 @@ class GeoPoint {
   }
 
   toGeoJSON() {
-    return _cloneDeep(this.geoJSON)
+    return utils.cloneDeep(this.geoJSON)
   }
 }
 

@@ -1,5 +1,3 @@
-'use strict'
-const extend = require('node.extend')
 const HError = require('./HError')
 
 let config
@@ -129,6 +127,44 @@ const extractErrorMsg = (res) => {
   return errorMsg
 }
 
+const isString = value => {
+  return Object.prototype.toString.call(value) === '[object String]'
+}
+
+const isArray = value => {
+  return Object.prototype.toString.call(value) === '[object Array]'
+}
+
+const isObject = value => {
+  const type = typeof value
+  return value != null && (type == 'object')
+}
+
+const isFunction = value => {
+  const type = typeof value
+  return value != null && (type == 'function')
+}
+
+const extend = (dist, src) => {
+  return Object.assign(dist, src)
+}
+
+// 目前仅支持对象或数字的拷贝
+const cloneDeep = source => {
+  const target = isArray(source) ? [] : {}
+  for (const keys in source) {
+    if (source.hasOwnProperty(keys)) {
+      if (source[keys] && typeof source[keys] === 'object') {
+        target[keys] = isArray(source[keys]) ? [] : {}
+        target[keys] = cloneDeep(source[keys])
+      } else {
+        target[keys] = source[keys]
+      }
+    }
+  }
+  return target
+}
+
 module.exports = {
   log,
   format,
@@ -139,4 +175,10 @@ module.exports = {
   replaceQueryParams,
   wxRequestFail,
   extractErrorMsg,
+  isArray,
+  isString,
+  isObject,
+  isFunction,
+  extend,
+  cloneDeep,
 }

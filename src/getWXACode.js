@@ -1,7 +1,7 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
-const _isString = require('lodash/isString')
+const utils = require('./utils')
 
 const API = BaaS._config.API
 
@@ -11,7 +11,7 @@ const makeRealParams = (type, params, cdn, categoryName) => {
   let realParams = {}
   const typeIndex = validateTypes.indexOf(type)
 
-  if (!_isString(type)  || typeIndex === -1) {
+  if (!utils.isString(type) || typeIndex === -1) {
     throw new HError(605, 'type 为字符串类型且只接受 "wxacode", "wxacodeunlimit", "wxaqrcode" 其中一种')
   }
 

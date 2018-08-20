@@ -15,9 +15,7 @@ class ContentGroup extends BaseQuery {
   find() {
     let condition = this._handleAllQueryConditions()
     condition.contentGroupID = this._contentGroupID
-
     this._initQueryParams()
-
     return BaaS.getContentList2(condition)
   }
 

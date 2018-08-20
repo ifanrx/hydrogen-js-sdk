@@ -1,4 +1,4 @@
-const API_HOST = 'https://xiaoapp.io'
+const API_HOST = 'https://api.xiaoapp.io'
 
 const API = {
   LOGIN: '/hserve/v1.4/session/init/',
@@ -166,5 +166,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.5.5'
+  VERSION: 'v1.5.0'
 }

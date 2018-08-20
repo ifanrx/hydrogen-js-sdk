@@ -1,9 +1,8 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
-const extend = require('node.extend')
 const HError = require('./HError')
-const Promise = require('./promise')
 const utils = require('./utils')
+const polyfill = require('./polyfill')
 
 
 /**
@@ -18,7 +17,7 @@ const setHeader = (header) => {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
     'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
-    'X-Hydrogen-Client-SDK-Type': 'file',
+    'X-Hydrogen-Client-SDK-Type': polyfill.SDK_TYPE,
   }
 
   let getAuthToken = BaaS.getAuthToken()
@@ -34,7 +33,7 @@ const setHeader = (header) => {
     })
   }
 
-  return extend(extendHeader, header || {})
+  return utils.extend(extendHeader, header || {})
 }
 
 const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) => {

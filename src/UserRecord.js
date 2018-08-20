@@ -1,6 +1,6 @@
 const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
-const _cloneDeep = require('lodash.clonedeep')
+const utils = require('./utils')
 
 class UserRecord extends BaseRecord {
   constructor() {
@@ -8,7 +8,7 @@ class UserRecord extends BaseRecord {
   }
 
   update() {
-    let record = _cloneDeep(this._record)
+    let record = utils.cloneDeep(this._record)
     this._record = {}
     return BaaS.updateUser({data: record})
   }

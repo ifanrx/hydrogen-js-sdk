@@ -2,7 +2,6 @@ const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const HError = require('./HError')
-const Promise = require('./promise')
 const utils = require('./utils')
 
 // get the upload config for upyun from sso
@@ -76,7 +75,6 @@ const uploadFile = (fileParams, metaData, type) => {
 
   return new Promise((resolve, reject) => {
     let fileName = utils.getFileNameFromPath(fileParams.filePath)
-
     return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
       let config = {
         id: res.data.id,

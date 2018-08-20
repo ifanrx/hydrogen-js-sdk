@@ -2,19 +2,18 @@ const BaaS = require('./baas')
 
 // 暴露指定 BaaS 方法
 BaaS.auth = require('./baasRequest').auth
-BaaS.handleUserInfo = require('./auth').handleUserInfo
 BaaS.ContentGroup = require('./ContentGroup')
 BaaS.File = require('./File')
 BaaS.FileCategory = require('./FileCategory')
 BaaS.GeoPoint = require('./GeoPoint')
 BaaS.GeoPolygon = require('./GeoPolygon')
 BaaS.getWXACode = require('./getWXACode')
+BaaS.handleUserInfo = require('./auth').handleUserInfo
 BaaS.invokeFunction = require('./invokeFunction')
 BaaS.login = require('./auth').login
 BaaS.logout = require('./auth').logout
 BaaS.order = require('./order')
 BaaS.pay = require('./pay')
-BaaS.Promise = require('./promise')
 BaaS.Query = require('./Query')
 BaaS.request = require('./request')
 BaaS.storage = require('./storage')

@@ -1,12 +1,9 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
+const HError = require('./HError')
 const Query = require('./Query')
 const TableRecord = require('./TableRecord')
-const _isString = require('lodash/isString')
-const _isNumber = require('lodash/isNumber')
-const _isArray = require('lodash/isArray')
-const _cloneDeep = require('lodash.clonedeep')
-const HError = require('./HError')
+const utils = require('./utils')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {
@@ -19,7 +16,7 @@ class TableObject extends BaseQuery {
   }
 
   createMany(args) {
-    if (_isArray(args)) {
+    if (utils.isArray(args)) {
       const params = {
         tableID: this._tableID,
         data: args
@@ -31,7 +28,7 @@ class TableObject extends BaseQuery {
   }
 
   delete(args) {
-    if (_isString(args) || _isNumber(args)) {
+    if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {
       const params = {
@@ -48,13 +45,13 @@ class TableObject extends BaseQuery {
   }
 
   getWithoutData(args) {
-    if (_isString(args) || _isNumber(args)) {
+    if (utils.isString(args) || Number.isInteger(args)) {
       return new TableRecord(this._tableID, args)
     } else if (args instanceof Query) {
       let queryObject = {}
       queryObject.limit = this._limit
       queryObject.offset = this._offset
-      queryObject.where = _cloneDeep(args.queryObject)
+      queryObject.where = utils.cloneDeep(args.queryObject)
       this._initQueryParams()
       return new TableRecord(this._tableID, null, queryObject)
     } else {
