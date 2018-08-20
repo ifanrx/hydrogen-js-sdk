@@ -19,7 +19,6 @@ const config = require('../core/config')
 const srcFolder = './src/';
 const distFolder = './dist/';
 const devFile = 'sdk.dev.js';
-const miniappRootFolder = '../miniapp-demo/';
 
 // watch
 gulp.task('watch', function () {
@@ -68,7 +67,6 @@ gulp.task('js:build', function () {
     })
     .pipe(source(devFile))
     .pipe(buffer())
-    .pipe(gulp.dest(miniappRootFolder))
     .pipe(gulp.dest(distFolder))
     .pipe(notify({ message: 'js:build task is completed!' }));
 });

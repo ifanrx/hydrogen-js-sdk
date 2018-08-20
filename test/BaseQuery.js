@@ -1,9 +1,9 @@
-require('../src/baasRequest').createRequestMethod()
-const BaseQuery = require('../src/BaseQuery')
-const config = require('../src/config')
+require('../core/baasRequest').createRequestMethod()
+const BaseQuery = require('../core/BaseQuery')
+const config = require('../core/config')
 const faker = require('faker')
 const helper = require('./helper')
-const Query = require('../src/Query')
+const Query = require('../core/Query')
 const randomOption = config.RANDOM_OPTION
 
 describe('BaseQuery', () => {

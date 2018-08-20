@@ -1,5 +1,5 @@
 
-const auth = require('../src/auth')
+const auth = require('../core/auth')
 
 describe('auth', () => {
   it('#handleUserInfo param value is undefined', () => {

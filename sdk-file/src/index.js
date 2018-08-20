@@ -16,5 +16,4 @@ polyfill.wxPaymentRequest = function (...args) {
   return wx.requestPayment(...args)
 }
 const baas = require('../../core/index')
-console.log(baas)
 module.exports = baas

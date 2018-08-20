@@ -1,6 +1,6 @@
 const rewire = require('rewire')
 
-const getWXACode = rewire('../src/getWXACode')
+const getWXACode = rewire('../core/getWXACode')
 const makeRealParams = getWXACode.__get__('makeRealParams')
 
 describe('getWXACode', () => {

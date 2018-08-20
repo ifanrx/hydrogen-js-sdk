@@ -1,4 +1,4 @@
-const storage = require('../src/storage')
+const storage = require('../core/storage')
 
 describe('storage', () => {
   let key = 'key'
