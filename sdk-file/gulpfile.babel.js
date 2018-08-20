@@ -14,7 +14,7 @@ import path from 'path';
 import shell from 'gulp-shell';
 import aliasify from 'aliasify';
 
-const config = require('./src/config')
+const config = require('../core/config')
 
 const srcFolder = './src/';
 const distFolder = './dist/';
@@ -45,10 +45,9 @@ gulp.task('js:build', function () {
   if (process.env.NODE_ENV === 'dev') {
     configFile = 'config.dev.js';
   };
-
   var aliasifyConfig = {
     aliases: {
-      'sdk-config': './' + path.join(srcFolder, configFile),
+      'sdk-config': path.join('../core',configFile),
     },
     appliesTo: {
       'includeExtensions': ['.js']

@@ -1,0 +1,21 @@
+@import "./vendor/zanui.wxss";
+@import './vendor/wxParser/wxParser/index.wxss';
+
+.page-container {
+  padding: 50rpx;
+  box-sizing: border-box;
+} 
+
+.page-title {
+  text-align: center;
+  font-size: 40rpx;
+  margin: 20rpx 0;
+}
+
+.tips {
+  color: #F41616;
+  font-size: 14px;
+  border-left: 2px solid #F41616;
+  padding: 5rpx 10rpx;
+  margin: 5rpx;
+}

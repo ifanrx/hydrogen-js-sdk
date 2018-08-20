@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/veryrich/index",
+
+    "pages-test/schema-change/index",
+    "pages-test/schema-query/index",
+    "pages-test/schema-legacy/index",
+    "pages-test/schema-batch/index",
+    "pages-test/geo/index",
+    "pages-test/file/index",
+    "pages-test/decrypt/index",
+    "pages-test/media/index",
+    "pages-test/pay/index",
+    "pages-test/trigger/index",
+    "pages-test/content/index",
+    "pages-test/content-legacy/index",
+    "pages-test/user/index",
+    "pages-test/auth/index",
+    "pages-test/lifeCycle/index",
+    "pages-test/wxacode/index",
+    "pages-test/invoke-function/index",
+    "pages-test/wxparser-file/index",
+    "pages-test/wxparser-plugin/index",
+    "pages-test/aggregation/index"
+  ],
+  "plugins": {
+    "wxparserPlugin": {
+      "version": "0.1.0",
+      "provider": "wx9d4d4ffa781ff3ac"
+    },
+    "sdkPlugin": {
+      "version": "dev",
+      "provider": "wxc6b86e382a1e3294"
+    }
+  }
+}
+
