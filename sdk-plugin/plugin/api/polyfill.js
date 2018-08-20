@@ -1,11 +1,12 @@
 module.exports = {
-  wxLogin() {
-
+  wxLogin(...args) {
+    return wx.login(...args)
   },
-  wxGetUserInfo() {
+  wxGetUserInfo(...args) {
+    return wx.getUserInfo(...args)
   },
-  wxPaymentRequest(){
-
+  wxPaymentRequest(...args){
+    return wx.requestPayment(...args)
   },
   getAPIHost(clientID) {
     return `https://${clientID}.xiaoapp.io`

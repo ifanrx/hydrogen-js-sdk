@@ -17,10 +17,6 @@
 			},
 			{
 				"type": "file",
-				"value": "plugin/utils/wxParser/app.wcss"
-			},
-			{
-				"type": "file",
 				"value": "plugin/utils/wxParser/app.wxss"
 			},
 			{
