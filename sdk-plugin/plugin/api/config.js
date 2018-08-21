@@ -41,6 +41,8 @@ const API = {
   DELETE_FILES: '/hserve/v1.3/uploaded-file/',
   FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
+  CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
+  CENSOR_MSG: '/hserve/v1.7/censor-msg/',
 }
 
 const methodMapList = [{

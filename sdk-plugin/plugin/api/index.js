@@ -22,6 +22,7 @@ BaaS.uploadFile = require('./uploadFile')
 BaaS.User = require('./User')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
+require('./censor')(BaaS)
 
 // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 require('./baasRequest').createRequestMethod()
