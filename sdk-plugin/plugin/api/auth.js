@@ -79,7 +79,7 @@ const login = (userInfo = true) => {
         })
       }).catch(err => {
         handleLoginFailure()
-        rejectLoginCallBacks(true, err)
+        rejectLoginCallBacks(err, true)
       })
     })
   } else {
@@ -111,7 +111,7 @@ const silentLogin = () => {
       resolveLoginCallBacks(false)
     }, err => {
       isSilentLogining = false
-      rejectLoginCallBacks(false, err)
+      rejectLoginCallBacks(err, false)
     })
   })
 }
@@ -139,7 +139,7 @@ const resolveLoginCallBacks = (userInfo = true) => {
   }, 0)
 }
 
-const rejectLoginCallBacks = (userInfo = true, err) => {
+const rejectLoginCallBacks = (err, userInfo = true) => {
   setTimeout(() => {
     if (userInfo) {
       while (loginReject.length) {
