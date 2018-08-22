@@ -24,7 +24,7 @@ const wxCensorImage = filePath => {
           return reject(res)
         }
 
-        resolve(data)
+        resolve(JSON.parse(data))
       },
       fail: () => {
         utils.wxRequestFail(reject)
