@@ -23,17 +23,14 @@ const wxCensorImage = filePath => {
         if (parseInt(statusCode) !== constants.STATUS_CODE.SUCCESS) {
           return reject(res)
         }
-
         resolve(JSON.parse(data))
       },
       fail: () => {
         utils.wxRequestFail(reject)
       }
     })
-
   })
 }
-
 
 const wxCensorText = text => {
   if (!text || typeof text !== 'string') {
@@ -47,7 +44,6 @@ const wxCensorText = text => {
     }
   })
 }
-
 
 module.exports = BaaS => {
   BaaS.wxCensorImage = wxCensorImage
