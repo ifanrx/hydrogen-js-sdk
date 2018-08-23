@@ -168,5 +168,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.6.0'
+  VERSION: 'v1.7.0'
 }
