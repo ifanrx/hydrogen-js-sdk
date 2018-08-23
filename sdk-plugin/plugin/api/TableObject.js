@@ -88,7 +88,7 @@ class TableObject extends BaseQuery {
   }
 
   count() {
-    return this.find().then(res => {
+    return this.limit(1).find().then(res => {
       let {total_count} = res.data.meta
       return total_count
     })
