@@ -40,7 +40,7 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
   return new Promise((resolve, reject) => {
 
     if (!BaaS._config.CLIENT_ID) {
-      reject(new HError(602))
+      return reject(new HError(602))
     }
 
     let headers = setHeader(header)

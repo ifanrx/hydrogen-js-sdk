@@ -208,7 +208,7 @@ const handleUserInfo = (res) => {
     return silentLogin().then(() => {
       // 用户拒绝授权，仅返回 uid, openid 和 unionid
       if(!detail.userInfo) {
-        reject(makeLoginResponseData(false))
+       return reject(makeLoginResponseData(false))
       }
 
       let payload = {

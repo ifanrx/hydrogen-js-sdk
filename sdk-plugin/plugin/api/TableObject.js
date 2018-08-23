@@ -86,6 +86,13 @@ class TableObject extends BaseQuery {
     this._initQueryParams()
     return BaaS.queryRecordList(condition)
   }
+
+  count() {
+    return this.find().then(res => {
+      let {total_count} = res.data.meta
+      return total_count
+    })
+  }
 }
 
 module.exports = TableObject

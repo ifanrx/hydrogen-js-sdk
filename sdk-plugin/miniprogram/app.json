@@ -2,7 +2,6 @@
   "pages": [
     "pages/index/index",
     "pages/veryrich/index",
-
     "pages-test/schema-change/index",
     "pages-test/schema-query/index",
     "pages-test/schema-legacy/index",
@@ -22,7 +21,8 @@
     "pages-test/invoke-function/index",
     "pages-test/wxparser-file/index",
     "pages-test/wxparser-plugin/index",
-    "pages-test/aggregation/index"
+    "pages-test/aggregation/index",
+    "pages-test/censor/index"
   ],
   "plugins": {
     "wxparserPlugin": {
@@ -35,4 +35,3 @@
     }
   }
 }
-
