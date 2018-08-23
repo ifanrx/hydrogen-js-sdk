@@ -1,5 +1,5 @@
 
-const baasRequest = require('../src/baasRequest')
+const baasRequest = require('../core/baasRequest')
 
 describe('baasRequest', () => {
   it('#excludeParams()', () => {

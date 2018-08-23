@@ -1,0 +1,9 @@
+[submodule "sdk-plugin/miniprogram/pages-test"]
+	path = sdk-plugin/miniprogram/pages-test
+	url = git@github.com:ifanrx/sdk-test-case.git
+[submodule "sdk-plugin/plugin/utils/wxParser"]
+	path = sdk-plugin/plugin/utils/wxParser
+	url = git@github.com:ifanrx/wxParser.git
+[submodule "sdk-plugin/miniprogram/vendor/wxParser"]
+	path = sdk-plugin/miniprogram/vendor/wxParser
+	url = git@github.com:ifanrx/wxParser.git

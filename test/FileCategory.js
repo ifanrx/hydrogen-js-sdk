@@ -1,7 +1,7 @@
-require('../src/baasRequest').createRequestMethod()
-const FileCategory = require('../src/FileCategory')
+require('../core/baasRequest').createRequestMethod()
+const FileCategory = require('../core/FileCategory')
 const helper = require('./helper')
-const Query = require('../src/Query')
+const Query = require('../core/Query')
 
 describe('FileCategory', () => {
   let fileCategory = null

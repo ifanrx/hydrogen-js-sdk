@@ -1,7 +1,7 @@
-require('../src/baasRequest').createRequestMethod()
-const File = require('../src/File')
+require('../core/baasRequest').createRequestMethod()
+const File = require('../core/File')
 const helper = require('./helper')
-const Query = require('../src/Query')
+const Query = require('../core/Query')
 
 describe('File', () => {
   let file = null

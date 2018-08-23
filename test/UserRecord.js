@@ -1,7 +1,7 @@
-require('../src/baasRequest').createRequestMethod()
-const config = require('../src/config')
+require('../core/baasRequest').createRequestMethod()
+const config = require('../core/config')
 const faker = require('faker')
-const UserRecord = require('../src/UserRecord')
+const UserRecord = require('../core/UserRecord')
 
 const randomOption = config.RANDOM_OPTION
 

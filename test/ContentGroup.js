@@ -1,9 +1,9 @@
-require('../src/baasRequest').createRequestMethod()
-const config = require('../src/config')
-const ContentGroup = require('../src/ContentGroup')
+require('../core/baasRequest').createRequestMethod()
+const config = require('../core/config')
+const ContentGroup = require('../core/ContentGroup')
 const faker = require('faker')
 const helper = require('./helper')
-const Query = require('../src/Query')
+const Query = require('../core/Query')
 
 const randomOption = config.RANDOM_OPTION
 

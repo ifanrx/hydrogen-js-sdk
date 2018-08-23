@@ -6,10 +6,10 @@
   "scripts": {
     "test": "mocha",
     "test-dev": "mocha test/index.js",
-    "dev": "export NODE_ENV=dev && gulp dev",
-    "build": "export NODE_ENV=production && gulp release",
+    "dev": "export NODE_ENV=dev && gulp --cwd ./sdk-file dev",
+    "build": "export NODE_ENV=production && gulp --cwd ./sdk-file release",
     "lock": "npm prune && npm shrinkwrap --dev",
-    "lint": "eslint test/**/*.js src/**/*.js"
+    "lint": "eslint test/**/*.js core/**/*.js"
   },
   "repository": {
     "type": "git",

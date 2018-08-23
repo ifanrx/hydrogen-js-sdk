@@ -2,7 +2,7 @@
 
 if (typeof require !== 'undefined') {
   global.expect = require('chai').expect
-  global.BaaS = require('../src')
+  global.BaaS = require('../core')
   // 模拟 wx 方法
   global.wx = require('./wechat-mock')
 

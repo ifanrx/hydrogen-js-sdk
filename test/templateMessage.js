@@ -1,4 +1,4 @@
-const makeParams = require('../src/templateMessage').makeParams
+const makeParams = require('../core/templateMessage').makeParams
 const faker = require('faker')
 
 describe('templateMessage', () => {

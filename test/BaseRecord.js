@@ -1,9 +1,9 @@
-require('../src/baasRequest').createRequestMethod()
-const BaseRecord = require('../src/BaseRecord')
-const config = require('../src/config')
+require('../core/baasRequest').createRequestMethod()
+const BaseRecord = require('../core/BaseRecord')
+const config = require('../core/config')
 const faker = require('faker')
-const GeoPoint = require('../src/GeoPoint')
-const GeoPolygon = require('../src/GeoPolygon')
+const GeoPoint = require('../core/GeoPoint')
+const GeoPolygon = require('../core/GeoPolygon')
 const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION

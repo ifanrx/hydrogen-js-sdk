@@ -1,8 +1,8 @@
-require('../src/baasRequest').createRequestMethod()
-const config = require('../src/config')
+require('../core/baasRequest').createRequestMethod()
+const config = require('../core/config')
 const faker = require('faker')
-const TableRecord = require('../src/TableRecord')
-const Query = require('../src/Query')
+const TableRecord = require('../core/TableRecord')
+const Query = require('../core/Query')
 const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION
