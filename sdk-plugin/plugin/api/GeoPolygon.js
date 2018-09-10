@@ -20,7 +20,6 @@ class GeoPolygon {
   }
 
   toGeoJSON() {
-    let coordinates = this.geoJSON.coordinates
     let face = []
     this.points.forEach((point) => {
       if (point instanceof GeoPoint) {
@@ -31,7 +30,7 @@ class GeoPolygon {
         throw new HError(605)
       }
     })
-    coordinates.push(face)
+    this.geoJSON.coordinates = [face]
     return utils.cloneDeep(this.geoJSON)
   }
 }
