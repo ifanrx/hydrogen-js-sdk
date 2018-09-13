@@ -115,7 +115,7 @@ const uploadFile = (fileParams, metaData, type) => {
 
   let fileName = utils.getFileNameFromPath(fileParams.filePath)
   getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
-    if (isAborted) return rj('aborted')
+    if (isAborted) return rj(new Error('aborted'))
 
     let config = {
       id: res.data.id,
@@ -127,7 +127,7 @@ const uploadFile = (fileParams, metaData, type) => {
       destLink: res.data.file_link
     }
     uploadTask = wxUpload(config, e => {
-      if (isAborted) return rj('aborted')
+      if (isAborted) return rj(new Error('aborted'))
       rs(e)
     }, rj, type)
     if (uploadCallback) {
