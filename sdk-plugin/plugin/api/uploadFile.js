@@ -67,27 +67,75 @@ const uploadFile = (fileParams, metaData, type) => {
     throw new HError(605)
   }
 
-  if(!metaData) {
+  if (!metaData) {
     metaData = {}
   } else if (typeof metaData !== 'object') {
     throw new HError(605)
   }
 
-  return new Promise((resolve, reject) => {
-    let fileName = utils.getFileNameFromPath(fileParams.filePath)
-    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
-      let config = {
-        id: res.data.id,
-        fileName: fileName,
-        policy: res.data.policy,
-        authorization: res.data.authorization,
-        uploadUrl: res.data.upload_url,
-        filePath: fileParams.filePath,
-        destLink: res.data.file_link
-      }
-      return wxUpload(config, resolve, reject, type)
+  let rs, rj, uploadCallback, isAborted, uploadTask = null
+
+  let p = new Promise((resolve, reject) => {
+      rs = resolve
+      rj = reject
+    }
+  )
+
+  let onProgressUpdate = function (cb) {
+    uploadCallback = cb
+    return this
+  }
+
+  let abort = function () {
+    if (uploadTask) {
+      uploadTask.abort()
+    }
+    isAborted = true
+    return this
+  }
+
+  function mix(obj) {
+    return Object.assign(obj, {
+      catch(...args) {
+        let newPromise = Promise.prototype.catch.call(this, ...args)
+        mix(newPromise)
+        return newPromise
+      },
+      then(...args) {
+        let newPromise = Promise.prototype.then.call(this, ...args)
+        mix(newPromise)
+        return newPromise
+      },
+      abort: abort,
+      onProgressUpdate: onProgressUpdate
     })
+  }
+
+  mix(p)
+
+  let fileName = utils.getFileNameFromPath(fileParams.filePath)
+  getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
+    if (isAborted) return rj('aborted')
+
+    let config = {
+      id: res.data.id,
+      fileName: fileName,
+      policy: res.data.policy,
+      authorization: res.data.authorization,
+      uploadUrl: res.data.upload_url,
+      filePath: fileParams.filePath,
+      destLink: res.data.file_link
+    }
+    uploadTask = wxUpload(config, e => {
+      if (isAborted) return rj('aborted')
+      rs(e)
+    }, rj, type)
+    if (uploadCallback) {
+      uploadTask.onProgressUpdate(uploadCallback)
+    }
   })
+
+  return p
 }
 
 module.exports = uploadFile
