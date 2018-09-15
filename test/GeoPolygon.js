@@ -1,5 +1,6 @@
 const GeoPoint = require('../core/GeoPoint')
 const GeoPolygon = require('../core/GeoPolygon')
+const TableObject = require('../core/TableObject')
 
 describe('GeoPolygon', () => {
   it('#new with 2D array', () => {
@@ -29,5 +30,14 @@ describe('GeoPolygon', () => {
     let point1 = new GeoPoint(1, 1)
     let point2 = new GeoPoint(1, 1)
     expect(() => new GeoPolygon([point1, point2])).to.throw()
+  })
+
+  it('#multi set', () => {
+    var Product = new TableObject('test')
+    var product = Product.create()
+    let polygon_t = new GeoPolygon([[10, 10], [20, 10], [30, 20], [10, 10]])
+    product.set("geo", polygon_t)
+    product.set("geo", polygon_t)
+    expect(polygon_t.geoJSON.coordinates).deep.equal([[[10, 10], [20, 10], [30, 20], [10, 10]]])
   })
 })
