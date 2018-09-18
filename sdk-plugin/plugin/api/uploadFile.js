@@ -82,7 +82,11 @@ const uploadFile = (fileParams, metaData, type) => {
   )
 
   let onProgressUpdate = function (cb) {
-    uploadCallback = cb
+    if (uploadTask) {
+      uploadTask.onProgressUpdate(cb)
+    } else {
+      uploadCallback = cb
+    }
     return this
   }
 
