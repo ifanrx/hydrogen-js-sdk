@@ -133,7 +133,7 @@ const uploadFile = (fileParams, metaData, type) => {
     if (uploadCallback) {
       uploadTask.onProgressUpdate(uploadCallback)
     }
-  })
+  }, rj)
 
   return p
 }
