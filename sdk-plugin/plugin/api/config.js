@@ -43,6 +43,7 @@ const API = {
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
   CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
+  SMS_VERIFICATION_CODE: '/hserve/v1.8/sms-verification-code/'
 }
 
 const methodMapList = [{
@@ -145,6 +146,10 @@ const methodMapList = [{
   getFileCategoryList: {
     url: API.FILE_CATEGORY_LIST
   },
+  sendSmsVerificationCode: {
+    url: API.SMS_VERIFICATION_CODE,
+    method: 'POST'
+  }
 },]
 
 const RANDOM_OPTION = {
@@ -168,5 +173,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.7.0'
+  VERSION: 'v1.8.0'
 }
