@@ -43,7 +43,8 @@ const API = {
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
   CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
-  SMS_VERIFICATION_CODE: '/hserve/v1.8/sms-verification-code/'
+  SEND_SMS_VERIFICATION_CODE: '/hserve/v1.8/sms-verification-code/',
+  VERIFY_SMS_VERIFICATION_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 }
 
 const methodMapList = [{
@@ -147,7 +148,11 @@ const methodMapList = [{
     url: API.FILE_CATEGORY_LIST
   },
   sendSmsVerificationCode: {
-    url: API.SMS_VERIFICATION_CODE,
+    url: API.SEND_SMS_VERIFICATION_CODE,
+    method: 'POST'
+  },
+  verifySmsVerificationCode: {
+    url: API.VERIFY_SMS_VERIFICATION_CODE,
     method: 'POST'
   }
 },]
