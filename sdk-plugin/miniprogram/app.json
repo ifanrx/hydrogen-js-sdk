@@ -22,7 +22,8 @@
     "pages-test/wxparser-file/index",
     "pages-test/wxparser-plugin/index",
     "pages-test/aggregation/index",
-    "pages-test/censor/index"
+    "pages-test/censor/index",
+    "pages-test/sms/index"
   ],
   "plugins": {
     "wxparserPlugin": {
