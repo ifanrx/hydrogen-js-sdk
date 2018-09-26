@@ -89,9 +89,6 @@
 ## 1.0.8 ( 2017-07-20 )
 - [F] 修复 wx.BaaS.getUserInfo 传递 userID 参数 400 的 bug
 
-## 1.0.8 ( 2017-07-20 )
-- [F] 修复 wx.BaaS.getUserInfo 传递 userID 参数 400 的 bug
-
 ## 1.0.5 ( 2017-06-02 )
 - [C] 升级 RECORD_LIST，RECORD_DETAIL，CREATE_RECORD，UPDATE_RECORD 以及 DELETE_RECORD 接口到 v1.1 版本
 
