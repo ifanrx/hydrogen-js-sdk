@@ -8,7 +8,7 @@ const utils = require('./utils')
 
 // BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
 // eslint-disable-next-line no-unused-vars
-const baasRequest = function ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) {
+const baasRequest = function ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) {
   return auth.silentLogin().then(() => {
     return request.apply(null, arguments)
   })
@@ -49,11 +49,9 @@ const doCreateRequestMethod = (methodMap) => {
           }
 
           return new Promise((resolve, reject) => {
-            return baasRequest({ url, method, data }).then((res) => {
-              if (res.statusCode == constants.httpMethodCodeMap[method]) {
-                resolve(res)
-              } else if (k === 'deleteRecordList' && res.statusCode == constants.httpMethodCodeMap['PUT']) {
-                // 批量删除操作后端返回的状态码为 200
+            return baasRequest({url, method, data}).then((res) => {
+              let status = parseInt(res.statusCode)
+              if (status >= 200 && status < 300) {
                 resolve(res)
               } else {
                 reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
