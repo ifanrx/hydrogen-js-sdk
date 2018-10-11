@@ -2,3 +2,5 @@ node_modules/
 src/npm-debug.log
 tmp/
 sdk-file/dist/sdk.dev.js
+lib/
+yarn-error.log

@@ -1,15 +1,19 @@
 {
-  "name": "hydrogen-js-sdk",
-  "version": "1.0.0",
-  "main": "./src/index.js",
+  "name": "minapp-sdk",
+  "version": "1.8.1",
+  "main": "./lib/index.js",
+  "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
   "scripts": {
     "test": "mocha",
     "test-dev": "mocha test/index.js",
     "dev": "export NODE_ENV=dev && gulp --cwd ./sdk-file dev",
     "build": "export NODE_ENV=production && gulp --cwd ./sdk-file release",
+    "build-npm": "export NODE_ENV=production && gulp --cwd ./sdk-file release-npm",
     "lock": "npm prune && npm shrinkwrap --dev",
-    "lint": "eslint test/**/*.js core/**/*.js"
+    "lint": "eslint test/**/*.js core/**/*.js",
+    "prepare": "npm run build-npm",
+    "prepublishOnly": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -33,7 +37,9 @@
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "chai": "^3.5.0",
+    "debug": "^2.2.0",
     "del": "^2.2.2",
+    "eslint": "^5.6.1",
     "faker": "^4.1.0",
     "frock": "^1.1.1",
     "frock-proxy": "^1.0.0",
@@ -47,6 +53,8 @@
     "gulp-shell": "^0.5.2",
     "gulp-uglify": "^2.0.1",
     "gulp-watch": "^4.3.11",
+    "lodash": "http://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
+    "md5": "^2.2.1",
     "mocha": "^3.2.0",
     "mochawesome": "^2.2.0",
     "node-extend": "^0.2.0",
@@ -58,12 +66,5 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.8.0"
-  },
-  "dependencies": {
-    "debug": "^2.2.0",
-    "lodash": "http://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
-    "md5": "^2.2.1",
-    "node-localstorage": "^1.3.0",
-    "rsvp": "^3.3.3"
   }
 }
