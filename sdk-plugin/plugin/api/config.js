@@ -155,7 +155,11 @@ const methodMapList = [{
     url: API.VERIFY_SMS_CODE,
     method: 'POST'
   }
-},]
+}, {
+  getOrderList: {
+    url: API.PAY
+  }
+}]
 
 const RANDOM_OPTION = {
   max: 100
