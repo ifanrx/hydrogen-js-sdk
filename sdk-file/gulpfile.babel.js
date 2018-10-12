@@ -87,7 +87,7 @@ gulp.task('js:clean', function () {
 // 删除旧版本文件 - npm
 gulp.task('js:clean-npm', function () {
   return del([
-    path.join(npmDistFolder, '/sdk.js'),
+    path.join(npmDistFolder, 'index.js'),
   ], {force: true});
 });
 
