@@ -18,6 +18,7 @@ const config = require('../core/config')
 
 const srcFolder = './src/';
 const distFolder = './dist/';
+const npmDistFolder = '../lib/'
 const devFile = 'sdk.dev.js';
 
 // watch
@@ -83,6 +84,13 @@ gulp.task('js:clean', function () {
   ]);
 });
 
+// 删除旧版本文件 - npm
+gulp.task('js:clean-npm', function () {
+  return del([
+    path.join(npmDistFolder, 'index.js'),
+  ], {force: true});
+});
+
 // 压缩、打版本
 gulp.task('js:release', ['js:clean', 'js:build'], function () {
   return gulp.src([
@@ -93,6 +101,25 @@ gulp.task('js:release', ['js:clean', 'js:build'], function () {
     .pipe(uglify()) // 压缩
     .pipe(gulp.dest(distFolder))
     .pipe(notify({ message: 'js:release task is completed!' }));
+});
+
+// 发布 npm
+gulp.task('js:release-npm', ['js:clean-npm', 'js:build'], function () {
+  return gulp.src([
+      path.join(distFolder, devFile)
+    ])
+    .pipe(concat('sdk.js'))
+    .pipe(rename('index.js'))
+    .pipe(uglify()) // 压缩
+    .pipe(gulp.dest(npmDistFolder))
+    .pipe(notify({ message: 'js:release-npm task is completed!' }));
+});
+
+// release-npm
+gulp.task('release-npm', ['js:release-npm'], function () {
+  setTimeout(function () {
+    process.exit(0);
+  }, 1000);
 });
 
 // release

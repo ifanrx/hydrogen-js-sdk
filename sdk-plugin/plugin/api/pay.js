@@ -1,8 +1,6 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
-const constants = require('./constants')
 const HError = require('./HError')
-const storage = require('./storage')
 const polyfill = require('./polyfill')
 
 const API = BaaS._config.API

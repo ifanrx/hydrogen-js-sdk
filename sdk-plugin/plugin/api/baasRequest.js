@@ -1,6 +1,5 @@
 const auth = require('./auth')
 const BaaS = require('./baas')
-const constants = require('./constants')
 const HError = require('./HError')
 const request = require('./request')
 const utils = require('./utils')
