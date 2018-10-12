@@ -13,7 +13,8 @@
     "lock": "npm prune && npm shrinkwrap --dev",
     "lint": "eslint test/**/*.js core/**/*.js",
     "prepare": "npm run build-npm",
-    "prepublishOnly": "npm run lint"
+    "prepublishOnly": "npm run lint",
+    "prepublish": "npm run build-npm && npm run lint"
   },
   "repository": {
     "type": "git",
