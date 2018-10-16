@@ -17,20 +17,9 @@ class Order extends BaseQuery {
   }
 
   getOrderList(params = {}) {
-    let condition = this._handleAllQueryConditions()
+    let condition = Object.assign({}, this._handleAllQueryConditions(), params)
     this._initQueryParams()
-
-    let {merchandiseRecordID, merchandiseSchemaID} = params
-
-    if (merchandiseRecordID) {
-      condition.merchandise_record_id = merchandiseRecordID
-    }
-
-    if (merchandiseSchemaID) {
-      condition.merchandise_schema_id = merchandiseSchemaID
-    }
-
-    return BaaS.getOrderList(condition)
+    return BaaS.getOrderList(Object.assign(condition, params))
   }
 }
 
