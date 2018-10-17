@@ -76,10 +76,9 @@ const uploadFile = (fileParams, metaData, type) => {
   let rs, rj, uploadCallback, isAborted, uploadTask = null
 
   let p = new Promise((resolve, reject) => {
-      rs = resolve
-      rj = reject
-    }
-  )
+    rs = resolve
+    rj = reject
+  })
 
   let onProgressUpdate = function (cb) {
     if (uploadTask) {

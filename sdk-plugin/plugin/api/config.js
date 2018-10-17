@@ -182,5 +182,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.8.1'
+  VERSION: 'v1.8.1'  // package.json 中的 version 也需要同步修改。
 }

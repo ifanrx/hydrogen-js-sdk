@@ -33,11 +33,11 @@ describe('GeoPolygon', () => {
   })
 
   it('#multi set', () => {
-    var Product = new TableObject('test')
-    var product = Product.create()
+    let Product = new TableObject('test')
+    let product = Product.create()
     let polygon_t = new GeoPolygon([[10, 10], [20, 10], [30, 20], [10, 10]])
-    product.set("geo", polygon_t)
-    product.set("geo", polygon_t)
+    product.set('geo', polygon_t)
+    product.set('geo', polygon_t)
     expect(polygon_t.geoJSON.coordinates).deep.equal([[[10, 10], [20, 10], [30, 20], [10, 10]]])
   })
 })
