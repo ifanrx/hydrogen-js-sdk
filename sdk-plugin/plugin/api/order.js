@@ -1,15 +1,32 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const utils = require('./utils')
+const HError = require('./HError')
+const BaseQuery = require('./BaseQuery')
 
 const API = BaaS._config.API
 
-const order = (params) => {
-  let url = utils.format(API.ORDER, { transactionID: params.transactionID })
+class Order extends BaseQuery {
+  constructor() {
+    super()
+  }
 
-  return baasRequest({
-    url: url,
-  })
+  get(transactionID) {
+    let url = utils.format(API.ORDER, {transactionID: transactionID})
+    return baasRequest({url})
+  }
+
+  getOrderList(params = {}) {
+    let condition = Object.assign({}, this._handleAllQueryConditions(), params)
+    this._initQueryParams()
+    return BaaS.getOrderList(Object.assign(condition, params))
+  }
 }
 
-module.exports = order
+Order.order = function (params) {
+  let orderInst = new Order()
+  return orderInst.get(params.transactionID)
+}
+
+module.exports = Order
+

@@ -37,6 +37,7 @@ const pay = (params) => {
         paySign: data.paySign,
         success: function (res) {
           res.transaction_no = data.transaction_no
+          res.trade_no = data.trade_no
           return resolve(res)
         },
         complete: function (res) {
