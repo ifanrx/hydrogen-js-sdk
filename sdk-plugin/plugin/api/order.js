@@ -1,7 +1,6 @@
 const BaaS = require('./baas')
 const baasRequest = require('./baasRequest').baasRequest
 const utils = require('./utils')
-const HError = require('./HError')
 const BaseQuery = require('./BaseQuery')
 
 const API = BaaS._config.API
