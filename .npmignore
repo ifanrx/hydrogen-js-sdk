@@ -11,3 +11,5 @@ frockfile.json
 npm-*
 yarn.lock
 yarn-error.log
+tmp/
+/.idea
