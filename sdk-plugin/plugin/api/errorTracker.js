@@ -20,7 +20,7 @@ function track(...args) {
   if (!initialized) {
     throw new HError(610)
   }
-  return errorTracker.track(...args)
+  return bugOut.track(...args)
 }
 
 function metaData(...args) {

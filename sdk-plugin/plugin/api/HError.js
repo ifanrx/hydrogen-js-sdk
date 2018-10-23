@@ -30,7 +30,7 @@ class HError {
       case 609:
         return 'wxExtend function should be executed to allow plugin use wx.login, wx.getUserInfo, wx.requestPayment'
       case 610:
-        return 'bugOut uninitialized'
+        return 'errorTracker uninitialized'
       default:
         return 'unknown error'
     }
