@@ -1,3 +1,5 @@
+var regeneratorRuntime = require('./vendor/async-runtime')
+
 App({
   onLaunch: function () {
     wx.BaaS = requirePlugin('sdkPlugin')
@@ -7,4 +9,5 @@ App({
   config: {
     appName: 'sdk',
   },
+  regeneratorRuntime
 })
