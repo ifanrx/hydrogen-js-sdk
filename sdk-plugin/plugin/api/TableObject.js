@@ -15,11 +15,12 @@ class TableObject extends BaseQuery {
     return new TableRecord(this._tableID)
   }
 
-  createMany(args) {
+  createMany(args, {enableTrigger = true} = {}) {
     if (utils.isArray(args)) {
       const params = {
         tableID: this._tableID,
-        data: args
+        data: args,
+        enable_trigger: enableTrigger ? 1 : 0
       }
       return BaaS.createRecordList(params)
     } else {
@@ -27,7 +28,7 @@ class TableObject extends BaseQuery {
     }
   }
 
-  delete(args) {
+  delete(args, {enableTrigger = true} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {
@@ -35,7 +36,8 @@ class TableObject extends BaseQuery {
         tableID: this._tableID,
         limit: this._limit,
         offset: this._offset,
-        where: JSON.stringify(args.queryObject)
+        where: JSON.stringify(args.queryObject),
+        enable_trigger: enableTrigger ? 1 : 0
       }
       this._initQueryParams()
       return BaaS.deleteRecordList(params)
