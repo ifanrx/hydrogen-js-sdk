@@ -63,7 +63,8 @@ describe('TableRecord', () => {
         data: {'price': 6},
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
         offset: 0,
-        limit: 20
+        limit: 20,
+        enable_trigger: 1,
       })
     })
     records.update()
