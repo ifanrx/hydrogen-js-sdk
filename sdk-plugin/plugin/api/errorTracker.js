@@ -2,7 +2,7 @@ const BaaS = require('./baas')
 const HError = require('./HError')
 const config = require('./config')
 const polyfill = require('./polyfill')
-const bugOut = require('./vendor/bugOut.v1.1.0.min')
+const bugOut = require('./vendor/bugOut.min')
 
 let initialized = false
 
@@ -13,7 +13,7 @@ function enable({usePlugins = false} = {}) {
   }
   // 插件版强制设置为 true
   bugOut.usePlugins = polyfill.SDK_TYPE === 'plugin' ? true : usePlugins
-  return bugOut.init(true, BaaS._config.CLIENT_ID, config.VERSION)
+  return bugOut.init(true, {clientId: BaaS._config.CLIENT_ID}, config.VERSION)
 }
 
 function track(...args) {
