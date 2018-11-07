@@ -151,7 +151,7 @@ const extend = (dist, src) => {
 
 // 目前仅支持对象或数字的拷贝
 const cloneDeep = source => {
-  const target = isArray(source) ? [] : {}
+  const target = isArray(source) ? [] : Object.create(Object.getPrototypeOf(source))
   for (const keys in source) {
     if (source.hasOwnProperty(keys)) {
       if (source[keys] && typeof source[keys] === 'object') {
