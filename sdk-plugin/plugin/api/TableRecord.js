@@ -35,7 +35,7 @@ class TableRecord extends BaseRecord {
   }
 
   toJSON() {
-    return this._recordID
+    return this._recordID == null ? '' : this._recordID.toString()
   }
 }
 
