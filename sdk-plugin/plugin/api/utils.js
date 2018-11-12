@@ -105,7 +105,7 @@ const replaceQueryParams = (params = {}) => {
 
 const wxRequestFail = (reject) => {
   wx.getNetworkType({
-    success: function(res) {
+    success: function (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
       } else {
@@ -165,6 +165,24 @@ const cloneDeep = source => {
   return target
 }
 
+function _serializeValueFuncFactory(config = ['TableRecord']) {
+  const GeoPoint = require('./GeoPoint')
+  const GeoPolygon = require('./GeoPolygon')
+  const TableRecord = require('./TableRecord')
+
+  return value => {
+    if (config.includes('Geo') && (value instanceof GeoPoint || value instanceof GeoPolygon)) {
+      return value.toGeoJSON()
+    }
+    if (config.includes('TableRecord') && value instanceof TableRecord) {
+      return value._recordID == null ? '' : value._recordID.toString()
+    } else {
+      return value
+    }
+  }
+}
+
+
 module.exports = {
   log,
   format,
@@ -181,4 +199,5 @@ module.exports = {
   isFunction,
   extend,
   cloneDeep,
+  _serializeValueFuncFactory,
 }

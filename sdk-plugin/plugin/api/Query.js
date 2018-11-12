@@ -2,7 +2,8 @@ const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 const HError = require('./HError')
 const utils = require('./utils')
-const BaseRecord = require('./BaseRecord')
+
+const serializeValue = utils._serializeValueFuncFactory(['TableRecord'])
 
 class Query {
   constructor() {
@@ -53,7 +54,7 @@ class Query {
     default:
       throw new HError(605)
     }
-    this._addQueryObject(key, {[op]: BaseRecord._formatValue(value)})
+    this._addQueryObject(key, {[op]: serializeValue(value)})
     return this
   }
 
@@ -84,7 +85,7 @@ class Query {
 
   in(key, arr) {
     if (arr && arr instanceof Array) {
-      this._addQueryObject(key, {in: arr.map(v => BaseRecord._formatValue(v))})
+      this._addQueryObject(key, {in: arr.map(v => serializeValue(v))})
       return this
     } else {
       throw new HError(605)
@@ -93,7 +94,7 @@ class Query {
 
   notIn(key, arr) {
     if (arr && arr instanceof Array) {
-      this._addQueryObject(key, {nin: arr.map(v => BaseRecord._formatValue(v))})
+      this._addQueryObject(key, {nin: arr.map(v => serializeValue(v))})
       return this
     } else {
       throw new HError(605)
