@@ -2,8 +2,9 @@ const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 const HError = require('./HError')
 const utils = require('./utils')
+const BaseRecord = require('./BaseRecord')
 
-const serializeValue = utils._serializeValueFuncFactory(['TableRecord'])
+const serializeValue = BaseRecord._serializeValueFuncFactory(['TableRecord'])
 
 class Query {
   constructor() {

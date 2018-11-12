@@ -4,6 +4,7 @@ const HError = require('./HError')
 const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
+const BaseRecord = require('./BaseRecord')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {
@@ -16,7 +17,7 @@ class TableObject extends BaseQuery {
   }
 
   createMany(args, {enableTrigger = true} = {}) {
-    const serializeValue = utils._serializeValueFuncFactory(['TableRecord'])
+    const serializeValue = BaseRecord._serializeValueFuncFactory(['TableRecord'])
 
     if (utils.isArray(args)) {
       const params = {
