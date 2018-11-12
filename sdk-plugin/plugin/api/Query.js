@@ -2,6 +2,7 @@ const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 const HError = require('./HError')
 const utils = require('./utils')
+const BaseRecord = require('./BaseRecord')
 
 class Query {
   constructor() {
@@ -11,7 +12,7 @@ class Query {
   static and(...queryObjects) {
     let newQuery = new Query()
     let andQuery = {$and: []}
-    queryObjects.forEach(function(query) {
+    queryObjects.forEach(function (query) {
       andQuery['$and'].push(query.queryObject)
     })
     newQuery._setQueryObject(andQuery)
@@ -21,7 +22,7 @@ class Query {
   static or(...queryObjects) {
     let newQuery = new Query()
     let orQuery = {$or: []}
-    queryObjects.forEach(function(query) {
+    queryObjects.forEach(function (query) {
       orQuery['$or'].push(query.queryObject)
     })
     newQuery._setQueryObject(orQuery)
@@ -52,7 +53,7 @@ class Query {
     default:
       throw new HError(605)
     }
-    this._addQueryObject(key, {[op]: value})
+    this._addQueryObject(key, {[op]: BaseRecord._formatValue(value)})
     return this
   }
 
@@ -83,7 +84,7 @@ class Query {
 
   in(key, arr) {
     if (arr && arr instanceof Array) {
-      this._addQueryObject(key, {in: arr})
+      this._addQueryObject(key, {in: arr.map(v => BaseRecord._formatValue(v))})
       return this
     } else {
       throw new HError(605)
@@ -92,7 +93,7 @@ class Query {
 
   notIn(key, arr) {
     if (arr && arr instanceof Array) {
-      this._addQueryObject(key, {nin: arr})
+      this._addQueryObject(key, {nin: arr.map(v => BaseRecord._formatValue(v))})
       return this
     } else {
       throw new HError(605)
@@ -204,7 +205,7 @@ class Query {
   }
 
   hasKey(key, fieldName) {
-    if(typeof key !== 'string' || typeof fieldName !== 'string'){
+    if (typeof key !== 'string' || typeof fieldName !== 'string') {
       throw HError(605)
     }
 
@@ -217,7 +218,7 @@ class Query {
   }
 
   _addQueryObject(key, obj) {
-    if(obj.constructor !== Object) {
+    if (obj.constructor !== Object) {
       throw new HError(605)
     }
 
@@ -227,7 +228,7 @@ class Query {
       query[key][`$${k}`] = obj[k]
     })
 
-    if(!this.queryObject['$and']) {
+    if (!this.queryObject['$and']) {
       this.queryObject['$and'] = []
     }
     this.queryObject['$and'].push(query)

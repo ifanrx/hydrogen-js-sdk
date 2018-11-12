@@ -2,6 +2,22 @@ const HError = require('./HError')
 const GeoPoint = require('./GeoPoint')
 const GeoPolygon = require('./GeoPolygon')
 
+/**
+ * 封装 payload
+ * @param value
+ * @return {*}
+ */
+function formatValue(value) {
+  if (value instanceof GeoPoint || value instanceof GeoPolygon) {
+    return value.toGeoJSON()
+  }
+  if (value instanceof BaseRecord) {
+    return value._recordID == null ? '' : value._recordID.toString()
+  } else {
+    return value
+  }
+}
+
 class BaseRecord {
   constructor(recordID) {
     this._recordID = recordID
@@ -14,14 +30,14 @@ class BaseRecord {
         let objectArg = args[0]
         let record = {}
         Object.keys(args[0]).forEach((key) => {
-          record[key] = (objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon) ? objectArg[key].toGeoJSON(): objectArg[key]
+          record[key] = formatValue(objectArg[key])
         })
         this._record = record
       } else {
         throw new HError(605)
       }
     } else if (args.length === 2) {
-      this._record[args[0]] = (args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon) ? args[1].toGeoJSON() : args[1]
+      this._record[args[0]] = formatValue(args[1])
     } else {
       throw new HError(605)
     }
@@ -66,5 +82,7 @@ class BaseRecord {
     return this
   }
 }
+
+BaseRecord._formatValue = formatValue
 
 module.exports = BaseRecord

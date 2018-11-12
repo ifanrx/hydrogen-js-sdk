@@ -4,6 +4,7 @@ const HError = require('./HError')
 const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
+const BaseRecord = require('./BaseRecord')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {
@@ -19,7 +20,12 @@ class TableObject extends BaseQuery {
     if (utils.isArray(args)) {
       const params = {
         tableID: this._tableID,
-        data: args,
+        data: args.map(record => {
+          Object.keys(record).forEach(key => {
+            record[key] = BaseRecord._formatValue(record[key])
+          })
+          return record
+        }),
         enable_trigger: enableTrigger ? 1 : 0
       }
       return BaaS.createRecordList(params)

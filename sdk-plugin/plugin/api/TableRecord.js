@@ -33,10 +33,6 @@ class TableRecord extends BaseRecord {
       return BaaS.updateRecordList(params)
     }
   }
-
-  toJSON() {
-    return this._recordID == null ? '' : this._recordID.toString()
-  }
 }
 
 module.exports = TableRecord
