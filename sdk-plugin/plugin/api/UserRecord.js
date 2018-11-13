@@ -3,8 +3,8 @@ const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
 
 class UserRecord extends BaseRecord {
-  constructor() {
-    super()
+  constructor(userID) {
+    super(userID)
   }
 
   update() {

@@ -17,7 +17,7 @@ class TableObject extends BaseQuery {
   }
 
   createMany(args, {enableTrigger = true} = {}) {
-    const serializeValue = BaseRecord._serializeValueFuncFactory(['TableRecord'])
+    const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
     if (utils.isArray(args)) {
       const params = {

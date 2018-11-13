@@ -1,15 +1,14 @@
 const HError = require('./HError')
 
-function _serializeValueFuncFactory(config = ['TableRecord']) {
+function _serializeValueFuncFactory(config = ['BaseRecord']) {
   const GeoPoint = require('./GeoPoint')
   const GeoPolygon = require('./GeoPolygon')
-  const TableRecord = require('./TableRecord')
 
   return value => {
     if (config.includes('Geo') && (value instanceof GeoPoint || value instanceof GeoPolygon)) {
       return value.toGeoJSON()
     }
-    if (config.includes('TableRecord') && value instanceof TableRecord) {
+    if (config.includes('BaseRecord') && value instanceof BaseRecord) {
       return value._recordID == null ? '' : value._recordID.toString()
     } else {
       return value
@@ -25,7 +24,7 @@ class BaseRecord {
   }
 
   set(...args) {
-    const serializeValue = _serializeValueFuncFactory(['TableRecord', 'Geo'])
+    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
 
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
