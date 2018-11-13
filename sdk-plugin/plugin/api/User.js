@@ -16,7 +16,7 @@ class User extends BaseQuery {
   getWithoutData(userID) {
     if (utils.isString(userID) || Number.isInteger(userID)) {
       return new UserRecord(userID)
-    }else {
+    } else {
       throw new HError(605)
     }
   }
