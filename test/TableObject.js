@@ -34,7 +34,8 @@ describe('TableObject', () => {
     let createRecordList = sinon.stub(BaaS, 'createRecordList').callsFake(args => {
       expect(args).to.deep.equal({
         tableID: randomNumber,
-        data: randomArray
+        data: randomArray,
+        enable_trigger: 1
       })
     })
     Product.createMany(randomArray)
@@ -56,7 +57,8 @@ describe('TableObject', () => {
         tableID: randomNumber,
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
         limit: 500,
-        offset: 0
+        offset: 0,
+        enable_trigger: 1,
       })
     })
     let query = new Query()
