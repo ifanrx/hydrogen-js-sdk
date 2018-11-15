@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "main": "./lib/index.js",
   "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
