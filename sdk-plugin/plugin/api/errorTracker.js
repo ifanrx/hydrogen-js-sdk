@@ -7,12 +7,12 @@ const bugOut = require('./vendor/bugOut.min')
 let initialized = false
 
 function enable({usePlugins = false} = {}) {
-  initialized = true
   if (!BaaS._config || !BaaS._config.CLIENT_ID) {
     throw new HError(602)
   }
   // 插件版强制设置为 true
   bugOut.usePlugins = polyfill.SDK_TYPE === 'plugin' ? true : usePlugins
+  initialized = true
   return bugOut.init(true, {clientId: BaaS._config.CLIENT_ID}, config.VERSION)
 }
 
