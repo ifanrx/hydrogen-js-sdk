@@ -1,6 +1,21 @@
 const HError = require('./HError')
-const GeoPoint = require('./GeoPoint')
-const GeoPolygon = require('./GeoPolygon')
+
+function _serializeValueFuncFactory(config = ['BaseRecord']) {
+  const GeoPoint = require('./GeoPoint')
+  const GeoPolygon = require('./GeoPolygon')
+
+  return value => {
+    if (config.includes('Geo') && (value instanceof GeoPoint || value instanceof GeoPolygon)) {
+      return value.toGeoJSON()
+    }
+    if (config.includes('BaseRecord') && value instanceof BaseRecord) {
+      return value._recordID == null ? '' : value._recordID.toString()
+    } else {
+      return value
+    }
+  }
+}
+
 
 class BaseRecord {
   constructor(recordID) {
@@ -9,19 +24,21 @@ class BaseRecord {
   }
 
   set(...args) {
+    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
+
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
         let objectArg = args[0]
         let record = {}
         Object.keys(args[0]).forEach((key) => {
-          record[key] = (objectArg[key] instanceof GeoPoint || objectArg[key] instanceof GeoPolygon) ? objectArg[key].toGeoJSON(): objectArg[key]
+          record[key] = serializeValue(objectArg[key])
         })
         this._record = record
       } else {
         throw new HError(605)
       }
     } else if (args.length === 2) {
-      this._record[args[0]] = (args[1] instanceof GeoPoint || args[1] instanceof GeoPolygon) ? args[1].toGeoJSON() : args[1]
+      this._record[args[0]] = serializeValue(args[1])
     } else {
       throw new HError(605)
     }
@@ -67,4 +84,5 @@ class BaseRecord {
   }
 }
 
+BaseRecord._serializeValueFuncFactory = _serializeValueFuncFactory
 module.exports = BaseRecord

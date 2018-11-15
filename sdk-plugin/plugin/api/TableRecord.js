@@ -2,7 +2,7 @@ const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
 
-class TableRecord  extends BaseRecord {
+class TableRecord extends BaseRecord {
   constructor(tableID, recordID, queryObject = {}) {
     super(recordID)
     this._tableID = tableID

@@ -1,6 +1,8 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
 const UserRecord = require('./UserRecord')
+const utils = require('./utils')
+const HError = require('./HError')
 
 class User extends BaseQuery {
   constructor() {
@@ -9,6 +11,14 @@ class User extends BaseQuery {
 
   get(userID) {
     return BaaS.getUserDetail({userID})
+  }
+
+  getWithoutData(userID) {
+    if (utils.isString(userID) || Number.isInteger(userID)) {
+      return new UserRecord(userID)
+    } else {
+      throw new HError(605)
+    }
   }
 
   getCurrentUserWithoutData() {

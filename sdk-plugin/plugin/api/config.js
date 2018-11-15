@@ -16,16 +16,17 @@ const API = {
   USER_LIST: '/hserve/v1.3/user/info/',
   UPDATE_USER: '/hserve/v1.3/user/info/',
 
-  TABLE_LIST: '/hserve/v1.4/table/',
-  TABLE_DETAIL: '/hserve/v1.4/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.4/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/',
-  RECORD_DETAIL: '/hserve/v1.5/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.4/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
-  UPDATE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
-  DELETE_RECORD: '/hserve/v1.4/table/:tableID/record/:recordID/',
-  DELETE_RECORD_LIST: '/hserve/v1.5/table/:tableID/record/?limit=:limit&offset=:offset&where=:where',
+  TABLE_LIST: '/hserve/v1.8/table/',
+  TABLE_DETAIL: '/hserve/v1.8/table/:tableID/',
+  RECORD_LIST: '/hserve/v1.8/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v1.8/table/:tableID/record/',
+  CREATE_RECORD_LIST: '/hserve/v1.8/table/:tableID/record/?enable_trigger=:enable_trigger',
+  RECORD_DETAIL: '/hserve/v1.8/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v1.8/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v1.8/table/:tableID/record/:recordID/',
+  UPDATE_RECORD_LIST: '/hserve/v1.8/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
+  DELETE_RECORD: '/hserve/v1.8/table/:tableID/record/:recordID/',
+  DELETE_RECORD_LIST: '/hserve/v1.8/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
@@ -85,7 +86,7 @@ const methodMapList = [{
     method: 'POST'
   },
   createRecordList: {
-    url: API.QUERY_RECORD_LIST,
+    url: API.CREATE_RECORD_LIST,
     method: 'POST'
   },
   updateRecord: {
