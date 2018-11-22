@@ -1,3 +1,6 @@
+## 1.10.1 (2018-11-22)
+- [F] 增加 Array.prototype.includes polyfill
+
 ## 1.10.0 (2018-11-15)
 - [A] 新增错误上报功能
 - [A] 新增对 Pointer 字段类型的支持
