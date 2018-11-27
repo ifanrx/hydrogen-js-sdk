@@ -51,25 +51,31 @@ class BaseRecord {
   }
 
   append(key, value) {
+    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
+    value = value.map(item => serializeValue(item))
     this._record[key] = {$append: value}
     return this
   }
 
   uAppend(key, value) {
+    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
+    value = value.map(item => serializeValue(item))
     this._record[key] = {$append_unique: value}
     return this
   }
 
   remove(key, value) {
+    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
+    value = value.map(item => serializeValue(item))
     this._record[key] = {$remove: value}
     return this
   }
