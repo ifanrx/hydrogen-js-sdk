@@ -31,14 +31,24 @@ class BaseRecord {
         let objectArg = args[0]
         let record = {}
         Object.keys(args[0]).forEach((key) => {
-          record[key] = serializeValue(objectArg[key])
+          let value = objectArg[key]
+          if (Array.isArray(value)) {
+            record[key] = value.map(item => serializeValue(item))
+          } else {
+            record[key] = serializeValue(value)
+          }
         })
         this._record = record
       } else {
         throw new HError(605)
       }
     } else if (args.length === 2) {
-      this._record[args[0]] = serializeValue(args[1])
+      let value = args[1]
+      if (Array.isArray(value)) {
+        this._record[args[0]] = value.map(item => serializeValue(item))
+      } else {
+        this._record[args[0]] = serializeValue(value)
+      }
     } else {
       throw new HError(605)
     }
