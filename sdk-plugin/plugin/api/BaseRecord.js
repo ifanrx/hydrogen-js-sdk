@@ -25,6 +25,7 @@ class BaseRecord {
 
   set(...args) {
     const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
+    const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
 
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
@@ -33,7 +34,7 @@ class BaseRecord {
         Object.keys(args[0]).forEach((key) => {
           let value = objectArg[key]
           if (Array.isArray(value)) {
-            record[key] = value.map(item => serializeValue(item))
+            record[key] = value.map(item => serializeArrayValue(item))
           } else {
             record[key] = serializeValue(value)
           }
@@ -45,7 +46,7 @@ class BaseRecord {
     } else if (args.length === 2) {
       let value = args[1]
       if (Array.isArray(value)) {
-        this._record[args[0]] = value.map(item => serializeValue(item))
+        this._record[args[0]] = value.map(item => serializeArrayValue(item))
       } else {
         this._record[args[0]] = serializeValue(value)
       }
@@ -61,31 +62,31 @@ class BaseRecord {
   }
 
   append(key, value) {
-    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
+    const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
-    value = value.map(item => serializeValue(item))
+    value = value.map(item => serializeArrayValue(item))
     this._record[key] = {$append: value}
     return this
   }
 
   uAppend(key, value) {
-    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
+    const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
-    value = value.map(item => serializeValue(item))
+    value = value.map(item => serializeArrayValue(item))
     this._record[key] = {$append_unique: value}
     return this
   }
 
   remove(key, value) {
-    const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
+    const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
       value = [value]
     }
-    value = value.map(item => serializeValue(item))
+    value = value.map(item => serializeArrayValue(item))
     this._record[key] = {$remove: value}
     return this
   }
