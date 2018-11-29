@@ -1,3 +1,6 @@
+## 1.10.2 (2018-11-27)
+- [M] 数据表 array 字段操作（set、append、uAppend、remove）支持 geojson 子类型
+
 ## 1.10.1 (2018-11-22)
 - [F] 增加 Array.prototype.includes polyfill
 
