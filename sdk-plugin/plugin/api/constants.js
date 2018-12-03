@@ -6,7 +6,8 @@ module.exports = {
     UID: 'uid',
     OPENID: 'openid',
     UNIONID: 'unionid',
-    IS_LOGINED_BAAS: 'is_logined_baas'
+    IS_LOGINED_BAAS: 'is_logined_baas',
+    EXPIRED_AT: 'expired_at'
   },
 
   STATUS_CODE: {

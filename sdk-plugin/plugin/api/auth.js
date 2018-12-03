@@ -43,6 +43,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.EXPIRED_AT, Date.now() + res.data.expired_in * 1000)
       resolve(res)
     } else {
       reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
@@ -88,7 +89,7 @@ const login = (userInfo = true) => {
 }
 
 const silentLogin = () => {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
+  if (storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
     return new Promise(resolve => {
       resolve(makeLoginResponseData(false))
     })
@@ -164,7 +165,7 @@ const handleLoginFailure = (userInfo = true) => {
 const logout = () => {
   return new Promise((resolve, reject) => {
     // API.LOGOUT 接口不做 token 检查
-    request({ url: API.LOGOUT, method: 'POST' }).then(() => {
+    request({url: API.LOGOUT, method: 'POST'}).then(() => {
       BaaS.clearSession()
       resolve()
     }, err => {
@@ -198,7 +199,7 @@ const getUserInfo = () => {
 
 // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
 const handleUserInfo = (res) => {
-  if(!res || !res.detail) {
+  if (!res || !res.detail) {
     throw new HError(603)
   }
 
@@ -207,7 +208,7 @@ const handleUserInfo = (res) => {
   return new Promise((resolve, reject) => {
     return silentLogin().then(() => {
       // 用户拒绝授权，仅返回 uid, openid 和 unionid
-      if(!detail.userInfo) {
+      if (!detail.userInfo) {
         return reject(makeLoginResponseData(false))
       }
 

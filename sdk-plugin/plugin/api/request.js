@@ -45,7 +45,7 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
 
     let headers = setHeader(header)
 
-    if (!/https:\/\//.test(url)) {
+    if (!/https?:\/\//.test(url)) {
       url = BaaS._config.API_HOST + url
     }
 
