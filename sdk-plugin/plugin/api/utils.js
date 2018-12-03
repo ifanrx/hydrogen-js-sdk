@@ -225,7 +225,7 @@ const cloneDeep = source => {
  * @return {boolean} expired
  */
 function isSessionExpired() {
-  return Date.now() >= storage.get(constants.STORAGE_KEY.EXPIRED_AT)
+  return Date.now() >= storage.get(constants.STORAGE_KEY.EXPIRES_AT)
 }
 
 
