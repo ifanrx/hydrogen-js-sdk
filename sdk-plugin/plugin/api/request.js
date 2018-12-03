@@ -3,6 +3,35 @@ const constants = require('./constants')
 const HError = require('./HError')
 const utils = require('./utils')
 const polyfill = require('./polyfill')
+const storage = require('./storage')
+
+/**
+ *
+ * @param {object} payload
+ * @param resolve
+ * @param reject
+ */
+function tryResendRequest(payload, resolve, reject) {
+  let silentLogin = require('./auth').silentLogin
+
+  // 此时的缓存一定是过期的
+  if (storage.get(constants.STORAGE_KEY.UID)) {
+    // 缓存被清空，silentLogin 一定会发起 session init 请求
+    BaaS.clearSession()
+  }
+
+  silentLogin().then(() => {
+    wx.request(
+      Object.assign(payload,
+        {
+          header: setHeader(payload.header),
+          success: resolve,
+          fail: () => {
+            utils.wxRequestFail(reject)
+          }
+        }))
+  }, reject)
+}
 
 
 /**
@@ -36,7 +65,7 @@ const setHeader = (header) => {
   return utils.extend(extendHeader, header || {})
 }
 
-const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json' }) => {
+const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
   return new Promise((resolve, reject) => {
 
     if (!BaaS._config.CLIENT_ID) {
@@ -56,9 +85,9 @@ const request = ({ url, method = 'GET', data = {}, header = {}, dataType = 'json
       header: headers,
       dataType: dataType,
       success: res => {
-        // 后端设置的 token 过期时间很长，因此不考虑 token 过期情况，只考虑是否携带有效 token 即可
+        // 尝试重发请求
         if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
-          BaaS.clearSession()
+          return tryResendRequest({header, method, url, data, dataType}, resolve, reject)
         }
         resolve(res)
       },

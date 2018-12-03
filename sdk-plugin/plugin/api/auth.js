@@ -94,7 +94,6 @@ const silentLogin = () => {
       resolve(makeLoginResponseData(false))
     })
   }
-
   if (isSilentLogining) {
     return new Promise((resolve, reject) => {
       silentLoginResolve.push(resolve)
@@ -103,7 +102,6 @@ const silentLogin = () => {
   }
 
   isSilentLogining = true
-
   return new Promise((resolve, reject) => {
     silentLoginResolve.push(resolve)
     silentLoginReject.push(reject)
