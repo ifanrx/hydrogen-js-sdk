@@ -43,7 +43,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in)
+      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     } else {
       reject(new HError(res.statusCode, utils.extractErrorMsg(res)))

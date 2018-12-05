@@ -88,7 +88,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       dataType: dataType,
       success: res => {
         // 尝试重发请求
-        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED) {
+        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED && url.match(/^https:\/\/\w+\.xiaoapp\.io/)) {
           return tryResendRequest({header, method, url, data, dataType}, resolve, reject)
         }
         resolve(res)

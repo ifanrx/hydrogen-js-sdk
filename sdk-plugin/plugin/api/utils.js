@@ -221,11 +221,11 @@ const cloneDeep = source => {
 }
 
 /**
- * session 是否已经过期
+ * session 是否已经过期，若不存在 EXPIRES_AT 缓存，则当做已过期
  * @return {boolean} expired
  */
 function isSessionExpired() {
-  return Date.now() >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) * 1000)
+  return (Date.now() / 1000) >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) || 0)
 }
 
 
