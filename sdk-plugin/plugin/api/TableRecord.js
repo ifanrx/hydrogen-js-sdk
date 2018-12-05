@@ -11,13 +11,13 @@ class TableRecord extends BaseRecord {
 
   save() {
     let record = utils.cloneDeep(this._record)
-    this._record = {}
-    return BaaS.createRecord({tableID: this._tableID, data: record})
+    this._recordValueInit()
+    return BaaS.createRecord({tableID: this._tableID, data: record.$set})
   }
 
   update({enableTrigger = true} = {}) {
     let record = utils.cloneDeep(this._record)
-    this._record = {}
+    this._recordValueInit()
     if (this._recordID) {
       return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
     } else {

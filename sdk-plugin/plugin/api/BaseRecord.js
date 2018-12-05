@@ -16,11 +16,17 @@ function _serializeValueFuncFactory(config = ['BaseRecord']) {
   }
 }
 
-
 class BaseRecord {
   constructor(recordID) {
     this._recordID = recordID
-    this._record = {}
+    this._recordValueInit()
+  }
+
+  _recordValueInit() {
+    this._record = {
+      $set: {},
+      $unset: {},
+    }
   }
 
   set(...args) {
@@ -30,25 +36,31 @@ class BaseRecord {
     if (args.length === 1) {
       if (typeof args[0] === 'object') {
         let objectArg = args[0]
-        let record = {}
+        let recordToSet = {}
         Object.keys(args[0]).forEach((key) => {
+          if (this._record.$unset.hasOwnProperty(key)) {
+            throw new HError(605)
+          }
           let value = objectArg[key]
           if (Array.isArray(value)) {
-            record[key] = value.map(item => serializeArrayValue(item))
+            recordToSet[key] = value.map(item => serializeArrayValue(item))
           } else {
-            record[key] = serializeValue(value)
+            recordToSet[key] = serializeValue(value)
           }
         })
-        this._record = record
+        this._record.$set = recordToSet
       } else {
         throw new HError(605)
       }
     } else if (args.length === 2) {
+      if (this._record.$unset.hasOwnProperty(args[0])) {
+        throw new HError(605)
+      }
       let value = args[1]
       if (Array.isArray(value)) {
-        this._record[args[0]] = value.map(item => serializeArrayValue(item))
+        this._record.$set[args[0]] = value.map(item => serializeArrayValue(item))
       } else {
-        this._record[args[0]] = serializeValue(value)
+        this._record.$set[args[0]] = serializeValue(value)
       }
     } else {
       throw new HError(605)
@@ -56,8 +68,29 @@ class BaseRecord {
     return this
   }
 
+  unset(...args) {
+    if (typeof args[0] === 'object') {
+      let recordToUnset = {}
+      Object.keys(args[0]).forEach((key) => {
+        if (this._record.$set.hasOwnProperty(key)) {
+          throw new HError(605)
+        }
+        recordToUnset[key] = ''
+      })
+      this._record.$unset = recordToUnset
+    } else if (typeof args[0] === 'string') {
+      if (this._record.$set.hasOwnProperty(args[0])) {
+        throw new HError(605)
+      }
+      this._record.$unset[args[0]] = ''
+    } else {
+      throw new HError(605)
+    }
+    return this
+  }
+
   incrementBy(key, value) {
-    this._record[key] = {$incr_by: value}
+    this._record.$set[key] = {$incr_by: value}
     return this
   }
 
@@ -67,7 +100,7 @@ class BaseRecord {
       value = [value]
     }
     value = value.map(item => serializeArrayValue(item))
-    this._record[key] = {$append: value}
+    this._record.$set[key] = {$append: value}
     return this
   }
 
@@ -77,7 +110,7 @@ class BaseRecord {
       value = [value]
     }
     value = value.map(item => serializeArrayValue(item))
-    this._record[key] = {$append_unique: value}
+    this._record.$set[key] = {$append_unique: value}
     return this
   }
 
@@ -87,7 +120,7 @@ class BaseRecord {
       value = [value]
     }
     value = value.map(item => serializeArrayValue(item))
-    this._record[key] = {$remove: value}
+    this._record.$set[key] = {$remove: value}
     return this
   }
 
@@ -96,7 +129,7 @@ class BaseRecord {
       throw new HError(605)
     }
 
-    this._record[key] = {$update: value}
+    this._record.$set[key] = {$update: value}
     return this
   }
 }

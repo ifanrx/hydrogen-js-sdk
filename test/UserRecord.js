@@ -22,7 +22,10 @@ describe('UserRecord', () => {
     user.update().then((res) => {
       expect(res).to.equal(randomString)
     })
-    expect(user._record).to.deep.equal({})
+    expect(user._record).to.deep.equal({
+      $set: {},
+      $unset: {},
+    })
     updateUser.restore()
   })
 })
