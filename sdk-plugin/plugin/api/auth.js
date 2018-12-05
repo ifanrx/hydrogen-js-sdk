@@ -116,11 +116,14 @@ const silentLogin = () => {
 }
 
 const makeLoginResponseData = (userInfo = true) => {
-  if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO)
+  if (userInfo) return Object.assign(
+    {expires_at: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
+    storage.get(constants.STORAGE_KEY.USERINFO))
   return {
     id: storage.get(constants.STORAGE_KEY.UID),
     openid: storage.get(constants.STORAGE_KEY.OPENID),
-    unionid: storage.get(constants.STORAGE_KEY.UNIONID)
+    unionid: storage.get(constants.STORAGE_KEY.UNIONID),
+    expires_at: storage.get(constants.STORAGE_KEY.EXPIRES_AT)
   }
 }
 
