@@ -23,7 +23,8 @@
     "pages-test/wxparser-plugin/index",
     "pages-test/aggregation/index",
     "pages-test/censor/index",
-    "pages-test/sms/index"
+    "pages-test/sms/index",
+    "pages-test/handle-401/index"
   ],
   "plugins": {
     "wxparserPlugin": {
