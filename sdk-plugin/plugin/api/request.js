@@ -4,6 +4,7 @@ const HError = require('./HError')
 const utils = require('./utils')
 const polyfill = require('./polyfill')
 const storage = require('./storage')
+const config = require('./config')
 
 /**
  *
@@ -88,7 +89,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       dataType: dataType,
       success: res => {
         // 尝试重发请求
-        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED && url.match(/^https:\/\/\w+\.xiaoapp\.io/)) {
+        if (res.statusCode == constants.STATUS_CODE.UNAUTHORIZED && url.match(config.API_HOST_PATTERN)) {
           return tryResendRequest({header, method, url, data, dataType}, resolve, reject)
         }
         resolve(res)
