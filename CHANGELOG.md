@@ -1,3 +1,7 @@
+## 1.10.2 (2018-12-06)
+- [A] SDK request 增加 token 过期管理
+- [M] 登录接口新增 session_expires_at 字段
+
 ## 1.10.2 (2018-11-27)
 - [M] 数据表 array 字段操作（set、append、uAppend、remove）支持 geojson 子类型
 
