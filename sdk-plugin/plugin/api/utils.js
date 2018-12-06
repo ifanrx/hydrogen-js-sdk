@@ -1,4 +1,6 @@
 const HError = require('./HError')
+const storage = require('./storage')
+const constants = require('./constants')
 
 let config
 try {
@@ -11,7 +13,7 @@ try {
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
 if (!Array.prototype.includes) {
   Object.defineProperty(Array.prototype, 'includes', {
-    value: function(searchElement, fromIndex) {
+    value: function (searchElement, fromIndex) {
 
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -218,6 +220,15 @@ const cloneDeep = source => {
   return target
 }
 
+/**
+ * session 是否已经过期，若不存在 EXPIRES_AT 缓存，则当做已过期
+ * @return {boolean} expired
+ */
+function isSessionExpired() {
+  return (Date.now() / 1000) >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) || 0)
+}
+
+
 module.exports = {
   log,
   format,
@@ -234,4 +245,5 @@ module.exports = {
   isFunction,
   extend,
   cloneDeep,
+  isSessionExpired,
 }

@@ -68,6 +68,10 @@
     <view class="zan-cell__bd">触发云函数</view>
     <view class="zan-cell__ft"></view>
   </navigator>
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/handle-401/index">
+    <view class="zan-cell__bd">401 处理测试</view>
+    <view class="zan-cell__ft"></view>
+  </navigator>
   <view class="page-title">wxParser 测试</view>
   <navigator class="zan-cell zan-cell--access" url="/pages-test/wxparser-file/index">
     <view class="zan-cell__bd">引入文件方式</view>

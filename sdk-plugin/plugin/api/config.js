@@ -1,4 +1,5 @@
 const API_HOST = 'https://api.xiaoapp.io'
+const API_HOST_PATTERN = /^https:\/\/\w+\.xiaoapp\.io/ // 若要修改 API 域名，这里的域名正则也要跟着修改
 
 const API = {
   LOGIN: '/hserve/v1.4/session/init/',
@@ -178,10 +179,11 @@ const requestParamsMap = {
 module.exports = {
   API_HOST: API_HOST,
   API: API,
+  API_HOST_PATTERN: API_HOST_PATTERN,
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.10.1'  // package.json 中的 version 也需要同步修改。
+  VERSION: 'v1.11.0'  // package.json 中的 version 也需要同步修改。
 }
