@@ -29,7 +29,10 @@ describe('TableRecord', () => {
     product.save().then((res) => {
       expect(res).to.equal(randomString)
     })
-    expect(product._record).to.deep.equal({})
+    expect(product._record).to.deep.equal({
+      $set: {},
+      $unset: {},
+    })
     createRecord.restore()
   })
 
@@ -41,7 +44,10 @@ describe('TableRecord', () => {
     product.update().then((res) => {
       expect(res).to.equal(randomString)
     })
-    expect(product._record).to.deep.equal({})
+    expect(product._record).to.deep.equal({
+      $set: {},
+      $unset: {},
+    })
     updateRecord.restore()
   })
 
@@ -60,7 +66,12 @@ describe('TableRecord', () => {
     const updateRecordList = sinon.stub(BaaS, 'updateRecordList').callsFake(args => {
       expect(args).to.deep.equal({
         tableID: randomNumber1,
-        data: {'price': 6},
+        data: {
+          $set: {
+            price: 6
+          },
+          $unset: {}
+        },
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
         offset: 0,
         limit: 20,
