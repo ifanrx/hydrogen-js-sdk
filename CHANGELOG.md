@@ -1,5 +1,12 @@
-## 1.12.0 (2018-12-07)
+## 1.12.0 (2018-12-10)
 - [A] 新增 unset 方法提供清空字段值的支持
+
+## 1.11.1 (2018-12-06)
+- [A] 用户和内容库支持 select & expand 操作
+
+## 1.11.0 (2018-12-06)
+- [A] SDK request 增加 token 过期管理
+- [M] 登录接口新增 session_expires_at 字段
 
 ## 1.10.2 (2018-11-27)
 - [M] 数据表 array 字段操作（set、append、uAppend、remove）支持 geojson 子类型

@@ -43,6 +43,7 @@ const sessionInit = (code, resolve, reject) => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     } else {
       reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
@@ -88,12 +89,11 @@ const login = (userInfo = true) => {
 }
 
 const silentLogin = () => {
-  if (storage.get(constants.STORAGE_KEY.UID)) {
+  if (storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
     return new Promise(resolve => {
       resolve(makeLoginResponseData(false))
     })
   }
-
   if (isSilentLogining) {
     return new Promise((resolve, reject) => {
       silentLoginResolve.push(resolve)
@@ -102,7 +102,6 @@ const silentLogin = () => {
   }
 
   isSilentLogining = true
-
   return new Promise((resolve, reject) => {
     silentLoginResolve.push(resolve)
     silentLoginReject.push(reject)
@@ -117,11 +116,14 @@ const silentLogin = () => {
 }
 
 const makeLoginResponseData = (userInfo = true) => {
-  if (userInfo) return storage.get(constants.STORAGE_KEY.USERINFO)
+  if (userInfo) return Object.assign(
+    {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
+    storage.get(constants.STORAGE_KEY.USERINFO))
   return {
     id: storage.get(constants.STORAGE_KEY.UID),
     openid: storage.get(constants.STORAGE_KEY.OPENID),
-    unionid: storage.get(constants.STORAGE_KEY.UNIONID)
+    unionid: storage.get(constants.STORAGE_KEY.UNIONID),
+    [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)
   }
 }
 
@@ -164,7 +166,7 @@ const handleLoginFailure = (userInfo = true) => {
 const logout = () => {
   return new Promise((resolve, reject) => {
     // API.LOGOUT 接口不做 token 检查
-    request({ url: API.LOGOUT, method: 'POST' }).then(() => {
+    request({url: API.LOGOUT, method: 'POST'}).then(() => {
       BaaS.clearSession()
       resolve()
     }, err => {
@@ -198,7 +200,7 @@ const getUserInfo = () => {
 
 // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
 const handleUserInfo = (res) => {
-  if(!res || !res.detail) {
+  if (!res || !res.detail) {
     throw new HError(603)
   }
 
@@ -207,7 +209,7 @@ const handleUserInfo = (res) => {
   return new Promise((resolve, reject) => {
     return silentLogin().then(() => {
       // 用户拒绝授权，仅返回 uid, openid 和 unionid
-      if(!detail.userInfo) {
+      if (!detail.userInfo) {
         return reject(makeLoginResponseData(false))
       }
 

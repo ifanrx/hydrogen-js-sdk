@@ -9,7 +9,16 @@ class ContentGroup extends BaseQuery {
   }
 
   getContent(richTextID) {
-    return BaaS.getContent({richTextID})
+    let params = {richTextID}
+    if (this._expand) {
+      params.expand = this._expand
+    }
+
+    if (this._keys) {
+      params.keys = this._keys
+    }
+    this._initQueryParams()
+    return BaaS.getContent(params)
   }
 
   find() {

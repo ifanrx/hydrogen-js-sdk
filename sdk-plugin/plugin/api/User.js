@@ -10,7 +10,16 @@ class User extends BaseQuery {
   }
 
   get(userID) {
-    return BaaS.getUserDetail({userID})
+    let params = {userID}
+    if (this._expand) {
+      params.expand = this._expand
+    }
+
+    if (this._keys) {
+      params.keys = this._keys
+    }
+    this._initQueryParams()
+    return BaaS.getUserDetail(params)
   }
 
   getWithoutData(userID) {
