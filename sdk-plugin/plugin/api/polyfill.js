@@ -9,7 +9,7 @@ module.exports = {
     return wx.requestPayment(...args)
   },
   getAPIHost(clientID) {
-    return `https://${clientID}.xiaoapp.io`
+    return `https://${clientID}.myminapp.com`
   },
   SDK_TYPE: 'file',
 
