@@ -24,7 +24,8 @@
     "pages-test/aggregation/index",
     "pages-test/censor/index",
     "pages-test/sms/index",
-    "pages-test/handle-401/index"
+    "pages-test/handle-401/index",
+    "pages-test/kefu-message/index"
   ],
   "plugins": {
     "wxparserPlugin": {
