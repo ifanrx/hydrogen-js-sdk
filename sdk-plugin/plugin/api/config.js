@@ -1,5 +1,5 @@
-const API_HOST = 'https://api.xiaoapp.io'
-const API_HOST_PATTERN = /^https:\/\/\w+\.xiaoapp\.io/ // 若要修改 API 域名，这里的域名正则也要跟着修改
+const API_HOST = 'https://api.myminapp.com'
+const API_HOST_PATTERN = /^https:\/\/\w+\.myminapp\.com/ // 若要修改 API 域名，这里的域名正则也要跟着修改
 
 const API = {
   LOGIN: '/hserve/v1.4/session/init/',

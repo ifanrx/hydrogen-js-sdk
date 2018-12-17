@@ -1,7 +1,7 @@
 const polyfill = require('./api/polyfill')
 const utils = require('./api/utils')
 const HError = require('./api/HError')
-polyfill.getAPIHost = () => 'https://api.xiaoapp.io'
+polyfill.getAPIHost = () => 'https://api.myminapp.com'
 polyfill.SDK_TYPE = 'plugin'
 polyfill.wxGetUserInfo = () => new HError(609)
 polyfill.wxLogin = () => new HError(609)
