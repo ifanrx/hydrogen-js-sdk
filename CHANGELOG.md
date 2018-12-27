@@ -1,3 +1,6 @@
+## 1.13.1 (2018-12-27)
+- [M] 升级 SDK FlexRecord API 到 v1.9
+
 ## 1.13.0 (2018-12-17)
 - [M] API 域名迁移到 myminapp.com
 
