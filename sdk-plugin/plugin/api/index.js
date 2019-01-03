@@ -10,6 +10,7 @@ BaaS.GeoPolygon = require('./GeoPolygon')
 BaaS.getWXACode = require('./getWXACode')
 BaaS.handleUserInfo = require('./auth').handleUserInfo
 BaaS.invokeFunction = require('./invokeFunction')
+BaaS.invoke = require('./invokeFunction')
 BaaS.login = require('./auth').login
 BaaS.logout = require('./auth').logout
 BaaS.order = require('./order').order
