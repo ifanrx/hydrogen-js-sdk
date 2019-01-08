@@ -1,5 +1,5 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequestEnhance
+const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
 
 const API = BaaS._config.API

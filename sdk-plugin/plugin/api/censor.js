@@ -1,5 +1,5 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequestEnhance
+const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const HError = require('./HError')
 const utils = require('./utils')
