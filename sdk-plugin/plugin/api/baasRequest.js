@@ -10,9 +10,15 @@ const utils = require('./utils')
 const baasRequest = function ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) {
   return auth.silentLogin().then(() => {
     return request.apply(null, arguments)
+  }).then(res => {
+    let status = parseInt(res.statusCode)
+    if (status >= 200 && status < 300) {
+      return res
+    } else {
+      throw new HError(res.statusCode, utils.extractErrorMsg(res))
+    }
   })
 }
-
 
 /**
  * 根据 methodMap 创建对应的 BaaS Method
@@ -47,18 +53,7 @@ const doCreateRequestMethod = (methodMap) => {
             data = utils.replaceQueryParams(data)
           }
 
-          return new Promise((resolve, reject) => {
-            return baasRequest({url, method, data}).then((res) => {
-              let status = parseInt(res.statusCode)
-              if (status >= 200 && status < 300) {
-                resolve(res)
-              } else {
-                reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
-              }
-            }, err => {
-              reject(err)
-            })
-          })
+          return baasRequest({url, method, data})
         }
       })(k)
     }

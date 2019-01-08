@@ -17,7 +17,7 @@ const makeRealParams = (type, params, cdn, categoryName) => {
 
   realParams.code_type = realTypeNames[typeIndex]
 
-  if(!params || params.constructor !== Object) {
+  if (!params || params.constructor !== Object) {
     throw new HError(605, 'params 为 Object 类型')
   }
 
@@ -72,17 +72,12 @@ const makeRealParams = (type, params, cdn, categoryName) => {
 const getWXACode = (type, params, cdn, categoryName) => {
   let realParams = makeRealParams(type, params, cdn, categoryName)
 
-  return new Promise((resolve, reject) => {
-    baasRequest({
-      url: API.WXACODE,
-      method: 'POST',
-      data: realParams,
-    }).then(res => {
-      if(res.statusCode === 400) return reject(new HError(400, res.data.message))
-      return resolve(res.data)
-    }, err => {
-      reject(err)
-    })
+  return baasRequest({
+    url: API.WXACODE,
+    method: 'POST',
+    data: realParams,
+  }).then(res => {
+    return res.data
   })
 }
 

@@ -5,7 +5,7 @@ const HError = require('./HError')
 const API = BaaS._config.API
 
 const wxDecryptData = (...params) => {
-  if(!validateParams(params)) {
+  if (!validateParams(params)) {
     throw new HError(605)
   }
 
@@ -14,20 +14,17 @@ const wxDecryptData = (...params) => {
     iv: params[1]
   }
 
-  return new Promise((resolve, reject) => {
-    baasRequest({
-      url: API.DECRYPT + params[2] + '/',
-      method: 'POST',
-      data: paramsObj,
-    }).then(res => {
-      let status = res.statusCode
-      if(status === 401) return reject(new HError(401, res.data.message))
-      if(status === 403) return reject(new HError(403, '微信解密插件未开启'))
-      if(status === 400) return reject(new HError(400, res.data.message))
-      return resolve(res.data)
-    }, err => {
-      reject(err)
-    })
+  return baasRequest({
+    url: API.DECRYPT + params[2] + '/',
+    method: 'POST',
+    data: paramsObj,
+  }).then(res => {
+    return res.data
+  }, err => {
+    let code = err.code
+    if (code === 403) throw new HError(403, '微信解密插件未开启')
+    if (code === 401) throw new HError(401, res.data.message)
+    if (code === 400) throw new HError(400, res.data.message)
   })
 }
 

@@ -34,7 +34,7 @@ const wxCensorImage = filePath => {
 
 const wxCensorText = text => {
   if (!text || typeof text !== 'string') {
-    throw HError(605)
+    return Promise.reject(new HError(605))
   }
   return baasRequest({
     url: BaaS._config.API_HOST + BaaS._config.API.CENSOR_MSG,
