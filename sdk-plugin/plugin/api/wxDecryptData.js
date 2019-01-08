@@ -19,7 +19,7 @@ const wxDecryptData = (...params) => {
     method: 'POST',
     data: paramsObj,
   }).then(res => {
-    return resolve(res.data)
+    return res.data
   }, err => {
     let code = err.code
     if (code === 403) throw new HError(403, '微信解密插件未开启')
