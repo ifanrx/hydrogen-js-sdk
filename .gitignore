@@ -1,6 +1,6 @@
 node_modules/
 npm-debug.log
 tmp/
-sdk-file/dist/sdk.dev.js
+sdk-file/dist/*.dev.js
 lib/
 yarn-error.log

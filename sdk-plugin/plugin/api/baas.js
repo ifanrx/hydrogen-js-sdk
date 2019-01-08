@@ -11,6 +11,7 @@ const polyfill = require('./polyfill')
 const BaaS = global.BaaS || {}
 
 BaaS._config = utils.getConfig()
+BaaS._polyfill = polyfill
 
 BaaS.init = (clientID) => {
   if (!utils.isString(clientID)) {
@@ -18,7 +19,7 @@ BaaS.init = (clientID) => {
   }
 
   BaaS._config.CLIENT_ID = clientID
-  BaaS._config.API_HOST = polyfill.getAPIHost(clientID)
+  BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
 }
 
 BaaS.getAuthToken = () => {
@@ -40,5 +41,7 @@ BaaS.clearSession = () => {
   storage.set(constants.STORAGE_KEY.OPENID, '')
   storage.set(constants.STORAGE_KEY.UNIONID, '')
 }
+
+BaaS.use = fn => fn(BaaS)
 
 module.exports = BaaS

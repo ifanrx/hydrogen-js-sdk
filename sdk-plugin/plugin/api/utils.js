@@ -2,12 +2,7 @@ const HError = require('./HError')
 const storage = require('./storage')
 const constants = require('./constants')
 
-let config
-try {
-  config = require('sdk-config')
-} catch (e) {
-  config = require('./config.dev')
-}
+let config = require('./config')
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
