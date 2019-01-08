@@ -42,7 +42,7 @@ const wxCensorText = text => {
     data: {
       content: text
     }
-  }).then(res => res.data)
+  })
 }
 
 module.exports = BaaS => {
