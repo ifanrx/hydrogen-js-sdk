@@ -23,7 +23,7 @@ const invokeFunction = (functionName, params, sync = true) => {
     method: 'POST',
     data: data,
   }).then(res => {
-    resolve(res.data)
+    return res.data
   })
 }
 

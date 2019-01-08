@@ -77,7 +77,7 @@ const getWXACode = (type, params, cdn, categoryName) => {
     method: 'POST',
     data: realParams,
   }).then(res => {
-    return resolve(res.data)
+    return res.data
   })
 }
 
