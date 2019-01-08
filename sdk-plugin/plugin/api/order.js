@@ -1,5 +1,5 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
+const baasRequest = require('./baasRequest').baasRequestEnhance
 const utils = require('./utils')
 const BaseQuery = require('./BaseQuery')
 

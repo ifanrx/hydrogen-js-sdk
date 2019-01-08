@@ -13,6 +13,17 @@ const baasRequest = function ({url, method = 'GET', data = {}, header = {}, data
   })
 }
 
+const baasRequestEnhance = function (args) {
+  return baasRequest(args).then(res => {
+    let status = parseInt(res.statusCode)
+    if (status >= 200 && status < 300) {
+      return res
+    } else {
+      throw new HError(res.statusCode, utils.extractErrorMsg(res))
+    }
+  })
+}
+
 
 /**
  * 根据 methodMap 创建对应的 BaaS Method
@@ -87,6 +98,7 @@ const createRequestMethod = () => {
 }
 
 module.exports = {
+  baasRequestEnhance,
   baasRequest,
   excludeParams,
   createRequestMethod,
