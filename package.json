@@ -43,5 +43,8 @@
     "sinon-stub-promise": "^4.0.0",
     "webpack": "^4.28.3",
     "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
   }
 }
