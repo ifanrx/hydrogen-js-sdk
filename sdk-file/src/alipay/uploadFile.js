@@ -1,0 +1,110 @@
+const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
+const HError = require('core-module/HError')
+
+class UploadError {
+  constructor(code, msg) {
+    let error = new Error()
+    error.code = code
+    error.message = msg ? `${code}: ${msg}` : `${code}: ${this.mapErrorMessage(code)}`
+    return error
+  }
+
+  // 前端错误信息定义
+  mapErrorMessage(code) {
+    switch (code) {
+      case 11:
+        return '文件不存在'
+      case 12:
+        return '上传文件失败'
+      case 13:
+        return '没有权限'
+      default:
+        return 'unknown error'
+    }
+  }
+}
+
+const myUpload = (config, resolve, reject, type) => {
+  return my.uploadFile({
+    url: config.uploadUrl,
+    filePath: config.filePath,
+    fileName: constants.UPLOAD.UPLOAD_FILE_KEY,
+    fileType: type,
+    formData: {
+      authorization: config.authorization,
+      policy: config.policy
+    },
+    header: getUploadHeaders(),
+    success: (res) => {
+      let result = {}
+      let data = JSON.parse(res.data)
+
+      result.status = 'ok'
+      result.path = config.destLink
+      result.file = {
+        'id': config.id,
+        'name': config.fileName,
+        'created_at': data.time,
+        'mime_type': data.mimetype,
+        'cdn_path': data.url,
+        'size': data.file_size,
+      }
+
+      delete res.data
+
+      if (type && type === 'json') {
+        res.data = result
+      } else {
+        res.data = JSON.stringify(result)
+      }
+
+      resolve(res)
+    },
+    fail: res => {
+      reject(new UploadError(parseInt(res.status)))
+    }
+  })
+}
+
+function createUploadFileFn = BaaS => (fileParams, metaData, type) => {
+  if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
+    throw new HError(605)
+  }
+
+  if (!metaData) {
+    metaData = {}
+  } else if (typeof metaData !== 'object') {
+    throw new HError(605)
+  }
+
+  let rs, rj = null
+
+  let p = new Promise((resolve, reject) => {
+    rs = resolve
+    rj = reject
+  })
+
+  // TODO: 检查 utils 中的方法
+  let fileName = utils.getFileNameFromPath(fileParams.filePath)
+  getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
+    let config = {
+      id: res.data.id,
+      fileName: fileName,
+      policy: res.data.policy,
+      authorization: res.data.authorization,
+      uploadUrl: res.data.upload_url,
+      filePath: fileParams.filePath,
+      destLink: res.data.file_link
+    }
+    myUpload(config, e => {
+      rs(e)
+    }, rj, type)
+  }, rj)
+
+  return p
+}
+
+module.exports = function (BaaS) {
+  BaaS.uploadFile = createUploadFileFn(BaaS)
+}
+module.exports.UploadError = UploadError
