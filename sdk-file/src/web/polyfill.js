@@ -5,13 +5,11 @@ module.exports = function (BaaS) {
         platform: 'web'
       }
     },
-    getNetworkType: function () {
-
+    setStorageSync: function (k, v) {
+      window.localStorage.setItem(k, v)
     },
-
-    setStorageSync: '',
-    getStorageSync: '',
-
-
+    getStorageSync: function (k) {
+      return window.localStorage.getItem(k)
+    },
   })
 }
