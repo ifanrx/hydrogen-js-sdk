@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
 
 const API = BaaS._config.API
@@ -14,7 +13,7 @@ const wxDecryptData = (...params) => {
     iv: params[1]
   }
 
-  return baasRequest({
+  return BaaS._baasRequest({
     url: API.DECRYPT + params[2] + '/',
     method: 'POST',
     data: paramsObj,

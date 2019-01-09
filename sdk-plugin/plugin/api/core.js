@@ -33,24 +33,29 @@ module.exports = function (BaaS) {
     storage.set(constants.STORAGE_KEY.UNIONID, '')
   }
 
+  // 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
+  BaaS._createRequestMethod = () => {
+    let methodMapList = BaaS._config.METHOD_MAP_LIST
+    methodMapList.map((v) => {
+      utils.doCreateRequestMethod(v)
+    })
+  }
+
   // 暴露指定 BaaS 方法
   BaaS.ContentGroup = require('./ContentGroup')
   BaaS.File = require('./File')
   BaaS.FileCategory = require('./FileCategory')
   BaaS.GeoPoint = require('./GeoPoint')
   BaaS.GeoPolygon = require('./GeoPolygon')
-  BaaS.getWXACode = require('./getWXACode')
   BaaS.invokeFunction = require('./invokeFunction')
   BaaS.invoke = require('./invokeFunction')
   BaaS.order = require('./order').order
   BaaS.Order = require('./order')
   BaaS.pay = require('./pay')
   BaaS.Query = require('./Query')
-  BaaS.request = require('./request')
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
   BaaS.User = require('./User')
   BaaS.ErrorTracker = require('./errorTracker')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
-  require('./baasRequest').createRequestMethod()
 }

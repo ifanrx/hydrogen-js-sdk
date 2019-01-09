@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
 
 const API = BaaS._config.API
@@ -19,7 +18,7 @@ function makeParams(formID) {
 const wxReportTicket = (formID) => {
   let paramsObj = makeParams(formID)
 
-  return baasRequest({
+  return BaaS._baasRequest({
     url: API.TEMPLATE_MESSAGE,
     method: 'POST',
     data: paramsObj,

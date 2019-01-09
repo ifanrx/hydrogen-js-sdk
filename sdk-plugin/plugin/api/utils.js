@@ -1,4 +1,3 @@
-const HError = require('./HError')
 const storage = require('./storage')
 const constants = require('./constants')
 const BaaS = require('./baas')
@@ -141,18 +140,6 @@ const replaceQueryParams = (params = {}) => {
   return copiedParams
 }
 
-const wxRequestFail = (reject) => {
-  wx.getNetworkType({
-    success: function (res) {
-      if (res.networkType === 'none') {
-        reject(new HError(600)) // 断网
-      } else {
-        reject(new HError(601)) // 网络超时
-      }
-    }
-  })
-}
-
 const extractErrorMsg = (res) => {
   let errorMsg = ''
   if (res.statusCode === 404) {
@@ -212,6 +199,60 @@ function isSessionExpired() {
   return (Date.now() / 1000) >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) || 0)
 }
 
+/**
+ * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
+ * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
+ */
+const excludeParams = (URL, params) => {
+  URL.replace(/:(\w*)/g, (match, m1) => {
+    if (params[m1] !== undefined) {
+      delete params[m1]
+    }
+  })
+  return params
+}
+
+/**
+ * 根据 methodMap 创建对应的 BaaS Method
+ * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
+ */
+const doCreateRequestMethod = (methodMap) => {
+  for (let k in methodMap) {
+    if (methodMap.hasOwnProperty(k)) {
+      BaaS[k] = ((k) => {
+        let methodItem = methodMap[k]
+        return (objects) => {
+          let newObjects = cloneDeep(objects)
+          let method = methodItem.method || 'GET'
+
+          if (methodItem.defaultParams) {
+            let defaultParamsCopy = cloneDeep(methodItem.defaultParams)
+            newObjects = extend(defaultParamsCopy, newObjects)
+          }
+
+          // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
+          let url = format(methodItem.url, newObjects)
+
+          let data = {}
+          if (newObjects.data) {
+            // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
+            data = newObjects.data
+          } else {
+            // 从用户输入的数据中，剔除 tableID, recordID 等用于 url 的数据
+            data = excludeParams(methodItem.url, newObjects)
+
+            // 将用户输入的数据中，部分变量名替换为后端可接受的名字，如 categoryID 替换为 category_id
+            data = replaceQueryParams(data)
+          }
+
+          return BaaS._baasRequest({url, method, data})
+        }
+      })(k)
+    }
+  }
+}
+
+
 
 module.exports = {
   log,
@@ -220,7 +261,6 @@ module.exports = {
   getFileNameFromPath,
   parseRegExp,
   replaceQueryParams,
-  wxRequestFail,
   extractErrorMsg,
   isArray,
   isString,
@@ -229,4 +269,6 @@ module.exports = {
   extend,
   cloneDeep,
   isSessionExpired,
+  excludeParams,
+  doCreateRequestMethod,
 }

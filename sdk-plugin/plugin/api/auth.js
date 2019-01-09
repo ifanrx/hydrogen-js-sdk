@@ -1,7 +1,6 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
 const HError = require('./HError')
-const request = require('./request')
 const storage = require('./storage')
 const utils = require('./utils')
 const polyfill = BaaS._polyfill
@@ -31,7 +30,7 @@ const auth = () => {
 
 // code 换取 session_key，生成并获取 3rd_session 即 token
 const sessionInit = (code, resolve, reject) => {
-  return request({
+  return BaaS.request({
     url: API.LOGIN,
     method: 'POST',
     data: {
@@ -234,7 +233,7 @@ const handleUserInfo = (res) => {
 
 // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
 const getSensitiveData = (data, resolve, reject, userInfo) => {
-  return request({
+  return BaaS.request({
     url: API.AUTHENTICATE,
     method: 'POST',
     data: data

@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const HError = require('./HError')
 const utils = require('./utils')
@@ -26,7 +25,7 @@ const wxCensorImage = filePath => {
         resolve(JSON.parse(data))
       },
       fail: () => {
-        utils.wxRequestFail(reject)
+        BaaS.request.wxRequestFail(reject)
       }
     })
   })
@@ -36,7 +35,7 @@ const wxCensorText = text => {
   if (!text || typeof text !== 'string') {
     return Promise.reject(new HError(605))
   }
-  return baasRequest({
+  return BaaS._baasRequest({
     url: BaaS._config.API_HOST + BaaS._config.API.CENSOR_MSG,
     method: 'POST',
     data: {

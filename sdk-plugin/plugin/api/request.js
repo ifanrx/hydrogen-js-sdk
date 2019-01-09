@@ -6,6 +6,19 @@ const storage = require('./storage')
 const config = BaaS._config
 const polyfill = BaaS._polyfill
 
+const wxRequestFail = function (reject) {
+  wx.getNetworkType({
+    success: function (res) {
+      if (res.networkType === 'none') {
+        reject(new HError(600)) // 断网
+      } else {
+        reject(new HError(601)) // 网络超时
+      }
+    }
+  })
+}
+
+
 /**
  *
  * @param {object} payload
@@ -30,7 +43,7 @@ function tryResendRequest(payload, resolve, reject) {
           header: setHeader(payload.header),
           success: resolve,
           fail: () => {
-            utils.wxRequestFail(reject)
+            wxRequestFail(reject)
           }
         }))
   }, reject)
@@ -95,7 +108,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         resolve(res)
       },
       fail: () => {
-        utils.wxRequestFail(reject)
+        wxRequestFail(reject)
       }
     })
 
@@ -104,3 +117,4 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
 }
 
 module.exports = request
+module.exports.wxRequestFail = wxRequestFail

@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
 const utils = require('./utils')
 
@@ -72,7 +71,7 @@ const makeRealParams = (type, params, cdn, categoryName) => {
 const getWXACode = (type, params, cdn, categoryName) => {
   let realParams = makeRealParams(type, params, cdn, categoryName)
 
-  return baasRequest({
+  return BaaS._baasRequest({
     url: API.WXACODE,
     method: 'POST',
     data: realParams,

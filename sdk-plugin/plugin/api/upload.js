@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const utils = require('./utils')
 
@@ -7,7 +6,7 @@ const utils = require('./utils')
 const getUploadFileConfig = (fileName, metaData) => {
   metaData.filename = fileName
 
-  return baasRequest({
+  return BaaS._baasRequest({
     url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
     method: 'POST',
     data: metaData

@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const utils = require('./utils')
 const BaseQuery = require('./BaseQuery')
 
@@ -12,7 +11,7 @@ class Order extends BaseQuery {
 
   get(transactionID) {
     let url = utils.format(API.ORDER, {transactionID: transactionID})
-    return baasRequest({url})
+    return BaaS._baasRequest({url})
   }
 
   getOrderList(params = {}) {

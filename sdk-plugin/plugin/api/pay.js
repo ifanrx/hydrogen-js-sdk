@@ -1,5 +1,4 @@
 const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const HError = require('./HError')
 const polyfill = BaaS._polyfill
 
@@ -21,7 +20,7 @@ const pay = (params) => {
     paramsObj[keysMap[key]] = params[key]
   }
 
-  return baasRequest({
+  return BaaS._baasRequest({
     url: API.PAY,
     method: 'POST',
     data: paramsObj,
