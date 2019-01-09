@@ -5,7 +5,7 @@ let VERSION = 'v1.14.1'
 try {
   VERSION = __VERSION__
 } catch (e) {
-  VERSION = 'v1.14.1'
+  // VERSION = 'v1.14.1'
 }
 
 const API = {

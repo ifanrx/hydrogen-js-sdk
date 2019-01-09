@@ -1,19 +1,7 @@
-const BaaS = require('./baas')
-const baasRequest = require('./baasRequest').baasRequest
 const constants = require('./constants')
 const HError = require('./HError')
 const utils = require('./utils')
-
-// get the upload config for upyun from sso
-const getUploadFileConfig = (fileName, metaData) => {
-  metaData.filename = fileName
-
-  return baasRequest({
-    url: BaaS._config.API_HOST + BaaS._config.API.UPLOAD,
-    method: 'POST',
-    data: metaData
-  })
-}
+const {getUploadFileConfig, getUploadHeaders} = require('./upload')
 
 const wxUpload = (config, resolve, reject, type) => {
   return wx.uploadFile({
@@ -24,13 +12,7 @@ const wxUpload = (config, resolve, reject, type) => {
       authorization: config.authorization,
       policy: config.policy
     },
-    header: {
-      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + BaaS.getAuthToken(),
-      'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-      'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
-      'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
-      'User-Agent': constants.UPLOAD.UA,
-    },
+    header: getUploadHeaders(),
     success: (res) => {
       let result = {}
       let data = JSON.parse(res.data)

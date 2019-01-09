@@ -13,7 +13,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: process.env.NODE_ENV === 'dev' ? 'sdk-[name].dev.js' : 'sdk-[name].js',
     library: 'BaaS',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'umd',
   },
   plugins: [
     new webpack.DefinePlugin({

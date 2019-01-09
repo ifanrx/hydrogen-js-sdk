@@ -76,9 +76,6 @@ const getSysPlatform = () => {
  * @param  {String} msg 日志信息
  */
 const log = (msg) => {
-  if (typeof BaaS !== 'undefined') { // 测试环境
-    return
-  }
   // 记录日志到日志文件
   console.log('BaaS LOG: ' + msg) // eslint-disable-line no-console
 }

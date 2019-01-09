@@ -1,6 +1,5 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
-const uploadFile = require('./uploadFile')
 
 class File extends BaseQuery {
   constructor() {
@@ -8,7 +7,7 @@ class File extends BaseQuery {
   }
 
   upload(fileParams, metaData) {
-    return uploadFile(fileParams, metaData, 'json')
+    return BaaS.uploadFile(fileParams, metaData, 'json')
   }
 
   delete(id) {
