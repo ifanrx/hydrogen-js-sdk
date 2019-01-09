@@ -1,7 +1,7 @@
 const BaaS = require('./baas')
 const HError = require('./HError')
-const config = require('./config')
-const polyfill = require('./polyfill')
+const config = BaaS._config
+const polyfill = BaaS._polyfill
 const bugOut = require('./vendor/bugOut.min')
 
 let initialized = false

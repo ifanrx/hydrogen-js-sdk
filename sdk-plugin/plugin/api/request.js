@@ -2,9 +2,9 @@ const BaaS = require('./baas')
 const constants = require('./constants')
 const HError = require('./HError')
 const utils = require('./utils')
-const polyfill = require('./polyfill')
 const storage = require('./storage')
-const config = require('./config')
+const config = BaaS._config
+const polyfill = BaaS._polyfill
 
 /**
  *

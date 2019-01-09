@@ -1,4 +1,38 @@
+const constants = require('./constants')
+const storage = require('./storage')
+const HError = require('./HError')
+const utils = require('./utils')
+
 module.exports = function (BaaS) {
+  BaaS.init = (clientID) => {
+    if (!utils.isString(clientID)) {
+      throw new HError(605)
+    }
+
+    BaaS._config.CLIENT_ID = clientID
+    BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
+  }
+
+  BaaS.getAuthToken = () => {
+    return storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
+  }
+
+  BaaS.isLogined = () => {
+    return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS)
+  }
+
+  BaaS.clearSession = () => {
+    // 清除客户端认证 Token
+    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')
+    // 清除 BaaS 登录状态
+    storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '')
+    // 清除用户信息
+    storage.set(constants.STORAGE_KEY.USERINFO, '')
+    storage.set(constants.STORAGE_KEY.UID, '')
+    storage.set(constants.STORAGE_KEY.OPENID, '')
+    storage.set(constants.STORAGE_KEY.UNIONID, '')
+  }
+
   // 暴露指定 BaaS 方法
   BaaS.auth = require('./baasRequest').auth
   BaaS.ContentGroup = require('./ContentGroup')

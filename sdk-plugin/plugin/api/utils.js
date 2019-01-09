@@ -1,8 +1,7 @@
 const HError = require('./HError')
 const storage = require('./storage')
 const constants = require('./constants')
-
-let config = require('./config')
+const BaaS = require('./baas')
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -58,14 +57,6 @@ if (!Array.prototype.includes) {
 }
 
 /**
- * 获取 SDK 配置信息
- * @return {Object}
- */
-const getConfig = () => {
-  return config
-}
-
-/**
  * 获取系统 Platform 信息
  * @return {String}
  */
@@ -85,7 +76,7 @@ const getSysPlatform = () => {
  * @param  {String} msg 日志信息
  */
 const log = (msg) => {
-  if (typeof BaaS !== 'undefined' && BaaS.test || !getConfig().DEBUG) { // 测试环境
+  if (typeof BaaS !== 'undefined') { // 测试环境
     return
   }
   // 记录日志到日志文件
@@ -137,7 +128,7 @@ const parseRegExp = (regExp) => {
  * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
  */
 const replaceQueryParams = (params = {}) => {
-  let requestParamsMap = config.REQUEST_PARAMS_MAP
+  let requestParamsMap = BaaS._config.REQUEST_PARAMS_MAP
   let copiedParams = extend({}, params)
 
   Object.keys(params).map(key => {
@@ -228,7 +219,6 @@ function isSessionExpired() {
 module.exports = {
   log,
   format,
-  getConfig,
   getSysPlatform,
   getFileNameFromPath,
   parseRegExp,

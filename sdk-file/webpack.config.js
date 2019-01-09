@@ -1,4 +1,6 @@
 const path = require('path')
+const webpack = require('webpack')
+const pkg = require('../package')
 
 module.exports = {
   context: __dirname,
@@ -13,6 +15,11 @@ module.exports = {
     library: 'BaaS',
     libraryTarget: 'commonjs2',
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      __VERSION__: JSON.stringify('haha123'),
+    })
+  ],
   resolve: {
     alias: {
       'core-module': path.resolve(__dirname, '../core/')
