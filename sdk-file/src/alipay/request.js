@@ -1,7 +1,45 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
-const storage = require('core-module/storage')
+
+class RequestError {
+  constructor(code, msg) {
+    let error = new Error()
+    error.code = code
+    error.message = msg ? `${code}: ${msg}` : `${code}: ${this.mapErrorMessage(code)}`
+    return error
+  }
+
+  // 前端错误信息定义
+  mapErrorMessage(code) {
+    switch (code) {
+      case 11:
+        return '无权跨域'
+      case 12:
+        return '网络出错'
+      case 13:
+        return '超时'
+      case 14:
+        return '解码失败'
+      case 19:
+        return 'HTTP 错误'
+      default:
+        return 'unknown error'
+    }
+  }
+}
+
+const extractErrorMsg = (res) => {
+  let errorMsg = ''
+  if (res.status === 404) {
+    errorMsg = 'not found'
+  } else if (res.data.error_msg) {
+    errorMsg = res.data.error_msg
+  } else if (res.data.message) {
+    errorMsg = res.data.message
+  }
+  return errorMsg
+}
 
 /**
  *
@@ -15,7 +53,7 @@ function tryResendRequest(BaaS, payload, resolve, reject) {
   // 情景1：若是第一次出现 401 错误，此时的缓存一定是过期的。
   // 情景2：假设有 a,b 两个 401 错误的请求，a请求 300ms 后返回，走情景 1 的逻辑。b 在 pending 10 秒后返回，此时缓存实际上是没过期的，但是仍然会重新清空缓存，走情景 1 逻辑。
   // 情景3：假设有 a,b,c 3 个并发请求，a 先返回，走了情景 1 的逻辑，此时 bc 请求在 silentLogin 请求返回前返回了，这时候他们会等待 silentLogin , 即多个请求只会发送一次 silentLogin 请求
-  if (storage.get(constants.STORAGE_KEY.UID)) {
+  if (BaaS.storage.get(constants.STORAGE_KEY.UID)) {
     // 缓存被清空，silentLogin 一定会发起 session init 请求
     BaaS.clearSession()
   }
@@ -26,8 +64,8 @@ function tryResendRequest(BaaS, payload, resolve, reject) {
         {
           headers: setHeader(BaaS, payload.header),
           success: resolve,
-          fail: () => {
-            utils.wxRequestFail(reject)  // TODO: wxRequestFail
+          fail: res => {
+            reject(new RequestError(parseInt(res.status)))
           }
         }))
   }, reject)
@@ -45,7 +83,7 @@ const setHeader = (BaaS, header) => {
   let extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+    'X-Hydrogen-Client-Platform': utils.getSysPlatform(),  // TODO: platform 参数修改
     'X-Hydrogen-Client-SDK-Type': polyfill.SDK_TYPE,
   }
 
@@ -65,8 +103,9 @@ const setHeader = (BaaS, header) => {
   return utils.extend(extendHeader, header || {})
 }
 
-const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
+const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header, headers, dataType = 'json'}) => {
   const config = BaaS._config
+  headers = (!!headers ? headers : header) || {}
   return new Promise((resolve, reject) => {
     if (!config.CLIENT_ID) {
       return reject(new HError(602))
@@ -88,8 +127,8 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, d
         }
         resolve(res)
       },
-      fail: () => {
-        utils.wxRequestFail(reject)  // TODO: wxRequestFail
+      fail: res => {
+        reject(new RequestError(parseInt(res.status)))
       }
     })
 
@@ -100,3 +139,6 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, d
 module.exports = function (BaaS) {
   BaaS.request = createRequestFn(BaaS)
 }
+
+module.exports.RequestError = RequestError
+module.exports.extractErrorMsg = extractErrorMsg

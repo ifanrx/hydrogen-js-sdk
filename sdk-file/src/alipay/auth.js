@@ -1,6 +1,5 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
-const storage = require('core-module/storage')
 const HError = require('core-module/HError')
 
 let isLogining = false
@@ -10,15 +9,15 @@ let isSilentLogining = false
 let silentLoginResolve = []
 let silentLoginReject = []
 
-const resolveLoginCallBacks = (userInfo = true) => {
+const resolveLoginCallBacks = (storage, userInfo = true) => {
   setTimeout(() => {
     if (userInfo) {
       while (loginResolve.length) {
-        loginResolve.shift()(makeLoginResponseData())
+        loginResolve.shift()(makeLoginResponseData(storage))
       }
     } else {
       while (silentLoginResolve.length) {
-        silentLoginResolve.shift()(makeLoginResponseData(false))
+        silentLoginResolve.shift()(makeLoginResponseData(storage, false))
       }
     }
   }, 0)
@@ -38,7 +37,7 @@ const rejectLoginCallBacks = (err, userInfo = true) => {
   }, 0)
 }
 
-const makeLoginResponseData = (userInfo = true) => {  // TODO: 改为 alipay 的返回数据1
+const makeLoginResponseData = (storage, userInfo = true) => {  // TODO: 改为 alipay 的返回数据1
   if (userInfo) return Object.assign(
     {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
     storage.get(constants.STORAGE_KEY.USERINFO))
@@ -84,11 +83,11 @@ const sessionInit = (BaaS, code, resolve, reject) => {
     }
   }).then(res => {
     if (res.statusCode == constants.STATUS_CODE.CREATED) {
-      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-      storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
-      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
+      BaaS.storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
+      BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     } else {
       reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
@@ -100,9 +99,9 @@ const sessionInit = (BaaS, code, resolve, reject) => {
 
 const createSilentLoginFn = BaaS => () => {
   const auth = createAuthFn(BaaS)
-  if (storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
+  if (BaaS.storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
     return new Promise(resolve => {
-      resolve(makeLoginResponseData(false))
+      resolve(makeLoginResponseData(BaaS.storage, false))
     })
   }
   if (isSilentLogining) {
@@ -118,7 +117,7 @@ const createSilentLoginFn = BaaS => () => {
     silentLoginReject.push(reject)
     auth().then(() => {
       isSilentLogining = false
-      resolveLoginCallBacks(false)
+      resolveLoginCallBacks(BaaS.storage, false)
     }, err => {
       isSilentLogining = false
       rejectLoginCallBacks(err, false)
@@ -129,9 +128,9 @@ const createSilentLoginFn = BaaS => () => {
 const createLoginFn = BaaS = (userInfo = true) => {
   const silentLogin = createSilentLoginFn(BaaS)
   if (userInfo) {
-    if (storage.get(constants.STORAGE_KEY.USERINFO)) {
+    if (BaaS.storage.get(constants.STORAGE_KEY.USERINFO)) {
       return new Promise(resolve => {
-        resolve(makeLoginResponseData())
+        resolve(makeLoginResponseData(BaaS.storage))
       })
     }
     if (isLogining) {
@@ -146,7 +145,7 @@ const createLoginFn = BaaS = (userInfo = true) => {
       loginReject.push(reject)
       auth(true).then(() => {
         isLogining = false
-        resolveLoginCallBacks()
+        resolveLoginCallBacks(BaaS.storage)
       }, err => {
         isLogining = false
         rejectLoginCallBacks(err)
