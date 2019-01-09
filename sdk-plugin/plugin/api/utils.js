@@ -62,7 +62,7 @@ if (!Array.prototype.includes) {
 const getSysPlatform = () => {
   let platform = 'UNKNOWN'
   try {
-    let res = wx.getSystemInfoSync()
+    let res = BaaS._polyfill.getSystemInfoSync()
     platform = res.platform
   } catch (e) {
     // pass for now
