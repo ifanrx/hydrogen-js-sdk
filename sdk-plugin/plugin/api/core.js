@@ -51,7 +51,6 @@ module.exports = function (BaaS) {
   BaaS.invoke = require('./invokeFunction')
   BaaS.order = require('./order').order
   BaaS.Order = require('./order')
-  BaaS.pay = require('./pay')
   BaaS.Query = require('./Query')
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
