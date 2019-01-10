@@ -4,10 +4,6 @@ module.exports = function (BaaS) {
       return my.getSystemInfoSync()
     },
 
-    getNetworkType: function () {
-
-    },
-
     setStorageSync: function (key, value) {
       return my.setStorageSync({
         key,

@@ -24,7 +24,7 @@ class UploadError {
   }
 }
 
-const myUpload = (config, resolve, reject, type) => {
+const myUpload = (config, resolve, reject) => {
   return my.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
@@ -38,7 +38,6 @@ const myUpload = (config, resolve, reject, type) => {
     success: (res) => {
       let result = {}
       let data = JSON.parse(res.data)
-
       result.status = 'ok'
       result.path = config.destLink
       result.file = {
@@ -49,15 +48,8 @@ const myUpload = (config, resolve, reject, type) => {
         'cdn_path': data.url,
         'size': data.file_size,
       }
-
       delete res.data
-
-      if (type && type === 'json') {
-        res.data = result
-      } else {
-        res.data = JSON.stringify(result)
-      }
-
+      res.data = result
       resolve(res)
     },
     fail: res => {
@@ -66,7 +58,7 @@ const myUpload = (config, resolve, reject, type) => {
   })
 }
 
-const createUploadFileFn = BaaS => (fileParams, metaData, type) => {
+const createUploadFileFn = BaaS => (fileParams, metaData) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new HError(605)
   }
@@ -99,7 +91,7 @@ const createUploadFileFn = BaaS => (fileParams, metaData, type) => {
     }
     myUpload(config, e => {
       rs(e)
-    }, rj, type)
+    }, rj)
   }, rj)
 
   return p
