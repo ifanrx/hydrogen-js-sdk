@@ -3,6 +3,7 @@ const core = require('./core')
 
 BaaS.use(core)
 BaaS.auth = require('./auth')
+BaaS.pay = require('./pay')
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')

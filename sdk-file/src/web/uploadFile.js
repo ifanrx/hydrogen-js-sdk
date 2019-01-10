@@ -4,7 +4,8 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 module.exports = function (BaaS) {
-  BaaS.uploadFile = function (fileObj, metaData) {
+  BaaS.uploadFile = function (fileParams, metaData) {
+    let fileObj = fileParams.fileObj
     if (!fileObj || typeof fileObj !== 'object' || !fileObj.name) {
       throw new HError(605)
     }
