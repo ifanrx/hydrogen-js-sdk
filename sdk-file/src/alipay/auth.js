@@ -63,12 +63,10 @@ const createAuthFn = BaaS => (force = false) => {
         if (res.authCode) {
           return sessionInit(BaaS, res.authCode, resolve, reject)
         } else {
-          utils.wxRequestFail(reject)  // TODO:
+          reject(res.authErrorScope)
         }
       },
-      fail: () => {
-        utils.wxRequestFail(reject)  // TODO:
-      },
+      fail: res => reject,
     })
   })
 }
@@ -90,11 +88,9 @@ const sessionInit = (BaaS, code, resolve, reject) => {
       BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     } else {
-      reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
+      reject(new HError(res.statusCode, BaaS.request.extractErrorMsg(res)))
     }
-  }, err => {
-    reject(err)
-  })
+  }, err => reject)
 }
 
 const createSilentLoginFn = BaaS => () => {
@@ -162,9 +158,7 @@ const createLogoutFn = BaaS = () => {
     BaaS.request({url: BaaS._config.API.LOGOUT, method: 'POST'}).then(() => {
       BaaS.clearSession()
       resolve()
-    }, err => {
-      reject(err)
-    })
+    }, err => reject)
   })
 }
 

@@ -53,7 +53,7 @@ const myUpload = (config, resolve, reject) => {
       resolve(res)
     },
     fail: res => {
-      reject(new UploadError(parseInt(res.status)))
+      reject(new UploadError(parseInt(res.error), res.errorMessage))
     }
   })
 }

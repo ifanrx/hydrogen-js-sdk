@@ -92,7 +92,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header, header
       dataType: dataType,
       success: resolve,
       fail: res => {
-        reject(new RequestError(parseInt(res.status)))
+        reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
     })
 
