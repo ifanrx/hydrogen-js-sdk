@@ -29,7 +29,7 @@ const myUpload = (config, resolve, reject, type) => {
     url: config.uploadUrl,
     filePath: config.filePath,
     fileName: constants.UPLOAD.UPLOAD_FILE_KEY,
-    fileType: type,
+    fileType: config.fileType,
     formData: {
       authorization: config.authorization,
       policy: config.policy
@@ -66,7 +66,7 @@ const myUpload = (config, resolve, reject, type) => {
   })
 }
 
-function createUploadFileFn = BaaS => (fileParams, metaData, type) => {
+const createUploadFileFn = BaaS => (fileParams, metaData, type) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new HError(605)
   }
@@ -94,6 +94,7 @@ function createUploadFileFn = BaaS => (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
+      fileType: fileParams.fileType,
       destLink: res.data.file_link
     }
     myUpload(config, e => {
