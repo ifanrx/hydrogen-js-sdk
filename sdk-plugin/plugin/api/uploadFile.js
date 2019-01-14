@@ -39,7 +39,7 @@ const wxUpload = (config, resolve, reject, type) => {
       resolve(res)
     },
     fail: () => {
-      utils.wxRequestFail(reject)
+      BaaS.request.wxRequestFail(reject)
     }
   })
 }

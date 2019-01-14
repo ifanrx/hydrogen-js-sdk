@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const pkg = require('../package')
+const isDEV = process.env.NODE_ENV === 'dev'
 
 module.exports = {
   context: __dirname,
@@ -11,18 +12,20 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: process.env.NODE_ENV === 'dev' ? 'sdk-[name].dev.js' : 'sdk-[name].js',
+    filename: isDEV ? 'sdk-[name].dev.js' : 'sdk-[name].js',
     library: 'BaaS',
     libraryTarget: 'umd',
   },
   plugins: [
     new webpack.DefinePlugin({
-      __VERSION__: JSON.stringify('haha123'),
+      __VERSION_WEB__: JSON.stringify(pkg.versions.web),
+      __VERSION_ALIPAY__: JSON.stringify(pkg.versions.alipay),
     })
   ],
   resolve: {
     alias: {
       'core-module': path.resolve(__dirname, '../core/')
     }
-  }
+  },
+  devtool: isDEV ? "inline-cheap-source-map" : 'source-map'
 }

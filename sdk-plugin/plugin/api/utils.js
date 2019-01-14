@@ -1,6 +1,7 @@
 const storage = require('./storage')
 const constants = require('./constants')
 const BaaS = require('./baas')
+const builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization']
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -252,9 +253,38 @@ const doCreateRequestMethod = (methodMap) => {
   }
 }
 
+/**
+ * 设置请求头
+ * @param  {Object} header 自定义请求头
+ * @return {Object}        扩展后的请求
+ */
+const mergeRequestHeader = (header) => {
+  let extendHeader = {
+    'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+    'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+    'X-Hydrogen-Client-Platform': getSysPlatform(),
+    'X-Hydrogen-Client-SDK-Type': BaaS._polyfill.SDK_TYPE,
+  }
+
+  let getAuthToken = BaaS.getAuthToken()
+  if (getAuthToken) {
+    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + getAuthToken
+  }
+
+  if (header) {
+    builtInHeader.map(key => {
+      if (header.hasOwnProperty(key)) {
+        delete header[key]
+      }
+    })
+  }
+
+  return extend(extendHeader, header || {})
+}
 
 
 module.exports = {
+  mergeRequestHeader,
   log,
   format,
   getSysPlatform,

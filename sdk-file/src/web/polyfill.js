@@ -6,10 +6,14 @@ module.exports = function (BaaS) {
       }
     },
     setStorageSync: function (k, v) {
-      window.localStorage.setItem(k, v)
+      window.localStorage.setItem(k, JSON.stringify({value: v}))
     },
     getStorageSync: function (k) {
-      return window.localStorage.getItem(k)
+      try {
+        return JSON.parse(window.localStorage.getItem(k)).value
+      } catch (e) {
+        return null
+      }
     },
   })
 }

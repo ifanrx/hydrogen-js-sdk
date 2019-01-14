@@ -2,12 +2,6 @@ const API_HOST = 'https://api.myminapp.com'
 const API_HOST_PATTERN = /^https:\/\/\w+\.myminapp\.com/ // 若要修改 API 域名，这里的域名正则也要跟着修改
 let VERSION = 'v1.14.1'
 
-try {
-  VERSION = __VERSION__
-} catch (e) {
-  // VERSION = 'v1.14.1'
-}
-
 const API = {
   LOGIN: '/hserve/v1.4/session/init/',
   AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
