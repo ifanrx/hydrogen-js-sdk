@@ -9,38 +9,31 @@ let isSilentLogining = false
 let silentLoginResolve = []
 let silentLoginReject = []
 
-const resolveLoginCallBacks = (storage, userInfo = true) => {
+const resolveLoginCallBacks = (storage, isForceLogin = true) => {
+  let resolves = isForceLogin ? loginResolve : silentLoginResolve
   setTimeout(() => {
-    if (userInfo) {
-      while (loginResolve.length) {
-        loginResolve.shift()(makeLoginResponseData(storage))
-      }
-    } else {
-      while (silentLoginResolve.length) {
-        silentLoginResolve.shift()(makeLoginResponseData(storage, false))
-      }
+    while (resolves.length) {
+      resolves.shift()(makeLoginResponseData(storage, isForceLogin))
     }
   }, 0)
 }
 
-const rejectLoginCallBacks = (err, userInfo = true) => {
+const rejectLoginCallBacks = (err, isForceLogin = true) => {
+  let rejects = isForceLogin ? loginReject : silentLoginReject
   setTimeout(() => {
-    if (userInfo) {
-      while (loginReject.length) {
-        loginReject.shift()(err)
-      }
-    } else {
-      while (silentLoginReject.length) {
-        silentLoginReject.shift()(err)
-      }
+    while (rejects.length) {
+      rejects.shift()(err)
     }
   }, 0)
 }
 
-const makeLoginResponseData = (storage, userInfo = true) => {  // TODO: 改为 alipay 的返回数据1
-  if (userInfo) return Object.assign(
-    {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
-    storage.get(constants.STORAGE_KEY.USERINFO))
+const makeLoginResponseData = (storage, isForceLogin = true) => {
+  // TODO: 改为 alipay 的返回数据
+  if (isForceLogin) {
+    return Object.assign(
+      {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
+      storage.get(constants.STORAGE_KEY.USERINFO))
+  }
   return {
     id: storage.get(constants.STORAGE_KEY.UID),
     openid: storage.get(constants.STORAGE_KEY.OPENID),
@@ -50,18 +43,19 @@ const makeLoginResponseData = (storage, userInfo = true) => {  // TODO: 改为 a
 }
 
 /**
- * 通过 force 判断是否为强制登录
+ * 通过 isForceLogin 判断是否为强制登录
  * scope 为 'auth_user'时，是主动授权，会弹出授权窗口
  * scope 为 'auth_base'时，不会弹出授权窗口
  */
-const createAuthFn = BaaS => (force = false) => {
-  const scope = force ? 'auth_user' : 'auth_base'
+const createAuthFn = BaaS => (isForceLogin = true) => {
+  const scope = isForceLogin ? 'auth_user' : 'auth_base'
+  const handler = isForceLogin ? createAuthenticateFn(BaaS) : createSessionInitFn(BaaS)
   return new Promise((resolve, reject) => {
     my.getAuthCode({
       scopes: scope,
       success: res => {
         if (res.authCode) {
-          return sessionInit(BaaS, res.authCode, resolve, reject)
+          return handler(res.authCode, resolve, reject)
         } else {
           reject(res.authErrorScope)
         }
@@ -71,8 +65,12 @@ const createAuthFn = BaaS => (force = false) => {
   })
 }
 
+const createAuthenticateFn = BaaS => (code, resolve, reject) => {
+
+}
+
 // TODO: 缺少 'auth_user' 后端返回用户信息的处理逻辑
-const sessionInit = (BaaS, code, resolve, reject) => {
+const createSessionInitFn = BaaS => (code, resolve, reject) => {
   return BaaS.request({
     url: BaaS._config.API.LOGIN,  // TODO: aliapy login api
     method: 'POST',
@@ -93,79 +91,45 @@ const sessionInit = (BaaS, code, resolve, reject) => {
   }, err => reject)
 }
 
-const createSilentLoginFn = BaaS => () => {
+const createLoginFn = BaaS = (isForceLogin = true) => {
   const auth = createAuthFn(BaaS)
-  if (BaaS.storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
+  let resolves = isForceLogin ? loginResolve : silentLoginResolve
+  let rejects = isForceLogin ? loginReject : silentLoginReject
+  if ((isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.USERINFO))
+    || (!isForceLogin && storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired())) {
+    // TODO: 判断条件可能需要修改
     return new Promise(resolve => {
-      resolve(makeLoginResponseData(BaaS.storage, false))
+      resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
     })
   }
-  if (isSilentLogining) {
-    return new Promise((resolve, reject) => {
-      silentLoginResolve.push(resolve)
-      silentLoginReject.push(reject)
-    })
-  }
-
-  isSilentLogining = true
   return new Promise((resolve, reject) => {
-    silentLoginResolve.push(resolve)
-    silentLoginReject.push(reject)
-    auth().then(() => {
-      isSilentLogining = false
-      resolveLoginCallBacks(BaaS.storage, false)
-    }, err => {
-      isSilentLogining = false
-      rejectLoginCallBacks(err, false)
-    })
-  })
-}
-
-const createLoginFn = BaaS = (userInfo = true) => {
-  const silentLogin = createSilentLoginFn(BaaS)
-  if (userInfo) {
-    if (BaaS.storage.get(constants.STORAGE_KEY.USERINFO)) {
-      return new Promise(resolve => {
-        resolve(makeLoginResponseData(BaaS.storage))
-      })
+    resolves.push(resolve)
+    rejects.push(reject)
+    if ((!isLogining && isForceLogin) || (!isSilentLogining && !isForceLogin)) {
+      if (isForceLogin) {
+        isLogining = true
+      } else {
+        isSilentLogining = true
+      }
+      auth(isForceLogin)
+        .then(() => resolveLoginCallBacks(BaaS.storage, isForceLogin))
+        .catch(err => rejectLoginCallBacks(err, isForceLogin))
+        .then(() => {
+          if (isForceLogin) {
+            isLogining = false
+          } else {
+            isSilentLogining = false
+          }
+        })
     }
-    if (isLogining) {
-      return new Promise((resolve, reject) => {
-        loginResolve.push(resolve)
-        loginReject.push(reject)
-      })
-    }
-    isLogining = true
-    return new Promise((resolve, reject) => {
-      loginResolve.push(resolve)
-      loginReject.push(reject)
-      auth(true).then(() => {
-        isLogining = false
-        resolveLoginCallBacks(BaaS.storage)
-      }, err => {
-        isLogining = false
-        rejectLoginCallBacks(err)
-      })
-    })
-  } else {
-    return silentLogin()
-  }
-}
-
-const createLogoutFn = BaaS = () => {
-  return new Promise((resolve, reject) => {
-    // API.LOGOUT 接口不做 token 检查
-    BaaS.request({url: BaaS._config.API.LOGOUT, method: 'POST'}).then(() => {
-      BaaS.clearSession()
-      resolve()
-    }, err => reject)
   })
 }
 
 module.exports = function (BaaS) {
+  const login = createLoginFn(BaaS)
   BaaS.auth = {
-    silentLogin: createSilentLoginFn(BaaS)
+    ...BaaS.auth,
+    silentLogin: login.bind(null, false)
+    loginWithAlipay: login,
   }
-  BaaS.login = createLoginFn(BaaS)
-  BaaS.logout = createLogoutFn(BaaS)
 }
