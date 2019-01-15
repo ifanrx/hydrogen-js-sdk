@@ -122,7 +122,7 @@ module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth = {
     ...BaaS.auth,
-    silentLogin: login,
+    silentLogin: login.bind(null, {forceLogin: false}),
     loginWithAlipay: login,
   }
 }
