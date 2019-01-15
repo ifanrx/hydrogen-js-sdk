@@ -1,6 +1,6 @@
 const utils = require('./api/utils')
 const HError = require('./api/HError')
-const BaaS = require('./api/index')
+const BaaS = require('./api/wechat/index')
 
 BaaS._polyfill.getAPIHost = () => 'https://api.myminapp.com'
 BaaS._polyfill.SDK_TYPE = 'plugin'

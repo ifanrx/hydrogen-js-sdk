@@ -1,6 +1,6 @@
-const BaaS = require('./baas')
-const utils = require('./utils')
-const BaseQuery = require('./BaseQuery')
+const BaaS = require('../baas')
+const utils = require('../utils')
+const BaseQuery = require('../BaseQuery')
 
 const API = BaaS._config.API
 

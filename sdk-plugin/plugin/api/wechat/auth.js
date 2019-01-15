@@ -1,7 +1,7 @@
-const constants = require('./constants')
-const HError = require('./HError')
-const storage = require('./storage')
-const utils = require('./utils')
+const constants = require('../constants')
+const HError = require('../HError')
+const storage = require('../storage')
+const utils = require('../utils')
 
 let loginResolve = []
 let loginReject = []

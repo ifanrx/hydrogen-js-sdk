@@ -1,6 +1,6 @@
-const BaaS = require('./baas')
-const HError = require('./HError')
-const utils = require('./utils')
+const BaaS = require('../baas')
+const HError = require('../HError')
+const utils = require('../utils')
 
 const wxRequestFail = function (reject) {
   wx.getNetworkType({

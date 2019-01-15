@@ -6,7 +6,7 @@ axios.interceptors.response.use(function (response) {
   response.statusCode = response.status
   return response;
 }, function (error) {
-  return new HError(error.status, utils.extractErrorMsg(error.response))
+  return error.response
 })
 
 module.exports = function (BaaS) {

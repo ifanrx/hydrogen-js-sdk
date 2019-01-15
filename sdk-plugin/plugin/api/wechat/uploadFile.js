@@ -1,7 +1,7 @@
-const constants = require('./constants')
-const HError = require('./HError')
-const utils = require('./utils')
-const {getUploadFileConfig, getUploadHeaders} = require('./upload')
+const constants = require('../constants')
+const HError = require('../HError')
+const utils = require('../utils')
+const {getUploadFileConfig, getUploadHeaders} = require('../upload')
 
 const wxUpload = (config, resolve, reject, type) => {
   return wx.uploadFile({
