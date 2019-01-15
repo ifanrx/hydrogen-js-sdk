@@ -14,9 +14,7 @@ module.exports = function (BaaS) {
     },
 
     getStorageSync: function (key) {
-      return my.getStorageSync({
-        key,
-      })
+      return my.getStorageSync({ key }).data
     },
 
     linkAlipay: function (userId, code) {

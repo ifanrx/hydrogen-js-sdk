@@ -86,7 +86,7 @@ const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
   })
 }
 
-const createLoginFn = BaaS = (isForceLogin = true) => {
+const createLoginFn = BaaS => (isForceLogin = true) => {
   const auth = createAuthFn(BaaS)
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   let rejects = isForceLogin ? loginReject : silentLoginReject
