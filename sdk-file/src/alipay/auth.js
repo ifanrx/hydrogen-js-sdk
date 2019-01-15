@@ -9,7 +9,7 @@ let isSilentLogining = false
 let silentLoginResolve = []
 let silentLoginReject = []
 
-const resolveLoginCallBacks = (storage, isForceLogin = true) => {
+const resolveLoginCallBacks = (storage, isForceLogin) => {
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   setTimeout(() => {
     while (resolves.length) {
@@ -18,7 +18,7 @@ const resolveLoginCallBacks = (storage, isForceLogin = true) => {
   }, 0)
 }
 
-const rejectLoginCallBacks = (err, isForceLogin = true) => {
+const rejectLoginCallBacks = (err, isForceLogin) => {
   let rejects = isForceLogin ? loginReject : silentLoginReject
   setTimeout(() => {
     while (rejects.length) {
@@ -27,7 +27,7 @@ const rejectLoginCallBacks = (err, isForceLogin = true) => {
   }, 0)
 }
 
-const makeLoginResponseData = (storage, isForceLogin = true) => {
+const makeLoginResponseData = (storage, isForceLogin) => {
   if (isForceLogin) {
     return Object.assign({
       id: storage.get(constants.STORAGE_KEY.UID),
@@ -47,7 +47,7 @@ const makeLoginResponseData = (storage, isForceLogin = true) => {
  * scope 为 'auth_user'时，是主动授权，会弹出授权窗口
  * scope 为 'auth_base'时，不会弹出授权窗口
  */
-const createAuthFn = BaaS => (isForceLogin = true) => {
+const createAuthFn = BaaS => (isForceLogin) => {
   const scope = isForceLogin ? 'auth_user' : 'auth_base'
   const handler = createLoginHandlerFn(BaaS, isForceLogin)
   return new Promise((resolve, reject) => {
@@ -86,7 +86,8 @@ const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
   })
 }
 
-const createLoginFn = BaaS => (isForceLogin = true) => {
+const createLoginFn = BaaS => opts => {
+  const isForceLogin = !!opts && !!opts.forceLogin
   const auth = createAuthFn(BaaS)
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   let rejects = isForceLogin ? loginReject : silentLoginReject
@@ -121,7 +122,7 @@ module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth = {
     ...BaaS.auth,
-    silentLogin: login.bind(null, false),
+    silentLogin: login,
     loginWithAlipay: login,
   }
 }
