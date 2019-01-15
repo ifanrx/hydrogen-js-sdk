@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="./sdk.dev.js"></script>
+  <title>WEB SDK 测试</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">登入登出</h5>
+      <hr>
+      <button type="button" class="btn btn-primary">匿名登录</button>
+      <hr />
+      <div>
+        <div class="form-group">
+          <input type="email" placeholder="邮箱" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="用户名" name="username" class="form-control" id="username1" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="密码" class="form-control" id="exampleInputPassword1">
+        </div>
+        <button type="button" class="btn btn-primary">账号密码登录</button>
+      </div>
+      <hr />
+      <div>
+        <div class="form-group">
+          <input placeholder="邮箱" name="email" type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="用户名" name="username" class="form-control" id="username" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="密码" class="form-control" id="exampleInputPassword2">
+        </div>
+        <button type="button" class="btn btn-primary">注册账号</button>
+      </div>
+      <hr />
+      <button type="button" class="btn btn-primary">退出登录</button>
+      <hr />
+      <button type="button" class="btn btn-primary">忘记密码</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">用户 （UserRecord）</h5>
+      <hr>
+      <button type="button" class="btn btn-primary">获取当前用户</button>
+      <hr />
+      <button type="button" class="btn btn-primary">发送验证邮件</button>
+      <hr />
+      <div>
+        <div class="form-group">
+          <input placeholder="旧密码" name="email" type="email" class="form-control" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="新密码" name="username" class="form-control" aria-describedby="emailHelp">
+        </div>
+        <button type="button" class="btn btn-primary">修改密码</button>
+      </div>
+      <hr>
+      <div>
+        <div class="form-group">
+          <input placeholder="邮箱" name="email" type="email" class="form-control" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input placeholder="用户名" name="username" class="form-control" aria-describedby="emailHelp">
+        </div>
+        <button type="button" class="btn btn-primary">修改用户信息</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">数据表</h5>
+      <button type="button" class="btn btn-primary">修改密码</button>
+      <button type="button" class="btn btn-primary">修改密码</button>
+      <button type="button" class="btn btn-primary">修改密码</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">文件</h5>
+      <button type="button" class="btn btn-primary">上传文件</button>
+      <button type="button" class="btn btn-primary">获取文件列表</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">内容库</h5>
+      This is some text within a card body.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">云函数</h5>
+      This is some text within a card body.
+    </div>
+  </div>
+</div>
+</body>
+</html>
