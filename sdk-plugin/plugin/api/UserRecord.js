@@ -87,9 +87,8 @@ class UserRecord extends BaseRecord {
 
   /**
    * 发送验证邮件
-   * @param email
    */
-  requestEmailVerification(email) {
+  requestEmailVerification() {
     return BaaS._baasRequest({
       url: API.WEB.EMAIL_VERIFY,
       method: 'POST',
@@ -113,7 +112,7 @@ class UserRecord extends BaseRecord {
    * 发送手机号验证
    * @param mobile
    */
-  requestMobileVerification(mobile) {
+  requestMobileVerification() {
     // TODO：本期先不做
   }
 }
