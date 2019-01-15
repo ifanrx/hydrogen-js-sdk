@@ -43,8 +43,6 @@ module.exports = function (BaaS) {
 
   // 暴露指定 BaaS 方法
   BaaS.auth = require('./auth')
-  BaaS.login = require('./auth').login
-  BaaS.logout = require('./auth').logout
   BaaS.ContentGroup = require('./ContentGroup')
   BaaS.File = require('./File')
   BaaS.FileCategory = require('./FileCategory')

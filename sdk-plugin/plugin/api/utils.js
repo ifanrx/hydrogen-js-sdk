@@ -258,7 +258,7 @@ const doCreateRequestMethod = (methodMap) => {
  * @param  {Object} header 自定义请求头
  * @return {Object}        扩展后的请求
  */
-const mergeRequestHeader = (header) => {
+const mergeRequestHeader = header => {
   let extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
@@ -282,6 +282,16 @@ const mergeRequestHeader = (header) => {
   return extend(extendHeader, header || {})
 }
 
+const validateStatusCode = res => {
+  let status = parseInt(res.status || res.statusCode)
+
+  if (status >= 200 && status < 300) {
+    return res
+  } else {
+    throw new HError(status, extractErrorMsg(res))
+  }
+}
+
 
 module.exports = {
   mergeRequestHeader,
@@ -301,4 +311,5 @@ module.exports = {
   isSessionExpired,
   excludeParams,
   doCreateRequestMethod,
+  validateStatusCode,
 }

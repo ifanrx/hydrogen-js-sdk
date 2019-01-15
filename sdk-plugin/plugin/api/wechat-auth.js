@@ -3,7 +3,6 @@ const HError = require('./HError')
 const storage = require('./storage')
 const utils = require('./utils')
 
-let isLogining = false
 let loginResolve = []
 let loginReject = []
 let isSilentLogining = false
@@ -172,11 +171,5 @@ module.exports = BaaS => {
     })
   }
 
-  BaaS.loginWithWechat = silentLogin
-
-  BaaS.linkWechat = function () {
-    // TODO
-  }
-
-  BaaS.handleUserInfo = handleUserInfo
+  BaaS.auth.loginWithWechat = BaaS.auth.silentLogin = silentLogin
 }

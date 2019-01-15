@@ -1,4 +1,4 @@
-const baasRequest = require('../core/baasRequest')
+// const baasRequest = require('../core/baasRequest')
 const utils = require('../core/utils')
 
 describe('baasRequest', () => {

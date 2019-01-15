@@ -7,12 +7,14 @@ try {
 }
 const uploadFile = require('./uploadFile')
 const request = require('./request')
+const baasRequest = require('./baasRequest')
 const auth = require('./auth')
 const polyfill = require('./polyfill')
 BaaS.use(core)
 BaaS.use(polyfill)
 BaaS.use(uploadFile)
 BaaS.use(request)
+BaaS.use(baasRequest)
 BaaS.use(auth)
 
 BaaS._createRequestMethod()

@@ -2,7 +2,7 @@ module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
     getSystemInfoSync: function () {
       return {
-        platform: 'web'
+        platform: 'WEB'
       }
     },
     setStorageSync: function (k, v) {

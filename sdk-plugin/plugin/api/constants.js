@@ -29,6 +29,33 @@ module.exports = {
     UA: 'Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30',
   },
 
+  USER_PROFILE_BUILD_IN_FIELDS: [
+    // 原有内置字段
+    'id',
+    'created_at',
+    'created_by',
+    'updated_at',
+    'country',
+    'nickname',
+    'province',
+    'city',
+    'language',
+    'openid',
+    'unionid',
+    'avatar',
+    'is_authorized',
+    'gender',
+
+    // 新增内置字段
+    'email',
+    'username',
+    'password',
+    'phone_number',
+    'last_login',
+    'auth_data',
+  ],
+
+
   httpMethodCodeMap: {
     GET: 200,
     POST: 201,

@@ -48,6 +48,14 @@ const API = {
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   SEND_SMS_CODE: '/hserve/v1.8/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
+
+  WEB: {
+    REGISTER: '/hserve/v1/web/register/',
+    LOGIN: '/hserve/v1/web/login/',
+    EMAIL_VERIFY: '/hserve/v1/web/email-verify/',
+    BASIC_INFO: '/hserve/v1/user/basic-info/',
+    PASSWORD_RESET: '/hserve/v1/web/password/reset/',
+  }
 }
 
 const methodMapList = [{
