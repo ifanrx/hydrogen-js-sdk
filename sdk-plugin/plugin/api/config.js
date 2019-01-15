@@ -50,11 +50,12 @@ const API = {
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 
   WEB: {
-    REGISTER: '/hserve/v1/web/register/',
-    LOGIN: '/hserve/v1/web/login/',
-    EMAIL_VERIFY: '/hserve/v1/web/email-verify/',
+    REGISTER: '/hserve/v1/register/',
+    LOGIN: '/hserve/v1/login/',
+    EMAIL_VERIFY: '/hserve/v1/user/email-verify/',
     BASIC_INFO: '/hserve/v1/user/account/',
-    PASSWORD_RESET: '/hserve/v1/web/password/reset/',
+    PASSWORD_RESET: '/hserve/v1/user/password/reset/',
+    ANONYMOUS_LOGIN: '/hserve/v1/anonymous-login/',
   },
 
   ALIPAY: {

@@ -22,8 +22,7 @@ const wxDecryptData = (...params) => {
   }, err => {
     let code = err.code
     if (code === 403) throw new HError(403, '微信解密插件未开启')
-    if (code === 401) throw new HError(401, res.data.message)
-    if (code === 400) throw new HError(400, res.data.message)
+    throw err
   })
 }
 

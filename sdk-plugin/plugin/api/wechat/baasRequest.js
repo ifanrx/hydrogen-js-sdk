@@ -2,7 +2,7 @@ const utils = require('../utils')
 const BaaS = require('../baas')
 const constants = require('../constants')
 const config = require('../config')
-
+const storage = require('../storage')
 /**
  *
  * @param {object} payload

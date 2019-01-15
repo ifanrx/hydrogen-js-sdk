@@ -1,5 +1,5 @@
 const BaaS = require('../baas')
-const core = require('../core')
+const core = require('../index')
 const wechatAuth = require('./auth')
 const censor = require('./censor')
 BaaS.use(core)
@@ -15,7 +15,7 @@ BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
 BaaS._polyfill.linkWechat = function () {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // TODO:: 绑定微信账号
     resolve(true)
   })

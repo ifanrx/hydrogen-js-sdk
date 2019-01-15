@@ -13,7 +13,7 @@ module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
 
-// 获取登录凭证 code, 进而换取用户登录态信息
+  // 获取登录凭证 code, 进而换取用户登录态信息
   const auth = () => {
     return new Promise((resolve, reject) => {
       polyfill.wxLogin({
@@ -27,7 +27,7 @@ module.exports = BaaS => {
     })
   }
 
-// code 换取 session_key，生成并获取 3rd_session 即 token
+  // code 换取 session_key，生成并获取 3rd_session 即 token
   const sessionInit = (code, resolve, reject) => {
     return BaaS.request({
       url: API.LOGIN,
@@ -52,7 +52,7 @@ module.exports = BaaS => {
   }
 
   const silentLogin = () => {
-    if (storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired()) {
+    if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
       return new Promise(resolve => {
         resolve(makeLoginResponseData(false))
       })
@@ -118,7 +118,7 @@ module.exports = BaaS => {
     }, 0)
   }
 
-// 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   const handleUserInfo = (res) => {
     if (!res || !res.detail) {
       throw new HError(603)
@@ -152,7 +152,7 @@ module.exports = BaaS => {
     })
   }
 
-// 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
+  // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
   const getSensitiveData = (data, resolve, reject, userInfo) => {
     return BaaS.request({
       url: API.AUTHENTICATE,
@@ -171,5 +171,6 @@ module.exports = BaaS => {
     })
   }
 
+  BaaS.auth.handleUserInfo = handleUserInfo
   BaaS.auth.loginWithWechat = BaaS.auth.silentLogin = silentLogin
 }

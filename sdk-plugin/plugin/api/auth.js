@@ -7,19 +7,57 @@ const UserRecord = require('./UserRecord')
 
 const API = BaaS._config.API
 
+let loginPromise = null
+let anonymousLoginPromise = null
+
 const login = data => {
-  return BaaS.request({
-    url: API.WEB.LOGIN,
-    method: 'POST',
-    data: data,
-  }).then(utils.validateStatusCode).then(res => {
-    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-    return res
-  })
+  if (!loginPromise) {
+    loginPromise = BaaS.request({
+      url: API.WEB.LOGIN,
+      method: 'POST',
+      data: data,
+    }).then(utils.validateStatusCode).then(res => {
+      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      let userInfo = Object.assign({}, res.data)
+      delete userInfo.token
+      delete userInfo.expires_in
+      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
+      loginPromise = null
+      return res.data
+    })
+  }
+  return loginPromise
 }
 
+/**
+ * 匿名登录，给用户分配一个临时的 TOKEN
+ */
+const anonymousLogin = () => {
+  if (!anonymousLoginPromise) {
+    anonymousLoginPromise = BaaS.request({
+      url: API.WEB.ANONYMOUS_LOGIN,
+      method: 'POST',
+      data: data,
+    }).then(utils.validateStatusCode).then(res => {
+      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      let userInfo = Object.assign({}, res.data)
+      delete userInfo.token
+      delete userInfo.expires_in
+      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
+      anonymousLoginPromise = null
+      return res.data
+    })
+  }
+  return anonymousLoginPromise
+}
+
+/**
+ * 静默登录
+ */
 const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
 }
@@ -29,7 +67,7 @@ const register = data => {
     url: API.WEB.REGISTER,
     method: 'POST',
     data: data,
-  }).then(utils.validateStatusCode)
+  }).then(utils.validateStatusCode).then(res => res.data)
 }
 
 
@@ -40,7 +78,7 @@ const logout = () => {
   }).then(res => {
     BaaS.clearSession()
     return utils.validateStatusCode(res)
-  })
+  }).then(res => res.data)
 }
 
 /**
@@ -58,6 +96,7 @@ module.exports = {
   login,
   logout,
   silentLogin,
+  anonymousLogin,
   requestPasswordReset,
   register,
   currentUser() {
