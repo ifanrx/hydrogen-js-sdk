@@ -45,10 +45,6 @@ const anonymousLogin = () => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '1')
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      let userInfo = Object.assign({}, res.data)
-      delete userInfo.token
-      delete userInfo.expires_in
-      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
       anonymousLoginPromise = null
       return res.data
     })
@@ -89,7 +85,7 @@ const requestPasswordReset = () => {
   return BaaS.request({
     url: API.WEB.PASSWORD_RESET,
     method: 'POST',
-  }).then(utils.validateStatusCode)
+  }).then(utils.validateStatusCode).then(res => res.data)
 }
 
 
@@ -103,6 +99,6 @@ module.exports = {
   currentUser() {
     let cache = storage.get(constants.STORAGE_KEY.USERINFO)
     if (cache) return null
-    return UserRecord.createCurrentUser(cache)
+    return UserRecord.init(cache)
   }
 }

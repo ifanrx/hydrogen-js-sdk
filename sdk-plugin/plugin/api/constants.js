@@ -47,14 +47,6 @@ module.exports = {
     'avatar',
     'is_authorized',
     'gender',
-
-    // 新增内置字段
-    'email',
-    'username',
-    'password',
-    'phone_number',
-    'last_login',
-    'auth_data',
   ],
 
 

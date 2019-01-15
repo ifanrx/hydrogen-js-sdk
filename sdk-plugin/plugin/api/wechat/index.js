@@ -14,6 +14,7 @@ BaaS.uploadFile = require('./uploadFile')
 BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
+BaaS.ErrorTracker = require('./errorTracker')
 BaaS._polyfill.linkWechat = function () {
   return new Promise((resolve) => {
     // TODO:: 绑定微信账号

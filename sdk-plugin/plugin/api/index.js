@@ -17,9 +17,9 @@ module.exports = function (BaaS) {
     return storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
   }
 
-  BaaS.isLogined = () => {
-    return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS)
-  }
+  // BaaS.isLogined = () => {
+  //   return storage.get(constants.STORAGE_KEY.IS_LOGINED_BAAS)
+  // }
 
   BaaS.clearSession = () => {
     // 清除客户端认证 Token
@@ -53,6 +53,5 @@ module.exports = function (BaaS) {
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
   BaaS.User = require('./User')
-  BaaS.ErrorTracker = require('./errorTracker')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 }

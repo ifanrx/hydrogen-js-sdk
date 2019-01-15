@@ -274,6 +274,11 @@ const mergeRequestHeader = header => {
   return extend({}, header || {}, extendHeader)
 }
 
+/**
+ * 处理 request.then 回调中出现 40x, 50x 的情况
+ * @param res
+ * @return {*}
+ */
 const validateStatusCode = res => {
   let status = parseInt(res.status || res.statusCode)
 

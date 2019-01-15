@@ -4,6 +4,8 @@ const utils = require('./utils')
 const USER_PROFILE_BUILD_IN_FIELDS = require('./constants').USER_PROFILE_BUILD_IN_FIELDS
 const HError = require('./HError')
 const API = BaaS._config.API
+const storage = require('./storage')
+const constants = require('./constants')
 
 class UserRecord extends BaseRecord {
   constructor(userID) {
@@ -41,13 +43,14 @@ class UserRecord extends BaseRecord {
    */
   updatePassword({password, newPassword}) {
     return BaaS._baasReuqest({
-      url: API.WEB.BASIC_INFO,
+      url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {
         password,
         new_password: newPassword,
       },
     }).then(res => {
+      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
       return res
     })
   }
@@ -59,13 +62,14 @@ class UserRecord extends BaseRecord {
    */
   updateEmail(email, sendVerificationEmail = false) {
     return BaaS._baasReuqest({
-      url: API.WEB.BASIC_INFO,
+      url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {email},
     }).then(res => {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
+      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
       return res
     })
   }
@@ -77,9 +81,12 @@ class UserRecord extends BaseRecord {
    */
   updateUsername(username) {
     return BaaS._baasReuqest({
-      url: API.WEB.BASIC_INFO,
+      url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {username},
+    }).then(res => {
+      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
+      return res
     })
   }
 
@@ -116,7 +123,11 @@ class UserRecord extends BaseRecord {
   }
 }
 
-UserRecord.createCurrentUser = function (userInfo) {
+/**
+ * 创建一个 currentUser 对象
+ * @param userInfo
+ */
+UserRecord.init = function (userInfo) {
   if (!utils.isObject(userInfo)) {
     return new HError(605)
   }
@@ -127,8 +138,9 @@ UserRecord.createCurrentUser = function (userInfo) {
     return this._attribute
   }
 
-  USER_PROFILE_BUILD_IN_FIELDS.forEach(key => {
-    if (userInfo.hasOwnProperty(key)) {
+  Object.keys(userInfo).forEach(key => {
+    // 以下划线开头或者是原有内置字段将直接添加在该对象上
+    if (key[0] === '_' || USER_PROFILE_BUILD_IN_FIELDS.includes(key)) {
       record[key] = userInfo[key]
     }
   })
