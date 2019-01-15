@@ -1,4 +1,3 @@
-require('../core/baasRequest').createRequestMethod()
 const FileCategory = require('../core/FileCategory')
 const helper = require('./helper')
 const Query = require('../core/Query')

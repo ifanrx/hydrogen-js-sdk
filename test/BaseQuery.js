@@ -1,4 +1,3 @@
-require('../core/baasRequest').createRequestMethod()
 const BaseQuery = require('../core/BaseQuery')
 const config = require('../core/config')
 const faker = require('faker')

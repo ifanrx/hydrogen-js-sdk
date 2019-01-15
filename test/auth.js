@@ -1,4 +1,3 @@
-
 const auth = require('../core/auth')
 
 describe('auth', () => {
