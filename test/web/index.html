@@ -24,7 +24,7 @@
     <div class="card-body">
       <h5 class="card-title">登入登出</h5>
       <hr>
-      <button type="button" class="btn btn-primary">匿名登录</button>
+      <button @click="anonymousLogin" type="button" class="btn btn-primary">匿名登录</button>
       <hr />
       <form>
         <div class="form-row form-group">
@@ -38,7 +38,7 @@
             <input v-model="loginForm.password" placeholder="密码" class="form-control" id="exampleInputPassword1">
           </div>
         </div>
-        <button type="button" class="btn btn-primary">账号密码登录</button>
+        <button @click="login" type="button" class="btn btn-primary">账号密码登录</button>
       </form>
       <hr />
       <div>
@@ -53,13 +53,12 @@
             <input v-model="registerForm.password" placeholder="密码" class="form-control">
           </div>
         </div>
-
-        <button type="button" class="btn btn-primary">注册账号</button>
+        <button @click="register" type="button" class="btn btn-primary">注册账号</button>
       </div>
       <hr />
-      <button type="button" class="btn btn-primary">退出登录</button>
+      <button @click="logout" type="button" class="btn btn-primary">退出登录</button>
       <hr />
-      <button type="button" class="btn btn-primary">忘记密码</button>
+      <button @click="forgetPwd" type="button" class="btn btn-primary">忘记密码</button>
     </div>
   </div>
   <div class="card">
@@ -98,9 +97,10 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">数据表</h5>
-      <button type="button" class="btn btn-primary">修改密码</button>
-      <button type="button" class="btn btn-primary">修改密码</button>
-      <button type="button" class="btn btn-primary">修改密码</button>
+      <button type="button" class="btn btn-primary">查询</button>
+      <button type="button" class="btn btn-primary">创建数据行</button>
+      <button type="button" class="btn btn-primary">修改数据行</button>
+      <button type="button" class="btn btn-primary">删除</button>
     </div>
   </div>
   <div class="card">

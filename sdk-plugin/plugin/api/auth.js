@@ -39,7 +39,6 @@ const anonymousLogin = () => {
     anonymousLoginPromise = BaaS.request({
       url: API.WEB.ANONYMOUS_LOGIN,
       method: 'POST',
-      data: data,
     }).then(utils.validateStatusCode).then(res => {
       storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
