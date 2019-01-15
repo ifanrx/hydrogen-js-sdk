@@ -26,6 +26,7 @@ module.exports = function (BaaS) {
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')
     // 清除 BaaS 登录状态
     storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '')
+    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '')
     // 清除用户信息
     storage.set(constants.STORAGE_KEY.USERINFO, '')
     storage.set(constants.STORAGE_KEY.UID, '')

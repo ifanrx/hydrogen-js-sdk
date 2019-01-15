@@ -7,6 +7,7 @@ module.exports = {
     OPENID: 'openid',
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas',
+    IS_ANONYMOUS_USER: 'is_anonymous_user',
     EXPIRES_AT: 'session_expires_at',
     ALIPAY_USER_ID: 'alipay_user_id',
   },

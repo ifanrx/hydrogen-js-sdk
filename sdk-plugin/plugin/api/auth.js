@@ -43,6 +43,7 @@ const anonymousLogin = () => {
     }).then(utils.validateStatusCode).then(res => {
       storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '1')
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       let userInfo = Object.assign({}, res.data)
       delete userInfo.token

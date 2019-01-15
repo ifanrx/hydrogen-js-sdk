@@ -35,17 +35,13 @@ module.exports = BaaS => {
       data: {
         code: code
       }
-    }).then(res => {
-      if (res.statusCode == constants.STATUS_CODE.CREATED) {
-        storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-        storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-        storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
-        storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-        storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-        resolve(res)
-      } else {
-        reject(new HError(res.statusCode, utils.extractErrorMsg(res)))
-      }
+    }).then(utils.validateStatusCode).then(res => {
+      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
+      storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
+      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      resolve(res)
     }, err => {
       reject(err)
     })
@@ -158,7 +154,7 @@ module.exports = BaaS => {
       url: API.AUTHENTICATE,
       method: 'POST',
       data: data
-    }).then(res => {
+    }).then(utils.validateStatusCode).then(res => {
       storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
       if (!userInfo.unionid && res.data.unionid) {
         userInfo.unionid = res.data.unionid
