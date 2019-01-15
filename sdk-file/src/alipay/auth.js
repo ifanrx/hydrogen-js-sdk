@@ -91,7 +91,7 @@ const createLoginFn = BaaS => (isForceLogin = true) => {
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   let rejects = isForceLogin ? loginReject : silentLoginReject
   if ((isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.USERINFO) && !utils.isSessionExpired())
-    || (!isForceLogin && storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired())) {
+    || (!isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired())) {
     return Promise.resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
   }
   return new Promise((resolve, reject) => {
