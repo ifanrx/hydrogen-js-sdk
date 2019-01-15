@@ -1,4 +1,4 @@
-const core = require('core-module/core')
+const core = require('core-module/index')
 const BaaS = require('core-module/baas')
 const auth = require('./auth')
 const request = require('./request')

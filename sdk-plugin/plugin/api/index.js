@@ -29,8 +29,6 @@ module.exports = function (BaaS) {
     // 清除用户信息
     storage.set(constants.STORAGE_KEY.USERINFO, '')
     storage.set(constants.STORAGE_KEY.UID, '')
-    storage.set(constants.STORAGE_KEY.OPENID, '')
-    storage.set(constants.STORAGE_KEY.UNIONID, '')
   }
 
   // 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)

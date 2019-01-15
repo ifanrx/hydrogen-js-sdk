@@ -1,4 +1,4 @@
-const core = require('core-module/core')
+const core = require('core-module/index')
 const BaaS = require('core-module/baas')
 try {
   BaaS._config.VERSION = __VERSION_WEB__
