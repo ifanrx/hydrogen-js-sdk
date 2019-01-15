@@ -1,4 +1,4 @@
-let config = require('../core/config')
+let config = require('../../core/config')
 const faker = require('faker')
 
 const randomOption = config.RANDOM_OPTION

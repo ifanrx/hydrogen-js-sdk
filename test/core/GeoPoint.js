@@ -1,4 +1,4 @@
-const GeoPoint = require('../core/GeoPoint')
+const GeoPoint = require('../../core/GeoPoint')
 
 describe('GeoPoint', () => {
   it('#new', () => {

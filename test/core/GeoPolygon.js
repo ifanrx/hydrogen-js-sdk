@@ -1,6 +1,6 @@
-const GeoPoint = require('../core/GeoPoint')
-const GeoPolygon = require('../core/GeoPolygon')
-const TableObject = require('../core/TableObject')
+const GeoPoint = require('../../core/GeoPoint')
+const GeoPolygon = require('../../core/GeoPolygon')
+const TableObject = require('../../core/TableObject')
 
 describe('GeoPolygon', () => {
   it('#new with 2D array', () => {

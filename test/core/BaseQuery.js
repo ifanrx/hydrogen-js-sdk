@@ -1,8 +1,8 @@
-const BaseQuery = require('../core/BaseQuery')
-const config = require('../core/config')
+const BaseQuery = require('../../core/BaseQuery')
+const config = require('../../core/config')
 const faker = require('faker')
 const helper = require('./helper')
-const Query = require('../core/Query')
+const Query = require('../../core/Query')
 const randomOption = config.RANDOM_OPTION
 
 describe('BaseQuery', () => {

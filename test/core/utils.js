@@ -1,4 +1,4 @@
-const utils = require('../core/utils')
+const utils = require('../../core/utils')
 
 describe('utils', () => {
   it('#log', () => {

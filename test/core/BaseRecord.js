@@ -1,8 +1,8 @@
-const BaseRecord = require('../core/BaseRecord')
-const config = require('../core/config')
+const BaseRecord = require('../../core/BaseRecord')
+const config = require('../../core/config')
 const faker = require('faker')
-const GeoPoint = require('../core/GeoPoint')
-const GeoPolygon = require('../core/GeoPolygon')
+const GeoPoint = require('../../core/GeoPoint')
+const GeoPolygon = require('../../core/GeoPolygon')
 const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION

@@ -1,4 +1,4 @@
-const Order = require('../core/order')
+const Order = require('../../core/wechat/order')
 
 describe('Order', () => {
   it('#getOrderList', () => {

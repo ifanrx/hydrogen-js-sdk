@@ -1,4 +1,4 @@
-const makeParams = require('../core/templateMessage').makeParams
+const makeParams = require('../../core/wechat/templateMessage').makeParams
 const faker = require('faker')
 
 describe('templateMessage', () => {

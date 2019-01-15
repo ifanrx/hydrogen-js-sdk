@@ -5,8 +5,8 @@
   "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
   "scripts": {
-    "test": "mocha",
-    "test-dev": "mocha test/index.js",
+    "test": "npm run test-wechat",
+    "test-wechat": "mocha test/wechat/index.js",
     "dev": "export NODE_ENV=dev && webpack --config sdk-file/webpack.config.js --mode development -w",
     "build": "echo 1",
     "build-npm": "echo 1",

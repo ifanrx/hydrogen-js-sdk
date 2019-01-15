@@ -1,6 +1,6 @@
-const File = require('../core/File')
+const File = require('../../core/File')
 const helper = require('./helper')
-const Query = require('../core/Query')
+const Query = require('../../core/Query')
 
 describe('File', () => {
   let file = null

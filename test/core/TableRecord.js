@@ -1,7 +1,7 @@
-const config = require('../core/config')
+const config = require('../../core/config')
 const faker = require('faker')
-const TableRecord = require('../core/TableRecord')
-const Query = require('../core/Query')
+const TableRecord = require('../../core/TableRecord')
+const Query = require('../../core/Query')
 const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION

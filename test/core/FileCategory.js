@@ -1,6 +1,6 @@
-const FileCategory = require('../core/FileCategory')
+const FileCategory = require('../../core/FileCategory')
 const helper = require('./helper')
-const Query = require('../core/Query')
+const Query = require('../../core/Query')
 
 describe('FileCategory', () => {
   let fileCategory = null

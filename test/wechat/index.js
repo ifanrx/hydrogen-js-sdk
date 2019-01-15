@@ -2,7 +2,7 @@
 
 if (typeof require !== 'undefined') {
   global.expect = require('chai').expect
-  global.BaaS = require('../core')
+  global.BaaS = require('../../core/wechat')
   // 模拟 wx 方法
   global.wx = require('./wechat-mock')
 
@@ -20,20 +20,23 @@ BaaS.test = {
 global.BaaS.init(BaaS.test.clientID)
 
 // 引入待测试模块
+require('../core/BaseQuery')
+require('../core/BaseRecord')
+require('../core/ContentGroup')
+require('../core/File')
+require('../core/FileCategory')
+require('../core/GeoPoint')
+require('../core/GeoPolygon')
+require('../core/Query')
+require('../core/storage')
+require('../core/TableObject')
+require('../core/TableRecord')
+require('../core/User')
+require('../core/UserRecord')
+require('../core/utils')
 require('./auth')
-require('./BaseQuery')
 require('./baasRequest')
-require('./ContentGroup')
-require('./File')
-require('./FileCategory')
-require('./GeoPoint')
-require('./GeoPolygon')
 require('./getWXACode')
-require('./Query')
-require('./storage')
-require('./TableObject')
-require('./templateMessage')
-require('./templateMessage')
-require('./utils')
 require('./Order')
+require('./templateMessage')
 require('./wxDecryptData')

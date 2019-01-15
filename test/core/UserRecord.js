@@ -1,6 +1,6 @@
-const config = require('../core/config')
+const config = require('../../core/config')
 const faker = require('faker')
-const UserRecord = require('../core/UserRecord')
+const UserRecord = require('../../core/UserRecord')
 
 const randomOption = config.RANDOM_OPTION
 
