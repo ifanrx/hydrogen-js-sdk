@@ -39,14 +39,13 @@ class UserRecord extends BaseRecord {
   /**
    * 更新密码
    */
-  updatePassword({password, newPassword, confirmPassword}) {
+  updatePassword({password, newPassword}) {
     return BaaS._baasReuqest({
       url: API.WEB.BASIC_INFO,
       method: 'PUT',
       data: {
         password,
         new_password: newPassword,
-        confirm_password: confirmPassword,
       },
     }).then(res => {
       return res

@@ -254,7 +254,7 @@ const doCreateRequestMethod = (methodMap) => {
 }
 
 /**
- * 设置请求头
+ * 设置 BaaS.request 请求头
  * @param  {Object} header 自定义请求头
  * @return {Object}        扩展后的请求
  */
@@ -266,20 +266,12 @@ const mergeRequestHeader = header => {
     'X-Hydrogen-Client-SDK-Type': BaaS._polyfill.SDK_TYPE,
   }
 
-  let getAuthToken = BaaS.getAuthToken()
-  if (getAuthToken) {
-    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + getAuthToken
+  let authToken = BaaS.getAuthToken()
+  if (authToken) {
+    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
   }
 
-  if (header) {
-    builtInHeader.map(key => {
-      if (header.hasOwnProperty(key)) {
-        delete header[key]
-      }
-    })
-  }
-
-  return extend(extendHeader, header || {})
+  return extend({}, header || {}, extendHeader)
 }
 
 const validateStatusCode = res => {

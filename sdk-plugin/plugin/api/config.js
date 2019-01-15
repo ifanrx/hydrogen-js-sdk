@@ -53,7 +53,7 @@ const API = {
     REGISTER: '/hserve/v1/web/register/',
     LOGIN: '/hserve/v1/web/login/',
     EMAIL_VERIFY: '/hserve/v1/web/email-verify/',
-    BASIC_INFO: '/hserve/v1/user/basic-info/',
+    BASIC_INFO: '/hserve/v1/user/account/',
     PASSWORD_RESET: '/hserve/v1/web/password/reset/',
   }
 }
