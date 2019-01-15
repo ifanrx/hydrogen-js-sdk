@@ -28,16 +28,16 @@ const rejectLoginCallBacks = (err, isForceLogin = true) => {
 }
 
 const makeLoginResponseData = (storage, isForceLogin = true) => {
-  // TODO: 改为 alipay 的返回数据
   if (isForceLogin) {
-    return Object.assign(
-      {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
-      storage.get(constants.STORAGE_KEY.USERINFO))
+    return Object.assign({
+      id: storage.get(constants.STORAGE_KEY.UID),
+      [constants.STORAGE_KEY.ALIPAY_USER_ID]: storage.get(constants.STORAGE_KEY.ALIPAY_USER_ID),
+      [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT),
+    }, storage.get(constants.STORAGE_KEY.USERINFO))
   }
   return {
     id: storage.get(constants.STORAGE_KEY.UID),
-    openid: storage.get(constants.STORAGE_KEY.OPENID),
-    unionid: storage.get(constants.STORAGE_KEY.UNIONID),
+    [constants.STORAGE_KEY.ALIPAY_USER_ID]: storage.get(constants.STORAGE_KEY.ALIPAY_USER_ID),
     [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)
   }
 }
@@ -49,58 +49,50 @@ const makeLoginResponseData = (storage, isForceLogin = true) => {
  */
 const createAuthFn = BaaS => (isForceLogin = true) => {
   const scope = isForceLogin ? 'auth_user' : 'auth_base'
-  const handler = isForceLogin ? createAuthenticateFn(BaaS) : createSessionInitFn(BaaS)
+  const handler = createLoginHandlerFn(BaaS, isForceLogin)
   return new Promise((resolve, reject) => {
     my.getAuthCode({
       scopes: scope,
       success: res => {
         if (res.authCode) {
-          return handler(res.authCode, resolve, reject)
+          resolve(res.authCode)
         } else {
           reject(res.authErrorScope)
         }
       },
       fail: res => reject,
     })
-  })
+  }).then(code => handler(code, isForceLogin))
 }
 
-const createAuthenticateFn = BaaS => (code, resolve, reject) => {
-
-}
-
-// TODO: 缺少 'auth_user' 后端返回用户信息的处理逻辑
-const createSessionInitFn = BaaS => (code, resolve, reject) => {
+const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
+  const API = BaaS._config.API
+  const url = isForceLogin ? API.ALIPAY.AUTHENTICATE : API.ALIPAY.SILENT_LOGIN
   return BaaS.request({
-    url: BaaS._config.API.LOGIN,  // TODO: aliapy login api
+    url,
     method: 'POST',
-    data: {
-      code: code
-    }
+    data: { code },
   }).then(res => {
     if (res.statusCode == constants.STATUS_CODE.CREATED) {
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-      BaaS.storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
+      BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      BaaS.storage.set(constants.STORAGE_KEY.USERINFO, res.data.user_info)
       BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      resolve(res)
+      return res
     } else {
-      reject(new HError(res.statusCode, BaaS.request.extractErrorMsg(res)))
+      throw new HError(res.statusCode, BaaS.request.extractErrorMsg(res))
     }
-  }, err => reject)
+  })
 }
 
 const createLoginFn = BaaS = (isForceLogin = true) => {
   const auth = createAuthFn(BaaS)
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   let rejects = isForceLogin ? loginReject : silentLoginReject
-  if ((isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.USERINFO))
+  if ((isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.USERINFO) && !utils.isSessionExpired())
     || (!isForceLogin && storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired())) {
-    // TODO: 判断条件可能需要修改
-    return new Promise(resolve => {
-      resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
-    })
+    return Promise.resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
   }
   return new Promise((resolve, reject) => {
     resolves.push(resolve)

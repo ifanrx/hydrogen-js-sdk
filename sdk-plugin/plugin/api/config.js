@@ -55,7 +55,12 @@ const API = {
     EMAIL_VERIFY: '/hserve/v1/web/email-verify/',
     BASIC_INFO: '/hserve/v1/user/account/',
     PASSWORD_RESET: '/hserve/v1/web/password/reset/',
-  }
+  },
+
+  ALIPAY: {
+    SILENT_LOGIN: '/hserve/v1/idp/alipay/silent-login/',
+    AUTHENTICATE: '/hserve/v1/idp/alipay/authenticate/',
+  },
 }
 
 const methodMapList = [{

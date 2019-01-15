@@ -7,7 +7,8 @@ module.exports = {
     OPENID: 'openid',
     UNIONID: 'unionid',
     IS_LOGINED_BAAS: 'is_logined_baas',
-    EXPIRES_AT: 'session_expires_at'
+    EXPIRES_AT: 'session_expires_at',
+    ALIPAY_USER_ID: 'alipay_user_id',
   },
 
   STATUS_CODE: {
