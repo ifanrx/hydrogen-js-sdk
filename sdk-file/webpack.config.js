@@ -7,7 +7,7 @@ module.exports = {
   context: __dirname,
   entry: {
     wechat: './src/wechat/index.js',
-    aliapy: './src/alipay/index.js',
+    alipay: './src/alipay/index.js',
     web: './src/web/index.js',
   },
   output: {
