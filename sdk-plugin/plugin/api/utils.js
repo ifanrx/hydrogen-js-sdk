@@ -171,8 +171,8 @@ const isFunction = value => {
   return value != null && (type == 'function')
 }
 
-const extend = (dist, src) => {
-  return Object.assign(dist, src)
+const extend = (...args) => {
+  return Object.assign(...args)
 }
 
 // 目前仅支持对象或数字的拷贝
@@ -270,7 +270,6 @@ const mergeRequestHeader = header => {
   if (authToken) {
     extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
   }
-
   return extend({}, header || {}, extendHeader)
 }
 

@@ -47,7 +47,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
     if (!config.CLIENT_ID) {
       return reject(new HError(602))
     }
-    let headers = utils.mergeRequestHeader(Object.assign({
+    headers = utils.mergeRequestHeader(Object.assign({
       'Content-Type': 'application/json',
     }, header, headers))
     if (!/https?:\/\//.test(url)) {

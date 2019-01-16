@@ -16,7 +16,7 @@ module.exports = function (BaaS) {
         return reject(new HError(602))
       }
 
-      let headers = utils.mergeRequestHeader(Object.assign({}, header, headers))
+      headers = utils.mergeRequestHeader(Object.assign({}, header, headers))
 
       if (!/https?:\/\//.test(url)) {
         url = BaaS._config.API_HOST + url
