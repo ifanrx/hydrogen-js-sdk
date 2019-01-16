@@ -4,7 +4,7 @@ const axios = require('axios')
 
 axios.interceptors.response.use(function (response) {
   response.statusCode = response.status
-  return response;
+  return response
 }, function (error) {
   return error.response
 })

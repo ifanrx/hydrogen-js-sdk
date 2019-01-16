@@ -127,7 +127,7 @@ class UserRecord extends BaseRecord {
  * 创建一个 currentUser 对象
  * @param userInfo
  */
-UserRecord.init = function (userInfo) {
+UserRecord.initCurrentUser = function (userInfo) {
   if (!utils.isObject(userInfo)) {
     return new HError(605)
   }

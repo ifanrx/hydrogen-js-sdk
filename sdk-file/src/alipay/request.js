@@ -13,18 +13,18 @@ class RequestError {
   // 前端错误信息定义
   mapErrorMessage(code) {
     switch (code) {
-      case 11:
-        return '无权跨域'
-      case 12:
-        return '网络出错'
-      case 13:
-        return '超时'
-      case 14:
-        return '解码失败'
-      case 19:
-        return 'HTTP 错误'
-      default:
-        return 'unknown error'
+    case 11:
+      return '无权跨域'
+    case 12:
+      return '网络出错'
+    case 13:
+      return '超时'
+    case 14:
+      return '解码失败'
+    case 19:
+      return 'HTTP 错误'
+    default:
+      return 'unknown error'
     }
   }
 }

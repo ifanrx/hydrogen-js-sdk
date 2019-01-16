@@ -98,6 +98,6 @@ module.exports = {
   currentUser() {
     let cache = storage.get(constants.STORAGE_KEY.USERINFO)
     if (cache) return null
-    return UserRecord.init(cache)
+    return UserRecord.initCurrentUser(cache)
   }
 }

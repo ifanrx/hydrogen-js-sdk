@@ -12,14 +12,14 @@ class UploadError {
   // 前端错误信息定义
   mapErrorMessage(code) {
     switch (code) {
-      case 11:
-        return '文件不存在'
-      case 12:
-        return '上传文件失败'
-      case 13:
-        return '没有权限'
-      default:
-        return 'unknown error'
+    case 11:
+      return '文件不存在'
+    case 12:
+      return '上传文件失败'
+    case 13:
+      return '没有权限'
+    default:
+      return 'unknown error'
     }
   }
 }
