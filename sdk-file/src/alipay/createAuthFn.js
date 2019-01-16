@@ -19,7 +19,7 @@ const createAuthFn = BaaS => (isForceLogin, userId) => {
           reject(res.authErrorScope)
         }
       },
-      fail: res => reject,
+      fail: res => reject(res),
     })
   }).then(code => handler(code, isForceLogin, userId))
 }

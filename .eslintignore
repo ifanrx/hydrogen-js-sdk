@@ -3,4 +3,3 @@ core/vendor/
 sdk-plugin/plugin/api/vendor/
 test/web/sdk.dev.js
 sdk-file/dist
-sdk-file/src/alipay
