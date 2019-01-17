@@ -1,1 +1,1 @@
-module.exports = require('core-module/index')
+module.exports = require('core-module/wechat/index')

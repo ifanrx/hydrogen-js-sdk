@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'dev'
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   context: __dirname,
@@ -28,7 +29,8 @@ module.exports = {
     new webpack.DefinePlugin({
       __VERSION_WEB__: JSON.stringify(pkg.versions.web),
       __VERSION_ALIPAY__: JSON.stringify(pkg.versions.alipay),
-    })
+    }),
+    isDEV ? new CopyWebpackPlugin([{from: 'dist/sdk-wechat.dev.js', to: '../tmp/vendor/sdk-wechat.dev.js'}]) : () => null
   ],
   resolve: {
     alias: {

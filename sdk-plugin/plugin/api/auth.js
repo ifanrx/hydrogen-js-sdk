@@ -74,9 +74,11 @@ const logout = () => {
     url: API.LOGOUT,
     method: 'POST',
   }).then(res => {
-    BaaS.clearSession()
     return utils.validateStatusCode(res)
-  }).then(res => res.data)
+  }).then(res => {
+    BaaS.clearSession()
+    return res
+  })
 }
 
 /**

@@ -42,7 +42,7 @@ class UserRecord extends BaseRecord {
    * 更新密码
    */
   updatePassword({password, newPassword}) {
-    return BaaS._baasReuqest({
+    return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {
@@ -61,7 +61,7 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationEmail
    */
   updateEmail(email, sendVerificationEmail = false) {
-    return BaaS._baasReuqest({
+    return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {email},
@@ -80,7 +80,7 @@ class UserRecord extends BaseRecord {
    * @return {*}
    */
   updateUsername(username) {
-    return BaaS._baasReuqest({
+    return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
       data: {username},
