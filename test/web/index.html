@@ -8,6 +8,7 @@
   <meta name="renderer" content="webkit">
   <meta name="format-detection" content="telephone=no, email=no" />
   <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.11/lodash.min.js"></script>
   <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <script src="./sdk.dev.js"></script>
@@ -63,34 +64,34 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">用户 （UserRecord）</h5>
+      <h5 class="card-title">用户</h5>
       <hr>
-      <button type="button" class="btn btn-primary">获取当前用户</button>
+      <button @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
       <hr />
-      <button type="button" class="btn btn-primary">发送验证邮件</button>
+      <button @click="requestPasswordReset" type="button" class="btn btn-primary">发送验证邮件</button>
       <hr />
       <div>
         <div class="form-group form-row">
           <div class="col">
-            <input placeholder="旧密码" name="email" type="email" class="form-control" aria-describedby="emailHelp">
+            <input v-model="passwordChangeForm.passowrd" placeholder="旧密码" name="email" type="email" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
-            <input placeholder="新密码" name="username" class="form-control" aria-describedby="emailHelp">
+            <input v-model="passwordChangeForm.new_passowrd" placeholder="新密码" name="username" class="form-control" aria-describedby="emailHelp">
           </div>
         </div>
-        <button type="button" class="btn btn-primary">修改密码</button>
+        <button @click="updatePassword" type="button" class="btn btn-primary">修改密码</button>
       </div>
       <hr>
       <div>
         <div class="form-group form-row">
           <div class="col">
-            <input placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+            <input v-model="userInfoForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
-            <input placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+            <input v-model="userInfoForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
           </div>
         </div>
-        <button type="button" class="btn btn-primary">修改用户信息</button>
+        <button @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
       </div>
     </div>
   </div>
@@ -125,7 +126,6 @@
     </div>
   </div>
 </div>
-
 <script src="index.js"></script>
 </body>
 </html>
