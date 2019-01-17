@@ -1,5 +1,4 @@
 const utils = require('core-module/utils')
-const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError {
@@ -13,18 +12,18 @@ class RequestError {
   // 前端错误信息定义
   mapErrorMessage(code) {
     switch (code) {
-      case 11:
-        return '无权跨域'
-      case 12:
-        return '网络出错'
-      case 13:
-        return '超时'
-      case 14:
-        return '解码失败'
-      case 19:
-        return 'HTTP 错误'
-      default:
-        return 'unknown error'
+    case 11:
+      return '无权跨域'
+    case 12:
+      return '网络出错'
+    case 13:
+      return '超时'
+    case 14:
+      return '解码失败'
+    case 19:
+      return 'HTTP 错误'
+    default:
+      return 'unknown error'
     }
   }
 }
@@ -47,7 +46,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
     if (!config.CLIENT_ID) {
       return reject(new HError(602))
     }
-    let headers = utils.mergeRequestHeader(Object.assign({
+    headers = utils.mergeRequestHeader(Object.assign({
       'Content-Type': 'application/json',
     }, header, headers))
     if (!/https?:\/\//.test(url)) {

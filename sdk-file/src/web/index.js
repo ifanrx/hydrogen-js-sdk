@@ -3,7 +3,7 @@ const BaaS = require('core-module/baas')
 try {
   BaaS._config.VERSION = __VERSION_WEB__
 } catch (e) {
-
+  // pass
 }
 const uploadFile = require('./uploadFile')
 const request = require('./request')

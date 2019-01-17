@@ -1,5 +1,7 @@
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 const HError = require('core-module/HError')
+const constants = require('core-module/constants')
+const utils = require('core-module/utils')
 
 class UploadError {
   constructor(code, msg) {
@@ -12,14 +14,14 @@ class UploadError {
   // 前端错误信息定义
   mapErrorMessage(code) {
     switch (code) {
-      case 11:
-        return '文件不存在'
-      case 12:
-        return '上传文件失败'
-      case 13:
-        return '没有权限'
-      default:
-        return 'unknown error'
+    case 11:
+      return '文件不存在'
+    case 12:
+      return '上传文件失败'
+    case 13:
+      return '没有权限'
+    default:
+      return 'unknown error'
     }
   }
 }
@@ -58,7 +60,7 @@ const myUpload = (config, resolve, reject) => {
   })
 }
 
-const createUploadFileFn = BaaS => (fileParams, metaData) => {
+const createUploadFileFn = () => (fileParams, metaData) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new HError(605)
   }
@@ -98,6 +100,6 @@ const createUploadFileFn = BaaS => (fileParams, metaData) => {
 }
 
 module.exports = function (BaaS) {
-  BaaS.uploadFile = createUploadFileFn(BaaS)
+  BaaS.uploadFile = createUploadFileFn()
 }
 module.exports.UploadError = UploadError

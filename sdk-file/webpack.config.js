@@ -12,7 +12,15 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: isDEV ? 'sdk-[name].dev.js' : 'sdk-[name].js',
+    filename: isDEV ? 'sdk-[name].dev.js' : function (entry) {
+      let version = pkg.version
+      if (entry.name === 'web') {
+        version = pkg.versions.web
+      } else if (entry.name === 'alipay') {
+        version = pkg.versions.alipay
+      }
+      return `sdk-[name].${version}.js`
+    },
     library: 'BaaS',
     libraryTarget: 'umd',
   },
@@ -27,5 +35,5 @@ module.exports = {
       'core-module': path.resolve(__dirname, '../core/')
     }
   },
-  devtool: isDEV ? "inline-cheap-source-map" : 'source-map'
+  devtool: isDEV ? 'inline-cheap-source-map' : 'source-map'
 }

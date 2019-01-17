@@ -1,5 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 core/vendor/
 sdk-plugin/plugin/api/vendor/
-test/web/
+test/web/sdk.dev.js
 sdk-file/dist

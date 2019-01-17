@@ -16,11 +16,13 @@ module.exports = {
     wx: true,
     describe: true,
     it: true,
+    my: true,
     expect: true,
     beforeEach: true,
     before: true,
     BaaS: true,
     sinon: true,
     rewire: true,
+    __VERSION_WEB__: true,
   }
 }

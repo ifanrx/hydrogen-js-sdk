@@ -4,7 +4,7 @@ const axios = require('axios')
 
 axios.interceptors.response.use(function (response) {
   response.statusCode = response.status
-  return response;
+  return response
 }, function (error) {
   return error.response
 })
@@ -16,8 +16,6 @@ module.exports = function (BaaS) {
         return reject(new HError(602))
       }
 
-      let headers = utils.mergeRequestHeader(Object.assign({}, header, headers))
-
       if (!/https?:\/\//.test(url)) {
         url = BaaS._config.API_HOST + url
       }
@@ -25,7 +23,7 @@ module.exports = function (BaaS) {
       let payload = {
         method,
         url,
-        headers,
+        headers: utils.mergeRequestHeader(Object.assign({}, header, headers)),
         data,
       }
       axios(payload).then(resolve, reject)

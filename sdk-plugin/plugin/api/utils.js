@@ -1,6 +1,7 @@
 const storage = require('./storage')
 const constants = require('./constants')
 const BaaS = require('./baas')
+const HError = require('./HError')
 const builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization']
 
 // 增加 includes polyfill，避免低版本的系统报错
@@ -171,8 +172,8 @@ const isFunction = value => {
   return value != null && (type == 'function')
 }
 
-const extend = (dist, src) => {
-  return Object.assign(dist, src)
+const extend = (...args) => {
+  return Object.assign(...args)
 }
 
 // 目前仅支持对象或数字的拷贝
@@ -270,7 +271,6 @@ const mergeRequestHeader = header => {
   if (authToken) {
     extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
   }
-
   return extend({}, header || {}, extendHeader)
 }
 

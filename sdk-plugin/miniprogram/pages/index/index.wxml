@@ -4,6 +4,10 @@
     <view class="zan-cell__bd">登入&登出</view>
     <view class="zan-cell__ft"></view>
   </navigator>
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/account/index">
+    <view class="zan-cell__bd">账户管理</view>
+    <view class="zan-cell__ft"></view>
+  </navigator>
   <navigator class="zan-cell zan-cell--access" url="/pages-test/schema-change/index">
     <view class="zan-cell__bd">schema 增删改测试</view>
     <view class="zan-cell__ft"></view>

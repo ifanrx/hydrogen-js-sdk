@@ -76,9 +76,8 @@ const createLoginFn = BaaS => opts => {
 
 module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
-  BaaS.auth = {
-    ...BaaS.auth,
+  BaaS.auth = Object.assign({}, BaaS.auth, {
     silentLogin: login.bind(null, {forceLogin: false}),
     loginWithAlipay: login,
-  }
+  })
 }
