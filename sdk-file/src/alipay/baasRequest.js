@@ -5,7 +5,7 @@ const utils = require('core-module/utils')
 const createBaasRequestFn = BaaS => ({url, method = 'GET', data = {}, header, headers, dataType = 'json'}) => {
   const config = BaaS._config
   return BaaS.auth.silentLogin().then(() => {
-    return BaaS.request.apply(null, arguments)
+    return BaaS.request({header, headers, method, url, data, dataType})
   }).then(res => {
     if (parseInt(res.status) === constants.STATUS_CODE.UNAUTHORIZED && url.match(config.API_HOST_PATTERN)) {
       return tryResendRequest(BaaS, {header, headers, method, url, data, dataType})
