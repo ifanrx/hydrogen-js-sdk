@@ -10,6 +10,7 @@ function init() {
     el: '#root',
     data() {
       return {
+        isLogin: false,
         loginForm: {
           email: '',
           username: '',
@@ -35,6 +36,8 @@ function init() {
       login() {
         window.BaaS.auth.login(_.pickBy(this.loginForm, v => !!v)).then(res => {
           console.log(res)
+          notie.alert({type: 1, text: '登录成功'})
+          this.isLogin = true
         })
       },
       register() {
@@ -44,7 +47,7 @@ function init() {
       },
       logout() {
         window.BaaS.auth.logout().then(res => {
-          console.log(res)
+          this.isLogin = false
         })
       },
       forgetPwd() {
@@ -69,6 +72,7 @@ function init() {
         let user = BaaS.auth.currentUser()
         user.updatePassword(_.pickBy(this.passwordChangeForm, v => !!v)).then(res => {
           console.log(res)
+          this.$forceUpdate()
         })
       },
       updateUserinfo() {
@@ -76,10 +80,12 @@ function init() {
         if (this.userInfoForm.username) {
           user.updateUsername(this.userInfoForm.username).then(res => {
             console.log(res)
+            this.$forceUpdate()
           })
         } else if (this.userInfoForm.email) {
           user.updateEmail(this.userInfoForm.email, true).then(res => {
             console.log(res)
+            this.$forceUpdate()
           })
         }
       },
@@ -110,8 +116,10 @@ function init() {
         })
       }
     },
+    computed: {},
     mounted() {
       window.BaaS.init('c2732ea16812760b8544')
+      this.isLogin = !!BaaS.auth.currentUser()
     }
   })
 }
