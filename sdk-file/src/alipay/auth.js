@@ -74,10 +74,18 @@ const createLoginFn = BaaS => opts => {
   })
 }
 
+const fnUnsupportedHandler = () => {
+  throw new HError(611)
+}
+
 module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth = Object.assign({}, BaaS.auth, {
     silentLogin: login.bind(null, {forceLogin: false}),
     loginWithAlipay: login,
+    login: fnUnsupportedHandler,
+    anonymousLogin: fnUnsupportedHandler,
+    requestPasswordReset: fnUnsupportedHandler,
+    register: fnUnsupportedHandler,
   })
 }

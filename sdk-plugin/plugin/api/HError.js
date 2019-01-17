@@ -31,6 +31,8 @@ class HError {
         return 'wxExtend function should be executed to allow plugin use wx.login, wx.getUserInfo, wx.requestPayment'
       case 610:
         return 'errorTracker uninitialized'
+      case 611:
+        return 'unsupported function'
       default:
         return 'unknown error'
     }

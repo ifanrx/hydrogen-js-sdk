@@ -5,3 +5,4 @@ sdk-file/dist/*.dev.js
 sdk-file/dist/*.map
 lib/
 yarn-error.log
+*.swp
