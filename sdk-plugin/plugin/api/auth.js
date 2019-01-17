@@ -97,7 +97,7 @@ module.exports = {
   register,
   currentUser() {
     let cache = storage.get(constants.STORAGE_KEY.USERINFO)
-    if (cache) return null
+    if (!cache) return null
     return UserRecord.initCurrentUser(cache)
   }
 }

@@ -60,10 +60,12 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       dataType,
       success: resolve,
       fail: res => {
+        if (res.status >= 200 && res.status < 300) {
+          return resolve(res)
+        }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
     })
-
     utils.log('Request => ' + url)
   })
 }

@@ -1,5 +1,6 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
+const HError = require('core-module/HError')
 const createAuthFn = require('./createAuthFn')
 
 let isLogining = false
