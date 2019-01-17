@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="../sdk.dev.js"></script>
+  <title>schema 增删改</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+    .toast {
+      color: #FFF;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin: -50px 0 0 -50px;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      background: rgba(0, 0, 0, .7);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, .3);
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">schema 增删改</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">请先创建一条记录，再进行下一步操作</h5>
+      <p v-if="record">id: {{record.id}}</p>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="createRecordA">添加记录（整体 set）</button>
+      <button type="button" class="btn btn-primary" @click="createRecordB">添加记录（单独 set）</button>
+      <button type="button" class="btn btn-primary" @click="deleteRecord" :disabled="!record">删除记录</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- int : </h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="updateRecord" :disabled="!record">int = 100</button>
+      <button type="button" class="btn btn-primary" @click="minusOne" :disabled="!record">int -= 1</button>
+      <button type="button" class="btn btn-primary" @click="plusOne" :disabled="!record">int += 1</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- array_int : [{{record.array_i}}]</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', [123, 456])" :disabled="!record">add [123, 456]</button>
+      <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', 123456)" :disabled="!record">add 123456</button>
+      <button type="button" class="btn btn-primary" @click="removeArrayFromArray('array_i', [record && record.array_i[0]])"
+        :disabled="!record || record && record.array_i.length<2">remove [{{record && record.array_i.length > 1 && record.array_i[0]}}]</button>
+      <button type="button" class="btn btn-primary" @click="removeArrayFromArray('array_i', record && record.array_i[0])"
+              :disabled="!record || record && record.array_i.length<2">remove {{record && record.array_i.length > 1 && record.array_i[0]}}</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- obj.num : {{record && record.obj && record.obj.num}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="patchObject" :disabled="!record">patchObject</button>
+    </div>
+  </div>
+
+  <div class="toast" v-if="isShowSuccessToast">
+    <p>√ 成功</p>
+  </div>
+  <div class="toast" v-if="isShowFailToast">
+    <p>X 失败</p>
+  </div>
+</div>
+
+<script src="../utils/deep-eql.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>
