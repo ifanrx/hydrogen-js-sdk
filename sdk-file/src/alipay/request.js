@@ -60,6 +60,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       dataType,
       success: resolve,
       fail: res => {
+        // 开发工具的 bug, 返回 200 才走 success
         if (res.status >= 200 && res.status < 300) {
           return resolve(res)
         }

@@ -61,6 +61,7 @@ const API = {
   ALIPAY: {
     SILENT_LOGIN: '/hserve/v1/idp/alipay/silent-login/',
     AUTHENTICATE: '/hserve/v1/idp/alipay/authenticate/',
+    USER_ASSOCIATE: '/hserve/v1/idp/alipay/user-associate/',
   },
 }
 

@@ -19,12 +19,12 @@ module.exports = function (BaaS) {
       return my.getStorageSync({ key }).data
     },
 
-    linkAlipay: function () {
+    linkAlipay: function ({forceLogin = false}) {
       const userId = BaaS.storage.get(constants.STORAGE_KEY.UID)
       if (!userId) {
         throw new HError(604)
       }
-      return createAuthFn(BaaS)(false, userId)
+      return createAuthFn(BaaS)(forceLogin, userId)
     },
   })
 }
