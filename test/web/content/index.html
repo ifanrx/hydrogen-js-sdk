@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="../sdk.dev.js"></script>
+  <title>文件</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+    .opt-btn {
+      width: 24px;
+      padding: 0;
+      text-align: center;
+    }
+    .list-group {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .toast {
+      color: #FFF;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin: -50px 0 0 -50px;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      background: rgba(0, 0, 0, .7);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, .3);
+    }
+    ul.category {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .category li {
+      display: inline;
+    }
+    .category a {
+      color: inherit;
+    }
+    .category a.active {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">内容库查找测试</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <ul class="category">
+        <li v-for="cate in cateList">
+          <a href="javascript:void(0);" :class="{active: selectedCateID === cate.id}" @click="handleCateClick(cate.id, cate.name)">{{cate.name}}</a> |
+        </li>
+      </ul>
+
+      <p>order_by : </p>
+      <div style="margin-bottom: 10px;">
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="title" v-model="order_by">
+            title
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-title" v-model="order_by">
+            -title
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="created_at" v-model="order_by">
+            created_at
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-created_at" v-model="order_by">
+            -created_at
+          </label>
+        </div>
+      </div>
+      <p>limit:</p>
+      <div style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', -1)">-</button>
+        <span class="num">{{limit}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', 1)">+</button>
+      </div>
+      <p>offset:</p>
+      <div style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', -1)">-</button>
+        <span class="num">{{offset}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', 1)">+</button>
+      </div>
+      <ul class="list-group">
+        <li v-for="item in contentList"
+            class="list-group-item d-flex justify-content-between align-items-center"
+        >{{item.title}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length ? '获取 title != '+contentList[0].title+' 的内容' : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="queryContentsByName" :disabled="!contentList.length">获取内容</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length ? '获取内容详情 title = '+contentList[0].title : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getContent" :disabled="!contentList.length">获取内容详情</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length > 1 ? '获取分类详情 name ='+contentList[0].name : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getCategory" :disabled="contentList.length <= 1">获取分类详情</button>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <h5 style="text-align: center;">{{modalTitle}}</h5>
+          <p style="text-align: center;">{{modalText}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" v-if="isShowSuccessToast">
+    <p>√ 成功</p>
+  </div>
+  <div class="toast" v-if="isShowFailToast">
+    <p>X 失败</p>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="./index.js"></script>
+</body>
+</html>
