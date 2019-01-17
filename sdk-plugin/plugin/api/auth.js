@@ -8,7 +8,7 @@ const UserRecord = require('./UserRecord')
 const API = BaaS._config.API
 
 let loginPromise = null
-let anonymousLoginPromise = null
+// let anonymousLoginPromise = null
 
 const login = data => {
   if (!loginPromise) {
@@ -32,23 +32,25 @@ const login = data => {
 }
 
 /**
- * 匿名登录，给用户分配一个临时的 TOKEN
+ * 匿名登录
  */
 const anonymousLogin = () => {
-  if (!anonymousLoginPromise) {
-    anonymousLoginPromise = BaaS.request({
-      url: API.WEB.ANONYMOUS_LOGIN,
-      method: 'POST',
-    }).then(utils.validateStatusCode).then(res => {
-      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '1')
-      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      anonymousLoginPromise = null
-      return res.data
-    })
-  }
-  return anonymousLoginPromise
+  return Promise.resolve()
+  // TODO::匿名登录逻辑，目前直接 resolve
+  // if (!anonymousLoginPromise) {
+  //   anonymousLoginPromise = BaaS.request({
+  //     url: API.WEB.ANONYMOUS_LOGIN,
+  //     method: 'POST',
+  //   }).then(utils.validateStatusCode).then(res => {
+  //     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+  //     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+  //     storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '1')
+  //     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+  //     anonymousLoginPromise = null
+  //     return res.data
+  //   })
+  // }
+  // return anonymousLoginPromise
 }
 
 /**
