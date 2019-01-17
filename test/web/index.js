@@ -27,7 +27,8 @@ function init() {
         userInfoForm: {
           email: '',
           username: '',
-        }
+        },
+        modalText: '',
       }
     },
     methods: {
@@ -81,6 +82,32 @@ function init() {
             console.log(res)
           })
         }
+      },
+      showModal(content) {
+        this.modalText = content
+        $('#myModal').modal('show')
+      },
+      helloWorld() {
+        BaaS.invokeFunction('helloWorld', undefined, false).then(res => {
+          if (res.code === 0) {
+            // success
+            this.showModal(JSON.stringify(res.data))
+          } else {
+            // faile
+            this.showModal(JSON.stringify(res))
+          }
+        }, err => {
+          console.log('err', err)
+        })
+      },
+
+      testRequest: function() {
+        BaaS.invokeFunction('testRequest').then(res => {
+          this.showModal(JSON.stringify(res.data))
+        }, err => {
+          console.log('err', err)
+          this.showModal(JSON.stringify(err))
+        })
       }
     },
     mounted() {
