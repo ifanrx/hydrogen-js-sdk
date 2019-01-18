@@ -43,13 +43,20 @@ const makeLoginResponseData = (storage, isForceLogin) => {
   }
 }
 
+const hasUserLogined = function (BaaS, isForceLogin) {
+  const uid = BaaS.storage.get(constants.STORAGE_KEY.UID)
+  const userInfo = BaaS.storage.get(constants.STORAGE_KEY.USERINFO)
+  const token = BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
+  return (isForceLogin && !!uid && !!token && !!userInfo && !utils.isSessionExpired())
+    || (!isForceLogin && !!uid && !!token && !utils.isSessionExpired())
+}
+
 const createLoginFn = BaaS => opts => {
   const isForceLogin = !!opts && !!opts.forceLogin
   const auth = createAuthFn(BaaS)
   let resolves = isForceLogin ? loginResolve : silentLoginResolve
   let rejects = isForceLogin ? loginReject : silentLoginReject
-  if ((isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.USERINFO) && !utils.isSessionExpired())
-    || (!isForceLogin && BaaS.storage.get(constants.STORAGE_KEY.UID) && !utils.isSessionExpired())) {
+  if (hasUserLogined(BaaS, isForceLogin)) {
     return Promise.resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
   }
   return new Promise((resolve, reject) => {
