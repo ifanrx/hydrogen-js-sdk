@@ -131,10 +131,11 @@ function init() {
       },
 
       deleteRecord: function () {
-        if (!this.recrod) return
+        if (!this.record) return
         Table.delete(this.record.id).then(res => {
           notie.alert({type: 1, text: '删除成功'})
           this.record = null
+          Vue.set(this, 'record', null)
         }, err => {
           notie.alert({type: 1, text: '创建失败'})
         })

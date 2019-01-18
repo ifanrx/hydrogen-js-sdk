@@ -159,7 +159,8 @@ function init() {
         if (!this.fileList.length) return
         let File = new BaaS.File()
         File.get(this.fileList[0].id).then((res) => {
-          notie.force(3, JSON.stringify(res.data), 'OK')
+          notie.force({type: 1, text: JSON.stringify(res.data)})
+          console.log(res.data.objects)
         }, (err) => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -167,8 +168,8 @@ function init() {
 
       getFileCategoryDetail: function() {
         let fileCategory = new BaaS.FileCategory()
-        fileCategory.get(this.data.cateList[1].id).then((res) => {
-          notie.force(3, JSON.stringify(res.data), 'OK')
+        fileCategory.get(this.cateList[1].id).then((res) => {
+          notie.force({type: 1, text: JSON.stringify(res.data)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -177,7 +178,8 @@ function init() {
       getFileListFromCategory: function() {
         let fileCategory = new BaaS.FileCategory()
         fileCategory.getFileList(this.cateList[1].id).then((res) => {
-          notie.force(3, JSON.stringify(res.data))
+          notie.force({type: 1, text: `共返回数据： ${res.data.objects.length}`})
+          console.log(res.data.objects)
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
