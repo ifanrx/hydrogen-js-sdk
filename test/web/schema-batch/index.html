@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <script src="../sdk.dev.js"></script>
+  <title>schema 批量测试</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      margin-bottom: 5px;
+    }
+
+    .opt-btn {
+      width: 24px;
+      padding: 0;
+      text-align: center;
+    }
+
+    .list-group {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">schema 批量测试</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">新增</h5>
+      <hr />
+      <button class="btn btn-primary" @click="batchCreate">批量新增数据</button>
+      <button class="btn btn-primary" @click="batchCreateNoTrigger">批量新增数据(不触发触发器)</button>
+      <button class="btn btn-primary" @click="batchCreatePointer">批量新增数据(Pointer)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新</h5>
+      <hr />
+      <button class="btn btn-primary" @click="batchUpdate_compare">比较查询批量更新数据</button>
+      <button class="btn btn-primary" @click="batchUpdate_compare_noTrigger">比较查询批量更新数据(不触发触发器)</button>
+      <button class="btn btn-primary" @click="batchUpdate_str">字符串查询更新数据</button>
+      <button class="btn btn-primary" @click="batchUpdate_arr">数组查询更新数据</button>
+      <button class="btn btn-primary" @click="batchUpdate_null">空查询更新数据</button>
+      <button class="btn btn-primary" @click="batchUpdate_and_or">复杂查询更新数据</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">删除</h5>
+      <hr />
+      <button class="btn btn-primary" @click="batchDelete">批量删除数据</button>
+      <button class="btn btn-primary" @click="batchDeleteNoTrigger">批量删除数据(不触发触发器)</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="../utils/common.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>
