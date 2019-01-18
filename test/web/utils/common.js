@@ -1,4 +1,8 @@
 (function () {
+  window.BaaS_config = {
+    content_groupID: 1538043206670160,
+  }
+
   // 初始化
   window.BaaS.init('c2732ea16812760b8544')
 

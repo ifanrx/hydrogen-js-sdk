@@ -1,5 +1,4 @@
-let GroupID = 1513076211190694
-let MyContentGroup = new BaaS.ContentGroup(GroupID)
+let MyContentGroup = new BaaS.ContentGroup(window.BaaS_config.content_groupID)
 
 const defaultCateList = [{
   name: '全部',
@@ -18,10 +17,6 @@ function init() {
         order_by: '',
         selectedCateID: 'all',
         selectedCateName: '全部',
-        modalText: '',
-        modalTitle: '',
-        isShowSuccessToast: false,
-        isShowFailToast: false,
       }
     },
     watch: {
@@ -36,31 +31,6 @@ function init() {
       },
     },
     methods: {
-      showModal(title, content) {
-        this.modalText = content
-        this.modalTitle = title
-        $('#myModal').modal('show')
-      },
-      showSuccessToast() {
-        if (this.timer) {
-          clearTimeout(this.timer)
-        }
-        this.isShowSuccessToast = true
-        this.timer = setTimeout(() => {
-          this.isShowSuccessToast = false
-        }, 2000)
-      },
-
-      showFailToast() {
-        if (this.timerFail) {
-          clearTimeout(this.timerFail)
-        }
-        this.isShowFailToast = true
-        this.timerFail = setTimeout(() => {
-          this.isShowFailToast = false
-        }, 2000)
-      },
-
       handleModifyNum(type, num) {
         this[type] += num
       },
@@ -79,11 +49,11 @@ function init() {
           query.arrayContains('categories', [selectedCateID])
         }
         return MyContentGroup.setQuery(query).orderBy(sortKey).limit(limit).offset(offset).find().then(res => {
-          this.showSuccessToast()
           this.contentList = res.data.objects
+          notie.alert({type: 1, text: '成功'})
         }).catch(err => {
           console.log(err)
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -91,10 +61,9 @@ function init() {
         const {cateList} = this
         if (cateList.length <= 1) return
         MyContentGroup.getCategory(cateList[1].id).then(res => {
-          this.showSuccessToast()
-          this.showModal(JSON.stringify(res.data))
+          notie.alert({type: 1, text: JSON.stringify(res.data)})
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -111,9 +80,9 @@ function init() {
         query.compare('title', '!=', contentList[0].title)
         MyContentGroup.setQuery(query).orderBy(sortKey).limit(limit).offset(offset).find().then((res) => {
           this.contentList = res.data.objects
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
         }, (err) => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -122,9 +91,9 @@ function init() {
         if (!contentList.length) return
         MyContentGroup.getContent(contentList[0].id).then(res => {
           this.showModal(res.data.title, res.data.content)
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
     },

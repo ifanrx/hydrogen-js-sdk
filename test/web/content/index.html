@@ -10,6 +10,8 @@
   <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
   <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
   <script src="../sdk.dev.js"></script>
   <title>文件</title>
   <style>
@@ -27,20 +29,6 @@
     .list-group {
       max-height: 200px;
       overflow-y: auto;
-    }
-    .toast {
-      color: #FFF;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      margin: -50px 0 0 -50px;
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-      text-align: center;
-      background: rgba(0, 0, 0, .7);
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, .3);
     }
     ul.category {
       display: flex;
@@ -149,36 +137,9 @@
       <button type="button" class="btn btn-primary" @click="getCategory" :disabled="contentList.length <= 1">获取分类详情</button>
     </div>
   </div>
-
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        </div>
-        <div class="modal-body">
-          <h5 style="text-align: center;">{{modalTitle}}</h5>
-          <p style="text-align: center;">{{modalText}}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast" v-if="isShowSuccessToast">
-    <p>√ 成功</p>
-  </div>
-  <div class="toast" v-if="isShowFailToast">
-    <p>X 失败</p>
-  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="../utils/common.js"></script>
 <script src="./index.js"></script>
 </body>
 </html>

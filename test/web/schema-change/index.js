@@ -23,30 +23,9 @@ function init() {
     data() {
       return {
         record: '',
-        isShowSuccessToast: false,
-        isShowFailToast: false,
       }
     },
     methods: {
-      showSuccessToast() {
-        if (this.timer) {
-          clearTimeout(this.timer)
-        }
-        this.isShowSuccessToast = true
-        this.timer = setTimeout(() => {
-          this.isShowSuccessToast = false
-        }, 2000)
-      },
-
-      showFailToast() {
-        if (this.timerFail) {
-          clearTimeout(this.timerFail)
-        }
-        this.isShowFailToast = true
-        this.timerFail = setTimeout(() => {
-          this.isShowFailToast = false
-        }, 2000)
-      },
 
       checkRecordFieldsEql(options, recordData) {
         const keys = Object.keys(options)
@@ -58,17 +37,17 @@ function init() {
           if (key === 'date') {
             return new Date(optionValue).getTime() === new Date(recordDataValue).getTime()
           } else if (key == 'geo_point' || key == 'geo_polygon') {
-            return deepEql(optionValue.geoJSON, recordDataValue)
+            return _.isEqual(optionValue.geoJSON, recordDataValue)
           } else if (key == 'file') {
-            console.warn('暂时无法检测返回的 file 数据是否是用户设置的数据')
+            notie.alert({type: 2, text: '暂时无法检测返回的 file 数据是否是用户设置的数据'})
             return !!recordDataValue
           }
-          return deepEql(optionValue, recordDataValue)
+          return _.isEqual(optionValue, recordDataValue)
         }
         if (check()) {
           return true
         } else {
-          console.error(`'${JSON.stringify(optionValue)}' not equal to '${JSON.stringify(recordDataValue)}'`)
+          notie.alert({type: 3, text: `'${JSON.stringify(optionValue)}' not equal to '${JSON.stringify(recordDataValue)}'`})
           return false
         }
       },
@@ -96,11 +75,12 @@ function init() {
           if (!this.checkRecordFieldsEql(options, res.data)) {
             throw new Error()
           }
-          this.showSuccessToast()
-          this.recrod = res.data
+          notie.alert({type: 1, text: '创建成功'})
+          // this.recrod = res.data
+          this.$set(record, res.data)
         }).catch(err => {
           console.log(err)
-          this.showFailToast()
+          notie.alert({type: 3, text: '创建失败'})
         })
       },
 
@@ -137,21 +117,22 @@ function init() {
           if (!this.checkRecordFieldsEql(options, res.data)) {
             throw new Error()
           }
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '创建成功'})
           this.recrod = res.data
         }).catch(err => {
           console.log(err)
-          this.showFailToast()
+          notie.alert({type: 1, text: '创建失败'})
+
         })
       },
 
       deleteRecord: function () {
         if (!this.recrod) return
         Table.delete(this.data.record.id).then(res => {
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '删除成功'})
           this.record = null
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 1, text: '创建失败'})
         })
       },
 
@@ -164,10 +145,10 @@ function init() {
           if (!this.checkRecordFieldEql(key, value, res.data[key])) {
             throw new Error()
           }
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
           this.record = res.data
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -175,9 +156,9 @@ function init() {
         Table.getWithoutData(this.data.record.id).incrementBy(key, value).update().then(res => {
           this.checkRecordFieldEql(key, this.data.record.int + value, res.data[key])
           this.record = res.data
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -198,9 +179,9 @@ function init() {
             throw new Error()
           }
           this.record = res.data
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
 
       },
@@ -210,9 +191,9 @@ function init() {
         record.patchObject('obj', { num: Math.ceil(Math.random() * 1000) })
         record.update().then(res => {
           this.record = res.data
-          this.showSuccessToast()
+          notie.alert({type: 1, text: '成功'})
         }, err => {
-          this.showFailToast()
+          notie.alert({type: 3, text: '失败'})
         })
       },
     },

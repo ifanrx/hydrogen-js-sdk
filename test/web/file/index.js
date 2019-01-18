@@ -1,13 +1,3 @@
-
-let Media = new BaaS.TableObject('test_media')
-
-let masterFileID = '5a2fe93308443e313a428c4f'
-let mediaRecordID = '5a2fbaef08443e70d5dbe1cc'
-let fileCategoryID = '5a377bb009a8054139faafed' // 图片
-let fileID = '5a3b4d9bfff1d66ab886dfc2'
-let fileID_1 = ''
-let fileID_2 = ''
-
 const defaultCateList = [{
   name: '全部',
   id: 'all',
@@ -71,6 +61,16 @@ function init() {
         this[type] += num
       },
 
+      handleCateClick(id, name) {
+        this.setData({
+          selectedCateID: id,
+          selectedCateName: name,
+        })
+        this.selectedCateID = id
+        this.selectedCateName = name
+        this.getFileList()
+      },
+
       getFileCategoryList() {
         const MyFileCategory = new BaaS.FileCategory()
         const {cateSortKey: sortKey, cateLimit: limit, cateOffset: offset} = this
@@ -107,11 +107,11 @@ function init() {
             console.log(data)
             setTimeout(resolve, 1000)
             // showSuccessToast()
-            notice.alert({type: 1, text: '上传成功'})
+            notie.alert({type: 1, text: '上传成功'})
           }, (err) => {
             reject(err)
             // showFailToast()
-            notice.alert({type: 3, text: '上传失败'})
+            notie.alert({type: 3, text: '上传失败'})
           })
         })
       },
@@ -133,10 +133,10 @@ function init() {
       deleteFileArray(ids) {
         let File = new BaaS.File()
         return File.delete(ids).then((res) => {
-          notice.alert({type: 1, text: '成功'})
+          notie.alert({type: 1, text: '成功'})
         }, (err) => {
           console.log(err)
-          notice.alert({type: 3, text: '失败'})
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
@@ -152,10 +152,10 @@ function init() {
       deleteFileSigle(id) {
         let File = new BaaS.File()
         return File.delete(id).then((res) => {
-          notice.alert({type: 1, text: '删除成功'})
+          notie.alert({type: 1, text: '删除成功'})
         }, (err) => {
           console.log(err)
-          notice.alert({type: 3, text: '删除失败'})
+          notie.alert({type: 3, text: '删除失败'})
         })
       },
 
@@ -165,27 +165,30 @@ function init() {
         File.get(this.fileList[0].id).then((res) => {
           notie.force(3, JSON.stringify(res.data), 'OK')
         }, (err) => {
-          notice.alert({type: 3, text: '失败'})
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
       getFileCategoryDetail: function() {
         let fileCategory = new BaaS.FileCategory()
         fileCategory.get(this.data.cateList[1].id).then((res) => {
-          notice.force(3, JSON.stringify(res.data), 'OK')
+          notie.force(3, JSON.stringify(res.data), 'OK')
         }, err => {
-          notice.alert({type: 3, text: '失败'})
+          notie.alert({type: 3, text: '失败'})
         })
       },
 
       getFileListFromCategory: function() {
         let fileCategory = new BaaS.FileCategory()
         fileCategory.getFileList(this.cateList[1].id).then((res) => {
-          notice.force(3, JSON.stringify(res.data))
+          notie.force(3, JSON.stringify(res.data))
         }, err => {
-          notice.alert({type: 3, text: '失败'})
+          notie.alert({type: 3, text: '失败'})
         })
       },
+    },
+    mounted() {
+      this.getFileCategoryList()
     }
   })
 }
