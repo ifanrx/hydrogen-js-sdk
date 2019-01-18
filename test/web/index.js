@@ -95,13 +95,7 @@ function init() {
 
       helloWorld() {
         BaaS.invokeFunction('helloWorld', undefined, false).then(res => {
-          if (res.code === 0) {
-            // success
-            notie.alert({type: 1, text: JSON.stringify(res.data)})
-          } else {
-            // faile
-            notie.alert({type: 3, text: JSON.stringify(res.data)})
-          }
+          notie.alert({type: 1, text: JSON.stringify(res.data)})
         }, err => {
           notie.alert({type: 3, text: '请求失败'})
           console.log('err', err)

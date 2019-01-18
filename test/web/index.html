@@ -133,6 +133,13 @@
       <button type="button" class="btn btn-primary" @click="testRequest">testRequest</button>
     </div>
   </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">User</h5>
+      <hr />
+      <a href="/user">user 测试</a>
+    </div>
+  </div>
 
 </div>
 <script src="utils/common.js"></script>
