@@ -43,14 +43,19 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, .3);
     }
     ul.category {
+      display: flex;
       list-style: none;
       margin-bottom: 20px;
+      padding-left: 0;
+      overflow-x: auto;
     }
     .category li {
       display: inline;
+      white-space: nowrap;
     }
     .category a {
       color: inherit;
+      padding: 0 5px;
     }
     .category a.active {
       color: #007bff;
@@ -69,6 +74,7 @@
     <div class="card-body">
       <ul class="category">
         <li v-for="cate in cateList">
+
           <a href="javascript:void(0);" :class="{active: selectedCateID === cate.id}" @click="handleCateClick(cate.id, cate.name)">{{cate.name}}</a> |
         </li>
       </ul>

@@ -82,6 +82,7 @@ function init() {
           })
         }
       },
+
       requestEmailVerification() {
         let user = BaaS.auth.currentUser()
         user.requestEmailVerification().then(res => {
@@ -91,28 +92,30 @@ function init() {
         this.modalText = content
         $('#myModal').modal('show')
       },
+
       helloWorld() {
         BaaS.invokeFunction('helloWorld', undefined, false).then(res => {
           if (res.code === 0) {
             // success
-            this.showModal(JSON.stringify(res.data))
+            notie.alert({type: 1, text: JSON.stringify(res.data)})
           } else {
             // faile
-            this.showModal(JSON.stringify(res))
+            notie.alert({type: 3, text: JSON.stringify(res.data)})
           }
         }, err => {
+          notie.alert({type: 3, text: '请求失败'})
           console.log('err', err)
         })
       },
 
       testRequest: function () {
         BaaS.invokeFunction('testRequest').then(res => {
-          this.showModal(JSON.stringify(res.data))
+          notie.alert({type: 1, text: JSON.stringify(res.data)})
         }, err => {
           console.log('err', err)
-          this.showModal(JSON.stringify(err))
+          notie.alert({type: 3, text: '请求失败'})
         })
-      }
+      },
     },
     computed: {},
     mounted() {
