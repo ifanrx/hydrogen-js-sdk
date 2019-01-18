@@ -69,7 +69,7 @@ function init() {
 
       getCategoryList() {
         MyContentGroup.getCategoryList().then(res => {
-          this.cateList = defaultCateList.concat(res.data.objects)
+          Vue.set(this, 'cateList', defaultCateList.concat(res.data.objects))
         }).catch(err => console.log(err))
       },
 
@@ -79,7 +79,7 @@ function init() {
         if (contentList.length < 1) return
         query.compare('title', '!=', contentList[0].title)
         MyContentGroup.setQuery(query).orderBy(sortKey).limit(limit).offset(offset).find().then((res) => {
-          this.contentList = res.data.objects
+          Vue.set(this, 'contentList', res.data.objects)
           notie.alert({type: 1, text: '成功'})
         }, (err) => {
           notie.alert({type: 3, text: '失败'})
@@ -90,7 +90,6 @@ function init() {
         const {contentList} = this
         if (!contentList.length) return
         MyContentGroup.getContent(contentList[0].id).then(res => {
-          this.showModal(res.data.title, res.data.content)
           notie.alert({type: 1, text: '成功'})
         }, err => {
           notie.alert({type: 3, text: '失败'})
@@ -99,6 +98,7 @@ function init() {
     },
     mounted() {
       this.getCategoryList()
+      this.queryContents()
     }
   })
 }

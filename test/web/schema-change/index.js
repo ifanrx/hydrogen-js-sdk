@@ -75,12 +75,14 @@ function init() {
           if (!this.checkRecordFieldsEql(options, res.data)) {
             throw new Error()
           }
-          notie.alert({type: 1, text: '创建成功'})
+          // notie.alert({type: 1, text: '创建成功'})
           // this.recrod = res.data
-          this.$set(record, res.data)
-        }).catch(err => {
+          Vue.set(this, 'record', res.data)
+        }, err => {
           console.log(err)
           notie.alert({type: 3, text: '创建失败'})
+        }).catch(err => {
+          console.log(err)
         })
       },
 
@@ -117,18 +119,20 @@ function init() {
           if (!this.checkRecordFieldsEql(options, res.data)) {
             throw new Error()
           }
-          notie.alert({type: 1, text: '创建成功'})
-          this.recrod = res.data
-        }).catch(err => {
+          // notie.alert({type: 1, text: '创建成功'})
+          Vue.set(this, 'record', res.data)
+        }, err => {
           console.log(err)
           notie.alert({type: 1, text: '创建失败'})
+        }).catch(err => {
+          console.log(err)
 
         })
       },
 
       deleteRecord: function () {
         if (!this.recrod) return
-        Table.delete(this.data.record.id).then(res => {
+        Table.delete(this.record.id).then(res => {
           notie.alert({type: 1, text: '删除成功'})
           this.record = null
         }, err => {
@@ -137,7 +141,7 @@ function init() {
       },
 
       updateRecord: function () {
-        let record = Table.getWithoutData(this.data.record.id)
+        let record = Table.getWithoutData(this.record.id)
         const key = 'int'
         const value = 100
         record.set(key, value)
@@ -153,8 +157,8 @@ function init() {
       },
 
       increment(key, value) {
-        Table.getWithoutData(this.data.record.id).incrementBy(key, value).update().then(res => {
-          this.checkRecordFieldEql(key, this.data.record.int + value, res.data[key])
+        Table.getWithoutData(this.record.id).incrementBy(key, value).update().then(res => {
+          this.checkRecordFieldEql(key, this.record.int + value, res.data[key])
           this.record = res.data
           notie.alert({type: 1, text: '成功'})
         }, err => {
@@ -174,8 +178,8 @@ function init() {
         if (!Array.isArray(value)) {
           value = [value]
         }
-        return Table.getWithoutData(this.data.record.id).append(key, value).update().then(res => {
-          if (!this.checkRecordFieldEql(key, this.data.record[key].concat(value), res.data[key])) {
+        return Table.getWithoutData(this.record.id).append(key, value).update().then(res => {
+          if (!this.checkRecordFieldEql(key, this.record[key].concat(value), res.data[key])) {
             throw new Error()
           }
           this.record = res.data
@@ -186,8 +190,22 @@ function init() {
 
       },
 
+      removeArrayFromArray(key, value) {
+        if (!Array.isArray(value)) {
+          value = [value]
+        }
+        const optionValue = this.record.array_i.filter(item => value.indexOf(item) === -1)
+        return Table.getWithoutData(this.record.id).remove(key, value).update().then(res => {
+          if (!this.checkRecordFieldEql(key, optionValue, res.data[key])) {
+            throw new Error()
+          }
+
+          Vue.set(this, 'record', res.data)
+        })
+      },
+
       patchObject() {
-        let record = Table.getWithoutData(this.data.record.id)
+        let record = Table.getWithoutData(this.record.id)
         record.patchObject('obj', { num: Math.ceil(Math.random() * 1000) })
         record.update().then(res => {
           this.record = res.data

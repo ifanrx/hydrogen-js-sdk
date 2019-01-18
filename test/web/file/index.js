@@ -62,10 +62,6 @@ function init() {
       },
 
       handleCateClick(id, name) {
-        this.setData({
-          selectedCateID: id,
-          selectedCateName: name,
-        })
         this.selectedCateID = id
         this.selectedCateName = name
         this.getFileList()

@@ -44,7 +44,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">更新字段 -- int : </h5>
+      <h5 class="card-title">更新字段 -- int : {{record.int}}</h5>
       <hr />
       <button type="button" class="btn btn-primary" @click="updateRecord" :disabled="!record">int = 100</button>
       <button type="button" class="btn btn-primary" @click="minusOne" :disabled="!record">int -= 1</button>
@@ -53,7 +53,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">更新字段 -- array_int : [{{record.array_i}}]</h5>
+      <h5 class="card-title">更新字段 -- array_int : {{record.array_i}}</h5>
       <hr />
       <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', [123, 456])" :disabled="!record">add [123, 456]</button>
       <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', 123456)" :disabled="!record">add 123456</button>

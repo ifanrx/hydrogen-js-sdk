@@ -229,7 +229,7 @@ function init() {
       getAllProductWithOptions() {
         const {order_by, offset, limit} = this
         Product.offset(offset).limit(limit).orderBy(order_by).find().then(res => {
-          this.recrods = res.data.objects
+          Vue.set(this, 'records', res.data.objects)
         }, err => {
           notie.alert({type: 3, text: '失败'})
         }).then(res => {})
@@ -237,7 +237,8 @@ function init() {
 
       selectQuery: function () {
         Product.select(['num']).find().then(res => {
-          notie.force({type: 1, text: JSON.stringify(res.data.objects)})
+          notie.force({type: 1, text: `查询成功-总记录数为 ${res.data.objects.length}`})
+          console.log(res.data.objects)
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -245,7 +246,8 @@ function init() {
 
       unselectQuery: function () {
         Product.select(['-array_s', '-str', '-file']).find().then(res => {
-          notie.force({type: 1, text: JSON.stringify(res.data.objects)})
+          notie.force({type: 1, text: `查询成功-总记录数为：${res.data.objects.length}`})
+          console.log(res.data.objects)
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
