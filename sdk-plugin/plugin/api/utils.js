@@ -2,7 +2,6 @@ const storage = require('./storage')
 const constants = require('./constants')
 const BaaS = require('./baas')
 const HError = require('./HError')
-const builtInHeader = ['X-Hydrogen-Client-ID', 'X-Hydrogen-Client-Version', 'X-Hydrogen-Client-Platform', 'Authorization']
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -281,7 +280,6 @@ const mergeRequestHeader = header => {
  */
 const validateStatusCode = res => {
   let status = parseInt(res.status || res.statusCode)
-
   if (status >= 200 && status < 300) {
     return res
   } else {

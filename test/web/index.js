@@ -116,7 +116,6 @@ function init() {
     },
     computed: {},
     mounted() {
-      window.BaaS.init('c2732ea16812760b8544')
       this.isLogin = !!BaaS.auth.currentUser()
     }
   })
