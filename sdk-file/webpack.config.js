@@ -30,7 +30,15 @@ module.exports = {
       __VERSION_WEB__: JSON.stringify(pkg.versions.web),
       __VERSION_ALIPAY__: JSON.stringify(pkg.versions.alipay),
     }),
-    isDEV ? new CopyWebpackPlugin([{from: 'dist/sdk-wechat.dev.js', to: '../tmp/vendor/sdk-wechat.dev.js'}]) : () => null
+    isDEV
+      ? new CopyWebpackPlugin([{
+        from: 'dist/sdk-wechat.dev.js',
+        to: '../../tmp/vendor/sdk-wechat.dev.js'
+      }])
+      : new CopyWebpackPlugin([{
+        from: `dist/sdk-wechat.${pkg.versions.web}.js`,
+        to: '../../lib/web.js'
+      }])
   ],
   resolve: {
     alias: {

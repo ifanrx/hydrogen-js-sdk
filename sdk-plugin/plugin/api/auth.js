@@ -87,10 +87,11 @@ const logout = () => {
 /**
  * 忘记密码，发送重置密码邮件
  */
-const requestPasswordReset = () => {
+const requestPasswordReset = ({email} = {}) => {
   return BaaS.request({
     url: API.WEB.PASSWORD_RESET,
     method: 'POST',
+    data: {email},
   }).then(utils.validateStatusCode).then(res => res.data)
 }
 

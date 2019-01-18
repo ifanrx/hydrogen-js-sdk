@@ -20,6 +20,9 @@ function init() {
           password: '',
           newPassword: ''
         },
+        forgetPassword: {
+          email: ''
+        },
         userInfoForm: {
           email: '',
           username: '',
@@ -54,7 +57,7 @@ function init() {
         console.log(BaaS.auth.currentUser())
       },
       requestPasswordReset() {
-        BaaS.auth.requestPasswordReset().then(res => {
+        BaaS.auth.requestPasswordReset({email: this.forgetPassword.email}).then(res => {
           console.log(res)
         })
       },

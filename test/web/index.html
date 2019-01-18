@@ -61,12 +61,17 @@
       <hr />
       <button :disabled="!isLogin" @click="logout" type="button" class="btn btn-primary">退出登录</button>
       <hr />
+      <div class="form-row form-group">
+        <div class="col">
+          <input :disabled="isLogin" v-model="forgetPassword.email" placeholder="邮箱" class="form-control" />
+        </div>
+      </div>
       <button :disabled="isLogin" @click="requestPasswordReset" type="button" class="btn btn-primary">忘记密码</button>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">用户</h5>
+      <h5 class="card-title">账户管理</h5>
       <hr>
       <button :disabled="!isLogin" @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
       <hr />
