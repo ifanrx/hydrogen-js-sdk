@@ -50,7 +50,6 @@ class UserRecord extends BaseRecord {
         new_password: newPassword,
       },
     }).then(res => {
-      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
       return res.data
     })
   }
@@ -69,7 +68,7 @@ class UserRecord extends BaseRecord {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
-      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
+      storage.set(constants.STORAGE_KEY.USERINFO, Object.assign(res.data, this._attribute))
       return res.data
     })
   }
@@ -85,7 +84,7 @@ class UserRecord extends BaseRecord {
       method: 'PUT',
       data: {username, password},
     }).then(res => {
-      storage.set(constants.STORAGE_KEY.USERINFO, res.data)
+      storage.set(constants.STORAGE_KEY.USERINFO, Object.assign(res.data, this._attribute))
       return res.data
     })
   }
