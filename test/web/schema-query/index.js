@@ -52,7 +52,7 @@ function init() {
       },
       getAllProduct() {
         Product.find().then(res => {
-          this.recrods = res.data.objects
+          Vue.set(this, 'records', res.data.objects)
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
           notie.alert({type: 1, text: result})
         }, err => {
@@ -61,11 +61,11 @@ function init() {
       },
       getProduct() {
         if (!this.records.length) return
-        const {records} = this.data
+        const {records} = this
         if (!records.length) return
         Product.get(records[0].id).then(res => {
           let result = `查询成功-ID为：${res.data.id}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -75,7 +75,7 @@ function init() {
         if (!records.length) return
         Product.select('str').get(records[0].id).then(res => {
           let result = `查询成功-str：${res.data.str}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -85,7 +85,7 @@ function init() {
         if (!records.length) return
         Product.select(['-str', '-array_i']).get(records[0].id).then(res => {
           let result = `All keys：[${Object.keys(res.data)}]`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '初始化数据成功'})
         })
@@ -95,7 +95,7 @@ function init() {
         query.compare('int', type, 50)
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -105,7 +105,7 @@ function init() {
         query.contains('str', 'm')
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -116,7 +116,7 @@ function init() {
         query.matches('str', regx)
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -126,7 +126,7 @@ function init() {
         query.in('array_s', ['黑', '白'])
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -136,7 +136,7 @@ function init() {
         query.notIn('array_s', ['灰'])
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -146,7 +146,7 @@ function init() {
         query.arrayContains('array_s', ['黑', '白', '灰'])
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -156,7 +156,7 @@ function init() {
         query.compare('array_s', '=', ['a', 'b', 'c', 'd'])
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -167,7 +167,7 @@ function init() {
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
           this.showModal(result)
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           this.showFailToast()
           notie.alert({type: 3, text: '失败'})
@@ -178,7 +178,7 @@ function init() {
         query.isNotNull('int')
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -189,7 +189,7 @@ function init() {
         query.exists(['str', 'int'])
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -200,7 +200,7 @@ function init() {
         query.notExists('int')
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -217,7 +217,7 @@ function init() {
         let orQuery = new BaaS.Query.or(andQuery, query3)
         Product.setQuery(orQuery).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -237,7 +237,7 @@ function init() {
 
       selectQuery: function () {
         Product.select(['num']).find().then(res => {
-          notie.alert({type: 1, text: JSON.stringify(res.data.objects)})
+          notie.force({type: 1, text: JSON.stringify(res.data.objects)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -245,7 +245,7 @@ function init() {
 
       unselectQuery: function () {
         Product.select(['-array_s', '-str', '-file']).find().then(res => {
-          notie.alert({type: 1, text: JSON.stringify(res.data.objects)})
+          notie.force({type: 1, text: JSON.stringify(res.data.objects)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -253,7 +253,7 @@ function init() {
 
       expandCreated_by: function () {
         Product.expand('created_by').find().then(res => {
-          notie.alert({type: 1, text: 'created_by: ' + JSON.stringify(res.data.objects[0].created_by)})
+          notie.force({type: 1, text: 'created_by: ' + JSON.stringify(res.data.objects[0].created_by)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -263,7 +263,7 @@ function init() {
         const {records} = this
         if (!records.length) return
         Product.expand('created_by').get(records[0].id).then(res => {
-          notie.alert({type: 1, text: 'created_by: ' + JSON.stringify(res.data.created_by)})
+          notie.force({type: 1, text: 'created_by: ' + JSON.stringify(res.data.created_by)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -276,7 +276,7 @@ function init() {
         query.compare('created_at', '<', endTimestamp)
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -294,7 +294,7 @@ function init() {
         // query.compare('duedate', '<', (new Date(endTimestamp)).toISOString())
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -305,7 +305,7 @@ function init() {
         query.hasKey('obj', 'num')
         Product.setQuery(query).find().then(res => {
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
-          notie.alert({type: 1, text: result})
+          notie.force({type: 1, text: result})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })
@@ -314,7 +314,7 @@ function init() {
       countItem(){
         let query = new BaaS.Query()
         Product.setQuery(query).count().then(res => {
-          notie.alert({type: 1, text: JSON.stringify(res)})
+          notie.force({type: 1, text: JSON.stringify(res)})
         }, err => {
           notie.alert({type: 3, text: '失败'})
         })

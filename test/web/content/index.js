@@ -49,7 +49,7 @@ function init() {
           query.arrayContains('categories', [selectedCateID])
         }
         return MyContentGroup.setQuery(query).orderBy(sortKey).limit(limit).offset(offset).find().then(res => {
-          this.contentList = res.data.objects
+          Vue.set(this, 'contentList', res.data.objects)
           notie.alert({type: 1, text: '成功'})
         }).catch(err => {
           console.log(err)
