@@ -1,8 +1,3 @@
-function printRequestResult() {
-  return
-}
-
-
 function init() {
   const BaaS = window.BaaS
 
@@ -23,11 +18,12 @@ function init() {
         },
         passwordChangeForm: {
           password: '',
-          new_password: ''
+          newPassword: ''
         },
         userInfoForm: {
           email: '',
           username: '',
+          password: '',
         },
         modalText: '',
       }
@@ -36,7 +32,6 @@ function init() {
       login() {
         window.BaaS.auth.login(_.pickBy(this.loginForm, v => !!v)).then(res => {
           console.log(res)
-          notie.alert({type: 1, text: '登录成功'})
           this.isLogin = true
         })
       },
@@ -48,11 +43,6 @@ function init() {
       logout() {
         window.BaaS.auth.logout().then(res => {
           this.isLogin = false
-        })
-      },
-      forgetPwd() {
-        window.BaaS.auth.requestPasswordReset().then(res => {
-          console.log(res)
         })
       },
       anonymousLogin() {
@@ -70,24 +60,32 @@ function init() {
       },
       updatePassword() {
         let user = BaaS.auth.currentUser()
-        user.updatePassword(_.pickBy(this.passwordChangeForm, v => !!v)).then(res => {
-          console.log(res)
+        user.updatePassword(this.passwordChangeForm).then(res => {
           this.$forceUpdate()
         })
       },
       updateUserinfo() {
         let user = BaaS.auth.currentUser()
         if (this.userInfoForm.username) {
-          user.updateUsername(this.userInfoForm.username).then(res => {
+          user.updateUsername({
+            username: this.userInfoForm.username,
+            password: this.userInfoForm.password,
+          }).then(res => {
             console.log(res)
-            this.$forceUpdate()
           })
         } else if (this.userInfoForm.email) {
-          user.updateEmail(this.userInfoForm.email, true).then(res => {
+          user.updateEmail({
+            email: this.userInfoForm.email,
+            password: this.userInfoForm.password,
+          }, {sendVerificationEmail: false}).then(res => {
             console.log(res)
-            this.$forceUpdate()
           })
         }
+      },
+      requestEmailVerification() {
+        let user = BaaS.auth.currentUser()
+        user.requestEmailVerification().then(res => {
+        })
       },
       showModal(content) {
         this.modalText = content
@@ -107,7 +105,7 @@ function init() {
         })
       },
 
-      testRequest: function() {
+      testRequest: function () {
         BaaS.invokeFunction('testRequest').then(res => {
           this.showModal(JSON.stringify(res.data))
         }, err => {

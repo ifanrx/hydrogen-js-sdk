@@ -6,7 +6,7 @@ axios.interceptors.response.use(function (response) {
   response.statusCode = response.status
   return response
 }, function (error) {
-  return error.response
+  throw error.response
 })
 
 module.exports = function (BaaS) {
@@ -26,6 +26,7 @@ module.exports = function (BaaS) {
         headers: utils.mergeRequestHeader(Object.assign({}, header, headers)),
         data,
       }
+
       axios(payload).then(resolve, reject)
       utils.log('Request => ' + url)
     })

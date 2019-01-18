@@ -61,7 +61,7 @@
       <hr />
       <button :disabled="!isLogin" @click="logout" type="button" class="btn btn-primary">退出登录</button>
       <hr />
-      <button @click="forgetPwd" type="button" class="btn btn-primary">忘记密码</button>
+      <button :disabled="isLogin" @click="requestPasswordReset" type="button" class="btn btn-primary">忘记密码</button>
     </div>
   </div>
   <div class="card">
@@ -70,15 +70,15 @@
       <hr>
       <button :disabled="!isLogin" @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
       <hr />
-      <button :disabled="!isLogin" @click="requestPasswordReset" type="button" class="btn btn-primary">发送验证邮件</button>
+      <button :disabled="!isLogin" @click="requestEmailVerification" type="button" class="btn btn-primary">发送验证邮件</button>
       <hr />
       <div>
         <div class="form-group form-row">
           <div class="col">
-            <input v-model="passwordChangeForm.passowrd" placeholder="旧密码" name="email" type="email" class="form-control" aria-describedby="emailHelp">
+            <input v-model="passwordChangeForm.password" placeholder="旧密码" type="email" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
-            <input v-model="passwordChangeForm.new_passowrd" placeholder="新密码" name="username" class="form-control" aria-describedby="emailHelp">
+            <input v-model="passwordChangeForm.newPassword" placeholder="新密码" class="form-control" aria-describedby="emailHelp">
           </div>
         </div>
         <button :disabled="!isLogin" @click="updatePassword" type="button" class="btn btn-primary">修改密码</button>
@@ -91,6 +91,9 @@
           </div>
           <div class="col">
             <input :disabled="!!userInfoForm.email" v-model="userInfoForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="userInfoForm.password" placeholder="密码" class="form-control" aria-describedby="emailHelp">
           </div>
         </div>
         <button :disabled="!isLogin" @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
@@ -150,7 +153,8 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script src="index.js"></script>
 </body>
 </html>

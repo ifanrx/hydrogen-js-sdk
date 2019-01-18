@@ -51,7 +51,7 @@ class UserRecord extends BaseRecord {
       },
     }).then(res => {
       storage.set(constants.STORAGE_KEY.USERINFO, res.data)
-      return res
+      return res.data
     })
   }
 
@@ -60,17 +60,17 @@ class UserRecord extends BaseRecord {
    * @param email
    * @param sendVerificationEmail
    */
-  updateEmail(email, sendVerificationEmail = false) {
+  updateEmail({email, password} = {}, {sendVerificationEmail = false} = {}) {
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: {email},
+      data: {email, password},
     }).then(res => {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
       storage.set(constants.STORAGE_KEY.USERINFO, res.data)
-      return res
+      return res.data
     })
   }
 
@@ -79,14 +79,14 @@ class UserRecord extends BaseRecord {
    * @param username
    * @return {*}
    */
-  updateUsername(username) {
+  updateUsername({username, password} = {}) {
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: {username},
+      data: {username, password},
     }).then(res => {
       storage.set(constants.STORAGE_KEY.USERINFO, res.data)
-      return res
+      return res.data
     })
   }
 

@@ -26,6 +26,9 @@ const login = data => {
       storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
       loginPromise = null
       return res.data
+    }, err => {
+      loginPromise = null
+      throw err
     })
   }
   return loginPromise
