@@ -24,7 +24,12 @@ module.exports = function (BaaS) {
         method,
         url,
         headers: utils.mergeRequestHeader(Object.assign({}, header, headers)),
-        data,
+      }
+
+      if (method.toUpperCase() === 'GET') {
+        payload.params = data
+      } else {
+        payload.data = data
       }
 
       axios(payload).then(resolve, reject)
