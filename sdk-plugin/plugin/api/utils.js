@@ -262,7 +262,7 @@ const mergeRequestHeader = header => {
   let extendHeader = {
     'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
     'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': getSysPlatform(),
+    'X-Hydrogen-Client-Platform': BaaS._polyfill.CLIENT_PLATFORM,
     'X-Hydrogen-Client-SDK-Type': BaaS._polyfill.SDK_TYPE,
   }
 

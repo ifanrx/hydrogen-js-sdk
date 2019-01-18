@@ -27,5 +27,7 @@ module.exports = function (BaaS) {
       }
       return createAuthFn(BaaS)(isForceLogin, userId)
     },
+
+    CLIENT_PLATFORM: 'ALIPAY',
   })
 }

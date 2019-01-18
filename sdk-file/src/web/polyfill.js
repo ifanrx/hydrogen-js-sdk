@@ -15,5 +15,6 @@ module.exports = function (BaaS) {
         return null
       }
     },
+    CLIENT_PLATFORM: 'WEB',
   })
 }

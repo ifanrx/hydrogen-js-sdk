@@ -12,6 +12,7 @@ module.exports = {
     return `https://${clientID}.myminapp.com`
   },
   SDK_TYPE: 'file',
+  CLIENT_PLATFORM: 'WECHAT',
   setStorageSync(k, v) {
     return wx.setStorageSync(k, v)
   },
