@@ -78,7 +78,6 @@ const createUploadFileFn = () => (fileParams, metaData) => {
     rj = reject
   })
 
-  // TODO: 检查 utils 中的方法
   let fileName = utils.getFileNameFromPath(fileParams.filePath)
   getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
     let config = {
