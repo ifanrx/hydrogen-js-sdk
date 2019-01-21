@@ -4,10 +4,12 @@ const HError = require('./HError')
 const storage = require('./storage')
 const utils = require('./utils')
 const UserRecord = require('./UserRecord')
+const User = require('./User')
 
 const API = BaaS._config.API
 
 let loginPromise = null
+let getUserPromise = null
 // let anonymousLoginPromise = null
 
 const login = data => {
@@ -20,12 +22,8 @@ const login = data => {
       storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      let userInfo = Object.assign({}, res.data)
-      delete userInfo.token
-      delete userInfo.expires_in
-      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
       loginPromise = null
-      return res.data
+      return currentUser()
     }, err => {
       loginPromise = null
       throw err
@@ -95,6 +93,24 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode).then(res => res.data)
 }
 
+const currentUser = () => {
+  let uid = storage.get(constants.STORAGE_KEY.UID)
+  if (!uid) return resolve(null)
+
+  if (!getUserPromise) {
+    getUserPromise = new User().get(uid).then(res => {
+      let user = UserRecord.initCurrentUser(res.data)
+      user.user_id = res.data.id
+      getUserPromise = null
+      return user
+    }, err => {
+      getUserPromise = null
+      throw err
+    })
+  }
+
+  return getUserPromise
+}
 
 module.exports = {
   login,
@@ -103,9 +119,5 @@ module.exports = {
   anonymousLogin,
   requestPasswordReset,
   register,
-  currentUser() {
-    let cache = storage.get(constants.STORAGE_KEY.USERINFO)
-    if (!cache) return null
-    return UserRecord.initCurrentUser(cache)
-  }
+  currentUser,
 }

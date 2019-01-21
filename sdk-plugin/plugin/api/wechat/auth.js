@@ -2,12 +2,9 @@ const constants = require('../constants')
 const HError = require('../HError')
 const storage = require('../storage')
 const utils = require('../utils')
+const commonAuth = require('../auth')
 
-let loginResolve = []
-let loginReject = []
-let isSilentLogining = false
-let silentLoginResolve = []
-let silentLoginReject = []
+let silentLoginPromise = null
 
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
@@ -42,77 +39,27 @@ module.exports = BaaS => {
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
-    }, err => {
-      reject(err)
-    })
+    }, reject)
   }
 
   const silentLogin = () => {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
-      return new Promise(resolve => {
-        resolve(makeLoginResponseData(false))
-      })
-    }
-    if (isSilentLogining) {
-      return new Promise((resolve, reject) => {
-        silentLoginResolve.push(resolve)
-        silentLoginReject.push(reject)
-      })
+      return Promise.resolve()
     }
 
-    isSilentLogining = true
-    return new Promise((resolve, reject) => {
-      silentLoginResolve.push(resolve)
-      silentLoginReject.push(reject)
-      auth().then(() => {
-        isSilentLogining = false
-        resolveLoginCallBacks(false)
+    if (!silentLoginPromise) {
+      silentLoginPromise = auth().then(res => {
+        silentLoginPromise = null
+        return res
       }, err => {
-        isSilentLogining = false
-        rejectLoginCallBacks(err, false)
+        silentLoginPromise = null
+        throw err
       })
-    })
-  }
-
-  const makeLoginResponseData = (userInfo = true) => {
-    if (userInfo) return Object.assign(
-      {[constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)},
-      storage.get(constants.STORAGE_KEY.USERINFO))
-    return {
-      id: storage.get(constants.STORAGE_KEY.UID),
-      openid: storage.get(constants.STORAGE_KEY.OPENID),
-      unionid: storage.get(constants.STORAGE_KEY.UNIONID),
-      [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)
     }
+
+    return silentLoginPromise
   }
 
-  const resolveLoginCallBacks = (userInfo = true) => {
-    setTimeout(() => {
-      if (userInfo) {
-        while (loginResolve.length) {
-          loginResolve.shift()(makeLoginResponseData())
-        }
-      } else {
-        while (silentLoginResolve.length) {
-          silentLoginResolve.shift()(makeLoginResponseData(false))
-        }
-      }
-    }, 0)
-  }
-
-  const rejectLoginCallBacks = (err, userInfo = true) => {
-    setTimeout(() => {
-      if (userInfo) {
-        while (loginReject.length) {
-          loginReject.shift()(err)
-        }
-      } else {
-        while (silentLoginReject.length) {
-          silentLoginReject.shift()(err)
-        }
-      }
-    }, 0)
-  }
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   const handleUserInfo = (res) => {
@@ -122,51 +69,47 @@ module.exports = BaaS => {
 
     let detail = res.detail
 
-    return new Promise((resolve, reject) => {
-      return silentLogin().then(() => {
-        // 用户拒绝授权，仅返回 uid, openid 和 unionid
-        if (!detail.userInfo) {
-          return reject(makeLoginResponseData(false))
-        }
-
-        let payload = {
-          rawData: detail.rawData,
-          signature: detail.signature,
-          encryptedData: detail.encryptedData,
-          iv: detail.iv
-        }
-
-        let userInfo = detail.userInfo
-        userInfo.id = storage.get(constants.STORAGE_KEY.UID)
-        userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
-        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-
-        return getSensitiveData(payload, resolve, reject, userInfo)
-      }, (err) => {
-        reject(err)
+    // 用户拒绝授权，仅返回 uid, openid 和 unionid
+    if (!detail.userInfo) {
+      return Promise.reject({
+        id: storage.get(constants.STORAGE_KEY.UID),
+        openid: storage.get(constants.STORAGE_KEY.OPENID),
+        unionid: storage.get(constants.STORAGE_KEY.UNIONID),
       })
+    }
+
+    return silentLogin().then(() => {
+      let payload = {
+        rawData: detail.rawData,
+        signature: detail.signature,
+        encryptedData: detail.encryptedData,
+        iv: detail.iv
+      }
+
+      let userInfo = detail.userInfo
+      userInfo.id = storage.get(constants.STORAGE_KEY.UID)
+      userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
+      userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
+
+      return getSensitiveData(payload, userInfo).then(() => commonAuth.currentUser())
     })
   }
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data, resolve, reject, userInfo) => {
+  const getSensitiveData = (data, userInfo) => {
     return BaaS.request({
       url: API.AUTHENTICATE,
       method: 'POST',
       data: data
     }).then(utils.validateStatusCode).then(res => {
-      storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '1')
       if (!userInfo.unionid && res.data.unionid) {
         userInfo.unionid = res.data.unionid
         storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid)
       }
-      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
-      resolve(makeLoginResponseData())
-    }, err => {
-      reject(err)
     })
   }
 
   BaaS.auth.handleUserInfo = handleUserInfo
-  BaaS.auth.loginWithWechat = BaaS.auth.silentLogin = silentLogin
+  BaaS.auth.loginWithWechat = () => silentLogin().then(res => commonAuth.currentUser())
+  BaaS.auth.silentLogin = silentLogin
 }
