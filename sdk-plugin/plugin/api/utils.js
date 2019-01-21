@@ -288,6 +288,29 @@ const validateStatusCode = res => {
 }
 
 
+/**
+ * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
+ * @param fn
+ * @return {function(): *}
+ */
+const rateLimit = (fn) => {
+  let promise = null
+  return function () {
+    if (!promise) {
+      promise = fn.apply(this, arguments).then(res => {
+        promise = null
+        return res
+      }, err => {
+        promise = null
+        throw err
+      })
+    }
+
+    return promise
+  }
+}
+
+
 module.exports = {
   mergeRequestHeader,
   log,
@@ -307,4 +330,5 @@ module.exports = {
   excludeParams,
   doCreateRequestMethod,
   validateStatusCode,
+  rateLimit,
 }

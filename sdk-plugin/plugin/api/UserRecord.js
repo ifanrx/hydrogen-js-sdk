@@ -50,13 +50,14 @@ class UserRecord extends BaseRecord {
         new_password: newPassword,
       },
     }).then(res => {
-      return res.data
+      return this
     })
   }
 
   /**
    * 更新邮箱
    * @param email
+   * @param password
    * @param sendVerificationEmail
    */
   updateEmail({email, password} = {}, {sendVerificationEmail = false} = {}) {
@@ -68,8 +69,8 @@ class UserRecord extends BaseRecord {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
-      storage.set(constants.STORAGE_KEY.USERINFO, Object.assign(res.data, this._attribute))
-      return res.data
+      Object.assign(this._attribute, res.data)
+      return this
     })
   }
 
@@ -84,8 +85,8 @@ class UserRecord extends BaseRecord {
       method: 'PUT',
       data: {username, password},
     }).then(res => {
-      storage.set(constants.STORAGE_KEY.USERINFO, Object.assign(res.data, this._attribute))
-      return res.data
+      Object.assign(this._attribute, res.data)
+      return this
     })
   }
 

@@ -45,11 +45,13 @@ function init() {
       register() {
         window.BaaS.auth.register(_.pickBy(this.registerForm, v => !!v)).then(res => {
           console.log(res)
+          this.isLogin = true
         })
       },
       logout() {
         window.BaaS.auth.logout().then(res => {
           this.isLogin = false
+          console.log(res)
         })
       },
       anonymousLogin() {
@@ -70,7 +72,7 @@ function init() {
       updatePassword() {
         BaaS.auth.currentUser().then(user => {
           user.updatePassword(this.passwordChangeForm).then(res => {
-            this.$forceUpdate()
+            console.log(res)
           })
         })
       },
@@ -95,7 +97,9 @@ function init() {
       },
       requestEmailVerification() {
         BaaS.auth.currentUser().then(user => {
-          user.requestEmailVerification()
+          user.requestEmailVerification().then(res => {
+            console.log(res)
+          })
         })
 
       },

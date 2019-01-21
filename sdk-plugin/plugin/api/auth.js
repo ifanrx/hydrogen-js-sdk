@@ -8,28 +8,17 @@ const User = require('./User')
 
 const API = BaaS._config.API
 
-let loginPromise = null
-let getUserPromise = null
-// let anonymousLoginPromise = null
-
 const login = data => {
-  if (!loginPromise) {
-    loginPromise = BaaS.request({
-      url: API.WEB.LOGIN,
-      method: 'POST',
-      data: data,
-    }).then(utils.validateStatusCode).then(res => {
-      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      loginPromise = null
-      return currentUser()
-    }, err => {
-      loginPromise = null
-      throw err
-    })
-  }
-  return loginPromise
+  return BaaS.request({
+    url: API.WEB.LOGIN,
+    method: 'POST',
+    data: data,
+  }).then(utils.validateStatusCode).then(res => {
+    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+    return currentUser()
+  })
 }
 
 /**
@@ -66,7 +55,12 @@ const register = data => {
     url: API.WEB.REGISTER,
     method: 'POST',
     data: data,
-  }).then(utils.validateStatusCode).then(res => res.data)
+  }).then(utils.validateStatusCode).then(res => {
+    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+    return currentUser()
+  })
 }
 
 
@@ -74,9 +68,7 @@ const logout = () => {
   return BaaS.request({
     url: API.LOGOUT,
     method: 'POST',
-  }).then(res => {
-    return utils.validateStatusCode(res)
-  }).then(res => {
+  }).then(utils.validateStatusCode).then(res => {
     BaaS.clearSession()
     return res
   })
@@ -90,34 +82,26 @@ const requestPasswordReset = ({email} = {}) => {
     url: API.WEB.PASSWORD_RESET,
     method: 'POST',
     data: {email},
-  }).then(utils.validateStatusCode).then(res => res.data)
+  }).then(utils.validateStatusCode)
 }
 
 const currentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   if (!uid) return Promise.resolve(null)
 
-  if (!getUserPromise) {
-    getUserPromise = new User().get(uid).then(res => {
-      let user = UserRecord.initCurrentUser(res.data)
-      user.user_id = res.data.id
-      getUserPromise = null
-      return user
-    }, err => {
-      getUserPromise = null
-      throw err
-    })
-  }
-
-  return getUserPromise
+  return new User().get(uid).then(res => {
+    let user = UserRecord.initCurrentUser(res.data)
+    user.user_id = res.data.id
+    return user
+  })
 }
 
 module.exports = {
-  login,
+  login: utils.rateLimit(login),
   logout,
   silentLogin,
   anonymousLogin,
   requestPasswordReset,
-  register,
-  currentUser,
+  register: utils.rateLimit(register),
+  currentUser: utils.rateLimit(currentUser),
 }
