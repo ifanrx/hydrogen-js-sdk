@@ -3,83 +3,37 @@ const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 const createAuthFn = require('./createAuthFn')
 
-let isLogining = false
-let loginResolve = []
-let loginReject = []
-let isSilentLogining = false
-let silentLoginResolve = []
-let silentLoginReject = []
-
-const resolveLoginCallBacks = (storage, isForceLogin) => {
-  let resolves = isForceLogin ? loginResolve : silentLoginResolve
-  setTimeout(() => {
-    while (resolves.length) {
-      resolves.shift()(makeLoginResponseData(storage, isForceLogin))
-    }
-  }, 0)
+let loginPromise = {
+  silent: null,
+  force: null,
 }
 
-const rejectLoginCallBacks = (err, isForceLogin) => {
-  let rejects = isForceLogin ? loginReject : silentLoginReject
-  setTimeout(() => {
-    while (rejects.length) {
-      rejects.shift()(err)
-    }
-  }, 0)
-}
-
-const makeLoginResponseData = (storage, isForceLogin) => {
-  if (isForceLogin) {
-    return Object.assign({
-      id: storage.get(constants.STORAGE_KEY.UID),
-      [constants.STORAGE_KEY.ALIPAY_USER_ID]: storage.get(constants.STORAGE_KEY.ALIPAY_USER_ID),
-      [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT),
-    }, storage.get(constants.STORAGE_KEY.USERINFO))
-  }
-  return {
-    id: storage.get(constants.STORAGE_KEY.UID),
-    [constants.STORAGE_KEY.ALIPAY_USER_ID]: storage.get(constants.STORAGE_KEY.ALIPAY_USER_ID),
-    [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT)
-  }
-}
-
-const hasUserLogined = function (BaaS, isForceLogin) {
+const hasUserLogined = function (BaaS) {
   const uid = BaaS.storage.get(constants.STORAGE_KEY.UID)
-  const userInfo = BaaS.storage.get(constants.STORAGE_KEY.USERINFO)
   const token = BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
-  return (isForceLogin && !!uid && !!token && !!userInfo && !utils.isSessionExpired())
-    || (!isForceLogin && !!uid && !!token && !utils.isSessionExpired())
+  return !!uid && !!token && !utils.isSessionExpired()
 }
 
 const createLoginFn = BaaS => opts => {
   const isForceLogin = !!opts && !!opts.forceLogin
   const auth = createAuthFn(BaaS)
-  let resolves = isForceLogin ? loginResolve : silentLoginResolve
-  let rejects = isForceLogin ? loginReject : silentLoginReject
-  if (hasUserLogined(BaaS, isForceLogin)) {
-    return Promise.resolve(makeLoginResponseData(BaaS.storage, isForceLogin))
+  if (hasUserLogined(BaaS)) {
+    return Promise.resolve()
   }
-  return new Promise((resolve, reject) => {
-    resolves.push(resolve)
-    rejects.push(reject)
-    if ((!isLogining && isForceLogin) || (!isSilentLogining && !isForceLogin)) {
-      if (isForceLogin) {
-        isLogining = true
-      } else {
-        isSilentLogining = true
-      }
-      auth(isForceLogin)
-        .then(() => resolveLoginCallBacks(BaaS.storage, isForceLogin))
-        .catch(err => rejectLoginCallBacks(err, isForceLogin))
-        .then(() => {
-          if (isForceLogin) {
-            isLogining = false
-          } else {
-            isSilentLogining = false
-          }
-        })
-    }
-  })
+  const loginType = isForceLogin ? 'force' : 'silent'
+  if (loginPromise[loginType]) {
+    return loginPromise[loginType]
+  }
+  loginPromise[loginType] = auth(isForceLogin)
+    .then(res => {
+      loginPromise[loginType] = null
+      return res
+    })
+    .catch(err => {
+      loginPromise[loginType] = null
+      throw err
+    })
+  return loginPromise[loginType]
 }
 
 const fnUnsupportedHandler = () => {
@@ -90,7 +44,7 @@ module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth = Object.assign({}, BaaS.auth, {
     silentLogin: login.bind(null, {forceLogin: false}),
-    loginWithAlipay: login,
+    loginWithAlipay: opts => login(opts).then(BaaS.auth.currentUser),
     login: fnUnsupportedHandler,
     anonymousLogin: fnUnsupportedHandler,
     requestPasswordReset: fnUnsupportedHandler,

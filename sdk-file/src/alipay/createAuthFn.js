@@ -51,9 +51,6 @@ const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      if (isForceLogin) {
-        BaaS.storage.set(constants.STORAGE_KEY.USERINFO, res.data.user_info)
-      }
       BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       return res
     } else {
@@ -71,7 +68,6 @@ const createUserAssociateFn = BaaS => (code, isForceLogin) => {
   }).then(res => {
     if (res.status == constants.STATUS_CODE.UPDATE) {
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
-      BaaS.storage.set(constants.STORAGE_KEY.USERINFO, res.data.user_info)
       return res
     } else {
       throw new HError(res.statusCode, require('./request').extractErrorMsg(res))
