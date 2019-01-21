@@ -118,6 +118,13 @@
   </div>
   <div class="card" v-show="isLogin">
     <div class="card-body">
+      <h5 class="card-title">User</h5>
+      <hr />
+      <a href="/user">user 测试</a>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
       <h5 class="card-title">文件</h5>
       <hr />
       <a href="/file">文件测试</a>
@@ -140,12 +147,30 @@
   </div>
   <div class="card" v-show="isLogin">
     <div class="card-body">
-      <h5 class="card-title">User</h5>
+      <h5 class="card-title">短信</h5>
       <hr />
-      <a href="/user">user 测试</a>
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input v-model="sms.phone" placeholder="手机号" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="sendSMSCode">发送验证码</button>
+      </div>
+      <hr />
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input v-model="sms.phone" placeholder="手机号" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="sms.code" placeholder="验证码" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="verifyPhone">验证手机号</button>
+      </div>
     </div>
   </div>
-
 </div>
 <script src="utils/common.js"></script>
 <script src="index.js"></script>

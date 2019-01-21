@@ -29,6 +29,10 @@ function init() {
           password: '',
         },
         modalText: '',
+        sms: {
+          phone: '',
+          code: '',
+        }
       }
     },
     methods: {
@@ -115,6 +119,20 @@ function init() {
         }, err => {
           console.log('err', err)
           notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+      sendSMSCode() {
+        BaaS.sendSmsCode({phone: this.sms.phone}).then(res => {
+          // success
+          console.log(res)
+        }).catch(err => {
+          // err
+          console.log(err)
+        })
+      },
+      verifyPhone() {
+        BaaS.verifySmsCode({phone: this.sms.phone, code: this.sms.code}).then(res => {
+          console.log(res)
         })
       },
     },
