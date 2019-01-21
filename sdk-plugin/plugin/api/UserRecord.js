@@ -138,6 +138,10 @@ UserRecord.initCurrentUser = function (userInfo) {
     return this._attribute
   }
 
+  record.get = function (key) {
+    return this._attribute[key]
+  }
+
   Object.keys(userInfo).forEach(key => {
     // 以下划线开头或者是原有内置字段将直接添加在该对象上
     if (key[0] === '_' || USER_PROFILE_BUILD_IN_FIELDS.includes(key)) {

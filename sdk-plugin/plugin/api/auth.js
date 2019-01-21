@@ -87,7 +87,7 @@ const requestPasswordReset = ({email} = {}) => {
 
 const currentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
-  if (!uid) return Promise.resolve(null)
+  if (!uid) return Promise.reject(HError(604))
 
   return new User().get(uid).then(res => {
     let user = UserRecord.initCurrentUser(res.data)

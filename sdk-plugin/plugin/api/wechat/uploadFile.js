@@ -36,7 +36,11 @@ const wxUpload = (config, resolve, reject, type) => {
         res.data = JSON.stringify(result)
       }
 
-      resolve(res)
+      try {
+        resolve(utils.validateStatusCode(res))
+      } catch (err) {
+        reject(err)
+      }
     },
     fail: () => {
       BaaS.request.wxRequestFail(reject)
