@@ -110,6 +110,6 @@ module.exports = BaaS => {
   }
 
   BaaS.auth.handleUserInfo = handleUserInfo
-  BaaS.auth.loginWithWechat = () => silentLogin().then(res => commonAuth.currentUser())
+  BaaS.auth.loginWithWechat = () => silentLogin().then(() => commonAuth.currentUser())
   BaaS.auth.silentLogin = silentLogin
 }
