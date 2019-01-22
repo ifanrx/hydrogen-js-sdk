@@ -55,7 +55,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       method = 'POST'
     }
     if (!/https?:\/\//.test(url)) {
-      url = config.API_HOST + url
+      url = BaaS._polyfill.getAPIHost() + url
     }
     my.httpRequest({
       method: method,

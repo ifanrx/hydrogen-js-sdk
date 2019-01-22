@@ -8,8 +8,8 @@ module.exports = {
   wxPaymentRequest(...args) {
     return wx.requestPayment(...args)
   },
-  getAPIHost(clientID) {
-    return `https://${clientID}.myminapp.com`
+  getAPIHost() {
+    return `https://${require('./baas')._config.CLIENT_ID}.myminapp.com`
   },
   SDK_TYPE: 'file',
   CLIENT_PLATFORM: 'WECHAT',

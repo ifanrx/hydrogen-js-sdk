@@ -1,13 +1,10 @@
 (function () {
   window.BaaS_config = {
-    content_groupID: 1538043206670160,
+    content_groupID: 1534324665369752,
   }
 
   // 初始化
-  window.BaaS.init('c2732ea16812760b8544')
-
-  //
-  window.BaaS._polyfill.getAPIHost = () => 'http://viac3.eng-vm.can.corp.ifanr.com'
+  window.BaaS.init('733b59d1b10ff4a37390')
 
   // hook request
   let r = window.BaaS.request

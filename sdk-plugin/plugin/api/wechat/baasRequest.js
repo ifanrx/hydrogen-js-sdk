@@ -1,7 +1,6 @@
 const utils = require('../utils')
 const BaaS = require('../baas')
 const constants = require('../constants')
-const config = require('../config')
 const storage = require('../storage')
 /**
  *
@@ -27,7 +26,7 @@ const baasRequest = function ({url, method = 'GET', data = {}, header = {}, data
   return BaaS.auth.silentLogin().then(() => {
     return BaaS.request.apply(null, arguments)
   }).then(res => {
-    if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED && url.match(config.API_HOST_PATTERN)) {
+    if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED) {
       return tryResendRequest({header, method, url, data, dataType})
     } else {
       return utils.validateStatusCode(res)

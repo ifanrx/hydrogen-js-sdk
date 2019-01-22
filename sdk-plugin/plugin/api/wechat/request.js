@@ -25,7 +25,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
     let headers = utils.mergeRequestHeader(header)
 
     if (!/https?:\/\//.test(url)) {
-      url = BaaS._config.API_HOST + url
+      url = BaaS._polyfill.getAPIHost() + url
     }
 
     wx.request({

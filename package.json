@@ -8,7 +8,7 @@
   "scripts": {
     "test": "npm run test-wechat",
     "test-wechat": "mocha test/wechat/index.js",
-    "test-web": "anywhere -p 40034 -d test/web",
+    "test-web": "anywhere -p 40034 -h localhost -d test/web",
     "dev": "export NODE_ENV=dev && webpack --config sdk-file/webpack.config.js --mode development -w",
     "build": "webpack --config sdk-file/webpack.config.js --mode production",
     "build-npm": "npm run build",

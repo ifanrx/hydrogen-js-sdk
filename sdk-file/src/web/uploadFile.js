@@ -32,7 +32,7 @@ module.exports = function (BaaS) {
       fd.append('policy', config.policy)
       fd.append('authorization', config.authorization)
 
-      return axios.post(config.uploadUrl, fd, {headers: getUploadHeaders()})
+      return axios.post(config.uploadUrl, fd)
     }).then((res) => {
       let result = {}
       let data = res.data

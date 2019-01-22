@@ -6,7 +6,7 @@ module.exports = BaaS => {
   const wxCensorImage = filePath => {
     return new Promise((resolve, reject) => {
       wx.uploadFile({
-        url: BaaS._config.API_HOST + BaaS._config.API.CENSOR_IMAGE,
+        url: BaaS._polyfill.getAPIHost() + BaaS._config.API.CENSOR_IMAGE,
         filePath: filePath,
         name: constants.UPLOAD.UPLOAD_FILE_KEY,
         header: {
@@ -36,7 +36,7 @@ module.exports = BaaS => {
       return Promise.reject(new HError(605))
     }
     return BaaS._baasRequest({
-      url: BaaS._config.API_HOST + BaaS._config.API.CENSOR_MSG,
+      url: BaaS._polyfill.getAPIHost() + BaaS._config.API.CENSOR_MSG,
       method: 'POST',
       data: {
         content: text
