@@ -64,7 +64,7 @@ const createUserAssociateFn = BaaS => (code, isForceLogin) => {
   return BaaS.request({
     url: API.ALIPAY.USER_ASSOCIATE,
     method: 'PUT',
-    data: { code, is_authorized: isForceLogin },
+    data: { code, authorized: isForceLogin },
   }).then(res => {
     if (res.status == constants.STATUS_CODE.UPDATE) {
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
