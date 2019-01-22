@@ -3,7 +3,6 @@ const utils = require('core-module/utils')
 
 // eslint-disable-next-line no-unused-vars
 const createBaasRequestFn = BaaS => ({url, method = 'GET', data = {}, header, headers, dataType = 'json'}) => {
-  const config = BaaS._config
   return BaaS.auth.silentLogin().then(() => {
     return BaaS.request({header, headers, method, url, data, dataType})
   }).then(res => {
