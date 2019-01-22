@@ -51,7 +51,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
     }, header, headers))
     // 兼容 PUT 与 DELETE 请求，支付宝暂时只支持 GET 与 POST 两种请求
     if (method.toUpperCase() === 'PUT' || method.toUpperCase() === 'DELETE') {
-      headers['X-Hydrogen-Alipay-Method'] = method
+      headers['X-Hydrogen-Request-Method'] = method
       method = 'POST'
     }
     if (!/https?:\/\//.test(url)) {
