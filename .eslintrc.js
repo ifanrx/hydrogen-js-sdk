@@ -24,5 +24,6 @@ module.exports = {
     sinon: true,
     rewire: true,
     __VERSION_WEB__: true,
+    __VERSION_ALIPAY__: true,
   }
 }

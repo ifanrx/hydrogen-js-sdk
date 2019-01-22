@@ -7,6 +7,8 @@ const polyfill = require('./polyfill')
 const uploadFile = require('./uploadFile')
 const pay = require('./pay')
 
+BaaS._config.VERSION = __VERSION_ALIPAY__
+
 BaaS.use(core)
 BaaS.use(auth)
 BaaS.use(request)
