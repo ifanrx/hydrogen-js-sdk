@@ -48,11 +48,11 @@ const API = {
   SEND_SMS_CODE: '/hserve/v1.8/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 
-  VIDEO_SNAPSHOT: '/hserve/v1/file/video-snapshot/',
-  M3U8_CONCAT: '/hserve/v1/file/m3u8-concat/',
-  M3U8_CLIP: '/hserve/v1/file/m3u8-clip/',
-  M3U8_META: '/hserve/v1/file/m3u8-meta/',
-  VIDEO_AUDIO_META: '/hserve/v1/file/video-audio-meta/',
+  VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
+  M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
+  M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
+  M3U8_META: '/hserve/v1/media/m3u8-meta/',
+  VIDEO_AUDIO_META: '/hserve/v1/media/video-audio-meta/',
 }
 
 const methodMapList = [{
