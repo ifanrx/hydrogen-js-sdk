@@ -39,8 +39,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __VERSION_WEB__: JSON.stringify(pkg.versions.web),
-      __VERSION_ALIPAY__: JSON.stringify(pkg.versions.alipay),
+      __VERSION_WEB__: `v${JSON.stringify(pkg.versions.web)}`,
+      __VERSION_ALIPAY__: `v${JSON.stringify(pkg.versions.alipay)}`,
     }),
     isDEV
       ? new CopyWebpackPlugin([{
