@@ -1,6 +1,10 @@
 (function () {
   window.BaaS_config = {
     content_groupID: 1534324665369752,
+    pointer: {
+      test_order: '5bbac56fbd66033df7fd0aa2',
+      user: 61736923,
+    }
   }
 
   // 初始化

@@ -149,17 +149,17 @@ function init() {
         })
       },
       batchCreatePointer() {
-        // Product.createMany([
-        //   {
-        //     pointer_userprofile: new window.BaaS.User().getWithoutData(pointer_userprofile_id)
-        //   }, {
-        //     pointer_test_order: new window.BaaS.TableObject('test_order').getWithoutData(pointer_test_order_id)
-        //   }
-        // ]).then(res => {
-        //   showModal(JSON.stringify(res.data))
-        // }, err => {
-        //   console.log(err)
-        // })
+        Product.createMany([
+          {
+            pointer_userprofile: new window.BaaS.User().getWithoutData(BaaS_config.pointer.user)
+          }, {
+            pointer_test_order: new window.BaaS.TableObject('test_order').getWithoutData(BaaS_config.pointer.test_order)
+          }
+        ]).then(res => {
+          showModal(JSON.stringify(res.data))
+        }, err => {
+          console.log(err)
+        })
       }
     },
   })
