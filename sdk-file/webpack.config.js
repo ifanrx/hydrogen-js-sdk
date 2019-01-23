@@ -2,7 +2,26 @@ const path = require('path')
 const webpack = require('webpack')
 const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'dev'
+const isCI = process.env.NODE_ENV === 'ci'
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+
+let plugins = [
+  new webpack.DefinePlugin({
+    __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
+    __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
+  }),
+]
+if (!isCI) {
+  plugins.push(isDEV
+    ? new CopyWebpackPlugin([{
+      from: 'dist/sdk-wechat.dev.js',
+      to: '../../tmp/vendor/sdk-wechat.dev.js'
+    }])
+    : new CopyWebpackPlugin([{
+      from: `dist/sdk-wechat.${pkg.versions.web}.js`,
+      to: '../../lib/web.js'
+    }]))
+}
 
 module.exports = {
   context: __dirname,
@@ -37,21 +56,7 @@ module.exports = {
       }
     }]
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
-      __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
-    }),
-    isDEV
-      ? new CopyWebpackPlugin([{
-        from: 'dist/sdk-wechat.dev.js',
-        to: '../../tmp/vendor/sdk-wechat.dev.js'
-      }])
-      : new CopyWebpackPlugin([{
-        from: `dist/sdk-wechat.${pkg.versions.web}.js`,
-        to: '../../lib/web.js'
-      }])
-  ],
+  plugins: plugins,
   resolve: {
     alias: {
       'core-module': path.resolve(__dirname, '../core/')
