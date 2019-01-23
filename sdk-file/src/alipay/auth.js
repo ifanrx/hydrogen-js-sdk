@@ -40,9 +40,6 @@ module.exports = function (BaaS) {
   BaaS.auth = Object.assign({}, BaaS.auth, {
     silentLogin: login.bind(null, {forceLogin: false}),
     loginWithAlipay: opts => login(opts).then(BaaS.auth.currentUser),
-    login: utils.fnUnsupportedHandler,
     anonymousLogin: utils.fnUnsupportedHandler,
-    requestPasswordReset: utils.fnUnsupportedHandler,
-    register: utils.fnUnsupportedHandler,
   })
 }
