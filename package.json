@@ -41,7 +41,7 @@
     "babel-loader": "^8.0.5",
     "chai": "^3.5.0",
     "copy-webpack-plugin": "^4.6.0",
-    "eslint": "^5.6.1",
+    "eslint": "4.19.1",
     "faker": "^4.1.0",
     "mocha": "^3.2.0",
     "mochawesome": "^2.2.0",
