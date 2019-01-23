@@ -4,7 +4,6 @@ const storage = require('../storage')
 const utils = require('../utils')
 const commonAuth = require('../auth')
 
-
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -101,9 +100,5 @@ module.exports = BaaS => {
     silentLogin: silentLogin,
     loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
     handleUserInfo: utils.rateLimit(handleUserInfo),
-    login: utils.fnUnsupportedHandler,
-    anonymousLogin: utils.fnUnsupportedHandler,
-    requestPasswordReset: utils.fnUnsupportedHandler,
-    register: utils.fnUnsupportedHandler,
   })
 }
