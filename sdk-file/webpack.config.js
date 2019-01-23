@@ -32,7 +32,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: isDEV ? 'sdk-[name].dev.js' : function (entry) {
+    filename: isDEV || isCI ? 'sdk-[name].dev.js' : function (entry) {
       let version = pkg.version
       if (entry.name === 'web') {
         version = pkg.versions.web
