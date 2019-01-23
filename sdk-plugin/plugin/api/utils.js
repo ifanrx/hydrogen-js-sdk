@@ -310,6 +310,10 @@ const rateLimit = (fn) => {
   }
 }
 
+const fnUnsupportedHandler = () => {
+  throw new HError(611)
+}
+
 
 module.exports = {
   mergeRequestHeader,
@@ -331,4 +335,5 @@ module.exports = {
   doCreateRequestMethod,
   validateStatusCode,
   rateLimit,
+  fnUnsupportedHandler,
 }

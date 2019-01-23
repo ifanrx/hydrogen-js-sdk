@@ -4,7 +4,6 @@ const storage = require('../storage')
 const utils = require('../utils')
 const commonAuth = require('../auth')
 
-
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -97,7 +96,9 @@ module.exports = BaaS => {
     })
   }
 
-  BaaS.auth.handleUserInfo = utils.rateLimit(handleUserInfo)
-  BaaS.auth.loginWithWechat = () => silentLogin().then(() => commonAuth.currentUser())
-  BaaS.auth.silentLogin = silentLogin
+  Object.assign(BaaS.auth, {
+    silentLogin: silentLogin,
+    loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
+    handleUserInfo: utils.rateLimit(handleUserInfo),
+  })
 }

@@ -1,6 +1,5 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
-const HError = require('core-module/HError')
 const createAuthFn = require('./createAuthFn')
 
 let loginPromise = {
@@ -36,18 +35,14 @@ const createLoginFn = BaaS => opts => {
   return loginPromise[loginType]
 }
 
-const fnUnsupportedHandler = () => {
-  throw new HError(611)
-}
-
 module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth = Object.assign({}, BaaS.auth, {
     silentLogin: login.bind(null, {forceLogin: false}),
     loginWithAlipay: opts => login(opts).then(BaaS.auth.currentUser),
-    login: fnUnsupportedHandler,
-    anonymousLogin: fnUnsupportedHandler,
-    requestPasswordReset: fnUnsupportedHandler,
-    register: fnUnsupportedHandler,
+    login: utils.fnUnsupportedHandler,
+    anonymousLogin: utils.fnUnsupportedHandler,
+    requestPasswordReset: utils.fnUnsupportedHandler,
+    register: utils.fnUnsupportedHandler,
   })
 }
