@@ -97,7 +97,13 @@ module.exports = BaaS => {
     })
   }
 
-  BaaS.auth.handleUserInfo = utils.rateLimit(handleUserInfo)
-  BaaS.auth.loginWithWechat = () => silentLogin().then(() => commonAuth.currentUser())
-  BaaS.auth.silentLogin = silentLogin
+  Object.assign(BaaS.auth, {
+    silentLogin: silentLogin,
+    loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
+    handleUserInfo: utils.rateLimit(handleUserInfo),
+    login: utils.fnUnsupportedHandler,
+    anonymousLogin: utils.fnUnsupportedHandler,
+    requestPasswordReset: utils.fnUnsupportedHandler,
+    register: utils.fnUnsupportedHandler,
+  })
 }
