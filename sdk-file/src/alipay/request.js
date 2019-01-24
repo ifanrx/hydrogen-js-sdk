@@ -1,15 +1,7 @@
 const utils = require('core-module/utils')
 const HError = require('core-module/HError')
 
-class RequestError {
-  constructor(code, msg) {
-    let error = new Error()
-    error.code = code
-    error.message = msg ? `${code}: ${msg}` : `${code}: ${this.mapErrorMessage(code)}`
-    return error
-  }
-
-  // 前端错误信息定义
+class RequestError extends HError {
   mapErrorMessage(code) {
     switch (code) {
     case 11:
@@ -23,7 +15,7 @@ class RequestError {
     case 19:
       return 'HTTP 错误'
     default:
-      return 'unknown error'
+      return '未知错误'
     }
   }
 }
@@ -56,7 +48,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
     }
     if (!/https?:\/\//.test(url)) {
       const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
-      url = API_HOST + url
+      url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
     my.httpRequest({
       method: method,

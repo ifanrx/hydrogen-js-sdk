@@ -3,15 +3,7 @@ const HError = require('core-module/HError')
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 
-class UploadError {
-  constructor(code, msg) {
-    let error = new Error()
-    error.code = code
-    error.message = msg ? `${code}: ${msg}` : `${code}: ${this.mapErrorMessage(code)}`
-    return error
-  }
-
-  // 前端错误信息定义
+class UploadError extends HError {
   mapErrorMessage(code) {
     switch (code) {
     case 11:
@@ -21,7 +13,7 @@ class UploadError {
     case 13:
       return '没有权限'
     default:
-      return 'unknown error'
+      return '未知错误'
     }
   }
 }

@@ -1,15 +1,16 @@
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
+const AUTH_ERROR = 11
 
 /**
- * 通过 isForceLogin 判断是否为强制登录
+ * 通过 forceLogin 判断是否为强制登录
  * scope 为 'auth_user'时，是主动授权，会弹出授权窗口
  * scope 为 'auth_base'时，不会弹出授权窗口
  *
  * 当有 userId 时，执行 linkAlipay 的操作
  */
-const createAuthFn = BaaS => function auth(isForceLogin, userId) {
-  const scope = isForceLogin ? 'auth_user' : 'auth_base'
+const createAuthFn = BaaS => function auth(forceLogin, userId) {
+  const scope = forceLogin ? 'auth_user' : 'auth_base'
   const handler = !userId
     ? createLoginHandlerFn(BaaS)
     : createUserAssociateFn(BaaS)
@@ -28,7 +29,7 @@ const createAuthFn = BaaS => function auth(isForceLogin, userId) {
   })
     .catch(err => {
       // 当用户取消授权后，执行静默登录
-      if ((err.error && err.error === 11)
+      if ((err.error && err.error === AUTH_ERROR)
         // 兼容开发工具上用户取消授权的操作
         || (err.authErrorScope && err.authErrorScope.scope && /用户取消授权/.test(err.authErrorScope.scope))) {
         return auth(false, userId)
@@ -36,12 +37,12 @@ const createAuthFn = BaaS => function auth(isForceLogin, userId) {
         throw err
       }
     })
-    .then(code => handler(code, isForceLogin))
+    .then(code => handler(code, forceLogin))
 }
 
-const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
+const createLoginHandlerFn = BaaS => (code, forceLogin) => {
   const API = BaaS._config.API
-  const url = isForceLogin ? API.ALIPAY.AUTHENTICATE : API.ALIPAY.SILENT_LOGIN
+  const url = forceLogin ? API.ALIPAY.AUTHENTICATE : API.ALIPAY.SILENT_LOGIN
   return BaaS.request({
     url,
     method: 'POST',
@@ -59,12 +60,12 @@ const createLoginHandlerFn = BaaS => (code, isForceLogin) => {
   })
 }
 
-const createUserAssociateFn = BaaS => (code, isForceLogin) => {
+const createUserAssociateFn = BaaS => (code, forceLogin) => {
   const API = BaaS._config.API
   return BaaS.request({
     url: API.ALIPAY.USER_ASSOCIATE,
     method: 'PUT',
-    data: { code, authorized: isForceLogin },
+    data: { code, authorized: forceLogin },
   }).then(res => {
     if (res.status == constants.STATUS_CODE.UPDATE) {
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')

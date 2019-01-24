@@ -14,16 +14,16 @@ const hasUserLogined = function (BaaS) {
 }
 
 const createLoginFn = BaaS => opts => {
-  const isForceLogin = !!opts && !!opts.forceLogin
+  const forceLogin = !!opts && !!opts.forceLogin
   const auth = createAuthFn(BaaS)
   if (hasUserLogined(BaaS)) {
     return Promise.resolve()
   }
-  const loginType = isForceLogin ? 'force' : 'silent'
+  const loginType = forceLogin ? 'force' : 'silent'
   if (loginPromise[loginType]) {
     return loginPromise[loginType]
   }
-  loginPromise[loginType] = auth(isForceLogin)
+  loginPromise[loginType] = auth(forceLogin)
     .then(res => {
       loginPromise[loginType] = null
       return res
@@ -37,9 +37,7 @@ const createLoginFn = BaaS => opts => {
 
 module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
-  BaaS.auth = Object.assign({}, BaaS.auth, {
-    silentLogin: login.bind(null, {forceLogin: false}),
-    loginWithAlipay: opts => login(opts).then(BaaS.auth.currentUser),
-    anonymousLogin: utils.fnUnsupportedHandler,
-  })
+  BaaS.auth.silentLogin = login.bind(null, {forceLogin: false})
+  BaaS.auth.loginWithAlipay = opts => login(opts).then(BaaS.auth.currentUser)
+  BaaS.auth.anonymousLogin = utils.fnUnsupportedHandler
 }
