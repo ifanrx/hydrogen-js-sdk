@@ -6,3 +6,4 @@ sdk-file/dist/*.map
 lib/
 yarn-error.log
 *.swp
+test/web/sdk.dev.js
