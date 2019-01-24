@@ -26,7 +26,7 @@ module.exports = function (BaaS) {
         headers: utils.mergeRequestHeader(Object.assign({}, header, headers)),
       }
 
-      if (method.toUpperCase() === 'GET' || method.toUpperCase() === 'DELETE') {
+      if (method.toUpperCase() === 'GET') {
         payload.params = data
       } else {
         payload.data = data

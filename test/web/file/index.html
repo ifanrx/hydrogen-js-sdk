@@ -127,8 +127,8 @@
         <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', 1)">+</button>
       </div>
       <ul class="list-group">
-        <li v-for="item in fileList" class="list-group-item d-flex justify-content-between align-items-center">
-          <input type="checkbox" v-model="selectedFileList">
+        <li key="item.id" v-for="item in fileList" class="list-group-item d-flex justify-content-between align-items-center">
+          <input :value="item.id" type="checkbox" v-model="selectedFileList">
           <span>{{item.name}}</span>
           <a href="javascript:void(0);" style="float: right;" @click="deleteFileSigle(item.id)">删除</a>
         </li>
