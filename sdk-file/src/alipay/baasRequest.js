@@ -11,7 +11,7 @@ const createBaasRequestFn = BaaS => (args) => {
       } else {
         throw res
       }
-  })
+    })
 }
 
 /**
