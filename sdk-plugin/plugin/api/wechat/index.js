@@ -15,13 +15,7 @@ BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
 BaaS.ErrorTracker = require('./errorTracker')
-BaaS._polyfill.linkWechat = function () {
-  return new Promise((resolve) => {
-    // TODO:: 绑定微信账号
-    resolve(true)
-  })
-}
-
+BaaS._polyfill.linkWechat = BaaS.auth.linkWechat
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境
 if (typeof wx !== 'undefined') {

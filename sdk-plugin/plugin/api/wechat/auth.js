@@ -8,12 +8,11 @@ module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
 
-  // 获取登录凭证 code, 进而换取用户登录态信息
-  const auth = () => {
+  const getLoginCode = () => {
     return new Promise((resolve, reject) => {
       polyfill.wxLogin({
         success: res => {
-          return sessionInit(res.code, resolve, reject)
+          resolve(res.code)
         },
         fail: () => {
           BaaS.request.wxRequestFail(reject)
@@ -22,10 +21,19 @@ module.exports = BaaS => {
     })
   }
 
+  // 获取登录凭证 code, 进而换取用户登录态信息
+  const auth = () => {
+    return new Promise((resolve, reject) => {
+      getLoginCode().then(code => {
+        sessionInit(code, resolve, reject)
+      }, reject)
+    })
+  }
+
   // code 换取 session_key，生成并获取 3rd_session 即 token
   const sessionInit = (code, resolve, reject) => {
     return BaaS.request({
-      url: API.LOGIN,
+      url: API.WECHAT.SILENT_LOGIN,
       method: 'POST',
       data: {
         code: code
@@ -85,7 +93,7 @@ module.exports = BaaS => {
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
   const getSensitiveData = (data, userInfo) => {
     return BaaS.request({
-      url: API.AUTHENTICATE,
+      url: API.WECHAT.AUTHENTICATE,
       method: 'POST',
       data: data
     }).then(utils.validateStatusCode).then(res => {
@@ -100,5 +108,6 @@ module.exports = BaaS => {
     silentLogin: silentLogin,
     loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
     handleUserInfo: utils.rateLimit(handleUserInfo),
+    linkWechat: utils.rateLimit(linkWechat),
   })
 }

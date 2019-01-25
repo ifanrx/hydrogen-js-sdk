@@ -19,7 +19,7 @@ const wxReportTicket = (formID) => {
   let paramsObj = makeParams(formID)
 
   return BaaS._baasRequest({
-    url: API.TEMPLATE_MESSAGE,
+    url: API.WECHAT.TEMPLATE_MESSAGE,
     method: 'POST',
     data: paramsObj,
   })

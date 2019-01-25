@@ -3,15 +3,15 @@ const API_HOST_PATTERN = /^https:\/\/\w+\.myminapp\.com/ // 若要修改 API 域
 let VERSION = 'v2.0.0'
 
 const API = {
-  LOGIN: '/hserve/v1.4/session/init/',
-  AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
+  // LOGIN: '/hserve/v1.4/session/init/',
+  // AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
   LOGOUT: '/hserve/v1/session/destroy/',
-  PAY: '/hserve/v1/wechat/pay/order/',
-  ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
+  // PAY: '/hserve/v1/wechat/pay/order/',
+  // ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
-  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
-  DECRYPT: '/hserve/v1/wechat/decrypt/',
-  WXACODE: '/hserve/v1.4/miniappcode/',
+  // TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+  // DECRYPT: '/hserve/v1/wechat/decrypt/',
+  // WXACODE: '/hserve/v1.4/miniappcode/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v2.0/user/info/:userID/',
@@ -56,6 +56,19 @@ const API = {
     ACCOUNT_INFO: '/hserve/v1/user/account/',
     PASSWORD_RESET: '/hserve/v1/user/password/reset/',
     ANONYMOUS_LOGIN: '/hserve/v1/anonymous-login/',
+  },
+
+  WECHAT: {
+    SILENT_LOGIN: '/hserve/v2.0/idp/wechat/silent-login/',
+    AUTHENTICATE: '/hserve/v2.0/idp/wechat/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
+    TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+    DECRYPT: '/hserve/v1/wechat/decrypt/',
+    WXACODE: '/hserve/v1.4/miniappcode/',
+    PAY: '/hserve/v1/wechat/pay/order/',
+    ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
+    CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
+    CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   },
 
   ALIPAY: {
@@ -175,7 +188,7 @@ const methodMapList = [{
   }
 }, {
   getOrderList: {
-    url: API.PAY
+    url: API.WECHAT.PAY
   }
 }]
 

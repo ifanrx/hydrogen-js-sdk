@@ -14,7 +14,7 @@ const wxDecryptData = (...params) => {
   }
 
   return BaaS._baasRequest({
-    url: API.DECRYPT + params[2] + '/',
+    url: API.WECHAT.DECRYPT + params[2] + '/',
     method: 'POST',
     data: paramsObj,
   }).then(res => {

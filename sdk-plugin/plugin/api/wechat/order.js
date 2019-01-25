@@ -10,7 +10,7 @@ class Order extends BaseQuery {
   }
 
   get(transactionID) {
-    let url = utils.format(API.ORDER, {transactionID: transactionID})
+    let url = utils.format(API.WECHAT.ORDER, {transactionID: transactionID})
     return BaaS._baasRequest({url})
   }
 

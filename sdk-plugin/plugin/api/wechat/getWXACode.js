@@ -72,7 +72,7 @@ const getWXACode = (type, params, cdn, categoryName) => {
   let realParams = makeRealParams(type, params, cdn, categoryName)
 
   return BaaS._baasRequest({
-    url: API.WXACODE,
+    url: API.WECHAT.WXACODE,
     method: 'POST',
     data: realParams,
   }).then(res => {

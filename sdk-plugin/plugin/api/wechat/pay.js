@@ -21,7 +21,7 @@ const pay = (params) => {
   }
 
   return BaaS._baasRequest({
-    url: API.PAY,
+    url: API.WECHAT.PAY,
     method: 'POST',
     data: paramsObj,
   }).then(function (res) {
