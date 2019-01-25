@@ -47,6 +47,12 @@ const API = {
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   SEND_SMS_CODE: '/hserve/v1.8/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
+
+  VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
+  M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
+  M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
+  M3U8_META: '/hserve/v1/media/m3u8-meta/',
+  VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
 }
 
 const methodMapList = [{
