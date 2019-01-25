@@ -1,16 +1,16 @@
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 
-// eslint-disable-next-line no-unused-vars
-const createBaasRequestFn = BaaS => ({url, method = 'GET', data = {}, header, headers, dataType = 'json'}) => {
-  return BaaS.auth.silentLogin().then(() => {
-    return BaaS.request({header, headers, method, url, data, dataType})
-  }).then(res => {
-    if (parseInt(res.status) === constants.STATUS_CODE.UNAUTHORIZED) {
-      return tryResendRequest(BaaS, {header, headers, method, url, data, dataType})
-    } else {
-      return utils.validateStatusCode(res)
-    }
+const createBaasRequestFn = BaaS => (args) => {
+  return BaaS.auth.silentLogin()
+    .then(() => BaaS.request(args))
+    .then(utils.validateStatusCode)
+    .catch(res => {
+      if (parseInt(res.status) === constants.STATUS_CODE.UNAUTHORIZED) {
+        return tryResendRequest(BaaS, args)
+      } else {
+        throw res
+      }
   })
 }
 

@@ -1,4 +1,5 @@
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError extends HError {
@@ -61,6 +62,9 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
         // 开发工具的 bug, 返回 200 才走 success
         if (res.status >= 200 && res.status < 300) {
           return resolve(res)
+        }
+        if (res.status === constants.STATUS_CODE.UNAUTHORIZED) {
+          return reject(res)
         }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
