@@ -5,7 +5,7 @@ let VERSION = 'v2.0.0'
 const API = {
   // LOGIN: '/hserve/v1.4/session/init/',
   // AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
-  LOGOUT: '/hserve/v1/session/destroy/',
+  LOGOUT: '/hserve/v2.0/session/destroy/',
   // PAY: '/hserve/v1/wechat/pay/order/',
   // ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',

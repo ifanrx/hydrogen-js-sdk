@@ -104,6 +104,16 @@ module.exports = BaaS => {
     })
   }
 
+  const linkWechat = () => {
+    return getLoginCode().then(code => {
+      return BaaS._baasRequest({
+        method: 'POST',
+        url: API.WECHAT.USER_ASSOCIATE,
+        data: {code}
+      })
+    })
+  }
+
   Object.assign(BaaS.auth, {
     silentLogin: silentLogin,
     loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
