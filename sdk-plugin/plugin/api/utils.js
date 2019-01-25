@@ -308,7 +308,7 @@ const rateLimit = (fn) => {
       }
     } catch (err) {
       promise = null
-      return err
+      throw err
     }
 
     return promise
