@@ -296,19 +296,14 @@ const validateStatusCode = res => {
 const rateLimit = (fn) => {
   let promise = null
   return function () {
-    try {
-      if (!promise) {
-        promise = fn.apply(this, arguments).then(res => {
-          promise = null
-          return res
-        }, err => {
-          promise = null
-          throw err
-        })
-      }
-    } catch (err) {
-      promise = null
-      throw err
+    if (!promise) {
+      promise = fn.apply(this, arguments).then(res => {
+        promise = null
+        return res
+      }, err => {
+        promise = null
+        throw err
+      })
     }
 
     return promise
