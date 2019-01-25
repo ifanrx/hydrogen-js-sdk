@@ -31,7 +31,7 @@ const createAuthFn = BaaS => function auth(forceLogin, userId) {
       // 当用户取消授权后，执行静默登录
       if ((err.error && err.error === AUTH_ERROR)
         // 兼容开发工具上用户取消授权的操作
-        || (err.authErrorScope && err.authErrorScope.scope && /用户取消授权/.test(err.authErrorScope.scope))) {
+        || (err.authErrorScope && err.authErrorScope.scope)) {
         return auth(false, userId)
       } else {
         throw err
