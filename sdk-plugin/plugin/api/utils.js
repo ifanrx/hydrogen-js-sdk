@@ -126,7 +126,7 @@ const parseRegExp = (regExp) => {
  */
 const replaceQueryParams = (params = {}) => {
   let requestParamsMap = BaaS._config.REQUEST_PARAMS_MAP
-  let copiedParams = extend({}, params)
+  let copiedParams = Object.assign({}, params)
 
   Object.keys(params).map(key => {
     Object.keys(requestParamsMap).map(mapKey => {
@@ -228,7 +228,7 @@ const doCreateRequestMethod = (methodMap) => {
 
           if (methodItem.defaultParams) {
             let defaultParamsCopy = cloneDeep(methodItem.defaultParams)
-            newObjects = extend(defaultParamsCopy, newObjects)
+            newObjects = Object.assign(defaultParamsCopy, newObjects)
           }
 
           // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
@@ -270,7 +270,7 @@ const mergeRequestHeader = header => {
   if (authToken) {
     extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
   }
-  return extend({}, header || {}, extendHeader)
+  return Object.assign({}, header || {}, extendHeader)
 }
 
 /**
@@ -328,7 +328,6 @@ module.exports = {
   isString,
   isObject,
   isFunction,
-  extend,
   cloneDeep,
   isSessionExpired,
   excludeParams,
