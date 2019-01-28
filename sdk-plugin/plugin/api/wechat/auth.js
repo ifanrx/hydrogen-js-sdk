@@ -120,4 +120,28 @@ module.exports = BaaS => {
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),
   })
+
+
+  // 兼容原有的 API
+
+  BaaS.login = function (args) {
+    if (args === false) {
+      return silentLogin().then(() => ({
+        id: storage.get(constants.STORAGE_KEY.UID),
+        openid: storage.get(constants.STORAGE_KEY.OPENID),
+        unionid: storage.get(constants.STORAGE_KEY.UNIONID),
+        [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT),
+      }))
+    } else {
+      return Promise.reject(new HError(605))
+    }
+  }
+
+  BaaS.handleUserInfo = function (res) {
+    return BaaS.auth.handleUserInfo(res).then(user => {
+      return user.toJSON()
+    })
+  }
+
+  BaaS.logout = BaaS.auth.logout
 }
