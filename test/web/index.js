@@ -59,7 +59,7 @@ function init() {
           console.log(res)
         })
       },
-      getCurrentUser() {
+      currentUser() {
         BaaS.auth.getCurrentUser().then(res => {
           console.log(res)
         })
