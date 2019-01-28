@@ -51,7 +51,7 @@ function init() {
           })
       },
       getAllProduct() {
-        Product.find().then(res => {
+        Product.expand(['pointer_test_order', 'pointer_userprofile']).find().then(res => {
           Vue.set(this, 'records', res.data.objects)
           let result = `查询成功-总记录数为：${res.data.meta.total_count}`
           notie.alert({type: 1, text: result})
@@ -232,7 +232,8 @@ function init() {
           Vue.set(this, 'records', res.data.objects)
         }, err => {
           notie.alert({type: 3, text: '失败'})
-        }).then(res => {})
+        }).then(res => {
+        })
       },
 
       selectQuery: function () {
@@ -302,7 +303,7 @@ function init() {
         })
       },
 
-      hasKey(){
+      hasKey() {
         let query = new BaaS.Query()
         query.hasKey('obj', 'num')
         Product.setQuery(query).find().then(res => {
@@ -313,7 +314,7 @@ function init() {
         })
       },
 
-      countItem(){
+      countItem() {
         let query = new BaaS.Query()
         Product.setQuery(query).count().then(res => {
           notie.force({type: 1, text: JSON.stringify(res)})
