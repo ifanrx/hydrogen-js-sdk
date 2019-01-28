@@ -59,8 +59,8 @@ function init() {
           console.log(res)
         })
       },
-      currentUser() {
-        BaaS.auth.currentUser().then(res => {
+      getCurrentUser() {
+        BaaS.auth.getCurrentUser().then(res => {
           console.log(res)
         })
       },
@@ -70,14 +70,14 @@ function init() {
         })
       },
       updatePassword() {
-        BaaS.auth.currentUser().then(user => {
+        BaaS.auth.getCurrentUser().then(user => {
           user.updatePassword(this.passwordChangeForm).then(res => {
             console.log(res)
           })
         })
       },
       updateUserinfo() {
-        BaaS.auth.currentUser().then(user => {
+        BaaS.auth.getCurrentUser().then(user => {
           if (this.userInfoForm.username) {
             user.updateUsername({
               username: this.userInfoForm.username,
@@ -96,7 +96,7 @@ function init() {
         })
       },
       requestEmailVerification() {
-        BaaS.auth.currentUser().then(user => {
+        BaaS.auth.getCurrentUser().then(user => {
           user.requestEmailVerification().then(res => {
             console.log(res)
           })
@@ -142,7 +142,7 @@ function init() {
     },
     computed: {},
     mounted() {
-      BaaS.auth.currentUser().then(res => {
+      BaaS.auth.getCurrentUser().then(res => {
         console.log(res)
         this.isLogin = !!res
       })

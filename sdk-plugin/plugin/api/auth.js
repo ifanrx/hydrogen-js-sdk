@@ -17,7 +17,7 @@ const login = data => {
     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-    return currentUser()
+    return getCurrentUser()
   })
 }
 
@@ -59,7 +59,7 @@ const register = data => {
     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-    return currentUser()
+    return getCurrentUser()
   })
 }
 
@@ -85,7 +85,7 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
-const currentUser = () => {
+const getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   if (!uid) return Promise.reject(new HError(604))
 
@@ -103,5 +103,5 @@ module.exports = {
   anonymousLogin,
   requestPasswordReset,
   register: utils.rateLimit(register),
-  currentUser: utils.rateLimit(currentUser),
+  getCurrentUser: utils.rateLimit(getCurrentUser),
 }

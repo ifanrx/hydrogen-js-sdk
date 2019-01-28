@@ -86,7 +86,7 @@ module.exports = BaaS => {
       userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
       userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
 
-      return getSensitiveData(payload, userInfo).then(() => commonAuth.currentUser())
+      return getSensitiveData(payload, userInfo).then(() => commonAuth.getCurrentUser())
     })
   }
 
@@ -116,7 +116,7 @@ module.exports = BaaS => {
 
   Object.assign(BaaS.auth, {
     silentLogin: silentLogin,
-    loginWithWechat: () => silentLogin().then(() => commonAuth.currentUser()),
+    loginWithWechat: () => silentLogin().then(() => commonAuth.getCurrentUser()),
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),
   })
