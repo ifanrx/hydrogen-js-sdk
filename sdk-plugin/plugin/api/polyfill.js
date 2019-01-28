@@ -14,10 +14,20 @@ module.exports = {
   SDK_TYPE: 'file',
   CLIENT_PLATFORM: 'WECHAT',
   setStorageSync(k, v) {
-    return wx.setStorageSync(k, v)
+    // 增加重试
+    // https://developers.weixin.qq.com/community/develop/doc/a352fb32bfc76cb6a6438925e4edf9b1
+    try {
+      return wx.setStorageSync(k, v)
+    } catch (err) {
+      return wx.setStorageSync(k, v)
+    }
   },
   getStorageSync(k) {
-    return wx.getStorageSync(k)
+    try {
+      return wx.getStorageSync(k)
+    } catch (e) {
+      return wx.getStorageSync(k)
+    }
   },
   getSystemInfoSync() {
     return wx.getSystemInfoSync()
