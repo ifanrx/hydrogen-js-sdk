@@ -2,31 +2,31 @@
   "pages": [
     "pages/index/index",
     "pages/veryrich/index",
-    "pages-test/schema-change/index",
-    "pages-test/schema-query/index",
-    "pages-test/schema-legacy/index",
-    "pages-test/schema-batch/index",
-    "pages-test/geo/index",
-    "pages-test/file/index",
-    "pages-test/decrypt/index",
-    "pages-test/media/index",
-    "pages-test/pay/index",
-    "pages-test/trigger/index",
-    "pages-test/content/index",
-    "pages-test/content-legacy/index",
-    "pages-test/user/index",
-    "pages-test/auth/index",
-    "pages-test/lifeCycle/index",
-    "pages-test/wxacode/index",
-    "pages-test/invoke-function/index",
-    "pages-test/wxparser-file/index",
-    "pages-test/wxparser-plugin/index",
-    "pages-test/aggregation/index",
-    "pages-test/censor/index",
-    "pages-test/sms/index",
-    "pages-test/handle-401/index",
-    "pages-test/kefu-message/index",
-    "pages-test/account/index"
+    "pages-test/wechat/schema-change/index",
+    "pages-test/wechat/schema-query/index",
+    "pages-test/wechat/schema-legacy/index",
+    "pages-test/wechat/schema-batch/index",
+    "pages-test/wechat/geo/index",
+    "pages-test/wechat/file/index",
+    "pages-test/wechat/decrypt/index",
+    "pages-test/wechat/media/index",
+    "pages-test/wechat/pay/index",
+    "pages-test/wechat/trigger/index",
+    "pages-test/wechat/content/index",
+    "pages-test/wechat/content-legacy/index",
+    "pages-test/wechat/user/index",
+    "pages-test/wechat/auth/index",
+    "pages-test/wechat/lifeCycle/index",
+    "pages-test/wechat/wxacode/index",
+    "pages-test/wechat/invoke-function/index",
+    "pages-test/wechat/wxparser-file/index",
+    "pages-test/wechat/wxparser-plugin/index",
+    "pages-test/wechat/aggregation/index",
+    "pages-test/wechat/censor/index",
+    "pages-test/wechat/sms/index",
+    "pages-test/wechat/handle-401/index",
+    "pages-test/wechat/kefu-message/index",
+    "pages-test/wechat/account/index"
   ],
   "plugins": {
     "wxparserPlugin": {
@@ -35,7 +35,7 @@
     },
     "sdkPlugin": {
       "version": "dev",
-      "provider": "wxc6b86e382a1e3294"
+      "provider": "wxfab60d15556a51ec"
     }
   }
 }
