@@ -79,14 +79,14 @@ function init() {
       updateUserinfo() {
         BaaS.auth.getCurrentUser().then(user => {
           if (this.userInfoForm.username) {
-            user.updateUsername({
+            user.setUsername({
               username: this.userInfoForm.username,
               password: this.userInfoForm.password,
             }).then(res => {
               console.log(res)
             })
           } else if (this.userInfoForm.email) {
-            user.updateEmail({
+            user.setEmail({
               email: this.userInfoForm.email,
               password: this.userInfoForm.password,
             }, {sendVerificationEmail: false}).then(res => {

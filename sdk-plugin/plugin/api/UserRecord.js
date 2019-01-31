@@ -60,11 +60,21 @@ class UserRecord extends BaseRecord {
    * @param password
    * @param sendVerificationEmail
    */
-  updateEmail({email, password} = {}, {sendVerificationEmail = false} = {}) {
+  setEmail({email, newPassword, password} = {}, {sendVerificationEmail = false} = {}) {
+    let payload = {email}
+
+    if (password) {
+      payload.password = password
+    }
+
+    if (newPassword) {
+      payload.new_password = newPassword
+    }
+
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: {email, password},
+      data: payload,
     }).then(res => {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
@@ -79,11 +89,23 @@ class UserRecord extends BaseRecord {
    * @param username
    * @return {*}
    */
-  updateUsername({username, password} = {}) {
+  setUsername({username, newPassword, password} = {}) {
+    let payload = {
+      username
+    }
+
+    if (password) {
+      payload.password = password
+    }
+
+    if (newPassword) {
+      payload.new_password = newPassword
+    }
+
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: {username, password},
+      data: payload,
     }).then(res => {
       Object.assign(this._attribute, res.data)
       return this
