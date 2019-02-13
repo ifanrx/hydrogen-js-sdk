@@ -60,12 +60,8 @@ class UserRecord extends BaseRecord {
    * @param password
    * @param sendVerificationEmail
    */
-  setEmail({email, newPassword, password} = {}, {sendVerificationEmail = false} = {}) {
+  setEmail({email, newPassword} = {}, {sendVerificationEmail = false} = {}) {
     let payload = {email}
-
-    if (password) {
-      payload.password = password
-    }
 
     if (newPassword) {
       payload.new_password = newPassword
@@ -89,13 +85,9 @@ class UserRecord extends BaseRecord {
    * @param username
    * @return {*}
    */
-  setUsername({username, newPassword, password} = {}) {
+  setUsername({username, newPassword} = {}) {
     let payload = {
       username
-    }
-
-    if (password) {
-      payload.password = password
     }
 
     if (newPassword) {
