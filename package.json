@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/ifanrx/repository#readme",
   "versions": {
-    "alipay": "2.0.0",
-    "web": "2.0.0"
+    "alipay": "2.0.0-a",
+    "web": "2.0.0-a"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
