@@ -76,6 +76,12 @@ const API = {
     AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
   },
+
+  VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
+  M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
+  M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
+  M3U8_META: '/hserve/v1/media/m3u8-meta/',
+  VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
 }
 
 const methodMapList = [{
