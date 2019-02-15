@@ -57,20 +57,13 @@ class UserRecord extends BaseRecord {
   /**
    * 更新邮箱
    * @param email
-   * @param password
    * @param sendVerificationEmail
    */
-  setEmail({email, newPassword} = {}, {sendVerificationEmail = false} = {}) {
-    let payload = {email}
-
-    if (newPassword) {
-      payload.new_password = newPassword
-    }
-
+  setEmail(email, {sendVerificationEmail = false} = {}) {
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: payload,
+      data: {email},
     }).then(res => {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
@@ -85,19 +78,11 @@ class UserRecord extends BaseRecord {
    * @param username
    * @return {*}
    */
-  setUsername({username, newPassword} = {}) {
-    let payload = {
-      username
-    }
-
-    if (newPassword) {
-      payload.new_password = newPassword
-    }
-
+  setUsername(username) {
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
-      data: payload,
+      data: {username},
     }).then(res => {
       Object.assign(this._attribute, res.data)
       return this
@@ -112,6 +97,21 @@ class UserRecord extends BaseRecord {
     return BaaS._baasRequest({
       url: API.WEB.EMAIL_VERIFY,
       method: 'POST',
+    })
+  }
+
+  /**
+   * 初次设置账号信息
+   * @param {object}  accountInfo
+   */
+  setAccount(accountInfo = {}) {
+    return BaaS._baasRequest({
+      url: API.WEB.ACCOUNT_INFO,
+      method: 'PUT',
+      data: accountInfo,
+    }).then(res => {
+      Object.assign(this._attribute, res.data)
+      return this
     })
   }
 
