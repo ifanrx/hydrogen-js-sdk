@@ -13,8 +13,7 @@
     "build": "webpack --config sdk-file/webpack.config.js --mode production",
     "build-npm": "npm run build && cp sdk-file/dist/sdk-web.${npm_package_versions_web}.js lib/web.js && cp sdk-file/dist/sdk-wechat.${npm_package_version}.js lib/index.js",
     "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
-    "prepublishOnly": "npm run lint",
-    "prepublish": "npm run lint && npm run build-npm"
+    "prepublishOnly": "npm run lint && npm run build-npm"
   },
   "repository": {
     "type": "git",
