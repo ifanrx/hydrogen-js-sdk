@@ -4,8 +4,6 @@ const utils = require('./utils')
 const USER_PROFILE_BUILD_IN_FIELDS = require('./constants').USER_PROFILE_BUILD_IN_FIELDS
 const HError = require('./HError')
 const API = BaaS._config.API
-const storage = require('./storage')
-const constants = require('./constants')
 
 class UserRecord extends BaseRecord {
   constructor(userID) {
@@ -105,6 +103,11 @@ class UserRecord extends BaseRecord {
    * @param {object}  accountInfo
    */
   setAccount(accountInfo = {}) {
+    if (accountInfo.password) {
+      accountInfo.new_password = accountInfo.password
+      delete accountInfo.password
+    }
+
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
