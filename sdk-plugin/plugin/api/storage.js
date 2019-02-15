@@ -1,10 +1,11 @@
+const BaaS = require('./baas')
 const storageKeyPrefix = 'ifx_baas_'
 
 module.exports = {
   set: (key, value) => {
-    wx.setStorageSync(storageKeyPrefix + key, value)
+    BaaS._polyfill.setStorageSync(storageKeyPrefix + key, value)
   },
   get: (key) => {
-    return wx.getStorageSync(storageKeyPrefix + key)
+    return BaaS._polyfill.getStorageSync(storageKeyPrefix + key)
   }
 }

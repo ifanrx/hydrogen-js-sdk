@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.11/lodash.min.js"></script>
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <script src="../sdk.dev.js"></script>
+  <title>schema 增删改</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">schema 增删改</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">请先创建一条记录，再进行下一步操作</h5>
+      <p v-if="record">id: {{record.id}}</p>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="createRecordA">添加记录（整体 set）</button>
+      <button type="button" class="btn btn-primary" @click="createRecordB">添加记录（单独 set）</button>
+      <button type="button" class="btn btn-primary" @click="deleteRecord" :disabled="!record">删除记录</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- int : {{record && record.int}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="updateRecord" :disabled="!record">int = 100</button>
+      <button type="button" class="btn btn-primary" @click="minusOne" :disabled="!record">int -= 1</button>
+      <button type="button" class="btn btn-primary" @click="plusOne" :disabled="!record">int += 1</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- array_int : {{record && record.array_i}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', [123, 456])" :disabled="!record">add [123, 456]</button>
+      <button type="button" class="btn btn-primary" @click="addItemToArray('array_i', 123456)" :disabled="!record">add 123456</button>
+      <button type="button" class="btn btn-primary" @click="removeArrayFromArray('array_i', [record && record.array_i[0]])"
+        :disabled="!record || record && record.array_i.length<2">remove [{{record && record.array_i.length > 1 && record.array_i[0]}}]</button>
+      <button type="button" class="btn btn-primary" @click="removeArrayFromArray('array_i', record && record.array_i[0])"
+              :disabled="!record || record && record.array_i.length<2">remove {{record && record.array_i.length > 1 && record.array_i[0]}}</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">更新字段 -- obj.num : {{record && record.obj && record.obj.num}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="patchObject" :disabled="!record">patchObject</button>
+    </div>
+  </div>
+</div>
+
+<script src="../utils/common.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>

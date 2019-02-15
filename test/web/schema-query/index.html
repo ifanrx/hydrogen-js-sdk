@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <script src="../sdk.dev.js"></script>
+  <title>schema 查找测试</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+    .opt-btn {
+      width: 24px;
+      padding: 0;
+      text-align: center;
+    }
+    .list-group {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">schema 查找测试</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">重置数据</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getAllProduct">重置</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">get 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getAllProduct">获取所有产品</button>
+      <button type="button" class="btn btn-primary" @click="getProduct" :disabled="records.length == 0">获取一个产品</button>
+      <button type="button" class="btn btn-primary" @click="getProductBySelect_asc" :disabled="records.length == 0">获取一个产品返回字段'str'</button>
+      <button type="button" class="btn btn-primary" @click="getProductBySelect_desc" :disabled="records.length == 0">获取一个产品不返回字段'str, array_i'</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">compare 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="compareQuery('=')">compare 查询(int = 50)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery('!=')">compare 查询(int != 50)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery('>')">compare 查询(int > 50)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery('>=')">compare 查询(int ≥ 50)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery('<')">compare 查询(int ＜ 50)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery('<=')">compare 查询(int ≤ 50)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">字符串查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="containsQuery">字符串 contains 'm' 查询(2)</button>
+      <button type="button" class="btn btn-primary" @click="regxQuery('str')">字符串正则查询 - 字面量(2)</button>
+      <button type="button" class="btn btn-primary" @click="regxQuery('func')">字符串正则查询 - 构造函数(4)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">数组查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="inQuery">数组 in 查询(4)</button>
+      <button type="button" class="btn btn-primary" @click="notInQuery">数组 notIn 查询(6)</button>
+      <button type="button" class="btn btn-primary" @click="arrayContainsQuery">数组 arrayContains 查询(1)</button>
+      <button type="button" class="btn btn-primary" @click="compareQuery_2">数组指定值查询(1)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">null 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="nullQuery">null 查询(1)</button>
+      <button type="button" class="btn btn-primary" @click="notNullQuery">not null 查询(8)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">exists 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="existsQuery">exists 查询(9)</button>
+      <button type="button" class="btn btn-primary" @click="notExistsQuery">notExists 查询(0)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">多条件查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="complexQueryProduct">多条件查询 and / or(5)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">分页与排序</h5>
+      <hr />
+      <p>order_by : </p>
+      <div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="num" v-model="order_by">
+            num
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-num" v-model="order_by">
+            -num
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="str" v-model="order_by">
+            str
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-str" v-model="order_by">
+            -str
+          </label>
+        </div>
+      </div>
+      <p>limit:</p>
+      <div>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', -1)">-</button>
+        <span class="num">{{limit}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', 1)">+</button>
+      </div>
+      <p>offset:</p>
+      <div>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', -1)">-</button>
+        <span class="num">{{offset}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', 1)">+</button>
+      </div>
+      <button type="button" class="btn btn-primary" @click="getAllProductWithOptions">查找</button>
+      <ul class="list-group">
+        <li
+            v-for="item in records"
+            class="list-group-item d-flex justify-content-between align-items-center"
+        >num: {{item.num}}, str: {{item.str}}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">字段过滤与扩展</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="selectQuery">返回指定字段 [num]</button>
+      <button type="button" class="btn btn-primary" @click="unselectQuery">不返回指定字段 [-array_s, -str, -file]</button>
+      <button type="button" class="btn btn-primary" @click="expandCreated_by">expand created_by</button>
+      <button type="button" class="btn btn-primary" @click="getExpand" :disabled="!records.length">tableObject get expand</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">时间类型字段查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="queryByTime1">created_at 查询</button>
+      <button type="button" class="btn btn-primary" @click="queryByTime2">date 查询</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">hasKey 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="hasKey">hasKey "num" 查询</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">count 查询</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="countItem">count 查询</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="../utils/common.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>

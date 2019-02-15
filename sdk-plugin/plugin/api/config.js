@@ -1,33 +1,34 @@
 const API_HOST = 'https://api.myminapp.com'
 const API_HOST_PATTERN = /^https:\/\/\w+\.myminapp\.com/ // 若要修改 API 域名，这里的域名正则也要跟着修改
+let VERSION = 'v2.0.0'
 
 const API = {
-  LOGIN: '/hserve/v1.4/session/init/',
-  AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
-  LOGOUT: '/hserve/v1/session/destroy/',
-  PAY: '/hserve/v1/wechat/pay/order/',
-  ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
+  // LOGIN: '/hserve/v1.4/session/init/',
+  // AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
+  LOGOUT: '/hserve/v2.0/session/destroy/',
+  // PAY: '/hserve/v1/wechat/pay/order/',
+  // ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
-  TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
-  DECRYPT: '/hserve/v1/wechat/decrypt/',
-  WXACODE: '/hserve/v1.4/miniappcode/',
+  // TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+  // DECRYPT: '/hserve/v1/wechat/decrypt/',
+  // WXACODE: '/hserve/v1.4/miniappcode/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
-  USER_DETAIL: '/hserve/v1.3/user/info/:userID/',
-  USER_LIST: '/hserve/v1.3/user/info/',
-  UPDATE_USER: '/hserve/v1.3/user/info/',
+  USER_DETAIL: '/hserve/v2.0/user/info/:userID/',
+  USER_LIST: '/hserve/v2.0/user/info/',
+  UPDATE_USER: '/hserve/v2.0/user/info/',
 
-  TABLE_LIST: '/hserve/v1.9/table/',
-  TABLE_DETAIL: '/hserve/v1.9/table/:tableID/',
-  RECORD_LIST: '/hserve/v1.9/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v1.9/table/:tableID/record/',
-  CREATE_RECORD_LIST: '/hserve/v1.9/table/:tableID/record/?enable_trigger=:enable_trigger',
-  RECORD_DETAIL: '/hserve/v1.9/table/:tableID/record/:recordID/',
-  CREATE_RECORD: '/hserve/v1.9/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v1.9/table/:tableID/record/:recordID/',
-  UPDATE_RECORD_LIST: '/hserve/v1.9/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
-  DELETE_RECORD: '/hserve/v1.9/table/:tableID/record/:recordID/',
-  DELETE_RECORD_LIST: '/hserve/v1.9/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
+  TABLE_LIST: '/hserve/v2.0/table/',
+  TABLE_DETAIL: '/hserve/v2.0/table/:tableID/',
+  RECORD_LIST: '/hserve/v2.0/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/',
+  CREATE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?enable_trigger=:enable_trigger',
+  RECORD_DETAIL: '/hserve/v2.0/table/:tableID/record/:recordID/',
+  CREATE_RECORD: '/hserve/v2.0/table/:tableID/record/',
+  UPDATE_RECORD: '/hserve/v2.0/table/:tableID/record/:recordID/',
+  UPDATE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
+  DELETE_RECORD: '/hserve/v2.0/table/:tableID/record/:recordID/',
+  DELETE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v1.3/content/detail/',
@@ -47,6 +48,34 @@ const API = {
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   SEND_SMS_CODE: '/hserve/v1.8/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
+
+  WEB: {
+    REGISTER: '/hserve/v2.0/register/',
+    LOGIN: '/hserve/v2.0/login/',
+    EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
+    ACCOUNT_INFO: '/hserve/v2.0/user/account/',
+    PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
+    ANONYMOUS_LOGIN: '/hserve/v2.0/anonymous-login/',
+  },
+
+  WECHAT: {
+    SILENT_LOGIN: '/hserve/v2.0/idp/wechat/silent-login/',
+    AUTHENTICATE: '/hserve/v2.0/idp/wechat/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
+    TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+    DECRYPT: '/hserve/v1/wechat/decrypt/',
+    WXACODE: '/hserve/v1.4/miniappcode/',
+    PAY: '/hserve/v1/wechat/pay/order/',
+    ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
+    CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
+    CENSOR_MSG: '/hserve/v1.7/censor-msg/',
+  },
+
+  ALIPAY: {
+    SILENT_LOGIN: '/hserve/v2.0/idp/alipay/silent-login/',
+    AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
+  },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
   M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
@@ -165,7 +194,7 @@ const methodMapList = [{
   }
 }, {
   getOrderList: {
-    url: API.PAY
+    url: API.WECHAT.PAY
   }
 }]
 
@@ -191,5 +220,5 @@ module.exports = {
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
-  VERSION: 'v1.16.0'  // package.json 中的 version 也需要同步修改。
+  VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }

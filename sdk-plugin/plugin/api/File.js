@@ -1,7 +1,5 @@
 const BaaS = require('./baas')
 const BaseQuery = require('./BaseQuery')
-const baasRequest = require('./baasRequest').baasRequest
-const uploadFile = require('./uploadFile')
 const API = BaaS._config.API
 
 class File extends BaseQuery {
@@ -10,7 +8,7 @@ class File extends BaseQuery {
   }
 
   upload(fileParams, metaData) {
-    return uploadFile(fileParams, metaData, 'json')
+    return BaaS.uploadFile(fileParams, metaData, 'json')
   }
 
   delete(id) {
@@ -32,7 +30,7 @@ class File extends BaseQuery {
   }
 
   genVideoSnapshot(params) {
-    return baasRequest({
+    return BaaS._baasRequest({
       url: API.VIDEO_SNAPSHOT,
       method: 'POST',
       data: params,
@@ -42,7 +40,7 @@ class File extends BaseQuery {
   }
 
   videoConcat(params) {
-    return baasRequest({
+    return BaaS._baasRequest({
       url: API.M3U8_CONCAT,
       method: 'POST',
       data: params,
@@ -52,7 +50,7 @@ class File extends BaseQuery {
   }
 
   videoClip(params) {
-    return baasRequest({
+    return BaaS._baasRequest({
       url: API.M3U8_CLIP,
       method: 'POST',
       data: params,
@@ -62,7 +60,7 @@ class File extends BaseQuery {
   }
 
   videoMeta(params) {
-    return baasRequest({
+    return BaaS._baasRequest({
       url: API.M3U8_META,
       method: 'POST',
       data: params,
@@ -72,7 +70,7 @@ class File extends BaseQuery {
   }
 
   videoAudioMeta(params) {
-    return baasRequest({
+    return BaaS._baasRequest({
       url: API.VIDEO_AUDIO_META,
       method: 'POST',
       data: params,

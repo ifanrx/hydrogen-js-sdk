@@ -1,13 +1,7 @@
-const HError = require('./HError')
 const storage = require('./storage')
 const constants = require('./constants')
-
-let config
-try {
-  config = require('sdk-config')
-} catch (e) {
-  config = require('./config.dev')
-}
+const BaaS = require('./baas')
+const HError = require('./HError')
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -63,21 +57,13 @@ if (!Array.prototype.includes) {
 }
 
 /**
- * 获取 SDK 配置信息
- * @return {Object}
- */
-const getConfig = () => {
-  return config
-}
-
-/**
  * 获取系统 Platform 信息
  * @return {String}
  */
 const getSysPlatform = () => {
   let platform = 'UNKNOWN'
   try {
-    let res = wx.getSystemInfoSync()
+    let res = BaaS._polyfill.getSystemInfoSync()
     platform = res.platform
   } catch (e) {
     // pass for now
@@ -90,9 +76,6 @@ const getSysPlatform = () => {
  * @param  {String} msg 日志信息
  */
 const log = (msg) => {
-  if (typeof BaaS !== 'undefined' && BaaS.test || !getConfig().DEBUG) { // 测试环境
-    return
-  }
   // 记录日志到日志文件
   console.log('BaaS LOG: ' + msg) // eslint-disable-line no-console
 }
@@ -142,8 +125,8 @@ const parseRegExp = (regExp) => {
  * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
  */
 const replaceQueryParams = (params = {}) => {
-  let requestParamsMap = config.REQUEST_PARAMS_MAP
-  let copiedParams = extend({}, params)
+  let requestParamsMap = BaaS._config.REQUEST_PARAMS_MAP
+  let copiedParams = Object.assign({}, params)
 
   Object.keys(params).map(key => {
     Object.keys(requestParamsMap).map(mapKey => {
@@ -156,18 +139,6 @@ const replaceQueryParams = (params = {}) => {
   })
 
   return copiedParams
-}
-
-const wxRequestFail = (reject) => {
-  wx.getNetworkType({
-    success: function (res) {
-      if (res.networkType === 'none') {
-        reject(new HError(600)) // 断网
-      } else {
-        reject(new HError(601)) // 网络超时
-      }
-    }
-  })
 }
 
 const extractErrorMsg = (res) => {
@@ -200,8 +171,8 @@ const isFunction = value => {
   return value != null && (type == 'function')
 }
 
-const extend = (dist, src) => {
-  return Object.assign(dist, src)
+const extend = (...args) => {
+  return Object.assign(...args)
 }
 
 // 目前仅支持对象或数字的拷贝
@@ -229,22 +200,139 @@ function isSessionExpired() {
   return (Date.now() / 1000) >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) || 0)
 }
 
+/**
+ * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
+ * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
+ */
+const excludeParams = (URL, params) => {
+  URL.replace(/:(\w*)/g, (match, m1) => {
+    if (params[m1] !== undefined) {
+      delete params[m1]
+    }
+  })
+  return params
+}
+
+/**
+ * 根据 methodMap 创建对应的 BaaS Method
+ * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
+ */
+const doCreateRequestMethod = (methodMap) => {
+  for (let k in methodMap) {
+    if (methodMap.hasOwnProperty(k)) {
+      BaaS[k] = ((k) => {
+        let methodItem = methodMap[k]
+        return (objects) => {
+          let newObjects = cloneDeep(objects)
+          let method = methodItem.method || 'GET'
+
+          if (methodItem.defaultParams) {
+            let defaultParamsCopy = cloneDeep(methodItem.defaultParams)
+            newObjects = Object.assign(defaultParamsCopy, newObjects)
+          }
+
+          // 替换 url 中的变量为用户输入的数据，如 tableID, recordID
+          let url = format(methodItem.url, newObjects)
+
+          let data = {}
+          if (newObjects.data) {
+            // 存在 data 属性的请求参数，只有 data 部分作为请求数据发送到后端接口
+            data = newObjects.data
+          } else {
+            // 从用户输入的数据中，剔除 tableID, recordID 等用于 url 的数据
+            data = excludeParams(methodItem.url, newObjects)
+
+            // 将用户输入的数据中，部分变量名替换为后端可接受的名字，如 categoryID 替换为 category_id
+            data = replaceQueryParams(data)
+          }
+
+          return BaaS._baasRequest({url, method, data})
+        }
+      })(k)
+    }
+  }
+}
+
+/**
+ * 设置 BaaS.request 请求头
+ * @param  {Object} header 自定义请求头
+ * @return {Object}        扩展后的请求
+ */
+const mergeRequestHeader = header => {
+  let extendHeader = {
+    'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+    'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+    'X-Hydrogen-Client-Platform': BaaS._polyfill.CLIENT_PLATFORM,
+    'X-Hydrogen-Client-SDK-Type': BaaS._polyfill.SDK_TYPE,
+  }
+
+  let authToken = BaaS.getAuthToken()
+  if (authToken) {
+    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
+  }
+  return Object.assign({}, header || {}, extendHeader)
+}
+
+/**
+ * 处理 request.then 回调中出现 40x, 50x 的情况
+ * @param res
+ * @return {*}
+ */
+const validateStatusCode = res => {
+  let status = parseInt(res.status || res.statusCode)
+  if (status >= 200 && status < 300) {
+    return res
+  } else {
+    throw new HError(status, extractErrorMsg(res))
+  }
+}
+
+
+/**
+ * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
+ * @param fn
+ * @return {function(): *}
+ */
+const rateLimit = (fn) => {
+  let promise = null
+  return function () {
+    if (!promise) {
+      promise = fn.apply(this, arguments).then(res => {
+        promise = null
+        return res
+      }, err => {
+        promise = null
+        throw err
+      })
+    }
+
+    return promise
+  }
+}
+
+const fnUnsupportedHandler = () => {
+  throw new HError(611)
+}
+
 
 module.exports = {
+  mergeRequestHeader,
   log,
   format,
-  getConfig,
   getSysPlatform,
   getFileNameFromPath,
   parseRegExp,
   replaceQueryParams,
-  wxRequestFail,
   extractErrorMsg,
   isArray,
   isString,
   isObject,
   isFunction,
-  extend,
   cloneDeep,
   isSessionExpired,
+  excludeParams,
+  doCreateRequestMethod,
+  validateStatusCode,
+  rateLimit,
+  fnUnsupportedHandler,
 }

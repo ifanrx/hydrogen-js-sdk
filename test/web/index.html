@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.11/lodash.min.js"></script>
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="./sdk.dev.js"></script>
+  <title>WEB SDK 测试</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">登入登出</h5>
+      <hr>
+      <button @click="anonymousLogin" type="button" class="btn btn-primary">匿名登录</button>
+      <hr />
+      <form>
+        <div class="form-row form-group">
+          <div class="col">
+            <input :disabled="!!loginForm.username" v-model="loginForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input :disabled="!!loginForm.email" v-model="loginForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="loginForm.password" placeholder="密码" class="form-control" id="exampleInputPassword1">
+          </div>
+        </div>
+        <button :disabled="isLogin" @click="login" type="button" class="btn btn-primary">账号密码登录</button>
+      </form>
+      <hr />
+      <div>
+        <div class="form-row form-group">
+          <div class="col">
+            <input :disabled="!!registerForm.username" v-model="registerForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input :disabled="!!registerForm.email" v-model="registerForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="registerForm.password" placeholder="密码" class="form-control">
+          </div>
+        </div>
+        <button :disabled="isLogin" @click="register" type="button" class="btn btn-primary">注册账号</button>
+      </div>
+      <hr />
+      <button :disabled="!isLogin" @click="logout" type="button" class="btn btn-primary">退出登录</button>
+      <hr />
+      <div class="form-row form-group">
+        <div class="col">
+          <input :disabled="isLogin" v-model="forgetPassword.email" placeholder="邮箱" class="form-control" />
+        </div>
+      </div>
+      <button :disabled="isLogin" @click="requestPasswordReset" type="button" class="btn btn-primary">忘记密码</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">账户管理</h5>
+      <hr>
+      <button :disabled="!isLogin" @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
+      <hr />
+      <button :disabled="!isLogin" @click="requestEmailVerification" type="button" class="btn btn-primary">发送验证邮件</button>
+      <hr />
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input v-model="passwordChangeForm.password" placeholder="旧密码" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="passwordChangeForm.newPassword" placeholder="新密码" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button :disabled="!isLogin" @click="updatePassword" type="button" class="btn btn-primary">修改密码</button>
+      </div>
+      <hr>
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input :disabled="!!userInfoForm.username" v-model="userInfoForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input :disabled="!!userInfoForm.email" v-model="userInfoForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="userInfoForm.password" placeholder="密码" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button :disabled="!isLogin" @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">数据表</h5>
+      <hr />
+      <a href="/schema-query">schema 查找测试</a>
+      <br />
+      <a href="/schema-change">schema 增删改测试</a>
+      <br />
+      <a href="/schema-batch">schema 批量操作测试</a>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">User</h5>
+      <hr />
+      <a href="/user">user 测试</a>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">文件</h5>
+      <hr />
+      <a href="/file">文件测试</a>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">内容库</h5>
+      <hr />
+      <a href="/content">内容库查找测试</a>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">云函数</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="helloWorld">helloWorld</button>
+      <button type="button" class="btn btn-primary" @click="testRequest">testRequest</button>
+    </div>
+  </div>
+  <div class="card" v-show="isLogin">
+    <div class="card-body">
+      <h5 class="card-title">短信</h5>
+      <hr />
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input v-model="sms.phone" placeholder="手机号" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="sendSMSCode">发送验证码</button>
+      </div>
+      <hr />
+      <div>
+        <div class="form-group form-row">
+          <div class="col">
+            <input v-model="sms.phone" placeholder="手机号" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input v-model="sms.code" placeholder="验证码" type="email" class="form-control" aria-describedby="emailHelp">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="verifyPhone">验证手机号</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="utils/common.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

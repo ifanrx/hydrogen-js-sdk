@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <script src="../sdk.dev.js"></script>
+  <title>文件</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+    .opt-btn {
+      width: 24px;
+      padding: 0;
+      text-align: center;
+    }
+    .list-group {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    ul.category {
+      display: flex;
+      list-style: none;
+      margin-bottom: 20px;
+      padding-left: 0;
+      overflow-x: auto;
+    }
+    .category li {
+      display: inline;
+      white-space: nowrap;
+    }
+    .category a {
+      color: inherit;
+      padding: 0 5px;
+    }
+    .category a.active {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">内容库查找测试</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-body">
+      <ul class="category">
+        <li v-for="cate in cateList">
+
+          <a href="javascript:void(0);" :class="{active: selectedCateID === cate.id}" @click="handleCateClick(cate.id, cate.name)">{{cate.name}}</a> |
+        </li>
+      </ul>
+
+      <p>order_by : </p>
+      <div style="margin-bottom: 10px;">
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="title" v-model="order_by">
+            title
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-title" v-model="order_by">
+            -title
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="created_at" v-model="order_by">
+            created_at
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="-created_at" v-model="order_by">
+            -created_at
+          </label>
+        </div>
+      </div>
+      <p>limit:</p>
+      <div style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', -1)">-</button>
+        <span class="num">{{limit}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('limit', 1)">+</button>
+      </div>
+      <p>offset:</p>
+      <div style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', -1)">-</button>
+        <span class="num">{{offset}}</span>
+        <button type="button" class="btn btn-primary opt-btn" @click="handleModifyNum('offset', 1)">+</button>
+      </div>
+      <ul class="list-group">
+        <li v-for="item in contentList"
+            class="list-group-item d-flex justify-content-between align-items-center"
+        >{{item.title}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length ? '获取 title != '+contentList[0].title+' 的内容' : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="queryContentsByName" :disabled="!contentList.length">获取内容</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length ? '获取内容详情 title = '+contentList[0].title : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getContent" :disabled="!contentList.length">获取内容详情</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{contentList.length > 1 ? '获取分类详情 name ='+contentList[0].name : '没有文件'}}</h5>
+      <hr />
+      <button type="button" class="btn btn-primary" @click="getCategory" :disabled="contentList.length <= 1">获取分类详情</button>
+    </div>
+  </div>
+</div>
+
+<script src="../utils/common.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>

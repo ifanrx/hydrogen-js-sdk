@@ -1,6 +1,10 @@
 node_modules/
 npm-debug.log
 tmp/
-sdk-file/dist/sdk.dev.js
+sdk-file/dist/*.dev.js
+sdk-file/dist/*.map
 lib/
 yarn-error.log
+*.swp
+test/web/sdk.dev.js
+.idea/*

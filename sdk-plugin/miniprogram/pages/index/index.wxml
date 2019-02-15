@@ -1,87 +1,91 @@
 <view>
   <view class="page-title">SDK 测试应用</view>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/auth/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/auth/index">
     <view class="zan-cell__bd">登入&登出</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/schema-change/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/account/index">
+    <view class="zan-cell__bd">账户管理</view>
+    <view class="zan-cell__ft"></view>
+  </navigator>
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/schema-change/index">
     <view class="zan-cell__bd">schema 增删改测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/schema-query/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/schema-query/index">
     <view class="zan-cell__bd">schema 查找测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/geo/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/geo/index">
     <view class="zan-cell__bd">schema geo 类型测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/schema-batch/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/schema-batch/index">
     <view class="zan-cell__bd">schema 批量操作测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/schema-legacy/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/schema-legacy/index">
     <view class="zan-cell__bd">schema 旧接口测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/content/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/content/index">
     <view class="zan-cell__bd">content 查找测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/content-legacy/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/content-legacy/index">
     <view class="zan-cell__bd">content 旧接口测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/user/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/user/index">
     <view class="zan-cell__bd">user 测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/file/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/file/index">
     <view class="zan-cell__bd">文件测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/censor/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/censor/index">
     <view class="zan-cell__bd">图片文本检测</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/sms/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/sms/index">
     <view class="zan-cell__bd">SMS</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/trigger/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/trigger/index">
     <view class="zan-cell__bd">模板消息测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/decrypt/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/decrypt/index">
     <view class="zan-cell__bd">解密测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/pay/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/pay/index">
     <view class="zan-cell__bd">支付测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/wxacode/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/wxacode/index">
     <view class="zan-cell__bd">生成二维码</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/invoke-function/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/invoke-function/index">
     <view class="zan-cell__bd">触发云函数</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/handle-401/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/handle-401/index">
     <view class="zan-cell__bd">401 处理测试</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/kefu-message/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/kefu-message/index">
     <view class="zan-cell__bd">客服消息</view>
     <view class="zan-cell__ft"></view>
   </navigator>
   <view class="page-title">wxParser 测试</view>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/wxparser-file/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/wxparser-file/index">
     <view class="zan-cell__bd">引入文件方式</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/wxparser-plugin/index">
+  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/wxparser-plugin/index">
     <view class="zan-cell__bd">使用 wxParser 插件</view>
     <view class="zan-cell__ft"></view>
   </navigator>
