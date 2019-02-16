@@ -17,7 +17,7 @@ module.exports = function (BaaS) {
     },
 
     getStorageSync: function (key) {
-      return my.getStorageSync({ key }).data
+      return my.getStorageSync({key}).data
     },
 
     linkAlipay: utils.rateLimit(function (opts) {
@@ -29,6 +29,18 @@ module.exports = function (BaaS) {
       return createAuthFn(BaaS)(isForceLogin, userId)
     }),
 
+    checkLatestVersion() {
+      // 支付宝小程序不能直接判断是否在开发者工具中，
+      // 只能判断当前小程序当前运行的版本，
+      // 在开发者工具中，取得的值为 develop
+      my.getRunScene({
+        success(result) {
+          if (result.envVersion === 'develop') {
+            BaaS.checkVersion('alipay')
+          }
+        }
+      })
+    },
     CLIENT_PLATFORM: 'ALIPAY',
   })
 }

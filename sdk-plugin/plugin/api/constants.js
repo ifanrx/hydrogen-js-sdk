@@ -10,7 +10,9 @@ module.exports = {
     IS_ANONYMOUS_USER: 'is_anonymous_user',
     EXPIRES_AT: 'session_expires_at',
     ALIPAY_USER_ID: 'alipay_user_id',
+    LATEST_VERSION_CHECK_TIMESTAMP: 'latest_version_check_timestamp'
   },
+  MAX_CHECK_TIME: '86400000',
 
   STATUS_CODE: {
     CREATED: 201,
