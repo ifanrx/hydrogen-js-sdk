@@ -11,6 +11,7 @@ module.exports = function (BaaS) {
 
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
+    BaaS.checkLatestVersion()
   }
 
   BaaS.getAuthToken = () => {
