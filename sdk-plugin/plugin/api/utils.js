@@ -314,6 +314,43 @@ const fnUnsupportedHandler = () => {
   throw new HError(611)
 }
 
+/**
+ * 对比版本号
+ * @param {string} versionStr1
+ * @param {string} versionStr2
+ * @return {number}
+ * @description 若 versionStr1 大于 versionStr2，返回 1，小于 返回 -1，相等返回 0。
+ * 注意该函数将会忽略 a(lpha)、b(eta) 等后缀,如 v2.0.0a 会被当做 2.0.0 处理
+ */
+const checkVersion = (versionStr1, versionStr2) => {
+  try {
+    if (typeof versionStr1 !== 'string' || typeof versionStr2 !== 'string') return 0
+
+    // v1.1 ===> 1.1
+    // ver2.2 ===> 2.2
+    versionStr1 = versionStr1.replace(/^[^0-9]/, '')
+    versionStr2 = versionStr2.replace(/^[^0-9]/, '')
+
+    let versionArray1 = versionStr1.split('.')
+    let versionArray2 = versionStr2.split('.')
+    let len = Math.max(versionArray1.length, versionArray2.length)
+
+    for (let i = 0; i < len; i++) {
+      let num1 = versionArray1[i] ? parseInt(versionArray1[i]) : 0
+      let num2 = versionArray2[i] ? parseInt(versionArray2[i]) : 0
+
+      if (num1 > num2) {
+        return 1
+      } else if (num1 < num2) {
+        return -1
+      }
+    }
+    return 0
+  } catch (e) {
+    return 0
+  }
+}
+
 
 module.exports = {
   mergeRequestHeader,
@@ -335,4 +372,5 @@ module.exports = {
   validateStatusCode,
   rateLimit,
   fnUnsupportedHandler,
+  checkVersion,
 }

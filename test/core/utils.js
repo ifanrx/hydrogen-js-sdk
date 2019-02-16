@@ -43,4 +43,20 @@ describe('utils', () => {
     let result = utils.replaceQueryParams(requestParams)
     expect(result).to.deep.equal({'category_id': 12, otherData: 100})
   })
+
+  it('checkVersion', () => {
+    let versions = [
+      ['v1.15.1', 'v1.15.2', -1],
+      ['1.15', 'v1.15.2', -1],
+      ['v1.15.1', '1.15.2', -1],
+      ['2.9.2', 'v1.16.1', 1],
+      ['1.16.1-a', 'v1.16.1-b', 0],
+      ['v1.15.1a', '1.15.1', 0],
+      ['v1.15', '1.15.0', 0],
+    ]
+
+    for (let i = 0; i < versions.length; i++) {
+      expect(utils.checkVersion(versions[i][0], versions[i][1])).to.equal(versions[i][2])
+    }
+  })
 })

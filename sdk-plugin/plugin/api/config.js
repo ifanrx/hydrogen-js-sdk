@@ -1,17 +1,10 @@
 const API_HOST = 'https://api.myminapp.com'
-const API_HOST_PATTERN = /^https:\/\/\w+\.myminapp\.com/ // 若要修改 API 域名，这里的域名正则也要跟着修改
 let VERSION = 'v2.0.0'
+let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
 
 const API = {
-  // LOGIN: '/hserve/v1.4/session/init/',
-  // AUTHENTICATE: '/hserve/v1.4/session/authenticate/',
   LOGOUT: '/hserve/v2.0/session/destroy/',
-  // PAY: '/hserve/v1/wechat/pay/order/',
-  // ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
   UPLOAD: '/hserve/v1/upload/',
-  // TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
-  // DECRYPT: '/hserve/v1/wechat/decrypt/',
-  // WXACODE: '/hserve/v1.4/miniappcode/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v2.0/user/info/:userID/',
@@ -82,6 +75,8 @@ const API = {
   M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
   M3U8_META: '/hserve/v1/media/m3u8-meta/',
   VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
+
+  LATEST_VERSION: '/hserve/v1/latest-sdk-version/',
 }
 
 const methodMapList = [{
@@ -214,11 +209,11 @@ const requestParamsMap = {
 module.exports = {
   API_HOST: API_HOST,
   API: API,
-  API_HOST_PATTERN: API_HOST_PATTERN,
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
+  SDK_DOWNLOAD_PAGE: SDK_DOWNLOAD_PAGE,
   VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }
