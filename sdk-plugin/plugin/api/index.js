@@ -20,7 +20,7 @@ module.exports = function (BaaS) {
 
   BaaS.checkLatestVersion = function () {
     return BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(res => {
-      let result = utils.checkVersion(BaaS._config.VERSION, res.data.version)
+      let result = utils.compareVersion(BaaS._config.VERSION, res.data.version)
       if (result === -1) {
         console.log(`当前 SDK 最新版本为 ${res.data.version}，请前往 ${BaaS._config.SDK_DOWNLOAD_PAGE} 下载。`)
       }

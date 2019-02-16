@@ -44,7 +44,7 @@ describe('utils', () => {
     expect(result).to.deep.equal({'category_id': 12, otherData: 100})
   })
 
-  it('checkVersion', () => {
+  it('compareVersion', () => {
     let versions = [
       ['v1.15.1', 'v1.15.2', -1],
       ['1.15', 'v1.15.2', -1],
@@ -56,7 +56,7 @@ describe('utils', () => {
     ]
 
     for (let i = 0; i < versions.length; i++) {
-      expect(utils.checkVersion(versions[i][0], versions[i][1])).to.equal(versions[i][2])
+      expect(utils.compareVersion(versions[i][0], versions[i][1])).to.equal(versions[i][2])
     }
   })
 })

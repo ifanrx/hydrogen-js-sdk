@@ -322,7 +322,7 @@ const fnUnsupportedHandler = () => {
  * @description 若 versionStr1 大于 versionStr2，返回 1，小于 返回 -1，相等返回 0。
  * 注意该函数将会忽略 a(lpha)、b(eta) 等后缀,如 v2.0.0a 会被当做 2.0.0 处理
  */
-const checkVersion = (versionStr1, versionStr2) => {
+const compareVersion = (versionStr1, versionStr2) => {
   try {
     if (typeof versionStr1 !== 'string' || typeof versionStr2 !== 'string') return 0
 
@@ -372,5 +372,5 @@ module.exports = {
   validateStatusCode,
   rateLimit,
   fnUnsupportedHandler,
-  checkVersion,
+  compareVersion,
 }
