@@ -3,6 +3,7 @@ npm-debug.log
 tmp/
 sdk-file/dist/*.dev.js
 sdk-file/dist/*.map
+sdk-file/dist/*.zip
 lib/
 yarn-error.log
 *.swp

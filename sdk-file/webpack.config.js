@@ -1,9 +1,11 @@
 const path = require('path')
 const webpack = require('webpack')
 const pkg = require('../package')
-const isDEV = process.env.NODE_ENV === 'dev'
+const isDEV = process.env.NODE_ENV === 'development'
+const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const JSZip = require('jszip')
+const fs = require('fs')
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -11,11 +13,27 @@ let plugins = [
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
 ]
-if (!isCI && isDEV) {
-  plugins.push(new CopyWebpackPlugin([{
-    from: 'dist/sdk-wechat.dev.js',
-    to: '../../tmp/vendor/sdk-wechat.dev.js'
-  }]))
+
+if (isProd) {
+  plugins = plugins.concat({
+      apply(compiler) {
+        compiler.hooks.afterEmit.tapAsync('ifanrxPackPlugin', (compilation, callback) => {
+          let promises = Object.keys(compilation.assets).map(asset => {
+            return new Promise(resolve => {
+              if (asset.match(/\.js$/)) {
+                const zip = new JSZip()
+                zip.file(asset, fs.readFileSync(compilation.assets[asset].existsAt))
+                zip.generateNodeStream({type: 'nodebuffer', streamFiles: true})
+                  .pipe(fs.createWriteStream(path.join(compilation.options.output.path, asset.replace(/\.js$/, '.zip'))))
+                  .on('finish', resolve)
+              }
+            })
+          })
+          Promise.all(promises).then(callback)
+        })
+      }
+    }
+  )
 }
 
 module.exports = {
@@ -28,12 +46,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: isDEV || isCI ? 'sdk-[name].dev.js' : function (entry) {
-      let version = pkg.version
-      if (entry.name === 'web') {
-        version = pkg.versions.web
-      } else if (entry.name === 'alipay') {
-        version = pkg.versions.alipay
-      }
+      let version = pkg.versions[entry.name] || pkg.version
       return `sdk-[name].${version}.js`
     },
     library: 'BaaS',
@@ -57,5 +70,6 @@ module.exports = {
       'core-module': path.resolve(__dirname, '../core/')
     }
   },
-  devtool: isDEV ? 'inline-cheap-source-map' : 'source-map'
+  devtool: isDEV ? 'inline-cheap-source-map' : 'source-map',
+  mode: process.env.NODE_ENV
 }
