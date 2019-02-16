@@ -17,6 +17,7 @@ BaaS.test = {
   clientID: 'ClientID-v233',
 }
 
+global.BaaS._polyfill.checkLatestVersion = null // 绕过 SDK 版本检测
 global.BaaS.init(BaaS.test.clientID)
 
 // 引入待测试模块
