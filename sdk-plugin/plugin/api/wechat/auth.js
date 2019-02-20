@@ -22,20 +22,21 @@ module.exports = BaaS => {
   }
 
   // 获取登录凭证 code, 进而换取用户登录态信息
-  const auth = () => {
+  const auth = ({failIfNotExists = false} = {}) => {
     return new Promise((resolve, reject) => {
       getLoginCode().then(code => {
-        sessionInit(code, resolve, reject)
+        sessionInit({code, failIfNotExists}, resolve, reject)
       }, reject)
     })
   }
 
   // code 换取 session_key，生成并获取 3rd_session 即 token
-  const sessionInit = (code, resolve, reject) => {
+  const sessionInit = ({code, failIfNotExists}, resolve, reject) => {
     return BaaS.request({
       url: API.WECHAT.SILENT_LOGIN,
       method: 'POST',
       data: {
+        enable_account_check: failIfNotExists,
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
@@ -48,11 +49,11 @@ module.exports = BaaS => {
     }, reject)
   }
 
-  const silentLogin = utils.rateLimit(function () {
+  const silentLogin = utils.rateLimit(function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
       return Promise.resolve()
     }
-    return auth()
+    return auth(...args)
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
@@ -116,7 +117,7 @@ module.exports = BaaS => {
 
   Object.assign(BaaS.auth, {
     silentLogin: silentLogin,
-    loginWithWechat: () => silentLogin().then(() => commonAuth.getCurrentUser()),
+    loginWithWechat: (...args) => silentLogin(...args).then(() => commonAuth.getCurrentUser()),
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),
   })
