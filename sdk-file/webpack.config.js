@@ -4,8 +4,9 @@ const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
-const JSZip = require('jszip')
 const fs = require('fs')
+var yazl = require("yazl");
+
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -18,14 +19,21 @@ if (isProd) {
   plugins = plugins.concat({
       apply(compiler) {
         compiler.hooks.afterEmit.tapAsync('ifanrxPackPlugin', (compilation, callback) => {
+          let outputPath = compilation.options.output.path
           let promises = Object.keys(compilation.assets).map(asset => {
             return new Promise(resolve => {
               if (asset.match(/\.js$/)) {
-                const zip = new JSZip()
-                zip.file(asset, fs.readFileSync(compilation.assets[asset].existsAt))
-                zip.generateNodeStream({type: 'nodebuffer', streamFiles: true})
-                  .pipe(fs.createWriteStream(path.join(compilation.options.output.path, asset.replace(/\.js$/, '.zip'))))
-                  .on('finish', resolve)
+                // 将 web sdk 命名为 sdk-web-latest.js
+                if (asset.match(/-web.*\.js$/)) {
+                  fs.writeFile(path.join(outputPath, 'sdk-web-latest.js'), compilation.assets[asset].children[0]._value, err => {
+                    err && console.log(err)
+                  })
+                }
+
+                // 生成 zip 包
+                var zipfile = new yazl.ZipFile();
+                zipfile.addFile(compilation.assets[asset].existsAt, asset);
+                zipfile.outputStream.pipe(fs.createWriteStream(path.join(outputPath, asset.replace(/\.js$/, '.zip')))).on("close", resolve)
               }
             })
           })
