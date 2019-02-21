@@ -22,21 +22,21 @@ module.exports = BaaS => {
   }
 
   // 获取登录凭证 code, 进而换取用户登录态信息
-  const auth = ({failIfNotExists = false} = {}) => {
+  const auth = ({createUser = true} = {}) => {
     return new Promise((resolve, reject) => {
       getLoginCode().then(code => {
-        sessionInit({code, failIfNotExists}, resolve, reject)
+        sessionInit({code, createUser}, resolve, reject)
       }, reject)
     })
   }
 
   // code 换取 session_key，生成并获取 3rd_session 即 token
-  const sessionInit = ({code, failIfNotExists}, resolve, reject) => {
+  const sessionInit = ({code, createUser}, resolve, reject) => {
     return BaaS.request({
       url: API.WECHAT.SILENT_LOGIN,
       method: 'POST',
       data: {
-        enable_account_check: failIfNotExists,
+        create_user: createUser,
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
