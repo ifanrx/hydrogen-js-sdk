@@ -10,7 +10,7 @@ module.exports = {
     IS_ANONYMOUS_USER: 'is_anonymous_user',
     EXPIRES_AT: 'session_expires_at',
     ALIPAY_USER_ID: 'alipay_user_id',
-    LATEST_VERSION_CHECK_TIMESTAMP: 'latest_version_check_timestamp'
+    LATEST_VERSION_CHECK_MILLISECONDS: 'latest_version_check_milliseconds'
   },
   VERSION_MIN_CHECK_INTERVAL: '86400000',
 

@@ -40,11 +40,11 @@ module.exports = function (BaaS) {
     }
 
     let now = Date.now()
-    let lastCheckTimeStamp = storage.get(constants.STORAGE_KEY.LATEST_VERSION_CHECK_TIMESTAMP)
-    if (lastCheckTimeStamp && lastCheckTimeStamp - now <= constants.VERSION_MIN_CHECK_INTERVAL) {
+    let lastCheckMilliseconds = storage.get(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS)
+    if (lastCheckMilliseconds && lastCheckMilliseconds - now <= constants.VERSION_MIN_CHECK_INTERVAL) {
       return
     }
-    storage.set(constants.STORAGE_KEY.LATEST_VERSION_CHECK_TIMESTAMP, now)
+    storage.set(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS, now)
     BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(onSuccess, onError)
   }
 
