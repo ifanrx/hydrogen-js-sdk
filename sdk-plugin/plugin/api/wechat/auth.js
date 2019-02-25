@@ -44,6 +44,11 @@ module.exports = BaaS => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.USERINFO, {
+        id: res.data.user_id,
+        openid: res.data.openid,
+        unionid: res.data.unionid,
+      })
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     }, reject)
@@ -86,7 +91,7 @@ module.exports = BaaS => {
       userInfo.id = storage.get(constants.STORAGE_KEY.UID)
       userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
       userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-
+      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
       return getSensitiveData(payload, userInfo).then(() => commonAuth.getCurrentUser())
     })
   }
