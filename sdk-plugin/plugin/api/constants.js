@@ -12,7 +12,7 @@ module.exports = {
     ALIPAY_USER_ID: 'alipay_user_id',
     LATEST_VERSION_CHECK_TIMESTAMP: 'latest_version_check_timestamp'
   },
-  MAX_CHECK_TIME: '86400000',
+  VERSION_MIN_CHECK_INTERVAL: '86400000',
 
   STATUS_CODE: {
     CREATED: 201,

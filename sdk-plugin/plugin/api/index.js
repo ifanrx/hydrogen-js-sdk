@@ -41,7 +41,7 @@ module.exports = function (BaaS) {
 
     let now = Date.now()
     let lastCheckTimeStamp = storage.get(constants.STORAGE_KEY.LATEST_VERSION_CHECK_TIMESTAMP)
-    if (lastCheckTimeStamp && lastCheckTimeStamp - now <= constants.MAX_CHECK_TIME) {
+    if (lastCheckTimeStamp && lastCheckTimeStamp - now <= constants.VERSION_MIN_CHECK_INTERVAL) {
       return
     }
     storage.set(constants.STORAGE_KEY.LATEST_VERSION_CHECK_TIMESTAMP, now)
