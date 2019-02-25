@@ -4,4 +4,7 @@ module.exports = {
   },
   SDK_TYPE: 'file',
   CLIENT_PLATFORM: 'UNKNOWN',
+  checkLatestVersion() {
+    return null
+  }
 }

@@ -3,7 +3,7 @@ const HError = require('./api/HError')
 const BaaS = require('./api/wechat/index')
 
 BaaS._polyfill.getAPIHost = () => 'https://api.myminapp.com'
-BaaS._polyfill.checkLatestVersion = null
+BaaS._polyfill.checkLatestVersion = () => null
 BaaS._polyfill.SDK_TYPE = 'plugin'
 BaaS._polyfill.wxGetUserInfo = () => new HError(609)
 BaaS._polyfill.wxLogin = () => new HError(609)
