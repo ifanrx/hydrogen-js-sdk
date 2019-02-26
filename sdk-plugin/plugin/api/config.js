@@ -69,6 +69,7 @@ const API = {
     AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
     PAY: '/hserve/v2.0/idp/alipay/pay/order/',
+    ORDER: '/hserve/v2.0/idp/alipay/pay/order/:transactionID/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
