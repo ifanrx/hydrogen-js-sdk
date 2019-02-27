@@ -20,8 +20,10 @@ const pay = (params) => {
     paramsObj[keysMap[key]] = params[key]
   }
 
+  paramsObj.gateway_type = 'weixin_tenpay'
+
   return BaaS._baasRequest({
-    url: API.WECHAT.PAY,
+    url: API.PAY,
     method: 'POST',
     data: paramsObj,
   }).then(function (res) {
