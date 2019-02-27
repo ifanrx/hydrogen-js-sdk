@@ -9,23 +9,24 @@ const keysMap = {
 }
 
 const RESULT_CODE = {
-  SUCCESS: 9000,
-  PENDING: 8000,
-  FAIL: 4000,
+  SUCCESS: '9000',
+  PENDING: '8000',
+  FAIL: '4000',
 }
 
 class PayError extends HError {
   mapErrorMessage(code) {
+    code = code.toString()
     switch (code) {
     case RESULT_CODE.FAIL:
       return '订单支付失败'
-    case 6001:
+    case '6001':
       return '用户中途取消'
-    case 6002:
+    case '6002':
       return '网络连接出错'
-    case 6004:
+    case '6004':
       return '支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态'
-    case 99:
+    case '99':
       return '用户点击忘记密码导致快捷界面退出' // only iOS
     default:
       return '未知错误'
@@ -53,12 +54,13 @@ const createPayFn = BaaS => (params) => {
       my.tradePay({
         tradeNO: data.trade_no,
         success: res => {
-          if (res.resultCode !== RESULT_CODE.SUCCESS || res.resultCode !== RESULT_CODE.PENDING) {
+          if (res.resultCode == RESULT_CODE.SUCCESS || res.resultCode == RESULT_CODE.PENDING) {
+            res.transaction_no = data.transaction_no
+            res.trade_no = data.trade_no
+            return resolve(res)
+          } else {
             return reject(new PayError(res.resultCode))
           }
-          res.transaction_no = data.transaction_no
-          res.trade_no = data.trade_no
-          return resolve(res)
         },
         fail: () => {
           return reject(new PayError(RESULT_CODE.FAIL))
