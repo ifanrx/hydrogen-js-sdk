@@ -42,6 +42,9 @@ const API = {
   SEND_SMS_CODE: '/hserve/v1.8/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 
+  PAY: '/hserve/v2.0/idp/pay/order/',
+  ORDER: '/hserve/v2.0/idp/pay/order/:transactionID/',
+
   WEB: {
     REGISTER: '/hserve/v2.0/register/',
     LOGIN: '/hserve/v2.0/login/',
@@ -58,8 +61,6 @@ const API = {
     TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
     WXACODE: '/hserve/v1.4/miniappcode/',
-    PAY: '/hserve/v1/wechat/pay/order/',
-    ORDER: '/hserve/v1/wechat/pay/order/:transactionID/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   },
@@ -68,8 +69,6 @@ const API = {
     SILENT_LOGIN: '/hserve/v2.0/idp/alipay/silent-login/',
     AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
-    PAY: '/hserve/v2.0/idp/alipay/pay/order/',
-    ORDER: '/hserve/v2.0/idp/alipay/pay/order/:transactionID/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
@@ -191,7 +190,7 @@ const methodMapList = [{
   }
 }, {
   getOrderList: {
-    url: API.WECHAT.PAY
+    url: API.PAY,
   }
 }]
 

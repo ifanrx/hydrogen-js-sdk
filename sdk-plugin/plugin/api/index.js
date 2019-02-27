@@ -80,5 +80,6 @@ module.exports = function (BaaS) {
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
   BaaS.User = require('./User')
+  BaaS.Order = require('./Order')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 }

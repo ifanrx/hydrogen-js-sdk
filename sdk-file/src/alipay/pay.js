@@ -41,8 +41,10 @@ const createPayFn = BaaS => (params) => {
     paramsObj[keysMap[key]] = params[key]
   }
 
+  paramsObj.gateway_type = 'alipay'
+
   return BaaS._baasRequest({
-    url: API.ALIPAY.PAY,
+    url: API.PAY,
     method: 'POST',
     data: paramsObj,
   }).then(res => {

@@ -37,6 +37,6 @@ module.exports = BaaS => {
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: 'wechat_miniapp'})
       }
-    }
+    },
   })
 }
