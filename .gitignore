@@ -2,9 +2,12 @@ node_modules/
 npm-debug.log
 tmp/
 sdk-file/dist/*.dev.js
+sdk-file/dist/sdk-web-latest.js
 sdk-file/dist/*.map
+sdk-file/dist/*.zip
 lib/
 yarn-error.log
 *.swp
 test/web/sdk.dev.js
 .idea/*
+scripts/config.js

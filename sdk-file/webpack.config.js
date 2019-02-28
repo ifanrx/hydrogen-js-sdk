@@ -1,9 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
 const pkg = require('../package')
-const isDEV = process.env.NODE_ENV === 'dev'
+const isDEV = process.env.NODE_ENV === 'development'
+const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const fs = require('fs')
+var yazl = require("yazl");
+
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -11,11 +14,35 @@ let plugins = [
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
 ]
-if (!isCI && isDEV) {
-  plugins.push(new CopyWebpackPlugin([{
-    from: 'dist/sdk-wechat.dev.js',
-    to: '../../tmp/vendor/sdk-wechat.dev.js'
-  }]))
+
+if (isProd) {
+  plugins = plugins.concat({
+      apply(compiler) {
+        compiler.hooks.afterEmit.tapAsync('ifanrxPackPlugin', (compilation, callback) => {
+          let outputPath = compilation.options.output.path
+          let promises = Object.keys(compilation.assets).map(asset => {
+            return new Promise(resolve => {
+              if (asset.match(/\.js$/)) {
+                // 将 web sdk 命名为 sdk-web-latest.js
+                if (asset.match(/-web.*\.js$/)) {
+                  fs.writeFile(path.join(outputPath, 'sdk-web-latest.js'), compilation.assets[asset].children[0]._value, err => {
+                    err && console.log(err)
+                  })
+                }
+
+                // 生成 zip 包
+                var zipfile = new yazl.ZipFile();
+                zipfile.addFile(compilation.assets[asset].existsAt, asset);
+                zipfile.outputStream.pipe(fs.createWriteStream(path.join(outputPath, asset.replace(/\.js$/, '.zip')))).on("close", resolve)
+                zipfile.end()
+              }
+            })
+          })
+          Promise.all(promises).then(callback)
+        })
+      }
+    }
+  )
 }
 
 module.exports = {
@@ -28,12 +55,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: isDEV || isCI ? 'sdk-[name].dev.js' : function (entry) {
-      let version = pkg.version
-      if (entry.name === 'web') {
-        version = pkg.versions.web
-      } else if (entry.name === 'alipay') {
-        version = pkg.versions.alipay
-      }
+      let version = pkg.versions[entry.name] || pkg.version
       return `sdk-[name].${version}.js`
     },
     library: 'BaaS',
@@ -57,5 +79,6 @@ module.exports = {
       'core-module': path.resolve(__dirname, '../core/')
     }
   },
-  devtool: isDEV ? 'inline-cheap-source-map' : 'source-map'
+  devtool: isDEV ? 'inline-cheap-source-map' : 'source-map',
+  mode: process.env.NODE_ENV
 }
