@@ -9,14 +9,15 @@ const AUTH_ERROR = 11
  *
  * 当有 userId 时，执行 linkAlipay 的操作
  */
-const createAuthFn = BaaS => function auth(forceLogin, userId) {
-  const scope = forceLogin ? 'auth_user' : 'auth_base'
+const createAuthFn = BaaS => function auth({forceLogin, scopes = [], createUser = true} = {}, userId) {
+  scopes = Array.isArray(scopes) ? scopes : []
+  let allScopes = forceLogin ? scopes.concat('auth_user') : 'auth_base'
   const handler = !userId
     ? createLoginHandlerFn(BaaS)
     : createUserAssociateFn(BaaS)
   return new Promise((resolve, reject) => {
     my.getAuthCode({
-      scopes: scope,
+      scopes: allScopes,
       success: res => {
         if (res.authCode) {
           resolve(res.authCode)
@@ -27,6 +28,7 @@ const createAuthFn = BaaS => function auth(forceLogin, userId) {
       fail: res => reject(res),
     })
   })
+    .then(code => handler(code, forceLogin, createUser))
     .catch(err => {
       // 当用户取消授权后，执行静默登录
       if ((err.error && err.error === AUTH_ERROR)
@@ -37,16 +39,18 @@ const createAuthFn = BaaS => function auth(forceLogin, userId) {
         throw err
       }
     })
-    .then(code => handler(code, forceLogin))
 }
 
-const createLoginHandlerFn = BaaS => (code, forceLogin) => {
+const createLoginHandlerFn = BaaS => (code, forceLogin, createUser) => {
   const API = BaaS._config.API
   const url = forceLogin ? API.ALIPAY.AUTHENTICATE : API.ALIPAY.SILENT_LOGIN
   return BaaS.request({
     url,
     method: 'POST',
-    data: { code },
+    data: {
+      code,
+      create_user: createUser,
+    },
   }).then(res => {
     if (res.status == constants.STATUS_CODE.CREATED) {
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
