@@ -45,7 +45,7 @@ function uploadToFtp() {
 function modifyVersion(data) {
   let modified = false
   versionMapping.forEach(([name, version]) => {
-    if (data.variables[name] === version) {
+    if (data.variables[name] !== version) {
       modified = true
       data.variables[name] = version
     }
