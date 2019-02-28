@@ -11,5 +11,6 @@ module.exports = {
   localRoot: path.join(__dirname, '../sdk-file/dist'),
   remoteRoot: '/hydrogen/sdk/',
   port: 21,
+  githubToken: 'githubToken', // https://github.com/settings/tokens
 }
 ```
