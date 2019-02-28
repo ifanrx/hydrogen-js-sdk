@@ -22,20 +22,21 @@ module.exports = BaaS => {
   }
 
   // 获取登录凭证 code, 进而换取用户登录态信息
-  const auth = () => {
+  const auth = ({createUser = true} = {}) => {
     return new Promise((resolve, reject) => {
       getLoginCode().then(code => {
-        sessionInit(code, resolve, reject)
+        sessionInit({code, createUser}, resolve, reject)
       }, reject)
     })
   }
 
   // code 换取 session_key，生成并获取 3rd_session 即 token
-  const sessionInit = (code, resolve, reject) => {
+  const sessionInit = ({code, createUser}, resolve, reject) => {
     return BaaS.request({
       url: API.WECHAT.SILENT_LOGIN,
       method: 'POST',
       data: {
+        create_user: createUser,
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
@@ -43,16 +44,21 @@ module.exports = BaaS => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      storage.set(constants.STORAGE_KEY.USERINFO, {
+        id: res.data.user_id,
+        openid: res.data.openid,
+        unionid: res.data.unionid,
+      })
       storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       resolve(res)
     }, reject)
   }
 
-  const silentLogin = utils.rateLimit(function () {
+  const silentLogin = utils.rateLimit(function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
       return Promise.resolve()
     }
-    return auth()
+    return auth(...args)
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
@@ -85,7 +91,7 @@ module.exports = BaaS => {
       userInfo.id = storage.get(constants.STORAGE_KEY.UID)
       userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
       userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-
+      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
       return getSensitiveData(payload, userInfo).then(() => commonAuth.getCurrentUser())
     })
   }
@@ -116,7 +122,7 @@ module.exports = BaaS => {
 
   Object.assign(BaaS.auth, {
     silentLogin: silentLogin,
-    loginWithWechat: () => silentLogin().then(() => commonAuth.getCurrentUser()),
+    loginWithWechat: (...args) => silentLogin(...args).then(() => commonAuth.getCurrentUser()),
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),
   })

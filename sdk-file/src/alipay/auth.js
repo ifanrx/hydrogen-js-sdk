@@ -13,7 +13,7 @@ const hasUserLogined = function (BaaS) {
   return !!uid && !!token && !utils.isSessionExpired()
 }
 
-const createLoginFn = BaaS => opts => {
+const createLoginFn = BaaS => (opts = {}) => {
   const forceLogin = !!opts && !!opts.forceLogin
   const auth = createAuthFn(BaaS)
   if (hasUserLogined(BaaS)) {
@@ -23,7 +23,7 @@ const createLoginFn = BaaS => opts => {
   if (loginPromise[loginType]) {
     return loginPromise[loginType]
   }
-  loginPromise[loginType] = auth(forceLogin)
+  loginPromise[loginType] = auth(opts)
     .then(res => {
       loginPromise[loginType] = null
       return res
