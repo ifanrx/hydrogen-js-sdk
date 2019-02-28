@@ -1,5 +1,5 @@
 const API_HOST = 'https://api.myminapp.com'
-let VERSION = 'v2.0.0'
+let VERSION = 'v2.0.1-a'
 let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
 
 const API = {
