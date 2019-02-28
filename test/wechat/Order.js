@@ -1,8 +1,6 @@
-const Order = require('../../core/wechat/order')
-
 describe('Order', () => {
   it('#getOrderList', () => {
-    let inst = new Order()
+    let inst = new global.BaaS.Order()
     let stub = global.sinon.stub(global.BaaS, 'getOrderList')
     stub.callsFake(params => {
       expect(params).to.deep.equal({
