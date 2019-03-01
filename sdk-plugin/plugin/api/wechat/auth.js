@@ -62,7 +62,7 @@ module.exports = BaaS => {
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
-  const handleUserInfo = res => {
+  const handleUserInfo = (res, opts) => {
     if (!res || !res.detail) {
       throw new HError(603)
     }
@@ -79,7 +79,7 @@ module.exports = BaaS => {
       }))
     }
 
-    return silentLogin().then(() => {
+    return silentLogin(opts).then(() => {
       let payload = {
         rawData: detail.rawData,
         signature: detail.signature,
