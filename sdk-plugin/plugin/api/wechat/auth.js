@@ -54,20 +54,21 @@ module.exports = BaaS => {
     }, reject)
   }
 
-  const silentLogin = utils.rateLimit(function (...args) {
+  const silentLogin = function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
       return Promise.resolve()
     }
     return auth(...args)
-  })
+  }
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
-  const handleUserInfo = (res, opts) => {
+  const handleUserInfo = res => {
     if (!res || !res.detail) {
       throw new HError(603)
     }
 
     let detail = res.detail
+    let createUser = !!res.createUser
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
@@ -79,20 +80,22 @@ module.exports = BaaS => {
       }))
     }
 
-    return silentLogin(opts).then(() => {
-      let payload = {
-        rawData: detail.rawData,
-        signature: detail.signature,
-        encryptedData: detail.encryptedData,
-        iv: detail.iv
-      }
+    return silentLogin({createUser}).then(() => {
+      return getUserInfo().then(detail => {
+        let payload = {
+          rawData: detail.rawData,
+          signature: detail.signature,
+          encryptedData: detail.encryptedData,
+          iv: detail.iv
+        }
 
-      let userInfo = detail.userInfo
-      userInfo.id = storage.get(constants.STORAGE_KEY.UID)
-      userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
-      userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-      storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
-      return getSensitiveData(payload, userInfo).then(() => commonAuth.getCurrentUser())
+        let userInfo = detail.userInfo
+        userInfo.id = storage.get(constants.STORAGE_KEY.UID)
+        userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
+        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
+        storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
+        return getSensitiveData(payload, userInfo)
+      })
     })
   }
 
@@ -110,19 +113,58 @@ module.exports = BaaS => {
     })
   }
 
-  const linkWechat = () => {
-    return getLoginCode().then(code => {
-      return BaaS._baasRequest({
-        method: 'POST',
-        url: API.WECHAT.USER_ASSOCIATE,
-        data: {code}
+  const getUserInfo = () => {
+    return new Promise((resolve, reject) => {
+      wx.getUserInfo({
+        success: resolve, fail: reject
       })
     })
   }
 
+  const linkWechat = res => {
+    let refreshUserInfo = false
+    if (res && res.userInfo) {
+      refreshUserInfo = true
+    }
+
+    return getLoginCode().then(code => {
+      // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
+      let getUserInfoPromise = refreshUserInfo ? getUserInfo() : Promise.resolve(null)
+
+      return getUserInfoPromise.then(res => {
+        let payload = res ? {
+          rawData: res.rawData,
+          signature: res.signature,
+          encryptedData: res.encryptedData,
+          iv: res.iv,
+          code
+        } : {code}
+
+        return BaaS._baasRequest({
+          method: 'POST',
+          url: API.WECHAT.USER_ASSOCIATE,
+          data: payload
+        })
+      })
+    })
+  }
+
+  const loginWithWechat = res => {
+    let loginPromise = null
+    // handleUserInfo 流程
+    if (res && res.detail) {
+      loginPromise = handleUserInfo(res)
+    } else {
+      // 静默登录流程
+      loginPromise = silentLogin(res)
+    }
+
+    return loginPromise.then(() => commonAuth.getCurrentUser())
+  }
+
   Object.assign(BaaS.auth, {
-    silentLogin: silentLogin,
-    loginWithWechat: (...args) => silentLogin(...args).then(() => commonAuth.getCurrentUser()),
+    silentLogin: utils.rateLimit(silentLogin),
+    loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),
   })
@@ -144,7 +186,7 @@ module.exports = BaaS => {
   }
 
   BaaS.handleUserInfo = function (res) {
-    return BaaS.auth.handleUserInfo(res).then(user => {
+    return BaaS.auth.handleUserInfo(res).then(() => commonAuth.getCurrentUser()).then(user => {
       return user.toJSON()
     })
   }
