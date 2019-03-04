@@ -149,14 +149,14 @@ module.exports = BaaS => {
     })
   }
 
-  const loginWithWechat = (authData, opts = {}) => {
+  const loginWithWechat = (authData, {createUser} = {createUser: true}) => {
     let loginPromise = null
     // handleUserInfo 流程
     if (authData && authData.detail) {
-      loginPromise = handleUserInfo(Object.assign(authData, {createUser: opts.createUser}))
+      loginPromise = handleUserInfo(Object.assign(authData, {createUser}))
     } else {
       // 静默登录流程
-      loginPromise = silentLogin(opts)
+      loginPromise = silentLogin({createUser})
     }
 
     return loginPromise.then(() => commonAuth.getCurrentUser())
