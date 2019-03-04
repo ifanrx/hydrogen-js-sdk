@@ -115,7 +115,7 @@ module.exports = BaaS => {
 
   const getUserInfo = () => {
     return new Promise((resolve, reject) => {
-      wx.getUserInfo({
+      BaaS._polyfill.wxGetUserInfo({
         success: resolve, fail: reject
       })
     })
