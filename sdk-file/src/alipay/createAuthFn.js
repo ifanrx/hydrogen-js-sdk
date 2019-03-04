@@ -59,7 +59,7 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser) => {
       BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
       return res
     } else {
-      throw new HError(res.statusCode, require('./request').extractErrorMsg(res))
+      throw new HError(res.status, require('./request').extractErrorMsg(res))
     }
   })
 }

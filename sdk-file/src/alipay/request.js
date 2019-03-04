@@ -63,8 +63,8 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
         if (res.status >= 200 && res.status < 300) {
           return resolve(res)
         }
-        if (res.status === constants.STATUS_CODE.UNAUTHORIZED) {
-          return reject(res)
+        if (res.error == 19) {
+          return reject(new HError(res.status))
         }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
