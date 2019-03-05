@@ -90,7 +90,7 @@ const format = (url, params) => {
   params = params || {}
   for (let key in params) {
     let reg = new RegExp(':' + key, 'g')
-    url = url.replace(reg, params[key])
+    url = url.replace(reg, encodeURIComponent(params[key]))
   }
   return url.replace(/([^:])\/\//g, (m, m1) => {
     return m1 + '/'
