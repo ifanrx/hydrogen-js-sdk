@@ -1,5 +1,4 @@
 const utils = require('core-module/utils')
-const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError extends HError {
@@ -51,20 +50,25 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
       url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
-    my.httpRequest({
+    let requestFn = my.canIUse('request') ? my.request : my.httpRequest
+    requestFn({
       method: method,
       url: url,
       data: data,
       headers,
       dataType,
-      success: resolve,
+      success: res => {
+        res.statusCode = res.status
+        resolve(res)
+      },
       fail: res => {
         // 开发工具的 bug, 返回 200 才走 success
         if (res.status >= 200 && res.status < 300) {
+          res.statusCode = res.status
           return resolve(res)
         }
-        if (res.status === constants.STATUS_CODE.UNAUTHORIZED) {
-          return reject(res)
+        if (res.error == 19) {
+          return reject(new HError(res.status))
         }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
