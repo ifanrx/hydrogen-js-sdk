@@ -4,7 +4,7 @@ const HError = require('./HError')
 const utils = require('./utils')
 
 module.exports = function (BaaS) {
-  BaaS.init = (clientID, {autoLogin} = {autoLogin: true}) => {
+  BaaS.init = (clientID, {autoLogin} = {autoLogin: false}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
