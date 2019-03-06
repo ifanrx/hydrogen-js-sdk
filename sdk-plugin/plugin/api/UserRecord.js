@@ -166,10 +166,9 @@ UserRecord.initCurrentUser = function (userInfo) {
   }
 
   let record = new UserRecord()
-  record._attribute = {
-    ...userInfo,
+  record._attribute = Object.assign({
     isAnonymousUser: BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER) === '1',
-  }
+  }, userInfo)
   record.toJSON = function () {
     return this._attribute
   }
