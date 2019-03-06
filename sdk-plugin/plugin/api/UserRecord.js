@@ -1,7 +1,8 @@
 const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
-const USER_PROFILE_BUILD_IN_FIELDS = require('./constants').USER_PROFILE_BUILD_IN_FIELDS
+const constants = require('./constants')
+const USER_PROFILE_BUILD_IN_FIELDS = constants.USER_PROFILE_BUILD_IN_FIELDS
 const HError = require('./HError')
 const API = BaaS._config.API
 
@@ -167,7 +168,7 @@ UserRecord.initCurrentUser = function (userInfo) {
   let record = new UserRecord()
   record._attribute = {
     ...userInfo,
-    isAnonymousUser: storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER) === '1',
+    isAnonymousUser: BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER) === '1',
   }
   record.toJSON = function () {
     return this._attribute

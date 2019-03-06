@@ -28,6 +28,8 @@ const extractErrorMsg = (res) => {
     errorMsg = res.data.error_msg
   } else if (res.data.message) {
     errorMsg = res.data.message
+  } else if (res.errorMessage) {
+    errorMsg = res.errorMessage  // my.request 返回的错误信息
   }
   return errorMsg
 }
@@ -68,7 +70,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
           return resolve(res)
         }
         if (res.error == 19) {
-          return reject(new HError(res.status))
+          return reject(new HError(res.status, extractErrorMsg(res)))
         }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
