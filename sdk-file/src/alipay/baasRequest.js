@@ -2,11 +2,12 @@ const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 
 const createBaasRequestFn = BaaS => (args) => {
-  return BaaS.auth.silentLogin()
+  let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
+  return beforeRequestPromise
     .then(() => BaaS.request(args))
     .then(utils.validateStatusCode)
     .catch(res => {
-      if (parseInt(res.status) === constants.STATUS_CODE.UNAUTHORIZED) {
+      if (parseInt(res.status) === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
         return tryResendRequest(BaaS, args)
       } else {
         throw res

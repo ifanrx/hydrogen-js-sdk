@@ -4,11 +4,12 @@ const HError = require('./HError')
 const utils = require('./utils')
 
 module.exports = function (BaaS) {
-  BaaS.init = clientID => {
+  BaaS.init = (clientID, {autoLogin} = {autoLogin: true}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
 
+    BaaS._config.AUTO_LOGIN = autoLogin
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
     BaaS._polyfill.checkLatestVersion()
