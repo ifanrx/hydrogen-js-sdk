@@ -5,6 +5,12 @@ const USER_PROFILE_BUILD_IN_FIELDS = require('./constants').USER_PROFILE_BUILD_I
 const HError = require('./HError')
 const API = BaaS._config.API
 
+function _validateUser() {
+  if (this._attribute.isAnonymousUser) {
+    throw new HError(612)
+  }
+}
+
 class UserRecord extends BaseRecord {
   constructor(userID) {
     super(userID)
@@ -20,6 +26,7 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至微信账号
    */
   linkWechat() {
+    _validateUser.call(this)
     if (!BaaS._polyfill.linkWechat) {
       return Promise.reject(new HError(605, 'linkWechat 方法未定义'))
     }
@@ -30,6 +37,7 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至支付宝账号
    */
   linkAlipay() {
+    _validateUser.call(this)
     if (!BaaS._polyfill.linkAlipay) {
       return Promise.reject(new HError(605, 'linkAlipay 方法未定义'))
     }
@@ -40,6 +48,7 @@ class UserRecord extends BaseRecord {
    * 更新密码
    */
   updatePassword({password, newPassword}) {
+    _validateUser.call(this)
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -58,6 +67,7 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationEmail
    */
   setEmail(email, {sendVerificationEmail = false} = {}) {
+    _validateUser.call(this)
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -77,6 +87,7 @@ class UserRecord extends BaseRecord {
    * @return {*}
    */
   setUsername(username) {
+    _validateUser.call(this)
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -92,6 +103,7 @@ class UserRecord extends BaseRecord {
    * 发送验证邮件
    */
   requestEmailVerification() {
+    _validateUser.call(this)
     return BaaS._baasRequest({
       url: API.WEB.EMAIL_VERIFY,
       method: 'POST',
@@ -103,6 +115,7 @@ class UserRecord extends BaseRecord {
    * @param {object}  accountInfo
    */
   setAccount(accountInfo = {}) {
+    _validateUser.call(this)
     if (accountInfo.password) {
       accountInfo.new_password = accountInfo.password
       delete accountInfo.password
@@ -125,6 +138,7 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationSMSCode
    */
   updateMobile(mobile, sendVerificationSMSCode = false) {
+    _validateUser.call(this)
     if (sendVerificationSMSCode) {
       this.requestMobileVerification(mobile)
     }
@@ -136,6 +150,7 @@ class UserRecord extends BaseRecord {
    * @param mobile
    */
   requestMobileVerification() {
+    _validateUser.call(this)
     // TODO：本期先不做
   }
 }
@@ -150,7 +165,10 @@ UserRecord.initCurrentUser = function (userInfo) {
   }
 
   let record = new UserRecord()
-  record._attribute = userInfo
+  record._attribute = {
+    ...userInfo,
+    isAnonymousUser: storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER) === '1',
+  }
   record.toJSON = function () {
     return this._attribute
   }

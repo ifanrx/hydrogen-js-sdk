@@ -17,7 +17,8 @@ module.exports = function (BaaS) {
       }
 
       if (!/https?:\/\//.test(url)) {
-        url = BaaS._polyfill.getAPIHost() + url
+        const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
+        url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
       }
 
       let payload = {

@@ -6,6 +6,7 @@ function init() {
     data() {
       return {
         isLogin: false,
+        isAnonymousLogin: BaaS.storage.get('is_anonymous_user') === '1',
         loginForm: {
           email: '',
           username: '',
@@ -56,6 +57,7 @@ function init() {
       },
       anonymousLogin() {
         BaaS.auth.anonymousLogin().then(res => {
+          this.isAnonymousLogin = true
           console.log(res)
         })
       },
@@ -78,6 +80,7 @@ function init() {
       },
       updateUserinfo() {
         BaaS.auth.getCurrentUser().then(user => {
+          console.log('user', user.toJSON())
           if (this.userInfoForm.username) {
             user.setUsername({
               username: this.userInfoForm.username,
