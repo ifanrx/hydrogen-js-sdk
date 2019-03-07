@@ -2,6 +2,7 @@ const utils = require('../utils')
 const BaaS = require('../baas')
 const constants = require('../constants')
 const storage = require('../storage')
+
 /**
  *
  * @param {object} payload
@@ -23,10 +24,12 @@ function tryResendRequest(payload) {
 // BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
 // eslint-disable-next-line no-unused-vars
 const baasRequest = function ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) {
-  return BaaS.auth.silentLogin().then(() => {
+  let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
+
+  return beforeRequestPromise.then(() => {
     return BaaS.request.apply(null, arguments)
   }).then(res => {
-    if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED) {
+    if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
       return tryResendRequest({header, method, url, data, dataType})
     } else {
       return utils.validateStatusCode(res)
