@@ -24,6 +24,8 @@ const extractErrorMsg = (res) => {
   let errorMsg = ''
   if (res.status === 404) {
     errorMsg = 'not found'
+  } else if (res.status === 401) {
+    errorMsg = 'unauthorized'
   } else if (res.data.error_msg) {
     errorMsg = res.data.error_msg
   } else if (res.data.message) {
