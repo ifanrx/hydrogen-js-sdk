@@ -1,8 +1,7 @@
 module.exports = BaaS => {
-  // BaaS 网络请求，此方法能保证在已登录 BaaS 后再发起请求
+  // web 端没有 silentLogin，所以 baasRequest 的逻辑与 wechat、alipay 不同，
+  // 这里为了接口统一，依然保留 baasRequest 模块
   BaaS._baasRequest = function () {
-    return BaaS.auth.silentLogin().then(() => {
-      return BaaS.request.apply(null, arguments)
-    })
+    return BaaS.request.apply(null, arguments)
   }
 }
