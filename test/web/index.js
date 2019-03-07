@@ -56,9 +56,10 @@ function init() {
         })
       },
       anonymousLogin() {
-        BaaS.auth.anonymousLogin().then(res => {
+        BaaS.auth.anonymousLogin().then(user => {
           this.isAnonymousLogin = true
-          console.log(res)
+          console.log('user.toJSON ', user.toJSON())
+          console.log('isAnonymousUser ', user.get('isAnonymousUser'))
         })
       },
       currentUser() {

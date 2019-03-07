@@ -1,4 +1,5 @@
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError extends HError {
@@ -22,9 +23,9 @@ class RequestError extends HError {
 
 const extractErrorMsg = (res) => {
   let errorMsg = ''
-  if (res.status === 404) {
+  if (res.status === constants.STATUS_CODE.NOT_FOUND) {
     errorMsg = 'not found'
-  } else if (res.status === 401) {
+  } else if (res.status === constants.STATUS_CODE.UNAUTHORIZED) {
     errorMsg = 'unauthorized'
   } else if (res.data.error_msg) {
     errorMsg = res.data.error_msg
@@ -66,9 +67,9 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
         resolve(res)
       },
       fail: res => {
+        res.statusCode = res.status
         // 开发工具的 bug, 返回 200 才走 success
         if (res.status >= 200 && res.status < 300) {
-          res.statusCode = res.status
           return resolve(res)
         }
         if (res.error == 19) {
