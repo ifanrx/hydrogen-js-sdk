@@ -51,7 +51,7 @@ const API = {
     EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
     ACCOUNT_INFO: '/hserve/v2.0/user/account/',
     PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
-    ANONYMOUS_LOGIN: '/hserve/v2.0/anonymous-login/',
+    ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   },
 
   WECHAT: {
