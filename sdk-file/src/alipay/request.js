@@ -22,19 +22,15 @@ class RequestError extends HError {
 }
 
 const extractErrorMsg = (res) => {
-  let errorMsg = ''
-  if (res.status === constants.STATUS_CODE.NOT_FOUND) {
-    errorMsg = 'not found'
-  } else if (res.status === constants.STATUS_CODE.UNAUTHORIZED) {
-    errorMsg = 'unauthorized'
-  } else if (res.data.error_msg) {
-    errorMsg = res.data.error_msg
-  } else if (res.data.message) {
-    errorMsg = res.data.message
-  } else if (res.errorMessage) {
-    errorMsg = res.errorMessage  // my.request 返回的错误信息
+  switch(res.status) {
+  case constants.STATUS_CODE.NOT_FOUND:
+    return 'not found'
+  case constants.STATUS_CODE.UNAUTHORIZED:
+    return 'unauthorized'
+  default:
+    // res.errorMessage 为 my.request 返回的错误信息
+    return res.data.error_msg || res.data.message || res.errorMessage || ''
   }
-  return errorMsg
 }
 
 const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, headers = {}, dataType = 'json'}) => {

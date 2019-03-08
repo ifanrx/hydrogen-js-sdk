@@ -21,7 +21,7 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至微信账号
    */
   linkWechat() {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     if (!BaaS._polyfill.linkWechat) {
@@ -34,7 +34,7 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至支付宝账号
    */
   linkAlipay() {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     if (!BaaS._polyfill.linkAlipay) {
@@ -47,7 +47,7 @@ class UserRecord extends BaseRecord {
    * 更新密码
    */
   updatePassword({password, newPassword}) {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
@@ -68,7 +68,7 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationEmail
    */
   setEmail(email, {sendVerificationEmail = false} = {}) {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
@@ -90,7 +90,7 @@ class UserRecord extends BaseRecord {
    * @return {*}
    */
   setUsername(username) {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
@@ -108,7 +108,7 @@ class UserRecord extends BaseRecord {
    * 发送验证邮件
    */
   requestEmailVerification() {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
@@ -124,7 +124,7 @@ class UserRecord extends BaseRecord {
   setAccount(accountInfo = {}) {
     console.log('set accountInfo')
     throw new HError(612)
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     if (accountInfo.password) {
@@ -149,7 +149,7 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationSMSCode
    */
   updateMobile(mobile, sendVerificationSMSCode = false) {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     if (sendVerificationSMSCode) {
@@ -163,7 +163,7 @@ class UserRecord extends BaseRecord {
    * @param mobile
    */
   requestMobileVerification() {
-    if (this._attribute.isAnonymousUser) {
+    if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     // TODO：本期先不做
@@ -180,9 +180,7 @@ UserRecord.initCurrentUser = function (userInfo) {
   }
 
   let record = new UserRecord()
-  record._attribute = Object.assign({
-    isAnonymousUser: BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER) === '1',
-  }, userInfo)
+  record._attribute = Object.assign({}, userInfo)
   record.toJSON = function () {
     return this._attribute
   }
