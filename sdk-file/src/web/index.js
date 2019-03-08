@@ -1,10 +1,8 @@
 const core = require('core-module/index')
 const BaaS = require('core-module/baas')
-try {
-  BaaS._config.VERSION = __VERSION_WEB__
-} catch (e) {
-  // pass
-}
+
+BaaS._config.VERSION = __VERSION_WEB__
+
 const uploadFile = require('./uploadFile')
 const request = require('./request')
 const baasRequest = require('./baasRequest')

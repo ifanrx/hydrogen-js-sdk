@@ -3,6 +3,9 @@ const core = require('core-module/index')
 const wechatAuth = require('./auth')
 const polyfill = require('./polyfill')
 const censor = require('./censor')
+
+BaaS._config.VERSION = __VERSION_WECHAT__
+
 BaaS.use(core)
 BaaS.use(polyfill)
 BaaS.use(wechatAuth)
