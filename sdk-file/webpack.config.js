@@ -4,8 +4,9 @@ const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
+const CopyOutputFilePlugin = require('./webpack/CopyOutputFilePlugin')
 const fs = require('fs')
-var yazl = require("yazl");
+var yazl = require('yazl')
 
 
 let plugins = [
@@ -13,6 +14,10 @@ let plugins = [
     __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
+  new CopyOutputFilePlugin({
+    fileNameInOutputDir: 'sdk-web.dev.js',
+    to: '../../test/web/sdk.dev.js'
+  })
 ]
 
 if (isProd) {
@@ -49,6 +54,7 @@ module.exports = {
   context: __dirname,
   entry: {
     wechat: './src/wechat/index.js',
+    'wechat-plugin': './src/wechat-plugin/index.js',
     alipay: './src/alipay/index.js',
     web: './src/web/index.js',
   },

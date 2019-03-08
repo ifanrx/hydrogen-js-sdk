@@ -1,7 +1,7 @@
-const utils = require('../utils')
-const BaaS = require('../baas')
-const constants = require('../constants')
-const storage = require('../storage')
+const utils = require('core-module/utils')
+const BaaS = require('core-module/baas')
+const constants = require('core-module/constants')
+const storage = require('core-module/storage')
 /**
  *
  * @param {object} payload
