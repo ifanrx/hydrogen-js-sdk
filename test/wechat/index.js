@@ -2,7 +2,15 @@
 
 if (typeof require !== 'undefined') {
   global.expect = require('chai').expect
-  global.BaaS = require('../../core/wechat')
+
+  // 为了兼容 webpack alias 与 DefinePlugin
+  global.__VERSION_WECHAT__ = 'v1.0.0'
+  const moduleAlias = require('module-alias')
+  moduleAlias.addAlias('core-module', __dirname + '../../../core')
+
+  let BaaS = require('../../sdk-file/src/wechat')
+  global.BaaS = BaaS
+
   // 模拟 wx 方法
   global.wx = require('./wechat-mock')
 

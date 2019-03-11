@@ -11,3 +11,4 @@ yarn-error.log
 test/web/sdk.dev.js
 .idea/*
 scripts/config.js
+sdk-plugin/plugin/api/sdk-wechat.js
