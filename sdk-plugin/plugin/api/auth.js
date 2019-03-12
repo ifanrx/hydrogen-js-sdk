@@ -9,8 +9,9 @@ const User = require('./User')
 const API = BaaS._config.API
 
 const login = data => {
+  let url = data.username ? API.WEB.LOGIN_USERNAME : API.WEB.LOGIN_EMAIL
   return BaaS.request({
-    url: API.WEB.LOGIN,
+    url,
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
@@ -46,8 +47,9 @@ const silentLogin = () => {
 }
 
 const register = data => {
+  let url = data.username ? API.WEB.REGISTER_USERNAME : API.WEB.REGISTER_EMAIL
   return BaaS.request({
-    url: API.WEB.REGISTER,
+    url,
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
