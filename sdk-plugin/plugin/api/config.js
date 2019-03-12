@@ -46,10 +46,10 @@ const API = {
   ORDER: '/hserve/v2.0/idp/pay/order/:transactionID/',
 
   WEB: {
-    REGISTER_USERNAME: '/hserve/v2.0/register/username',
-    REGISTER_EMAIL: '/hserve/v2.0/register/email',
-    LOGIN_USERNAME: '/hserve/v2.0/login/username',
-    LOGIN_EMAIL: '/hserve/v2.0/login/email',
+    REGISTER_USERNAME: '/hserve/v2.0/register/username/',
+    REGISTER_EMAIL: '/hserve/v2.0/register/email/',
+    LOGIN_USERNAME: '/hserve/v2.0/login/username/',
+    LOGIN_EMAIL: '/hserve/v2.0/login/email/',
     EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
     ACCOUNT_INFO: '/hserve/v2.0/user/account/',
     PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
