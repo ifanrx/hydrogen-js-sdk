@@ -9,13 +9,15 @@ const User = require('./User')
 const API = BaaS._config.API
 
 const login = data => {
+  let url = data.username ? API.WEB.LOGIN_USERNAME : API.WEB.LOGIN_EMAIL
   return BaaS.request({
-    url: API.WEB.LOGIN,
+    url,
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
     return getCurrentUser()
   })
@@ -25,22 +27,16 @@ const login = data => {
  * 匿名登录
  */
 const anonymousLogin = () => {
-  return Promise.resolve()
-  // TODO::匿名登录逻辑，目前直接 resolve
-  // if (!anonymousLoginPromise) {
-  //   anonymousLoginPromise = BaaS.request({
-  //     url: API.WEB.ANONYMOUS_LOGIN,
-  //     method: 'POST',
-  //   }).then(utils.validateStatusCode).then(res => {
-  //     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-  //     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-  //     storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '1')
-  //     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-  //     anonymousLoginPromise = null
-  //     return res.data
-  //   })
-  // }
-  // return anonymousLoginPromise
+  return BaaS.request({
+    url: API.WEB.ANONYMOUS_LOGIN,
+    method: 'POST',
+  }).then(utils.validateStatusCode).then(res => {
+    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
+    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+    return getCurrentUser()
+  })
 }
 
 /**
@@ -51,13 +47,15 @@ const silentLogin = () => {
 }
 
 const register = data => {
+  let url = data.username ? API.WEB.REGISTER_USERNAME : API.WEB.REGISTER_EMAIL
   return BaaS.request({
-    url: API.WEB.REGISTER,
+    url,
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
     storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
     storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
     return getCurrentUser()
   })
@@ -100,7 +98,7 @@ module.exports = {
   login: utils.rateLimit(login),
   logout,
   silentLogin,
-  anonymousLogin,
+  anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),
   getCurrentUser: utils.rateLimit(getCurrentUser),

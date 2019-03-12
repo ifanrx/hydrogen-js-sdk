@@ -41,7 +41,7 @@
             <input v-model="loginForm.password" placeholder="密码" class="form-control" id="exampleInputPassword1">
           </div>
         </div>
-        <button :disabled="isLogin" @click="login" type="button" class="btn btn-primary">账号密码登录</button>
+        <button :disabled="isLogin && !isAnonymousLogin" @click="login" type="button" class="btn btn-primary">账号密码登录</button>
       </form>
       <hr />
       <div>
@@ -56,7 +56,7 @@
             <input v-model="registerForm.password" placeholder="密码" class="form-control">
           </div>
         </div>
-        <button :disabled="isLogin" @click="register" type="button" class="btn btn-primary">注册账号</button>
+        <button :disabled="isLogin && !isAnonymousLogin" @click="register" type="button" class="btn btn-primary">注册账号</button>
       </div>
       <hr />
       <button :disabled="!isLogin" @click="logout" type="button" class="btn btn-primary">退出登录</button>
@@ -73,7 +73,7 @@
     <div class="card-body">
       <h5 class="card-title">账户管理</h5>
       <hr>
-      <button :disabled="!isLogin" @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
+      <button :disabled="!isLogin && !isAnonymousLogin " @click="currentUser" type="button" class="btn btn-primary">获取当前用户</button>
       <hr />
       <button :disabled="!isLogin" @click="requestEmailVerification" type="button" class="btn btn-primary">发送验证邮件</button>
       <hr />
@@ -101,11 +101,11 @@
             <input v-model="userInfoForm.password" placeholder="密码" class="form-control" aria-describedby="emailHelp">
           </div>
         </div>
-        <button :disabled="!isLogin" @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
+        <button :disabled="!isLogin && !isAnonymousLogin" @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
       </div>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">数据表</h5>
       <hr />
@@ -116,28 +116,28 @@
       <a href="/schema-batch">schema 批量操作测试</a>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">User</h5>
       <hr />
       <a href="/user">user 测试</a>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">文件</h5>
       <hr />
       <a href="/file">文件测试</a>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">内容库</h5>
       <hr />
       <a href="/content">内容库查找测试</a>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">云函数</h5>
       <hr />
@@ -145,7 +145,7 @@
       <button type="button" class="btn btn-primary" @click="testRequest">testRequest</button>
     </div>
   </div>
-  <div class="card" v-show="isLogin">
+  <div class="card" v-show="isLogin || isAnonymousLogin">
     <div class="card-body">
       <h5 class="card-title">短信</h5>
       <hr />

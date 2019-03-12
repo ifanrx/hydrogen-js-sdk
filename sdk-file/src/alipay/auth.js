@@ -39,5 +39,4 @@ module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth.silentLogin = login.bind(null, {forceLogin: false})
   BaaS.auth.loginWithAlipay = opts => login(opts).then(BaaS.auth.getCurrentUser)
-  BaaS.auth.anonymousLogin = utils.fnUnsupportedHandler
 }

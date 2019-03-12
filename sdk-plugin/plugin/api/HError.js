@@ -33,6 +33,8 @@ class HError {
         return 'errorTracker uninitialized'
       case 611:
         return 'unsupported function'
+      case 612:
+        return 'anonymous user is not allowed'
       default:
         return 'unknown error'
     }

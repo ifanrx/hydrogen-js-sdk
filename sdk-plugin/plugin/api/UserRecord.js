@@ -1,7 +1,8 @@
 const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
-const USER_PROFILE_BUILD_IN_FIELDS = require('./constants').USER_PROFILE_BUILD_IN_FIELDS
+const constants = require('./constants')
+const USER_PROFILE_BUILD_IN_FIELDS = constants.USER_PROFILE_BUILD_IN_FIELDS
 const HError = require('./HError')
 const API = BaaS._config.API
 
@@ -20,6 +21,9 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至微信账号
    */
   linkWechat() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     if (!BaaS._polyfill.linkWechat) {
       return Promise.reject(new HError(605, 'linkWechat 方法未定义'))
     }
@@ -30,6 +34,9 @@ class UserRecord extends BaseRecord {
    * 将当期用户关联至支付宝账号
    */
   linkAlipay() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     if (!BaaS._polyfill.linkAlipay) {
       return Promise.reject(new HError(605, 'linkAlipay 方法未定义'))
     }
@@ -40,6 +47,9 @@ class UserRecord extends BaseRecord {
    * 更新密码
    */
   updatePassword({password, newPassword}) {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -58,6 +68,9 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationEmail
    */
   setEmail(email, {sendVerificationEmail = false} = {}) {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -77,6 +90,9 @@ class UserRecord extends BaseRecord {
    * @return {*}
    */
   setUsername(username) {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     return BaaS._baasRequest({
       url: API.WEB.ACCOUNT_INFO,
       method: 'PUT',
@@ -92,6 +108,9 @@ class UserRecord extends BaseRecord {
    * 发送验证邮件
    */
   requestEmailVerification() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     return BaaS._baasRequest({
       url: API.WEB.EMAIL_VERIFY,
       method: 'POST',
@@ -103,6 +122,11 @@ class UserRecord extends BaseRecord {
    * @param {object}  accountInfo
    */
   setAccount(accountInfo = {}) {
+    console.log('set accountInfo')
+    throw new HError(612)
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     if (accountInfo.password) {
       accountInfo.new_password = accountInfo.password
       delete accountInfo.password
@@ -125,6 +149,9 @@ class UserRecord extends BaseRecord {
    * @param sendVerificationSMSCode
    */
   updateMobile(mobile, sendVerificationSMSCode = false) {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     if (sendVerificationSMSCode) {
       this.requestMobileVerification(mobile)
     }
@@ -136,6 +163,9 @@ class UserRecord extends BaseRecord {
    * @param mobile
    */
   requestMobileVerification() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
     // TODO：本期先不做
   }
 }
@@ -150,7 +180,7 @@ UserRecord.initCurrentUser = function (userInfo) {
   }
 
   let record = new UserRecord()
-  record._attribute = userInfo
+  record._attribute = Object.assign({}, userInfo)
   record.toJSON = function () {
     return this._attribute
   }

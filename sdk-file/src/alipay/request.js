@@ -1,4 +1,5 @@
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError extends HError {
@@ -21,15 +22,15 @@ class RequestError extends HError {
 }
 
 const extractErrorMsg = (res) => {
-  let errorMsg = ''
-  if (res.status === 404) {
-    errorMsg = 'not found'
-  } else if (res.data.error_msg) {
-    errorMsg = res.data.error_msg
-  } else if (res.data.message) {
-    errorMsg = res.data.message
+  switch(res.status) {
+  case constants.STATUS_CODE.NOT_FOUND:
+    return 'not found'
+  case constants.STATUS_CODE.UNAUTHORIZED:
+    return 'unauthorized'
+  default:
+    // res.errorMessage 为 my.request 返回的错误信息
+    return res.data.error_msg || res.data.message || res.errorMessage || ''
   }
-  return errorMsg
 }
 
 const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, headers = {}, dataType = 'json'}) => {
@@ -62,13 +63,13 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
         resolve(res)
       },
       fail: res => {
+        res.statusCode = res.status
         // 开发工具的 bug, 返回 200 才走 success
         if (res.status >= 200 && res.status < 300) {
-          res.statusCode = res.status
           return resolve(res)
         }
         if (res.error == 19) {
-          return reject(new HError(res.status))
+          return reject(new HError(res.status, extractErrorMsg(res)))
         }
         reject(new RequestError(parseInt(res.error), res.errorMessage))
       }
