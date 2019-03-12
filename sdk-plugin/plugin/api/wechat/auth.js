@@ -44,7 +44,7 @@ module.exports = BaaS => {
       storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '0')
+      storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       storage.set(constants.STORAGE_KEY.USERINFO, {
         id: res.data.user_id,
         openid: res.data.openid,

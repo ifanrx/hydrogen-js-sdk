@@ -6,7 +6,7 @@ function init() {
     data() {
       return {
         isLogin: false,
-        isAnonymousLogin: BaaS.storage.get('is_anonymous_user') === '1',
+        isAnonymousLogin: BaaS.storage.get('is_anonymous_user') == 1,
         loginForm: {
           email: '',
           username: '',
