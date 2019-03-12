@@ -1,4 +1,4 @@
-const makeParams = require('../../core/wechat/templateMessage').makeParams
+const makeParams = require('../../sdk-file/src/wechat/templateMessage').makeParams
 const faker = require('faker')
 
 describe('templateMessage', () => {

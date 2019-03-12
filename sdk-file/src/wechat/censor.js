@@ -1,6 +1,6 @@
-const constants = require('../constants')
-const HError = require('../HError')
-const utils = require('../utils')
+const constants = require('core-module/constants')
+const HError = require('core-module/HError')
+const utils = require('core-module/utils')
 
 module.exports = BaaS => {
   const wxCensorImage = filePath => {

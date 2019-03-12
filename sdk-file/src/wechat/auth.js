@@ -1,8 +1,8 @@
-const constants = require('../constants')
-const HError = require('../HError')
-const storage = require('../storage')
-const utils = require('../utils')
-const commonAuth = require('../auth')
+const constants = require('core-module/constants')
+const HError = require('core-module/HError')
+const storage = require('core-module/storage')
+const utils = require('core-module/utils')
+const commonAuth = require('core-module/auth')
 
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill

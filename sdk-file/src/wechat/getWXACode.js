@@ -1,6 +1,6 @@
-const BaaS = require('../baas')
-const HError = require('../HError')
-const utils = require('../utils')
+const BaaS = require('core-module/baas')
+const HError = require('core-module/HError')
+const utils = require('core-module/utils')
 
 const API = BaaS._config.API
 

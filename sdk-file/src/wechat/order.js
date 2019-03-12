@@ -1,4 +1,4 @@
-const BaaS = require('../baas')
+const BaaS = require('core-module/baas')
 
 const order = function (params) {
   let orderInst = new BaaS.Order()

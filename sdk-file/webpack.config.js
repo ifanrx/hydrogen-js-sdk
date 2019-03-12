@@ -4,58 +4,69 @@ const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
+const CopyOutputFilePlugin = require('./webpack/CopyOutputFilePlugin')
+const SdkPackPlugin = require('./webpack/SdkPackPlugin')
 const fs = require('fs')
-var yazl = require("yazl");
-
 
 let plugins = [
   new webpack.DefinePlugin({
+    __VERSION_WECHAT__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
 ]
 
 if (isProd) {
-  plugins = plugins.concat({
-      apply(compiler) {
-        compiler.hooks.afterEmit.tapAsync('ifanrxPackPlugin', (compilation, callback) => {
-          let outputPath = compilation.options.output.path
-          let promises = Object.keys(compilation.assets).map(asset => {
-            return new Promise(resolve => {
-              if (asset.match(/\.js$/)) {
-                // 将 web sdk 命名为 sdk-web-latest.js
-                if (asset.match(/-web.*\.js$/)) {
-                  fs.writeFile(path.join(outputPath, 'sdk-web-latest.js'), compilation.assets[asset].children[0]._value, err => {
-                    err && console.log(err)
-                  })
-                }
+  plugins = plugins.concat([
+    // 生成 web sdk 最新版文件
+    new CopyOutputFilePlugin({
+      fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
+      targetFileName: './sdk-web-latest.js',
+    }),
 
-                // 生成 zip 包
-                var zipfile = new yazl.ZipFile();
-                zipfile.addFile(compilation.assets[asset].existsAt, asset);
-                zipfile.outputStream.pipe(fs.createWriteStream(path.join(outputPath, asset.replace(/\.js$/, '.zip')))).on("close", resolve)
-                zipfile.end()
-              }
-            })
-          })
-          Promise.all(promises).then(callback)
-        })
-      }
-    }
-  )
+    // 复制 web sdk 文件至测试目录
+    new CopyOutputFilePlugin({
+      fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
+      targetFileName: '../../test/web/sdk.dev.js',
+    }),
+
+    // 复制 wechat-plugin sdk 文件至插件目录
+    new CopyOutputFilePlugin({
+      fileNameInOutputDir: `sdk-wechat-plugin.${pkg.version}.js`,
+      targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
+    }),
+
+    // 生成 zip 包等操作
+    new SdkPackPlugin(),
+  ])
+} else {
+  plugins = plugins.concat([
+    // 复制 wechat-plugin sdk 文件至插件目录
+    new CopyOutputFilePlugin({
+      fileNameInOutputDir: 'sdk-wechat-plugin.dev.js',
+      targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
+    }),
+
+    // 复制 web sdk 文件至测试目录
+    new CopyOutputFilePlugin({
+      fileNameInOutputDir: 'sdk-web.dev.js',
+      targetFileName: '../../test/web/sdk.dev.js',
+    }),
+  ])
 }
 
 module.exports = {
   context: __dirname,
   entry: {
     wechat: './src/wechat/index.js',
+    'wechat-plugin': './src/wechat-plugin/index.js',
     alipay: './src/alipay/index.js',
     web: './src/web/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: isDEV || isCI ? 'sdk-[name].dev.js' : function (entry) {
-      let version = pkg.versions[entry.name] || pkg.version
+      let version = pkg.versions[entry.chunk.name] || pkg.version
       return `sdk-[name].${version}.js`
     },
     library: 'BaaS',
