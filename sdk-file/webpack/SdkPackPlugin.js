@@ -14,6 +14,8 @@ Plugin.prototype.apply = function (compiler) {
           zipfile.addFile(compilation.assets[asset].existsAt, asset);
           zipfile.outputStream.pipe(fs.createWriteStream(path.join(outputPath, asset.replace(/\.js$/, '.zip')))).on("close", resolve)
           zipfile.end()
+        } else {
+          resolve()
         }
       })
     })
