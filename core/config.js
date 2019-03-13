@@ -60,7 +60,7 @@ const API = {
     SILENT_LOGIN: '/hserve/v2.0/idp/wechat/silent-login/',
     AUTHENTICATE: '/hserve/v2.0/idp/wechat/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
-    TEMPLATE_MESSAGE: '/hserve/v1/template-message-ticket/',
+    TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
     WXACODE: '/hserve/v1.4/miniappcode/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
@@ -71,6 +71,8 @@ const API = {
     SILENT_LOGIN: '/hserve/v2.0/idp/alipay/silent-login/',
     AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
+    TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
+    MINIAPP_QR_CODE: '/hserve/v2.0/idp/alipay/miniapp-qr-code/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',

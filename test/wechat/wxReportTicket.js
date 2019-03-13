@@ -1,4 +1,4 @@
-const makeParams = require('../../sdk-file/src/wechat/templateMessage').makeParams
+const makeParams = require('../../core/utils').makeReportTicketParam
 const faker = require('faker')
 
 describe('templateMessage', () => {
