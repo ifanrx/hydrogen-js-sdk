@@ -57,7 +57,7 @@ class UserRecord extends BaseRecord {
         password,
         new_password: newPassword,
       },
-    }).then(res => {
+    }).then(() => {
       return this
     })
   }
@@ -122,8 +122,6 @@ class UserRecord extends BaseRecord {
    * @param {object}  accountInfo
    */
   setAccount(accountInfo = {}) {
-    console.log('set accountInfo')
-    throw new HError(612)
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }

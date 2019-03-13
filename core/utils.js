@@ -14,10 +14,10 @@ if (!Array.prototype.includes) {
       }
 
       // 1. Let O be ? ToObject(this value).
-      var o = Object(this)
+      let o = Object(this)
 
       // 2. Let len be ? ToLength(? Get(O, "length")).
-      var len = o.length >>> 0
+      let len = o.length >>> 0
 
       // 3. If len is 0, return false.
       if (len === 0) {
@@ -26,14 +26,14 @@ if (!Array.prototype.includes) {
 
       // 4. Let n be ? ToInteger(fromIndex).
       //    (If fromIndex is undefined, this step produces the value 0.)
-      var n = fromIndex | 0
+      let n = fromIndex | 0
 
       // 5. If n ≥ 0, then
       //  a. Let k be n.
       // 6. Else n < 0,
       //  a. Let k be len + n.
       //  b. If k < 0, let k be 0.
-      var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0)
+      let k = Math.max(n >= 0 ? n : len - Math.abs(n), 0)
 
       function sameValueZero(x, y) {
         return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y))
@@ -385,4 +385,5 @@ module.exports = {
   fnUnsupportedHandler,
   compareVersion,
   makeReportTicketParam,
+  extend,
 }
