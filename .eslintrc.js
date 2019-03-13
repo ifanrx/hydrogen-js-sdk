@@ -25,5 +25,6 @@ module.exports = {
     rewire: true,
     __VERSION_WEB__: true,
     __VERSION_ALIPAY__: true,
+    __VERSION_WECHAT__: true,
   }
 }
