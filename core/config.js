@@ -24,9 +24,9 @@ const API = {
   DELETE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_LIST: '/hserve/v1.3/content/detail/',
+  CONTENT_LIST: '/hserve/v2.0/content/detail/',
   CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
-  CONTENT_DETAIL: '/hserve/v1.3/content/detail/:richTextID/',
+  CONTENT_DETAIL: '/hserve/v2.0/content/detail/:richTextID/',
   CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
   CONTENT_CATEGORY_LIST: '/hserve/v1/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
