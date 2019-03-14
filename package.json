@@ -1,10 +1,13 @@
 {
   "name": "minapp-sdk",
-  "version": "2.0.3-a",
+  "version": "2.0.3-b",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
+  "files": [
+    "/lib"
+  ],
   "scripts": {
     "test": "npm run test-wechat",
     "test-wechat": "mocha test/wechat/index.js",
@@ -33,8 +36,8 @@
   },
   "homepage": "https://github.com/ifanrx/repository#readme",
   "versions": {
-    "alipay": "2.0.3-a",
-    "web": "2.0.3-a"
+    "alipay": "2.0.3-b",
+    "web": "2.0.3-b"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
