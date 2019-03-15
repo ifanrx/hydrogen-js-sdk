@@ -1,4 +1,4 @@
-const createGetMiniappQRCode = BaaS => ({urlParam, queryParam, describe}) => {
+const createGetAlipayQRCode = BaaS => ({urlParam, queryParam, describe}) => {
   const API = BaaS._config.API
   return BaaS._baasRequest({
     url: API.ALIPAY.MINIAPP_QR_CODE,
@@ -14,5 +14,5 @@ const createGetMiniappQRCode = BaaS => ({urlParam, queryParam, describe}) => {
 }
 
 module.exports = function (BaaS) {
-  BaaS.getMiniappQRCode = createGetMiniappQRCode(BaaS)
+  BaaS.getAlipayQRCode = createGetAlipayQRCode(BaaS)
 }

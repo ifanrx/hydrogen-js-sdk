@@ -6,7 +6,7 @@ const baasRequest = require('./baasRequest')
 const polyfill = require('./polyfill')
 const uploadFile = require('./uploadFile')
 const pay = require('./pay')
-const miniappQRCode = require('./miniappQRCode')
+const alipayQRCode = require('./alipayQRCode')
 const reportTicket = require('./reportTicket')
 
 BaaS._config.VERSION = __VERSION_ALIPAY__
@@ -18,7 +18,7 @@ BaaS.use(baasRequest)
 BaaS.use(polyfill)
 BaaS.use(uploadFile)
 BaaS.use(pay)
-BaaS.use(miniappQRCode)
+BaaS.use(alipayQRCode)
 BaaS.use(reportTicket)
 BaaS._createRequestMethod()
 
