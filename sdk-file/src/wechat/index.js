@@ -17,7 +17,7 @@ BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')
 BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
-BaaS.wxReportTicket = require('./templateMessage').wxReportTicket
+BaaS.wxReportTicket = require('./wxReportTicket')
 BaaS.ErrorTracker = require('./errorTracker')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境

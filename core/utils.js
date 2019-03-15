@@ -351,6 +351,17 @@ const compareVersion = (versionStr1, versionStr2) => {
   }
 }
 
+const makeReportTicketParam = function (formID) {
+  if (!formID) {
+    throw new HError(605)
+  }
+
+  let paramsObj = {}
+  paramsObj['submission_type'] = 'form_id'
+  paramsObj['submission_value'] = formID
+  return paramsObj
+}
+
 
 module.exports = {
   mergeRequestHeader,
@@ -373,5 +384,6 @@ module.exports = {
   rateLimit,
   fnUnsupportedHandler,
   compareVersion,
+  makeReportTicketParam,
   extend,
 }
