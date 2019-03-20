@@ -63,6 +63,7 @@
     "yazl": "^2.5.1"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "console-log-level": "^1.4.1"
   }
 }

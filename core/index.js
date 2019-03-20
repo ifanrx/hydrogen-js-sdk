@@ -4,11 +4,13 @@ const HError = require('./HError')
 const utils = require('./utils')
 
 module.exports = function (BaaS) {
-  BaaS.init = (clientID, {autoLogin} = {autoLogin: false}) => {
+  BaaS.init = (clientID, {autoLogin, logLevel} = {autoLogin: false}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
-
+    if (logLevel) {
+      utils.setLogLevel(logLevel)
+    }
     BaaS._config.AUTO_LOGIN = autoLogin
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
@@ -34,8 +36,8 @@ module.exports = function (BaaS) {
         } else {
           let result = utils.compareVersion(BaaS._config.VERSION, res.data[platform])
           if (result === -1) {
-            // eslint-disable-next-line no-console
-            console.log(`【知晓云 SDK 更新提示】当前 SDK 版本为 ${BaaS._config.VERSION} 最新版本为 ${res.data[platform]}，请前往 ${BaaS._config.SDK_DOWNLOAD_PAGE} 下载。`)
+            utils.log(constants.LOG_LEVEL.WARN,
+              `【知晓云 SDK 更新提示】当前 SDK 版本为 ${BaaS._config.VERSION} 最新版本为 ${res.data[platform]}，请前往 ${BaaS._config.SDK_DOWNLOAD_PAGE} 下载。`)
           }
         }
       }

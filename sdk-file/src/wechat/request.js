@@ -1,6 +1,7 @@
 const BaaS = require('core-module/baas')
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 
 const wxRequestFail = function (reject) {
   wx.getNetworkType({
@@ -41,7 +42,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       }
     })
 
-    utils.log('Request => ' + url)
+    utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
   })
 }
 
