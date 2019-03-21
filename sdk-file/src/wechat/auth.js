@@ -111,6 +111,9 @@ module.exports = BaaS => {
         userInfo.unionid = res.data.unionid
         storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid)
       }
+      if (res.data.user_id) {
+        storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      }
     })
   }
 

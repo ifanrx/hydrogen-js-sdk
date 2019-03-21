@@ -1,5 +1,6 @@
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 const axios = require('axios')
 
 axios.interceptors.response.use(function (response) {
@@ -34,7 +35,7 @@ module.exports = function (BaaS) {
       }
 
       axios(payload).then(resolve, reject)
-      utils.log('Request => ' + url)
+      utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
     })
   }
 }

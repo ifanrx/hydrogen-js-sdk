@@ -2,6 +2,25 @@ const storage = require('./storage')
 const constants = require('./constants')
 const BaaS = require('./baas')
 const HError = require('./HError')
+const consoleLogLevel = require('console-log-level')
+
+/**
+ * log
+ */
+const createLogger = function (level) {
+  return consoleLogLevel({
+    level,
+  })
+}
+let logger = createLogger(constants.LOG_LEVEL.ERROR)
+const setLogLevel = function (level) {
+  Object.keys(constants.LOG_LEVEL).forEach(function (key) {
+    if (constants.LOG_LEVEL[key] === level) {
+      logger = createLogger(level)
+    }
+  })
+}
+
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -73,11 +92,11 @@ const getSysPlatform = () => {
 
 /**
  * 日志记录
+ * @param  {String} level 级别
  * @param  {String} msg 日志信息
  */
-const log = (msg) => {
-  // 记录日志到日志文件
-  console.log('BaaS LOG: ' + msg) // eslint-disable-line no-console
+const log = function (level, text) {
+  logger[level] && logger[level](text)
 }
 
 /**
@@ -366,6 +385,7 @@ const makeReportTicketParam = function (formID) {
 module.exports = {
   mergeRequestHeader,
   log,
+  setLogLevel,
   format,
   getSysPlatform,
   getFileNameFromPath,

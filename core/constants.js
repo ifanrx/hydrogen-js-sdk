@@ -51,12 +51,18 @@ module.exports = {
     'gender',
   ],
 
-
   httpMethodCodeMap: {
     GET: 200,
     POST: 201,
     PUT: 200,
     PATCH: 200,
     DELETE: 204,
-  }
+  },
+
+  LOG_LEVEL: {
+    DEBUG: 'debug',
+    INFO: 'info',
+    WARN: 'warn',
+    ERROR: 'error',
+  },
 }
