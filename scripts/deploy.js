@@ -85,4 +85,8 @@ async function run() {
   await updateDocVersion()
 }
 
-run()
+try {
+  run()
+} catch (e) {
+  console.log(e)
+}
