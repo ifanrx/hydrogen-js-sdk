@@ -14,7 +14,11 @@ const createLogger = function (level) {
 }
 let logger = createLogger(constants.LOG_LEVEL.ERROR)
 const setLogLevel = function (level) {
-  logger = createLogger(level)
+  Object.keys(constants.LOG_LEVEL).forEach(function (key) {
+    if (constants.LOG_LEVEL[key] === level) {
+      logger = createLogger(level)
+    }
+  })
 }
 
 
