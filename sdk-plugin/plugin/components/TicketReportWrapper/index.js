@@ -1,5 +1,10 @@
 Component({
-  properties: {},
+  properties: {
+    disappearAfterClick: {
+      type: Boolean,
+      value: false,
+    }
+  },
   data: {
     tapped: false,
   },
