@@ -4,6 +4,7 @@
     "veryrich": "pages/veryrich/index"
   },
   "publicComponents": {
-    "ticket-reporter": "components/TicketReporter/index"
+    "ticket-report-button": "components/TicketReportButton/index",
+    "ticket-report-container": "components/TicketReportContainer/index"
   }
 }

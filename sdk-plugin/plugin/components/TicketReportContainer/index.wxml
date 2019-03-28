@@ -1,0 +1,6 @@
+<form class="ticket-report-container" bindsubmit="reportTicket" report-submit>
+  <view class="button-wrapper">
+    <button wx:if="{{!tapped}}" class="button" form-type="submit" bind:tap='handleTap' />
+    <slot></slot>
+  </view>
+</form>

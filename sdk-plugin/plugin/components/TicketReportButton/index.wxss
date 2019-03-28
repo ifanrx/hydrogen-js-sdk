@@ -1,8 +1,8 @@
-.ticket-reporter .button-wrapper {
+.ticket-report-button .button-wrapper {
   position: relative;
 }
 
-.ticket-reporter .button {
+.ticket-report-button .button {
   position: absolute;
   top: 0;
   left: 0;
