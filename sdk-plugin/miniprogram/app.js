@@ -8,6 +8,10 @@ App({
 
     wx.BaaS.ErrorTracker.enable({usePlugins: true})
   },
+  onShow: function(options) {
+    console.log(wx.BaaS)
+    console.log(options)
+  },
   onError: function (res) {
     wx.BaaS.ErrorTracker.track(res)
   },
