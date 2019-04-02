@@ -29,7 +29,10 @@ describe('File', () => {
   })
 
   it('clear query params when query', () => {
-    file.limit(10).find()
-    expect(file._limit).to.equal(20)
+    let getFileListStub = sinon.stub(BaaS, 'getFileList').resolves()
+    return file.limit(10).find(() => {
+      expect(file._limit).to.equal(20)
+      getFileListStub.restore()
+    })
   })
 })

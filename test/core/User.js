@@ -47,7 +47,11 @@ describe('User', () => {
   })
 
   it('clear query params when query', () => {
-    user.limit(10).find()
-    expect(user._limit).to.equal(20)
+
+    let getUserListStub = sinon.stub(BaaS, 'getUserList').resolves()
+    return user.limit(10).find(() => {
+      expect(user._limit).to.equal(20)
+      getUserListStub.restore()
+    })
   })
 })

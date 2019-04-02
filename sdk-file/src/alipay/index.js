@@ -8,6 +8,7 @@ const uploadFile = require('./uploadFile')
 const pay = require('./pay')
 const alipayQRCode = require('./alipayQRCode')
 const reportTicket = require('./reportTicket')
+const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
 
 BaaS._config.VERSION = __VERSION_ALIPAY__
 
@@ -20,6 +21,7 @@ BaaS.use(uploadFile)
 BaaS.use(pay)
 BaaS.use(alipayQRCode)
 BaaS.use(reportTicket)
+BaaS.use(reportTemplateMsgAnalytics)
 BaaS._createRequestMethod()
 
 // 暴露 BaaS 到小程序环境

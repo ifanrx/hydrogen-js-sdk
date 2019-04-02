@@ -36,6 +36,8 @@
 	"appid": "wxc6b86e382a1e3294",
 	"projectname": "hydrogen-js-sdk-plugin",
 	"libVersion": "2.6.4",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -56,10 +58,10 @@
 				},
 				{
 					"id": 1,
-					"name": "模版消息进入",
+					"name": "模版消息卡片进入",
 					"pathName": "pages/index/index",
-					"query": "a=10",
-					"scene": "1014"
+					"query": "_H_utm_campaign=2",
+					"scene": 1014
 				}
 			]
 		},

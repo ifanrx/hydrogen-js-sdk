@@ -37,5 +37,6 @@
       "version": "dev",
       "provider": "wxc6b86e382a1e3294"
     }
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

@@ -15,10 +15,7 @@ const login = data => {
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
-    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
-    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+    BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
   })
 }
@@ -31,10 +28,8 @@ const anonymousLogin = () => {
     url: API.WEB.ANONYMOUS_LOGIN,
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
-    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+    BaaS._polyfill.handleLoginSuccess(res)
     storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
-    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
     return getCurrentUser()
   })
 }
@@ -53,10 +48,7 @@ const register = data => {
     method: 'POST',
     data: data,
   }).then(utils.validateStatusCode).then(res => {
-    storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
-    storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+    BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
   })
 }
