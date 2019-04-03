@@ -38,6 +38,7 @@ describe('tplMsgStatsReport', () => {
           expect(baasRequestStub).to.have.been.calledThrice
           expect(baasRequestStub.firstCall.args[0]).to.be.deep.equal({
             url: BaaS._config.API.TEMPLATE_MESSAGE_EVENT_REPORT,
+            method: 'POST',
             data: {
               stats_id: 'foo',
               platform: 'wechat_miniapp',
@@ -45,6 +46,7 @@ describe('tplMsgStatsReport', () => {
           })
           expect(baasRequestStub.secondCall.args[0]).to.be.deep.equal({
             url: BaaS._config.API.TEMPLATE_MESSAGE_EVENT_REPORT,
+            method: 'POST',
             data: {
               stats_id: 'bar',
               platform: 'wechat_miniapp',
@@ -52,6 +54,7 @@ describe('tplMsgStatsReport', () => {
           })
           expect(baasRequestStub.thirdCall.args[0]).to.be.deep.equal({
             url: BaaS._config.API.TEMPLATE_MESSAGE_EVENT_REPORT,
+            method: 'POST',
             data: {
               stats_id: 'baz',
               platform: 'wechat_miniapp',
