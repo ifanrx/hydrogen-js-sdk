@@ -106,9 +106,9 @@ describe('reportTemplateMsgAnalytics', () => {
       })
     })
 
-    it('should be called after anonymousLogin', () => {
+    it('should not be called after anonymousLogin', () => {
       return BaaS.auth.anonymousLogin().then(() => {
-        expect(reportStatsStub).to.have.been.calledOnce
+        expect(reportStatsStub).to.have.not.been.called
       })
     })
   })

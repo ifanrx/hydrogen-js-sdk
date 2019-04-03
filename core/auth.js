@@ -28,8 +28,7 @@ const anonymousLogin = () => {
     url: API.WEB.ANONYMOUS_LOGIN,
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
-    BaaS._polyfill.handleLoginSuccess(res)
-    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
+    BaaS._polyfill.handleLoginSuccess(res, true)
     return getCurrentUser()
   })
 }

@@ -40,13 +40,12 @@ module.exports = BaaS => {
         BaaS.checkVersion({platform: 'wechat_miniapp'})
       }
     },
-    handleLoginSuccess(res) {
+    handleLoginSuccess(res, isAnonymous) {
       // 登录成功的 hook （login、loginWithWechat、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       BaaS.storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       if (res.data.openid) {
         BaaS.storage.set(constants.STORAGE_KEY.USERINFO, {
           id: res.data.user_id,
@@ -55,7 +54,12 @@ module.exports = BaaS => {
         })
       }
       BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
-      tplMsgStatsReport.reportStats()
+      if (isAnonymous) {
+        BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
+      } else {
+        BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
+        tplMsgStatsReport.reportStats()
+      }
     },
   })
 }
