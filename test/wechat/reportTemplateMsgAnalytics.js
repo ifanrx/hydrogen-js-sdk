@@ -1,4 +1,3 @@
-const rewire = require('rewire')
 const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
@@ -60,9 +59,9 @@ describe('reportTemplateMsgAnalytics', () => {
               data: {
                 user_id: 'mock_user_id',
                 token: 'mock_token',
-                exports_in: 2592000,
+                expires_in: 2592000,
               }
-            })           
+            })
           }
           return request(options)
         })

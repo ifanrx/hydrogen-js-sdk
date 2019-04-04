@@ -8,7 +8,7 @@ sdk-file/dist/*.zip
 lib/
 yarn-error.log
 *.swp
-test/web/sdk.dev.js
+test/web-dev-server/sdk.dev.js
 .idea/*
 scripts/config.js
 sdk-plugin/plugin/api/sdk-wechat.js

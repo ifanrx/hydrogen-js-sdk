@@ -1,3 +1,5 @@
+const constants = require('core-module/constants')
+
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
     getSystemInfoSync: function () {
@@ -16,7 +18,7 @@ module.exports = function (BaaS) {
       }
     },
     CLIENT_PLATFORM: 'WEB',
-    handleLoginSuccess(res) {
+    handleLoginSuccess(res, isAnonymous) {
       // 登录成功的 hook （login、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
