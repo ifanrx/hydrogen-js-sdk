@@ -27,7 +27,7 @@ if (isProd) {
     // 复制 web sdk 文件至测试目录
     new CopyOutputFilePlugin({
       fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
-      targetFileName: '../../test/web/sdk.dev.js',
+      targetFileName: '../../test/web-dev-server/sdk.dev.js',
     }),
 
     // 复制 wechat-plugin sdk 文件至插件目录
