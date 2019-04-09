@@ -42,12 +42,11 @@ describe('TableObject', () => {
   })
 
   it('#delete one', () => {
-    let deleteRecord = sinon.stub(BaaS, 'deleteRecord')
-    deleteRecord.returnsPromise().resolves(randomString)
-    Product.get(randomNumber).then((res) => {
+    let deleteRecordStub = sinon.stub(BaaS, 'deleteRecord').resolves(randomString)
+    return Product.delete(randomNumber).then((res) => {
       expect(res).to.equal(randomString)
+      deleteRecordStub.restore()
     })
-    deleteRecord.restore()
   })
 
   it('#delete more', () => {
@@ -94,12 +93,11 @@ describe('TableObject', () => {
   })
 
   it('#get', () => {
-    let getRecord = sinon.stub(BaaS, 'getRecord')
-    getRecord.returnsPromise().resolves(randomString)
-    Product.get(randomNumber).then((res) => {
+    let getRecordStub = sinon.stub(BaaS, 'getRecord').resolves(randomString)
+    return Product.get(randomNumber).then((res) => {
       expect(res).to.equal(randomString)
+      getRecordStub.restore()
     })
-    getRecord.restore()
   })
 
   it('#get expand created_by', () => {
@@ -144,12 +142,18 @@ describe('TableObject', () => {
   })
 
   it('clear query params when get', () => {
-    Product.expand('created_by').get(randomNumber)
-    expect(Product._expand).to.equal(null)
+    let getRecordStub = sinon.stub(BaaS, 'getRecord').resolves()
+    return Product.expand('created_by').get(randomNumber).then(() => {
+      expect(Product._expand).to.equal(null)
+      getRecordStub.restore()
+    })
   })
 
   it('clear query params when query', () => {
-    Product.expand('created_by').limit(10).find()
-    expect(Product._limit).to.equal(20)
+    let queryRecordListStub = sinon.stub(BaaS, 'queryRecordList').resolves()
+    return Product.expand('created_by').limit(10).find(res => {
+      expect(Product._limit).to.equal(20)
+      queryRecordListStub.restore()
+    })
   })
 })

@@ -29,7 +29,10 @@ describe('FileCategory', () => {
   })
 
   it('clear query params when query', () => {
-    fileCategory.limit(10).find()
-    expect(fileCategory._limit).to.equal(20)
+    let getFileCategoryListStub = sinon.stub(BaaS, 'getFileCategoryList').resolves()
+    return fileCategory.limit(10).find(() => {
+      expect(fileCategory._limit).to.equal(20)
+      getFileCategoryListStub.restore()
+    })
   })
 })

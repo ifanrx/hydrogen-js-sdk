@@ -7,3 +7,6 @@
 [submodule "sdk-plugin/miniprogram/vendor/wxParser"]
 	path = sdk-plugin/miniprogram/vendor/wxParser
 	url = git@github.com:ifanrx/wxParser.git
+[submodule "sdk-plugin/plugin/components/TicketReportWrapper"]
+	path = sdk-plugin/plugin/components/TicketReportWrapper
+	url = git@github.com:ifanrx/minapp-ticket-wx.git

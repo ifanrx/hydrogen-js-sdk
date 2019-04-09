@@ -381,7 +381,6 @@ const makeReportTicketParam = function (formID) {
   return paramsObj
 }
 
-
 module.exports = {
   mergeRequestHeader,
   log,

@@ -2,12 +2,12 @@
 
 if (typeof require !== 'undefined') {
   // 为了兼容 webpack alias 与 DefinePlugin
-  global.__VERSION_WEB__ = 'v1.0.0'
+  global.__VERSION_ALIPAY__ = 'v1.0.0'
   const moduleAlias = require('module-alias')
   moduleAlias.addAlias('core-module', __dirname + '../../../core')
 
-  global.window = require('./web-mock')
-  let BaaS = require('../../sdk-file/src/web')
+  global.my = require('./alipay-mock')
+  let BaaS = require('../../sdk-file/src/alipay')
   global.BaaS = BaaS
 
   // 模拟 wx 方法

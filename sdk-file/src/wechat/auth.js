@@ -40,17 +40,7 @@ module.exports = BaaS => {
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
-      storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-      storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
-      storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
-      storage.set(constants.STORAGE_KEY.USERINFO, {
-        id: res.data.user_id,
-        openid: res.data.openid,
-        unionid: res.data.unionid,
-      })
-      storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      BaaS._polyfill.handleLoginSuccess(res)
       resolve(res)
     }, reject)
   }

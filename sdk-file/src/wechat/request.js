@@ -37,7 +37,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       header: headers,
       dataType: dataType,
       success: resolve,
-      fail: () => {
+      fail: (res) => {
         wxRequestFail(reject)
       }
     })

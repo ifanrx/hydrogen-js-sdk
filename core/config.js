@@ -45,6 +45,8 @@ const API = {
   PAY: '/hserve/v2.0/idp/pay/order/',
   ORDER: '/hserve/v2.0/idp/pay/order/:transactionID/',
 
+  TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
+
   WEB: {
     REGISTER_USERNAME: '/hserve/v2.0/register/username/',
     REGISTER_EMAIL: '/hserve/v2.0/register/email/',

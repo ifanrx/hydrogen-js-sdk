@@ -2,6 +2,7 @@ const HError = require('core-module/HError')
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 const createAuthFn = require('./createAuthFn')
+const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -42,5 +43,18 @@ module.exports = function (BaaS) {
       })
     },
     CLIENT_PLATFORM: 'ALIPAY',
+    handleLoginSuccess(res, isAnonymous) {
+      // 登录成功的 hook （login、loginWithAlipay、register）调用成功后触发
+      BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
+      BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
+      BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
+      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      if (isAnonymous) {
+        BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
+      } else {
+        BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
+        tplMsgStatsReport.reportStats()
+      }
+    },
   })
 }

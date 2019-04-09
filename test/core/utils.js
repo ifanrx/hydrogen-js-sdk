@@ -62,7 +62,7 @@ describe('utils', () => {
   })
 
   it('#doCreateRequestMethod()', () => {
-    const bassRequestSpy = sinon.spy(BaaS, '_baasRequest')
+    const bassRequestStub = sinon.stub(BaaS, '_baasRequest').resolves()
     const METHOD_MAP_LIST = {
       fakeFunction: {
         url: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
@@ -70,7 +70,7 @@ describe('utils', () => {
       },
     }
     utils.doCreateRequestMethod(METHOD_MAP_LIST)
-    BaaS.fakeFunction({
+    return BaaS.fakeFunction({
       tableID: 12345,
       where: JSON.stringify({"$and":[{"state":{"$contains":"一一"}}]}),
       limit: 10,
@@ -80,16 +80,17 @@ describe('utils', () => {
         a: 10,
         b: 20,
       }
+    }).then(() => {
+      let spyCall = bassRequestStub.getCall(0)
+      expect(spyCall.args[0]).to.deep.equal({
+        url: '/hserve/v2.0/table/12345/record/?limit=10&offset=5&where=%7B%22%24and%22%3A%5B%7B%22state%22%3A%7B%22%24contains%22%3A%22%E4%B8%80%E4%B8%80%22%7D%7D%5D%7D&enable_trigger=1',
+        method: 'PUT',
+        data: {
+          a: 10,
+          b: 20,
+        },
+      })
+      bassRequestStub.restore()
     })
-    let spyCall = bassRequestSpy.getCall(0)
-    expect(spyCall.args[0]).to.deep.equal({
-      url: '/hserve/v2.0/table/12345/record/?limit=10&offset=5&where=%7B%22%24and%22%3A%5B%7B%22state%22%3A%7B%22%24contains%22%3A%22%E4%B8%80%E4%B8%80%22%7D%7D%5D%7D&enable_trigger=1',
-      method: 'PUT',
-      data: {
-        a: 10,
-        b: 20,
-      },
-    })
-    bassRequestSpy.restore()
   })
 })

@@ -1,6 +1,6 @@
 {
-	"miniprogramRoot": "./miniprogram",
-	"pluginRoot": "./plugin",
+	"miniprogramRoot": "miniprogram/",
+	"pluginRoot": "plugin/",
 	"compileType": "plugin",
 	"setting": {
 		"urlCheck": false,
@@ -35,7 +35,9 @@
 	},
 	"appid": "wxc6b86e382a1e3294",
 	"projectname": "hydrogen-js-sdk-plugin",
-	"libVersion": "2.2.1",
+	"libVersion": "2.6.4",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -46,13 +48,20 @@
 			"list": []
 		},
 		"plugin": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
 					"id": 0,
 					"name": "广告落地页带参数",
 					"pathName": "pages/veryrich/index",
 					"query": "ad_id=testad&kak=3333&bbc=王小明"
+				},
+				{
+					"id": 1,
+					"name": "模版消息卡片进入",
+					"pathName": "pages/index/index",
+					"query": "_H_utm_campaign=2",
+					"scene": 1014
 				}
 			]
 		},
