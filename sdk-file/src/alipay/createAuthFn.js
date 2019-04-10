@@ -44,13 +44,17 @@ const createAuthFn = BaaS => function auth({forceLogin, scopes = [], createUser 
 const createLoginHandlerFn = BaaS => (code, forceLogin, createUser) => {
   const API = BaaS._config.API
   const url = forceLogin ? API.ALIPAY.AUTHENTICATE : API.ALIPAY.SILENT_LOGIN
+  const data = {
+    code,
+    create_user: createUser,
+  }
+  if (forceLogin) {
+    data.update_userprofile = BaaS._config.updateUserprofile
+  }
   return BaaS.request({
     url,
     method: 'POST',
-    data: {
-      code,
-      create_user: createUser,
-    },
+    data,
   }).then(res => {
     if (res.status == constants.STATUS_CODE.CREATED) {
       BaaS._polyfill.handleLoginSuccess(res)
@@ -63,10 +67,17 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser) => {
 
 const createUserAssociateFn = BaaS => (code, forceLogin) => {
   const API = BaaS._config.API
+  const data = {
+    code,
+    authorized: forceLogin,
+  }
+  if (forceLogin) {
+    data.update_userprofile = BaaS._config.updateUserprofile
+  }
   return BaaS.request({
     url: API.ALIPAY.USER_ASSOCIATE,
     method: 'PUT',
-    data: { code, authorized: forceLogin },
+    data,
   }).then(res => {
     if (res.status == constants.STATUS_CODE.UPDATE) {
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')

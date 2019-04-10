@@ -48,9 +48,11 @@ wx.getStorageSync = (key) => {
   return testStorage.getItem(key)
 }
 
+let code = 'mock wx.login code'
+
 // 模拟 wx.login 函数
 wx.login = ({ success }) => {
-  success && success({ code: 'mock wx.login code' })
+  success && success({ code })
 }
 
 // 模拟 wx.getUserInfo 函数

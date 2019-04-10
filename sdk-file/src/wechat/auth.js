@@ -92,10 +92,11 @@ module.exports = BaaS => {
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
   const getSensitiveData = (data, userInfo) => {
+    data.update_userprofile = BaaS._config.updateUserprofile
     return BaaS.request({
       url: API.WECHAT.AUTHENTICATE,
       method: 'POST',
-      data: data
+      data,
     }).then(utils.validateStatusCode).then(res => {
       if (!userInfo.unionid && res.data.unionid) {
         userInfo.unionid = res.data.unionid
@@ -131,6 +132,7 @@ module.exports = BaaS => {
           signature: res.signature,
           encryptedData: res.encryptedData,
           iv: res.iv,
+          update_userprofile: BaaS._config.updateUserprofile,
           code
         } : {code}
 

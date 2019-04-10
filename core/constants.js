@@ -65,4 +65,10 @@ module.exports = {
     WARN: 'warn',
     ERROR: 'error',
   },
+
+  UPDATE_USERPROFILE_VALUE: {
+    OVERWRITE: 'overwrite',
+    SETNX: 'setnx',
+    FALSE: 'false',
+  }
 }

@@ -3,8 +3,28 @@ const storage = require('./storage')
 const HError = require('./HError')
 const utils = require('./utils')
 
+const setUpdateUserprofile = (BaaS, value) => {
+  const result = Object.keys(constants.UPDATE_USERPROFILE_VALUE).some(key => {
+    if (value === constants.UPDATE_USERPROFILE_VALUE[key]) {
+      BaaS._config.updateUserprofile = value
+      return true
+    }
+  })
+  if (!result) {
+    BaaS._config.updateUserprofile = constants.UPDATE_USERPROFILE_VALUE.SETNX
+  }
+}
+
 module.exports = function (BaaS) {
-  BaaS.init = (clientID, {autoLogin, logLevel} = {autoLogin: false}) => {
+  BaaS.init = (clientID, {
+    autoLogin,
+    logLevel,
+    updateUserprofile,
+  } = {
+    autoLogin: false,
+    logLevel: '',
+    updateUserprofile: '',
+  }) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
@@ -15,6 +35,7 @@ module.exports = function (BaaS) {
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
     BaaS._polyfill.checkLatestVersion()
+    setUpdateUserprofile(BaaS, updateUserprofile)
   }
 
   BaaS.getAuthToken = () => {
