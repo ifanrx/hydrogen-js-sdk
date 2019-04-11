@@ -1,3 +1,4 @@
+require('core-js/features/promise')
 const core = require('core-module/index')
 const BaaS = require('core-module/baas')
 
