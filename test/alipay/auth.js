@@ -75,16 +75,9 @@ describe('auth', () => {
     })
 
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
-        it(`should be "${item[1]}"`, () => {
-          if (item[0]) {
-            BaaS.init('mock-client-id', {
-              updateUserprofile: item[0],
-            })
-          } else {
-            BaaS.init('mock-client-id')
-          }
-          return BaaS.auth.loginWithAlipay({forceLogin: true}).then(() => {
+      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+        it(`should be "${item[1]}"("${item[0]}")`, () => {
+          return BaaS.auth.loginWithAlipay({forceLogin: true, syncUserProfile: item[0]}).then(() => {
             expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
               url: config.API.ALIPAY.AUTHENTICATE,
               method: 'POST',
@@ -99,11 +92,7 @@ describe('auth', () => {
       })
 
       it('should not be included', () => {
-        BaaS.init('mock-client-id', {
-          updateUserprofile: 'setnx',
-        })
-        return BaaS.auth.loginWithAlipay({forceLogin: false}).then(() => {
-          expect(BaaS._config.updateUserprofile).to.be.equal('setnx')
+        return BaaS.auth.loginWithAlipay({forceLogin: false, syncUserProfile: 'false'}).then(() => {
           expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
             url: config.API.ALIPAY.SILENT_LOGIN,
             method: 'POST',
@@ -119,17 +108,10 @@ describe('auth', () => {
 
   describe('# linkAlipay', () => {
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
-        it(`should be "${item[1]}"`, () => {
-          if (item[0]) {
-            BaaS.init('mock-client-id', {
-              updateUserprofile: item[1],
-            })
-          } else {
-            BaaS.init('mock-client-id')
-          }
+      [[null, 'setnx'], ['foo', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+        it(`should be "${item[1]}"("${item[0]}")`, () => {
           return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-            return user.linkAlipay({forceLogin: true})
+            return user.linkAlipay({forceLogin: true, syncUserProfile: item[1]})
           }).then(res => {
             expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
               url: config.API.ALIPAY.USER_ASSOCIATE,
@@ -145,11 +127,8 @@ describe('auth', () => {
       })
 
       it('should not be included', () => {
-        BaaS.init('mock-client-id', {
-          updateUserprofile: 'setnx',
-        })
         return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-          return user.linkAlipay({forceLogin: false})
+          return user.linkAlipay({forceLogin: false, syncUserProfile: 'false'})
         }).then(res => {
           expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
             url: config.API.ALIPAY.USER_ASSOCIATE,

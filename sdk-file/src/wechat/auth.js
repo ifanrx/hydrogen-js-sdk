@@ -60,6 +60,7 @@ module.exports = BaaS => {
 
     let detail = res.detail
     let createUser = !!res.createUser
+    let syncUserProfile = res.syncUserProfile
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
@@ -77,7 +78,8 @@ module.exports = BaaS => {
           rawData: detail.rawData,
           signature: detail.signature,
           encryptedData: detail.encryptedData,
-          iv: detail.iv
+          iv: detail.iv,
+          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
 
         let userInfo = detail.userInfo
@@ -92,7 +94,6 @@ module.exports = BaaS => {
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
   const getSensitiveData = (data, userInfo) => {
-    data.update_userprofile = BaaS._config.updateUserprofile
     return BaaS.request({
       url: API.WECHAT.AUTHENTICATE,
       method: 'POST',
@@ -116,7 +117,9 @@ module.exports = BaaS => {
     })
   }
 
-  const linkWechat = res => {
+  const linkWechat = (res, {
+    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
+  } = {}) => {
     let refreshUserInfo = false
     if (res && res.userInfo) {
       refreshUserInfo = true
@@ -132,7 +135,7 @@ module.exports = BaaS => {
           signature: res.signature,
           encryptedData: res.encryptedData,
           iv: res.iv,
-          update_userprofile: BaaS._config.updateUserprofile,
+          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
           code
         } : {code}
 
@@ -145,11 +148,14 @@ module.exports = BaaS => {
     })
   }
 
-  const loginWithWechat = (authData, {createUser} = {createUser: true}) => {
+  const loginWithWechat = (authData, {
+    createUser = true,
+    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
+  } = {}) => {
     let loginPromise = null
     // handleUserInfo 流程
     if (authData && authData.detail) {
-      loginPromise = handleUserInfo(Object.assign(authData, {createUser}))
+      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile}))
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser})

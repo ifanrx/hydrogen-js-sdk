@@ -381,6 +381,19 @@ const makeReportTicketParam = function (formID) {
   return paramsObj
 }
 
+const getUpdateUserProfileParam = value => {
+  let result
+  Object.keys(constants.UPDATE_USERPROFILE_VALUE).forEach(key => {
+    if (value === constants.UPDATE_USERPROFILE_VALUE[key]) {
+      result = value
+    }
+  })
+  if (!result) {
+    result = constants.UPDATE_USERPROFILE_VALUE.SETNX
+  }
+  return result
+}
+
 module.exports = {
   mergeRequestHeader,
   log,
@@ -405,4 +418,5 @@ module.exports = {
   compareVersion,
   makeReportTicketParam,
   extend,
+  getUpdateUserProfileParam,
 }

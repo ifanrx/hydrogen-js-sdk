@@ -9,38 +9,15 @@ let expect = chai.expect
 describe('init', () => {
   describe('# updateUserprofile', () => {
     beforeEach(() => {
-      BaaS._config.updateUserprofile = ''
+      BaaS._config.CLIENT_ID = ''
     })
-
-    it('should set default value', () => {
-      BaaS.init('mock-client-id')
-      expect(BaaS._config.updateUserprofile).to.equal(constants.UPDATE_USERPROFILE_VALUE.SETNX)
-    })
-
-    it('should not value if value is allowed', () => {
-      BaaS.init('mock-client-id', {
-        updateUserprofile: 'overwrite',
+    let clientID
+    for (let i = 0; i < 10; i++) {
+      clientID = Math.random().toString(16).slice(2)
+      it(`should set "CLIENT_ID" to "${clientID}"`, () => {
+        BaaS.init(clientID)
+        expect(BaaS._config.CLIENT_ID).to.equal(clientID)
       })
-      expect(BaaS._config.updateUserprofile).to.equal('overwrite')
-      BaaS.init('mock-client-id', {
-        updateUserprofile: 'false',
-      })
-      expect(BaaS._config.updateUserprofile).to.equal('false')
-      BaaS.init('mock-client-id', {
-        updateUserprofile: 'setnx',
-      })
-      expect(BaaS._config.updateUserprofile).to.equal('setnx')
-    })
-
-    it('should set default value if value is not allowded', () => {
-      BaaS.init('mock-client-id', {
-        updateUserprofile: 'foo',
-      })
-      expect(BaaS._config.updateUserprofile).to.equal('setnx')
-      BaaS.init('mock-client-id', {
-        updateUserprofile: 'bar',
-      })
-      expect(BaaS._config.updateUserprofile).to.equal('setnx')
-    })
+    }
   })
 })

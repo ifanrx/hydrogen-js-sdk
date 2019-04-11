@@ -27,7 +27,7 @@ module.exports = function (BaaS) {
       if (!userId) {
         throw new HError(604)
       }
-      return createAuthFn(BaaS)({forceLogin}, userId)
+      return createAuthFn(BaaS)(Object.assign({}, opts, {forceLogin}), userId)
     }),
 
     checkLatestVersion() {
