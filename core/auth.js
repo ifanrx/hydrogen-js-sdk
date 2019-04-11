@@ -76,11 +76,13 @@ const requestPasswordReset = ({email} = {}) => {
 
 const getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
-  if (!uid) return Promise.reject(new HError(604))
+  let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
+  if (!uid || !expiresAt) return Promise.reject(new HError(604))
 
   return new User().get(uid).then(res => {
     let user = UserRecord.initCurrentUser(res.data)
     user.user_id = res.data.id
+    user.session_expires_at = expiresAt
     return user
   })
 }

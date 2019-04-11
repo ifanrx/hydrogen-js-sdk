@@ -95,17 +95,12 @@ describe('auth', () => {
     })
 
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
         it(`should be "${item[1]}"`, () => {
-          if (item[0]) {
-            BaaS.init('ClientID-v233', {
-              updateUserprofile: item[0],
-            })
-          } else {
-            BaaS.init('ClientID-v233')
-          }
           return BaaS.auth.loginWithWechat()
-            .then(res => BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {forceLogin: true}))
+            .then(res => BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
+              syncUserProfile: item[1],
+            }))
             .then(() => {
               expect(requestStub.getCall(2).args[0].data.update_userprofile).to.be.equal(item[1])
             })
@@ -113,11 +108,9 @@ describe('auth', () => {
       })
 
       it('should not be included', () => {
-        BaaS.init('ClientID-v233', {
-          updateUserprofile: 'setnx',
-        })
-        return BaaS.auth.loginWithWechat().then(() => {
-          expect(BaaS._config.updateUserprofile).to.be.equal('setnx')
+        return BaaS.auth.loginWithWechat(null, {
+          syncUserProfile: 'overwrite',
+        }).then(() => {
           expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
             url: config.API.WECHAT.SILENT_LOGIN,
             method: 'POST',
@@ -133,17 +126,12 @@ describe('auth', () => {
 
   describe('# linkWechat', () => {
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
         it(`should be "${item[1]}"`, () => {
-          if (item[0]) {
-            BaaS.init('ClientID-v233', {
-              updateUserprofile: item[1],
-            })
-          } else {
-            BaaS.init('mock-client-id')
-          }
           return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-            return user.linkWechat({userInfo: {}})
+            return user.linkWechat({userInfo: {}}, {
+              syncUserProfile: item[1],
+            })
           }).then(res => {
             expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
               url: config.API.WECHAT.USER_ASSOCIATE,
@@ -157,6 +145,22 @@ describe('auth', () => {
                 update_userprofile: item[1],
               }
             })
+          })
+        })
+      })
+
+      it('should not be included', () => {
+        return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
+          return user.linkWechat(null, {
+            syncUserProfile: 'overwrite',
+          })
+        }).then(res => {
+          expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
+            url: config.API.WECHAT.USER_ASSOCIATE,
+            method: 'POST',
+            data: {
+              code: wechatMock.__get__('code'),
+            }
           })
         })
       })
