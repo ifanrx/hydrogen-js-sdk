@@ -23,17 +23,6 @@ module.exports = BaaS => {
 
   // 获取登录凭证 code, 进而换取用户登录态信息
   const auth = ({createUser = true} = {}) => {
-    /**
-     * 由于判断 token 是否有效，是通过 storage 中的 token 与 expires_at 判断，
-     * 如果 expires_at 被设置为当前时刻已过期（0 或其他），而实际上 token 尚在
-     * 有效期内，则登录请求会返回重复登录提示。解决办法有两个：
-     *
-     * 1. 调用 sessionInit 时，不带上 token
-     * 2. 调用 sessionInit 前，清除 storage 中的 token
-     *
-     * 由于方法 1 中有许多判断逻辑，方法 2 比较便捷，所以选择方法 2
-     */
-    BaaS.clearSession()
     return new Promise((resolve, reject) => {
       getLoginCode().then(code => {
         sessionInit({code, createUser}, resolve, reject)
