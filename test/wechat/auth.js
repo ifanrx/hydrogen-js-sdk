@@ -165,4 +165,11 @@ describe('auth', () => {
       })
     })
   })
+
+  it('should call silent-login before force-login call', () => {
+    return BaaS.auth.loginWithWechat({detail: {userInfo: {}}})
+      .then(() => {
+        expect(requestStub.getCall(0).args[0].url).to.equal(config.API.WECHAT.SILENT_LOGIN)
+      })
+  })
 })

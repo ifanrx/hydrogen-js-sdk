@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "anywhere": "^1.5.0",
     "babel-loader": "^8.0.5",
@@ -67,6 +68,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "console-log-level": "^1.4.1"
+    "console-log-level": "^1.4.1",
+    "core-js": "^3.0.1"
   }
 }
