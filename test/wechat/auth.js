@@ -97,12 +97,11 @@ describe('auth', () => {
     describe('# update_userprofile', () => {
       [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
         it(`should be "${item[1]}"`, () => {
-          return BaaS.auth.loginWithWechat()
-            .then(res => BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
-              syncUserProfile: item[1],
-            }))
+          return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
+            syncUserProfile: item[1],
+          })
             .then(() => {
-              expect(requestStub.getCall(2).args[0].data.update_userprofile).to.be.equal(item[1])
+              expect(requestStub.getCall(1).args[0].data.update_userprofile).to.be.equal(item[1])
             })
         })
       })
