@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "2.0.6-b",
+  "version": "2.0.6-c",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -38,8 +38,8 @@
   },
   "homepage": "https://github.com/ifanrx/repository#readme",
   "versions": {
-    "alipay": "2.0.6-b",
-    "web": "2.0.6-b"
+    "alipay": "2.0.6-c",
+    "web": "2.0.6-c"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
