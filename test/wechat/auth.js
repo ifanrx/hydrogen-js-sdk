@@ -128,7 +128,7 @@ describe('auth', () => {
       [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
         it(`should be "${item[1]}"`, () => {
           return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-            return user.linkWechat({userInfo: {}}, {
+            return user.linkWechat({detail: {userInfo: {}}}, {
               syncUserProfile: item[1],
             })
           }).then(res => {

@@ -121,7 +121,7 @@ module.exports = BaaS => {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let refreshUserInfo = false
-    if (res && res.userInfo) {
+    if (res && res.detail && res.detail.userInfo) {
       refreshUserInfo = true
     }
 
