@@ -83,12 +83,37 @@ describe('auth', () => {
     expect(() => global.BaaS.auth.handleUserInfo({a: 'b'})).to.throw()
   })
 
-  it('should clear session before force login', () => {
-    const clearSessionSpy = sinon.spy(BaaS, 'clearSession')
+  it('should call silent-login before force-login call', () => {
     return BaaS.auth.loginWithWechat({detail: {userInfo: {}}})
       .then(() => {
-        expect(clearSessionSpy).to.have.been.calledOnce
-        clearSessionSpy.restore()
+        expect(requestStub.getCall(0).args[0].url).to.equal(config.API.WECHAT.SILENT_LOGIN)
+      })
+  })
+
+  it('should not have "Authorization" header in "sessionInit" request', () => {
+    const expiresAt = '0'
+    const token = 'bar'
+    BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, expiresAt)
+    BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, token)
+    expect(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT)).to.equal(expiresAt)
+    expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.equal(token)
+    requestStub.restore()
+    wx.request = sinon.stub().callsFake(({success}) => {
+      success({
+        statusCode: 201,
+        data: {
+          user_id: userId,
+          token,
+          openid: openId,
+          expires_in: expiresIn,
+        },
+      })
+    })
+    return BaaS.auth.loginWithWechat()
+      .then(() => {
+        console.log(wx.request.getCall(0).args[0])
+        expect(wx.request.getCall(0).args[0].header['Authorization']).to.equal(undefined)
+        delete(wx.request)
       })
   })
 })
