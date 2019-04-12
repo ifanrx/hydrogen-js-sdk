@@ -145,8 +145,9 @@ module.exports = BaaS => {
 
   const loginWithWechat = (authData, {createUser} = {createUser: true}) => {
     let loginPromise = null
-    // handleUserInfo 流程
     if (authData && authData.detail) {
+      // handleUserInfo 流程
+      BaaS.clearSession() // 防止用户在静默登录后又调用了 wx.login 使后端的 session_key 过期
       loginPromise = handleUserInfo(Object.assign(authData, {createUser}))
     } else {
       // 静默登录流程
