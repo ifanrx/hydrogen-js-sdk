@@ -113,5 +113,62 @@ describe('auth', () => {
         })
       })
     })
+
+    it('should throw 604 if have no uid', () => {
+      BaaS._baasRequest = BaaS.request
+      const successSpy = sinon.spy()
+      return BaaS.auth.login({
+        username: 'foo',
+        password: 'bar',
+      }).then(currentUser => {
+        BaaS.storage.set(constants.STORAGE_KEY.UID, '')
+        return BaaS.auth.getCurrentUser()
+          .then(successSpy)
+          .catch(err => {
+            expect(err.code).to.equal(604)
+          })
+          .then(() => {
+            expect(successSpy).have.not.been.called
+          })
+      })
+    })
+
+    it('should throw 604 if have no expiresAt', () => {
+      BaaS._baasRequest = BaaS.request
+      const successSpy = sinon.spy()
+      return BaaS.auth.login({
+        username: 'foo',
+        password: 'bar',
+      }).then(currentUser => {
+        BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, '')
+        return BaaS.auth.getCurrentUser()
+          .then(successSpy)
+          .catch(err => {
+            expect(err.code).to.equal(604)
+          })
+          .then(() => {
+            expect(successSpy).have.not.been.called
+          })
+      })
+    })
+
+    it('should throw 604 if token is expired', () => {
+      BaaS._baasRequest = BaaS.request
+      const successSpy = sinon.spy()
+      return BaaS.auth.login({
+        username: 'foo',
+        password: 'bar',
+      }).then(currentUser => {
+        BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, 0)
+        return BaaS.auth.getCurrentUser()
+          .then(successSpy)
+          .catch(err => {
+            expect(err.code).to.equal(604)
+          })
+          .then(() => {
+            expect(successSpy).have.not.been.called
+          })
+      })
+    })
   })
 })

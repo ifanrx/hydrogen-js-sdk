@@ -77,7 +77,7 @@ const requestPasswordReset = ({email} = {}) => {
 const getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
-  if (!uid || !expiresAt) return Promise.reject(new HError(604))
+  if (!uid || !expiresAt || utils.isSessionExpired()) return Promise.reject(new HError(604))
 
   return new User().get(uid).then(res => {
     let user = UserRecord.initCurrentUser(res.data)
