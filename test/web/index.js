@@ -24,3 +24,4 @@ global.BaaS.init(BaaS.test.clientID)
 
 // 引入待测试模块
 require('./auth')
+require('./init')

@@ -22,12 +22,12 @@ module.exports = function (BaaS) {
     },
 
     linkAlipay: utils.rateLimit(function (opts) {
-      const isForceLogin = !!opts && !!opts.forceLogin
+      const forceLogin = !!opts && !!opts.forceLogin
       const userId = BaaS.storage.get(constants.STORAGE_KEY.UID)
       if (!userId) {
         throw new HError(604)
       }
-      return createAuthFn(BaaS)(isForceLogin, userId)
+      return createAuthFn(BaaS)(Object.assign({}, opts, {forceLogin}), userId)
     }),
 
     checkLatestVersion() {

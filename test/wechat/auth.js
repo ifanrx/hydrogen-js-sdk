@@ -83,6 +83,89 @@ describe('auth', () => {
     expect(() => global.BaaS.auth.handleUserInfo({a: 'b'})).to.throw()
   })
 
+  describe('# loginWithWechat', () => {
+    it('should set storage', () => {
+      return BaaS.auth.loginWithWechat().then((res) => {
+        expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
+        expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
+        expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal('0')
+        expect(BaaS.storage.get(constants.STORAGE_KEY.OPENID)).to.be.equal(openId)
+        expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(Date.now() / 1000) + expiresIn - 30)
+      })
+    })
+
+    describe('# update_userprofile', () => {
+      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+        it(`should be "${item[1]}"`, () => {
+          return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
+            syncUserProfile: item[1],
+          })
+            .then(() => {
+              expect(requestStub.getCall(1).args[0].data.update_userprofile).to.be.equal(item[1])
+            })
+        })
+      })
+
+      it('should not be included', () => {
+        return BaaS.auth.loginWithWechat(null, {
+          syncUserProfile: 'overwrite',
+        }).then(() => {
+          expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
+            url: config.API.WECHAT.SILENT_LOGIN,
+            method: 'POST',
+            data: {
+              code: wechatMock.__get__('code'),
+              create_user: true,
+            }
+          })
+        })
+      })
+    })
+  })
+
+  describe('# linkWechat', () => {
+    describe('# update_userprofile', () => {
+      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
+        it(`should be "${item[1]}"`, () => {
+          return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
+            return user.linkWechat({detail: {userInfo: {}}}, {
+              syncUserProfile: item[1],
+            })
+          }).then(res => {
+            expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
+              url: config.API.WECHAT.USER_ASSOCIATE,
+              method: 'POST',
+              data: {
+                encryptedData: '',
+                iv: '',
+                rawData: '',
+                signature: '',
+                code: wechatMock.__get__('code'),
+                update_userprofile: item[1],
+              }
+            })
+          })
+        })
+      })
+
+      it('should not be included', () => {
+        return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
+          return user.linkWechat(null, {
+            syncUserProfile: 'overwrite',
+          })
+        }).then(res => {
+          expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
+            url: config.API.WECHAT.USER_ASSOCIATE,
+            method: 'POST',
+            data: {
+              code: wechatMock.__get__('code'),
+            }
+          })
+        })
+      })
+    })
+  })
+
   it('should call silent-login before force-login call', () => {
     return BaaS.auth.loginWithWechat({detail: {userInfo: {}}})
       .then(() => {
