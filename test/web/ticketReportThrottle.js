@@ -134,5 +134,19 @@ describe('ticketReportThrottle', () => {
         invoke_times: 1,
         timestamp: time,
       })
+    nowStub.restore()
+  })
+
+  it('should return Promise always', () => {
+    utils.__set__({last_invoke_time: null})
+    window.localStorage.clear(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD)
+    const fnStub = sinon.stub().resolves()
+    const res1 = utils.ticketReportThrottle(fnStub)()
+    const res2 = utils.ticketReportThrottle(fnStub)()
+    const typeofRes1 = Object.prototype.toString.call(res1)
+    const typeofRes2 = Object.prototype.toString.call(res2)
+    expect(typeofRes1).to.be.equal('[object Promise]')
+    expect(typeofRes2).to.be.equal('[object Promise]')
+    expect(fnStub).to.have.been.calledOnce
   })
 })
