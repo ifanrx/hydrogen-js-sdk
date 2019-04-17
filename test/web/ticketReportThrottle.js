@@ -97,6 +97,15 @@ describe('ticketReportThrottle', () => {
     nowStub.restore()
   })
 
+  it('should invoke fn with correct params', () => {
+    utils.__set__({last_invoke_time: null})
+    window.localStorage.clear(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD)
+    const value = 'fack-value'
+    const fnSpy = sinon.stub().returns(value)
+    utils.ticketReportThrottle(fnSpy)('foo', 'bar', 'baz')
+    expect(fnSpy).to.have.been.calledWith('foo', 'bar', 'baz')
+  })
+
   it('should return correct value', () => {
     utils.__set__({last_invoke_time: null})
     window.localStorage.clear(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD)
