@@ -25,11 +25,11 @@ const API = {
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v2.0/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v1/content/group/',
+  CONTENT_GROUP_LIST: '/hserve/v2.0/content/group/',
   CONTENT_DETAIL: '/hserve/v2.0/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_LIST: '/hserve/v1/content/category/',
-  CONTENT_CATEGORY_DETAIL: '/hserve/v1/content/category/:categoryID/',
+  CONTENT_GROUP_DETAIL: '/hserve/v2.0/content/group/',
+  CONTENT_CATEGORY_LIST: '/hserve/v2.0/content/category/',
+  CONTENT_CATEGORY_DETAIL: '/hserve/v2.0/content/category/:categoryID/',
 
   FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
   FILE_LIST: '/hserve/v1.3/uploaded-file/',
