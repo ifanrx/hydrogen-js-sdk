@@ -68,7 +68,7 @@ describe('auth', () => {
       return BaaS.auth.loginWithAlipay().then((res) => {
         expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
         expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
-        expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal('0')
+        expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
         expect(BaaS.storage.get(constants.STORAGE_KEY.ALIPAY_USER_ID)).to.be.equal(alipayUserId)
         expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(Date.now() / 1000) + expiresIn - 30)
       })

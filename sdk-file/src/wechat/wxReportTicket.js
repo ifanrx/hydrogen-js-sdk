@@ -13,4 +13,4 @@ const wxReportTicket = (formID) => {
   })
 }
 
-module.exports = wxReportTicket
+module.exports = utils.ticketReportThrottle(wxReportTicket)

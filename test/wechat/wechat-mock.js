@@ -40,12 +40,12 @@ wx.getNetworkType = function () {console.log('xxx')}
 
 // 模拟 wx.setStorageSync 函数
 wx.setStorageSync = (key, value) => {
-  testStorage.setItem(key, value)
+  testStorage.setItem(key, JSON.stringify(value))
 }
 
 // 模拟 wx.getStorageSync 函数
 wx.getStorageSync = (key) => {
-  return testStorage.getItem(key)
+  return JSON.parse(testStorage.getItem(key))
 }
 
 let code = 'mock wx.login code'
