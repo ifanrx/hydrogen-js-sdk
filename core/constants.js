@@ -76,8 +76,8 @@ module.exports = {
   TICKET_REPORT_INVOKE_LIMIT: {
     MIN_INTERVAL: 5 * 1000,
     TIMES_LIMIT: {
-      MAX_TIMES: 10,
-      INTERVAL: 24 * 60 * 60 * 1000,
+      MAX_TIMES_PER_CYCLE: 10,
+      CYCLE: 24 * 60 * 60 * 1000,
     }
   }
 }

@@ -37,7 +37,7 @@ describe('templateMessage', () => {
 
     it('should invoke once', () => {
       BaaS.storage.set(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, {
-        invoke_times: 1,
+        invokeTimes: 1,
         timestamp: Date.now(),
       })
       return Promise.all([
@@ -51,7 +51,7 @@ describe('templateMessage', () => {
     it('should invoke once(times limit)', () => {
       let now = Date.now()
       BaaS.storage.set(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, {
-        invoke_times: constants.TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.MAX_TIMES - 1,
+        invokeTimes: constants.TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.MAX_TIMES_PER_CYCLE - 1,
         timestamp: now,
       })
       const nowStub = sinon.stub(Date, 'now')
@@ -69,7 +69,7 @@ describe('templateMessage', () => {
     it('should invoke twice', () => {
       let now = Date.now()
       BaaS.storage.set(constants.STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, {
-        invoke_times: 1,
+        invokeTimes: 1,
         timestamp: now,
       })
       const nowStub = sinon.stub(Date, 'now')

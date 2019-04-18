@@ -395,37 +395,41 @@ const getUpdateUserProfileParam = value => {
 }
 
 const initReportTicketInvokeRecord = () => ({
-  invoke_times: 1,
+  invokeTimes: 1,
   timestamp: Date.now(),
 })
 const isInvokeRecordInvalid = (invokeRecord) => {
-  return isNaN(invokeRecord.invoke_times) || isNaN(invokeRecord.timestamp)
+  return isNaN(invokeRecord.invokeTimes) || isNaN(invokeRecord.timestamp)
 }
-let last_invoke_time
+let lastInvokeTime
 const ticketReportThrottle = ticketReportFn => (...args) => {
   const {LOG_LEVEL, TICKET_REPORT_INVOKE_LIMIT, STORAGE_KEY} = constants
   const now = Date.now()
-  log(LOG_LEVEL.DEBUG, `<ticket-report> last: ${last_invoke_time}, now: ${now}`)
-  if (last_invoke_time && now - last_invoke_time <= TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL) return Promise.resolve()  // 上次调用时间与当前时刻对比，未超过 5s 则调用失败
+  log(LOG_LEVEL.DEBUG, `<ticket-report> last: ${lastInvokeTime}, now: ${now}`)
+  if (lastInvokeTime && now - lastInvokeTime <= TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL) return Promise.resolve()  // 上次调用时间与当前时刻对比，未超过 5s 则调用失败
 
   let invokeRecord = storage.get(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD)
-  const isOverdue = invokeRecord && now - invokeRecord.timestamp > TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.INTERVAL
+  const isOverdue = invokeRecord && now - invokeRecord.timestamp > TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.CYCLE
   log(LOG_LEVEL.DEBUG, `<ticket-report> record: ${JSON.stringify(invokeRecord)}, now: ${now}`)
-  if (invokeRecord && invokeRecord.invoke_times >= TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.MAX_TIMES && !isOverdue) return Promise.resolve()  // 当调用次数超过 10 次，且第一次调用时间距离此刻未超过 24h，则调用失败
+  if (invokeRecord && invokeRecord.invokeTimes >= TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.MAX_TIMES_PER_CYCLE && !isOverdue) return Promise.resolve()  // 当调用次数超过 10 次，且第一次调用时间距离此刻未超过 24h，则调用失败
 
   // 更新 storage 中 REPORT_TICKET_INVOKE_RECORD 的数据
   if (!invokeRecord || isOverdue || isInvokeRecordInvalid(invokeRecord)) {
     invokeRecord = initReportTicketInvokeRecord()
   } else {
-    invokeRecord.invoke_times += 1
+    invokeRecord.invokeTimes += 1
   }
 
   // 调用 ticket report 方法
   if (ticketReportFn && typeof ticketReportFn === 'function') {
-    last_invoke_time = now
+    lastInvokeTime = now
     storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
     log(LOG_LEVEL.DEBUG, '<ticket-report> invoke success')
-    return ticketReportFn(...args)
+    return ticketReportFn(...args).catch(err => {
+      invokeRecord.invokeTimes -= 1
+      storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
+      throw err
+    })
   } else {
     log(LOG_LEVEL.DEBUG, '<ticket-report> invoke fail')
     log(LOG_LEVEL.ERROR, new TypeError('"ticketReportFn" must be Function type'))
