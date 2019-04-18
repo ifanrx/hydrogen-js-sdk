@@ -1,3 +1,7 @@
+## 2.0.8-a (2019-4-18)
+- [A] ticket-report 接口增加频次限制（wechat、alipay）
+- [M] 内容库、内容分类 api 版本升级至 2.0
+
 ## 2.0.7-a (2019-4-12)
 - [A] 支持设置是否在强制登录更新第一层级用户信息（wechat、alipay）
 - [F] wechat 端修复强制登录时，后端 session_key 过期引起的 401 问题

@@ -10,7 +10,8 @@ module.exports = {
     IS_ANONYMOUS_USER: 'is_anonymous_user',
     EXPIRES_AT: 'session_expires_at',
     ALIPAY_USER_ID: 'alipay_user_id',
-    LATEST_VERSION_CHECK_MILLISECONDS: 'latest_version_check_milliseconds'
+    LATEST_VERSION_CHECK_MILLISECONDS: 'latest_version_check_milliseconds',
+    REPORT_TICKET_INVOKE_RECORD: 'report_ticket_invoke_record',
   },
   VERSION_MIN_CHECK_INTERVAL: '86400000',
 
@@ -70,5 +71,13 @@ module.exports = {
     OVERWRITE: 'overwrite',
     SETNX: 'setnx',
     FALSE: 'false',
+  },
+
+  TICKET_REPORT_INVOKE_LIMIT: {
+    MIN_INTERVAL_PRE_TIME: 1 * 1000,
+    TIMES_LIMIT: {
+      MAX_TIMES_PER_CYCLE: 20,
+      CYCLE: 24 * 60 * 60 * 1000,
+    }
   }
 }

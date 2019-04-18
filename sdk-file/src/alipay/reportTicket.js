@@ -13,5 +13,5 @@ const createReportTicket = BaaS => (formID) => {
 }
 
 module.exports = function (BaaS) {
-  BaaS.reportTicket = createReportTicket(BaaS)
+  BaaS.reportTicket = utils.ticketReportThrottle(createReportTicket(BaaS))
 }

@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "ticket-report-wrapper": "plugin://sdkPlugin/ticket-report-wrapper"
+  }
+}

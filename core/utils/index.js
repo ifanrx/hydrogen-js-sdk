@@ -1,26 +1,9 @@
-const storage = require('./storage')
-const constants = require('./constants')
-const BaaS = require('./baas')
-const HError = require('./HError')
-const consoleLogLevel = require('console-log-level')
-
-/**
- * log
- */
-const createLogger = function (level) {
-  return consoleLogLevel({
-    level,
-  })
-}
-let logger = createLogger(constants.LOG_LEVEL.ERROR)
-const setLogLevel = function (level) {
-  Object.keys(constants.LOG_LEVEL).forEach(function (key) {
-    if (constants.LOG_LEVEL[key] === level) {
-      logger = createLogger(level)
-    }
-  })
-}
-
+const storage = require('../storage')
+const constants = require('../constants')
+const BaaS = require('../baas')
+const HError = require('../HError')
+const ticketReportThrottle = require('./ticketReportThrottle')
+const log = require('./log')
 
 // 增加 includes polyfill，避免低版本的系统报错
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
@@ -88,15 +71,6 @@ const getSysPlatform = () => {
     // pass for now
   }
   return platform
-}
-
-/**
- * 日志记录
- * @param  {String} level 级别
- * @param  {String} msg 日志信息
- */
-const log = function (level, text) {
-  logger[level] && logger[level](text)
 }
 
 /**
@@ -396,8 +370,8 @@ const getUpdateUserProfileParam = value => {
 
 module.exports = {
   mergeRequestHeader,
-  log,
-  setLogLevel,
+  log: log.log,
+  setLogLevel: log.setLogLevel,
   format,
   getSysPlatform,
   getFileNameFromPath,
@@ -419,4 +393,5 @@ module.exports = {
   makeReportTicketParam,
   extend,
   getUpdateUserProfileParam,
+  ticketReportThrottle,
 }
