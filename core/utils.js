@@ -398,7 +398,7 @@ const initReportTicketInvokeRecord = () => ({
   invokeTimes: 1,
   timestamp: Date.now(),
 })
-const isInvokeRecordInvalid = (invokeRecord) => {
+const isInvalidInvokeRecord = (invokeRecord) => {
   return isNaN(invokeRecord.invokeTimes) || isNaN(invokeRecord.timestamp)
 }
 let lastInvokeTime
@@ -414,7 +414,7 @@ const ticketReportThrottle = ticketReportFn => (...args) => {
   if (invokeRecord && invokeRecord.invokeTimes >= TICKET_REPORT_INVOKE_LIMIT.TIMES_LIMIT.MAX_TIMES_PER_CYCLE && !isOverdue) return Promise.resolve()  // 当调用次数超过 10 次，且第一次调用时间距离此刻未超过 24h，则调用失败
 
   // 更新 storage 中 REPORT_TICKET_INVOKE_RECORD 的数据
-  if (!invokeRecord || isOverdue || isInvokeRecordInvalid(invokeRecord)) {
+  if (!invokeRecord || isOverdue || isInvalidInvokeRecord(invokeRecord)) {
     invokeRecord = initReportTicketInvokeRecord()
   } else {
     invokeRecord.invokeTimes += 1
