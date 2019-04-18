@@ -52,8 +52,8 @@
     <view class="zan-cell__bd">SMS</view>
     <view class="zan-cell__ft"></view>
   </navigator>
-  <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/trigger/index">
-    <view class="zan-cell__bd">模板消息测试</view>
+  <navigator class="zan-cell zan-cell--access" url="/pages/ticket-report/index">
+    <view class="zan-cell__bd">formid</view>
     <view class="zan-cell__ft"></view>
   </navigator>
   <navigator class="zan-cell zan-cell--access" url="/pages-test/wechat/decrypt/index">

@@ -1,0 +1,7 @@
+<ticket-report-wrapper>
+  <view class="page-container">
+    <view bindtap='handleTap'>点击</view>
+    <input type="" placeholder="input"/>
+  </view>
+</ticket-report-wrapper>
+

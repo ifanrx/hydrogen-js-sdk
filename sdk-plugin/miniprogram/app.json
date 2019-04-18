@@ -11,7 +11,7 @@
     "pages-test/wechat/decrypt/index",
     "pages-test/wechat/media/index",
     "pages-test/wechat/pay/index",
-    "pages-test/wechat/trigger/index",
+    "pages/ticket-report/index",
     "pages-test/wechat/content/index",
     "pages-test/wechat/content-legacy/index",
     "pages-test/wechat/user/index",

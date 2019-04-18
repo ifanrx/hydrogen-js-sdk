@@ -4,6 +4,6 @@
     "veryrich": "pages/veryrich/index"
   },
   "publicComponents": {
-    "ticket-report-wrapper": "components/TicketReportWrapper/src/index"
+    "ticket-report-wrapper": "components/TicketReportWrapper/index"
   }
 }
