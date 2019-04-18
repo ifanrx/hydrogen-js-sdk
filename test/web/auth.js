@@ -75,6 +75,8 @@ describe('auth', () => {
   describe('# login', () => {
     it('should set storage', () => {
       BaaS._baasRequest = BaaS.request
+      const now = Date.now()
+      const nowStub = sinon.stub(Date, 'now').returns(now)
       return BaaS.auth.login({
         username: 'foo',
         password: 'bar',
@@ -82,7 +84,8 @@ describe('auth', () => {
         expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
         expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
         expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
-        expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(Date.now() / 1000) + expiresIn - 30)
+        expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
+        nowStub.restore()
       })
     })
   })
