@@ -41,8 +41,8 @@ describe('templateMessage', () => {
         timestamp: Date.now(),
       })
       return Promise.all([
-        BaaS.wxReportTicket('foo'),
-        BaaS.wxReportTicket('bar'),
+        BaaS.wxReportTicket('foo', {enableThrottle: true}),
+        BaaS.wxReportTicket('bar', {enableThrottle: true}),
       ]).then(() => {
         expect(requestStub).to.have.been.calledOnce
       })
@@ -58,8 +58,8 @@ describe('templateMessage', () => {
         .onCall(0).returns(now + constants.TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL)
         .onCall(1).returns(now + 2 * constants.TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL + 1)
       return Promise.all([
-        BaaS.wxReportTicket('foo'),
-        BaaS.wxReportTicket('bar'),
+        BaaS.wxReportTicket('foo', {enableThrottle: true}),
+        BaaS.wxReportTicket('bar', {enableThrottle: true}),
       ]).then(() => {
         expect(requestStub).to.have.been.calledOnce
         nowStub.restore()
@@ -76,8 +76,8 @@ describe('templateMessage', () => {
         .onCall(0).returns(now + 3 * constants.TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL)
         .onCall(1).returns(now + 4 * constants.TICKET_REPORT_INVOKE_LIMIT.MIN_INTERVAL + 1)
       return Promise.all([
-        BaaS.wxReportTicket('foo'),
-        BaaS.wxReportTicket('bar'),
+        BaaS.wxReportTicket('foo', {enableThrottle: true}),
+        BaaS.wxReportTicket('bar', {enableThrottle: true}),
       ]).then(() => {
         expect(requestStub).to.have.been.calledTwice
         nowStub.restore()

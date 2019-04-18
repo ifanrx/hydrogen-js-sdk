@@ -10,7 +10,10 @@ const isInvalidInvokeRecord = (invokeRecord) => {
   return isNaN(invokeRecord.invokeTimes) || isNaN(invokeRecord.timestamp)
 }
 let lastInvokeTime
-const ticketReportThrottle = ticketReportFn => (...args) => {
+const ticketReportThrottle = ticketReportFn => (formID, {enableThrottle = false} = {}) => {
+  if (!enableThrottle) {
+    return ticketReportFn(formID)
+  }
   const {LOG_LEVEL, TICKET_REPORT_INVOKE_LIMIT, STORAGE_KEY} = constants
   const now = Date.now()
   log(LOG_LEVEL.DEBUG, `<ticket-report> last: ${lastInvokeTime}, now: ${now}`)
@@ -32,7 +35,7 @@ const ticketReportThrottle = ticketReportFn => (...args) => {
   if (ticketReportFn && typeof ticketReportFn === 'function') {
     lastInvokeTime = now
     storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
-    return ticketReportFn(...args)
+    return ticketReportFn(formID)
       .then(res => {
         log(LOG_LEVEL.DEBUG, `<ticket-report> invoke success ${Date.now() - now}ms`)
         return res
