@@ -424,12 +424,17 @@ const ticketReportThrottle = ticketReportFn => (...args) => {
   if (ticketReportFn && typeof ticketReportFn === 'function') {
     lastInvokeTime = now
     storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
-    log(LOG_LEVEL.DEBUG, '<ticket-report> invoke success')
-    return ticketReportFn(...args).catch(err => {
-      invokeRecord.invokeTimes -= 1
-      storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
-      throw err
-    })
+    return ticketReportFn(...args)
+      .then(res => {
+        log(LOG_LEVEL.DEBUG, `<ticket-report> invoke success ${Date.now() - now}ms`)
+        return res
+      })
+      .catch(err => {
+        log(LOG_LEVEL.DEBUG, `<ticket-report> invoke fail ${Date.now() - now}ms`)
+        invokeRecord.invokeTimes -= 1
+        storage.set(STORAGE_KEY.REPORT_TICKET_INVOKE_RECORD, invokeRecord)
+        throw err
+      })
   } else {
     log(LOG_LEVEL.DEBUG, '<ticket-report> invoke fail')
     log(LOG_LEVEL.ERROR, new TypeError('"ticketReportFn" must be Function type'))
