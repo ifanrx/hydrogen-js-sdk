@@ -14,46 +14,19 @@ let plugins = [
     __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
+
+  // 复制 web sdk 文件至测试目录
+  new CopyOutputFilePlugin({
+    fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
+    targetFileName: '../../test/web-dev-server/sdk.dev.js',
+  }),
+
+  // 复制 wechat-plugin sdk 文件至插件目录
+  new CopyOutputFilePlugin({
+    fileNameInOutputDir: `sdk-wechat-plugin.${pkg.version}.js`,
+    targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
+  }),
 ]
-
-if (isProd) {
-  plugins = plugins.concat([
-    // 生成 web sdk 最新版文件
-    new CopyOutputFilePlugin({
-      fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
-      targetFileName: './sdk-web-latest.js',
-    }),
-
-    // 复制 web sdk 文件至测试目录
-    new CopyOutputFilePlugin({
-      fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
-      targetFileName: '../../test/web-dev-server/sdk.dev.js',
-    }),
-
-    // 复制 wechat-plugin sdk 文件至插件目录
-    new CopyOutputFilePlugin({
-      fileNameInOutputDir: `sdk-wechat-plugin.${pkg.version}.js`,
-      targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
-    }),
-
-    // 生成 zip 包等操作
-    new SdkPackPlugin(),
-  ])
-} else {
-  plugins = plugins.concat([
-    // 复制 wechat-plugin sdk 文件至插件目录
-    new CopyOutputFilePlugin({
-      fileNameInOutputDir: 'sdk-wechat-plugin.dev.js',
-      targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
-    }),
-
-    // 复制 web sdk 文件至测试目录
-    new CopyOutputFilePlugin({
-      fileNameInOutputDir: 'sdk-web.dev.js',
-      targetFileName: '../../test/web/sdk.dev.js',
-    }),
-  ])
-}
 
 module.exports = {
   context: __dirname,
