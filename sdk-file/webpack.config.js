@@ -6,7 +6,6 @@ const isDEV = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
 const CopyOutputFilePlugin = require('./webpack/CopyOutputFilePlugin')
-const SdkPackPlugin = require('./webpack/SdkPackPlugin')
 const copyFilesForDev = require('./webpack/copyFilesForDev')
 
 let plugins = [
