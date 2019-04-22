@@ -15,14 +15,8 @@
     "test-web": "mocha test/web/index.js",
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
-    "build": "export NODE_ENV=production && npm run clean && webpack --mode=production --config sdk-file/webpack.config.js",
-    "build-npm": "npm run build && npm run copy-npm",
-    "copy-npm": "cp sdk-file/dist/sdk-web.${npm_package_versions_web}.js lib/web.js && cp sdk-file/dist/sdk-wechat.${npm_package_version}.js lib/index.js",
-    "clean": "rm -rf dist/",
-    "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
-    "deploy": "node scripts/deploy.js",
-    "publish": "npm run deploy",
-    "prepublishOnly": "npm run lint && npm run build-npm"
+    "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
+    "lint": "eslint core/**/*.js sdk-file/src/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -63,8 +57,7 @@
     "sinon-chai": "^3.3.0",
     "sinon-stub-promise": "^4.0.0",
     "webpack": "^4.28.3",
-    "webpack-cli": "^3.2.1",
-    "yazl": "^2.5.1"
+    "webpack-cli": "^3.2.1"
   },
   "dependencies": {
     "axios": "^0.18.0",

@@ -5,6 +5,7 @@ sdk-file/dist/*.dev.js
 sdk-file/dist/sdk-web-latest.js
 sdk-file/dist/*.map
 sdk-file/dist/*.zip
+sdk-file/webpack/copyFilesForDev.local.js
 lib/
 yarn-error.log
 *.swp

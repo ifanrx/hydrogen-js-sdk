@@ -1,12 +1,13 @@
 const path = require('path')
 const webpack = require('webpack')
+const fs = require('fs')
 const pkg = require('../package')
 const isDEV = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
 const CopyOutputFilePlugin = require('./webpack/CopyOutputFilePlugin')
 const SdkPackPlugin = require('./webpack/SdkPackPlugin')
-const fs = require('fs')
+const copyFilesForDev = require('./webpack/copyFilesForDev')
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -15,15 +16,14 @@ let plugins = [
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
 
-  // 复制 web sdk 文件至测试目录
-  new CopyOutputFilePlugin({
-    fileNameInOutputDir: `sdk-web.${pkg.versions.web}.js`,
-    targetFileName: '../../test/web-dev-server/sdk.dev.js',
-  }),
+  ...copyFilesForDev.map(item => new CopyOutputFilePlugin({
+    fileNameInOutputDir: item.from,
+    targetFileName: item.to,
+  })),
 
   // 复制 wechat-plugin sdk 文件至插件目录
   new CopyOutputFilePlugin({
-    fileNameInOutputDir: `sdk-wechat-plugin.${pkg.version}.js`,
+    fileNameInOutputDir: isDEV ? 'sdk-wechat-plugin.dev.js' : `sdk-wechat-plugin.${pkg.version}.js`,
     targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
   }),
 ]
