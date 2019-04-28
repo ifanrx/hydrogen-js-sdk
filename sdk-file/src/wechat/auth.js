@@ -72,9 +72,11 @@ module.exports = BaaS => {
       }))
     }
 
-    return silentLogin({createUser}).then(() => {
+    return getLoginCode().then(code => {
       return getUserInfo().then(detail => {
         let payload = {
+          code,
+          create_user: createUser,
           rawData: detail.rawData,
           signature: detail.signature,
           encryptedData: detail.encryptedData,
@@ -87,26 +89,20 @@ module.exports = BaaS => {
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
         userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
         storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
-        return getSensitiveData(payload, userInfo)
+        return getSensitiveData(payload)
       })
+    }).then(res => {
+      BaaS._polyfill.handleLoginSuccess(res)
     })
   }
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data, userInfo) => {
+  const getSensitiveData = (data) => {
     return BaaS.request({
       url: API.WECHAT.AUTHENTICATE,
       method: 'POST',
       data,
-    }).then(utils.validateStatusCode).then(res => {
-      if (!userInfo.unionid && res.data.unionid) {
-        userInfo.unionid = res.data.unionid
-        storage.set(constants.STORAGE_KEY.UNIONID, userInfo.unionid)
-      }
-      if (res.data.user_id) {
-        storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
-      }
-    })
+    }).then(utils.validateStatusCode)
   }
 
   const getUserInfo = () => {
@@ -155,7 +151,6 @@ module.exports = BaaS => {
     let loginPromise = null
     if (authData && authData.detail) {
       // handleUserInfo 流程
-      BaaS.clearSession() // 防止用户在静默登录后又调用了 wx.login 使后端的 session_key 过期
       loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile}))
     } else {
       // 静默登录流程

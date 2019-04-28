@@ -84,15 +84,42 @@ describe('auth', () => {
   })
 
   describe('# loginWithWechat', () => {
-    it('should set storage', () => {
+    [null, {detail: {userInfo: {}}}].forEach(param => {
+      it(`should set storage(${param === null ? 'silent' : 'force'} login)`, () => {
+        const now = Date.now()
+        const nowStub = sinon.stub(Date, 'now').returns(now)
+        return BaaS.auth.loginWithWechat(param).then((res) => {
+          expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
+          expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
+          expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
+          expect(BaaS.storage.get(constants.STORAGE_KEY.OPENID)).to.be.equal(openId)
+          expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
+          if (param !== null) {
+            // force login
+            expect(requestStub.getCall(0).args[0].url).to.be.equal(config.API.WECHAT.AUTHENTICATE)
+          }
+          nowStub.restore()
+        })
+      })
+    })
+
+    it('should call authenticate api with "code" and "create_user" param when force login', () => {
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.loginWithWechat().then((res) => {
-        expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
-        expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
-        expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
-        expect(BaaS.storage.get(constants.STORAGE_KEY.OPENID)).to.be.equal(openId)
-        expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
+      return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {createUser: false}).then((res) => {
+        expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
+          url: config.API.WECHAT.AUTHENTICATE,
+          method: 'POST',
+          data: {
+            encryptedData: '',
+            iv: '',
+            rawData: '',
+            signature: '',
+            code: wechatMock.__get__('code'),
+            create_user: false,
+            update_userprofile: 'setnx',
+          }
+        })
         nowStub.restore()
       })
     })
@@ -104,7 +131,7 @@ describe('auth', () => {
             syncUserProfile: item[1],
           })
             .then(() => {
-              expect(requestStub.getCall(1).args[0].data.update_userprofile).to.be.equal(item[1])
+              expect(requestStub.getCall(0).args[0].data.update_userprofile).to.be.equal(item[1])
             })
         })
       })
@@ -167,12 +194,5 @@ describe('auth', () => {
         })
       })
     })
-  })
-
-  it('should call silent-login before force-login call', () => {
-    return BaaS.auth.loginWithWechat({detail: {userInfo: {}}})
-      .then(() => {
-        expect(requestStub.getCall(0).args[0].url).to.equal(config.API.WECHAT.SILENT_LOGIN)
-      })
   })
 })
