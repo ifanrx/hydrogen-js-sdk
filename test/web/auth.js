@@ -19,8 +19,8 @@ describe('auth', () => {
     request = BaaS.request
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
-        options.url === BaaS._config.API.WEB.LOGIN_USERNAME ||
-        options.url === BaaS._config.API.WEB.REGISTER_USERNAME
+        options.url === BaaS._config.API.LOGIN_USERNAME ||
+        options.url === BaaS._config.API.REGISTER_USERNAME
       ) {
         return Promise.resolve({
           status: 201,
@@ -42,6 +42,8 @@ describe('auth', () => {
             _provider : {}
           }
         })
+      } else {
+        return Promise.resolve()
       }
       return request(options)
     })
@@ -87,6 +89,48 @@ describe('auth', () => {
         expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
         nowStub.restore()
       })
+    })
+  })
+
+  describe('# loginWithThirdParty', () => {
+    it('should request "THIRD_PARTY_AUTH" if "token" param is not in url', () => {
+      global.window.location = {
+        search: '',
+      }
+      let provider = 'weibo'
+      let url = BaaS._config.API.WEB.THIRD_PARTY_AUTH.replace(':provider', provider)
+      return BaaS.auth.loginWithThirdParty(provider)
+        .catch(err => console.log(err))
+        .then(() => {
+          expect(requestStub).to.have.been.calledWith({
+            url,
+            method: 'GET',
+          })
+        })
+    })
+
+    it('should request "THIRD_PARTY_LOGIN" if "token" param is in url', () => {
+      const token = 'mock-token'
+      global.window.location = {
+        search: '?token=' + token,
+      }
+      let provider = 'weixin'
+      let url = BaaS._config.API.WEB.THIRD_PARTY_LOGIN.replace(':provider', provider)
+      return BaaS.auth.loginWithThirdParty(provider, {
+        createUser: false,
+      })
+        .catch(err => console.log(err))
+        .then(() => {
+          expect(requestStub).to.have.been.calledWith({
+            url,
+            method: 'POST',
+            data: {
+              token,
+              create_user: false,
+              update_userprofile: 'setnx',
+            },
+          })
+        })
     })
   })
 

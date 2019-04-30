@@ -143,6 +143,14 @@ function init() {
           console.log(res)
         })
       },
+      thirdPartyLogin() {
+        BaaS.auth.loginWithThirdParty('weibo', {
+          iframe: true,
+          authPageUrl: '/auth.html',
+        })
+          .then(res => {console.log(res)})
+          .catch(err => console.log(err))
+      },
     },
     computed: {},
     mounted() {

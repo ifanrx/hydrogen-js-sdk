@@ -9,7 +9,7 @@ const User = require('./User')
 const API = BaaS._config.API
 
 const login = data => {
-  let url = data.username ? API.WEB.LOGIN_USERNAME : API.WEB.LOGIN_EMAIL
+  let url = data.username ? API.LOGIN_USERNAME : API.LOGIN_EMAIL
   return BaaS.request({
     url,
     method: 'POST',
@@ -25,7 +25,7 @@ const login = data => {
  */
 const anonymousLogin = () => {
   return BaaS.request({
-    url: API.WEB.ANONYMOUS_LOGIN,
+    url: API.ANONYMOUS_LOGIN,
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res, true)
@@ -41,7 +41,7 @@ const silentLogin = () => {
 }
 
 const register = data => {
-  let url = data.username ? API.WEB.REGISTER_USERNAME : API.WEB.REGISTER_EMAIL
+  let url = data.username ? API.REGISTER_USERNAME : API.REGISTER_EMAIL
   return BaaS.request({
     url,
     method: 'POST',
@@ -68,7 +68,7 @@ const logout = () => {
  */
 const requestPasswordReset = ({email} = {}) => {
   return BaaS.request({
-    url: API.WEB.PASSWORD_RESET,
+    url: API.PASSWORD_RESET,
     method: 'POST',
     data: {email},
   }).then(utils.validateStatusCode)

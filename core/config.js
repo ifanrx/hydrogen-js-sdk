@@ -3,7 +3,16 @@ let VERSION = 'v2.0.1-a'
 let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
 
 const API = {
+  REGISTER_USERNAME: '/hserve/v2.0/register/username/',
+  REGISTER_EMAIL: '/hserve/v2.0/register/email/',
+  LOGIN_USERNAME: '/hserve/v2.0/login/username/',
+  LOGIN_EMAIL: '/hserve/v2.0/login/email/',
+  EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
+  ACCOUNT_INFO: '/hserve/v2.0/user/account/',
+  PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
+  ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   LOGOUT: '/hserve/v2.0/session/destroy/',
+
   UPLOAD: '/hserve/v1/upload/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
@@ -48,14 +57,9 @@ const API = {
   TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
 
   WEB: {
-    REGISTER_USERNAME: '/hserve/v2.0/register/username/',
-    REGISTER_EMAIL: '/hserve/v2.0/register/email/',
-    LOGIN_USERNAME: '/hserve/v2.0/login/username/',
-    LOGIN_EMAIL: '/hserve/v2.0/login/email/',
-    EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
-    ACCOUNT_INFO: '/hserve/v2.0/user/account/',
-    PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
-    ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
+    THIRD_PARTY_AUTH: '/hserve/v2.0/oauth/:provider/redirect/',
+    THIRD_PARTY_LOGIN: '/hserve/v2.0/oauth/:provider/login/',
+    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/oauth/:provider/associate/',
   },
 
   WECHAT: {

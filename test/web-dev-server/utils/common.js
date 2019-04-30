@@ -8,13 +8,15 @@
   }
 
   // 初始化
-  window.BaaS.init('733b59d1b10ff4a37390')
+  window.BaaS.init('733b59d1b10ff4a37390', {
+    logLevel: 'debug',
+  })
 
   // DEBUG config
-  BaaS._config.DEBUG = true
-  BaaS.init('995140f59511a222c937')
-  BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com'
-  BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/
+  // BaaS._config.DEBUG = true
+  // BaaS.init('995140f59511a222c937')
+  // BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com'
+  // BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/
 
   // hook request
   let r = window.BaaS.request

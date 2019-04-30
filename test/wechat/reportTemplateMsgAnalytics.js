@@ -44,11 +44,11 @@ describe('reportTemplateMsgAnalytics', () => {
       requestStub = sinon.stub(BaaS, 'request')
         .callsFake(function (options) {
           if (
-            options.url === BaaS._config.API.WEB.LOGIN_USERNAME
-            || options.url === BaaS._config.API.WEB.LOGIN_EMAIL
-            || options.url === BaaS._config.API.WEB.REGISTER_USERNAME
-            || options.url === BaaS._config.API.WEB.REGISTER_EMAIL
-            || options.url === BaaS._config.API.WEB.ANONYMOUS_LOGIN
+            options.url === BaaS._config.API.LOGIN_USERNAME
+            || options.url === BaaS._config.API.LOGIN_EMAIL
+            || options.url === BaaS._config.API.REGISTER_USERNAME
+            || options.url === BaaS._config.API.REGISTER_EMAIL
+            || options.url === BaaS._config.API.ANONYMOUS_LOGIN
             || options.url === utils.format(BaaS._config.API.USER_DETAIL, {
               userID: 'mock_user_id',
             })

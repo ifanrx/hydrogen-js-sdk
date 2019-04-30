@@ -25,7 +25,7 @@ describe('auth', () => {
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
         options.url === BaaS._config.API.ALIPAY.SILENT_LOGIN ||
-        options.url === BaaS._config.API.WEB.LOGIN_USERNAME ||
+        options.url === BaaS._config.API.LOGIN_USERNAME ||
         options.url === BaaS._config.API.ALIPAY.USER_ASSOCIATE ||
         options.url === BaaS._config.API.ALIPAY.AUTHENTICATE
       ) {
