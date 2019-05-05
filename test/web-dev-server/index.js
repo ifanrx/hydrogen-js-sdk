@@ -144,9 +144,29 @@ function init() {
         })
       },
       thirdPartyLogin() {
-        BaaS.auth.loginWithThirdParty('weibo', {
-          iframe: true,
-          authPageUrl: '/auth.html',
+        BaaS.auth.loginWithThirdParty('weibo', '/auth.html', {
+          // iframe: true,
+          authModalStyle: {
+            container: {
+              background: 'gray',
+            },
+            iframe: {
+              // background: 'red',
+            },
+            closeButton: {
+              // right: '50%',
+            }
+          },
+          windowFeatures: `
+            left=100,
+            top=100,
+            width=800,
+            height=600,
+            menubar=yes,
+            resizable=yes,
+            scrollbars=yes,
+            status=yes
+          `,
         })
           .then(res => {console.log(res)})
           .catch(err => console.log(err))

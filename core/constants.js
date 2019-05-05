@@ -79,5 +79,15 @@ module.exports = {
       MAX_TIMES_PER_CYCLE: 20,
       CYCLE: 24 * 60 * 60 * 1000,
     }
+  },
+
+  AUTH_WINDOW_TYPE: {
+    IFRAME: 'iframe',
+    WINDOW: 'window',
+  },
+
+  THIRD_PARTY_AUTH_STATUS: {
+    ACCESS_ALLOWED: 'access_allowed',
+    ACCESS_DINIED: 'access_dinied',
   }
 }
