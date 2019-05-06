@@ -1,7 +1,7 @@
 const utils = require('core-module/utils')
 const HError = require('core-module/HError')
 const constants = require('core-module/constants')
-const getThirdPartyAuthToken = require('./getThirdPartyAuthToken')
+let getThirdPartyAuthToken = require('./getThirdPartyAuthToken')
 
 const getToken = () => {
   const params = new URLSearchParams(window.location.search)
@@ -22,21 +22,29 @@ const createThirdPartyAuthFn = BaaS => () => {
     }, referer)
     return Promise.resolve()
   } else {
-    // TODO: 跳转到正确的页面。
-    window.location.href = 'http://viac2.eng-vm.can.corp.ifanr.com/login/partner/weixin/redirect/'
     // 跳转到第三方授权页面
-    // return BaaS.request({
-    //   // url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_AUTH, {provider}),
-    //   url: '/login/partner/weixin/redirect/',
-    //   method: 'GET',
-    // }).then(() => {
-    //   #<{(|*
-    //    * 请求成功返回后，页面会重定向。
-    //    * 如果没有跳转到第三方授权页面，而继续往下执行了，
-    //    * 则直接报“用户未授权”的错误。
-    //    |)}>#
-    //   throw new HError(603)
-    // })
+    return BaaS.request({
+      url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_AUTH, {provider}),
+      method: 'GET',
+    }).then(res => {
+      if (res.status === 200 && res.data.status === 'ok') {
+        window.location.href = res.data.redirect_url
+      } else {
+        throw res
+      }
+    }).catch(err => {
+      let error = ''
+      if (err.data) {
+        error = err.statusText || err.data
+      } else {
+        error = err.message
+      }
+      refererWindow.postMessage({
+        status: constants.THIRD_PARTY_AUTH_STATUS.FAIL,
+        error,
+      }, referer)
+      throw err
+    })
   }
 }
 
@@ -55,7 +63,7 @@ const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}
         }
       }).then(utils.validateStatusCode).then(res => {
         BaaS._polyfill.handleLoginSuccess(res)
-        return getCurrentUser()
+        return BaaS.auth.getCurrentUser()
       })
     })
 }

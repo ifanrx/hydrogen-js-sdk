@@ -1,26 +1,25 @@
 const utils = require('core-module/utils')
 const HError = require('core-module/HError')
 const constants = require('core-module/constants')
-const windowManager = require('./windowManager')
+let windowManager = require('./windowManager')
 
 let getThirdPartyAuthToken = (options = {}) => {
   // TODO: 兼容 IE
   return new Promise((resolve, reject) => {
     let authWindow
     let handleRecieveMessage
-    const removeListener = () => {
-      window.removeEventListener('message', handleRecieveMessage, false)
-      authWindow.close()
-    }
     handleRecieveMessage = event => {
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.ACCESS_ALLOWED && event.data.token) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> token: ${event.data.token}`)
-        removeListener()
+        window.removeEventListener('message', handleRecieveMessage, false)
+        authWindow.close()
         return resolve(event.data.token)
       }
-      if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.ACCESS_DINIED) {
-        removeListener()
-        return reject(new HError(603))
+      if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.FAIL) {
+        utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> fail, ${event.data.error}`, )
+        window.removeEventListener('message', handleRecieveMessage, false)
+        authWindow.close()
+        return reject(new HError(603, event.data.error))
       }
     }
     const onClose = () => {

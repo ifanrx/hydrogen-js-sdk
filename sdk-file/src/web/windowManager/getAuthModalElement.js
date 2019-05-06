@@ -1,6 +1,11 @@
 let iframe = null
 let container = null
 let closeBtn = null
+const ELEMENT_ID = {
+  CONTAINER: 'auth-iframe__container',
+  IFRAME: 'auth-iframe__iframe',
+  CLOSE_BUTTON: 'auth-iframe__close-btn',
+}
 
 let closeBtnIcon = "" +
 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACpUlEQVR4Xu2bbVEDMRCG3yoAB4ADH" +
@@ -17,7 +22,7 @@ let closeBtnIcon = "" +
 
 const createAuthModal = () => {
   container = document.createElement('div')
-  container.id = 'auth-iframe-container'
+  container.id = ELEMENT_ID.CONTAINER
   container.style.cssText = `
     display: none;
     position: fixed;
@@ -31,6 +36,7 @@ const createAuthModal = () => {
   `
 
   iframe = document.createElement('iframe')
+  iframe.id = ELEMENT_ID.IFRAME
   iframe.style.cssText = `
     border: none;
     width: 100vw;
@@ -38,6 +44,7 @@ const createAuthModal = () => {
   `
 
   closeBtn = document.createElement('div')
+  closeBtn.id = ELEMENT_ID.CLOSE_BUTTON
   closeBtn.style.cssText = `
     position: absolute;
     top: 20px;
@@ -59,7 +66,14 @@ const setStyle = (element, style) => {
   })
 }
 
+
 const getAuthModalElement = modalStyle => {
+  container = document.querySelector(`#${ELEMENT_ID.CONTAINER}`)
+  if (container) {
+    iframe = container.querySelector(`#${ELEMENT_ID.IFRAME}`)
+    closeBtn = container.querySelector(`#${ELEMENT_ID.CLOSE_BUTTON}`)
+  }
+
   if (!container || !iframe || !closeBtn) {
     createAuthModal()
   }
@@ -75,7 +89,7 @@ const getAuthModalElement = modalStyle => {
   return {container, iframe, closeBtn}
 }
 
-window.addEventListener('load', () => {
+typeof window !== 'undefined' && window.addEventListener('load', () => {
   createAuthModal()
 })
 

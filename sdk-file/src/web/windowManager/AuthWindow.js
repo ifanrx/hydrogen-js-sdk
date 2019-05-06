@@ -16,6 +16,7 @@ class AuthWindow {
         this.watchWindowStatus()
       } else if (typeof this.onClose === 'function') {
         this.onClose()
+        this.timer = null
       }
     }, 500)
   }

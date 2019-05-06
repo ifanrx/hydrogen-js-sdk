@@ -88,6 +88,6 @@ module.exports = {
 
   THIRD_PARTY_AUTH_STATUS: {
     ACCESS_ALLOWED: 'access_allowed',
-    ACCESS_DINIED: 'access_dinied',
+    FAIL: 'fail',
   }
 }
