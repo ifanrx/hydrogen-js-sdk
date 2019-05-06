@@ -5,5 +5,7 @@ let window = {}
 
 // 模拟 window.localStorage
 window.localStorage = testStorage
+window.addEventListener = () => {}
+window.open = () => {}
 
 module.exports = window
