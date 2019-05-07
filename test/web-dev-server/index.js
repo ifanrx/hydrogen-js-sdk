@@ -144,15 +144,17 @@ function init() {
         })
       },
       thirdPartyLogin: function () {
-        BaaS.auth.loginWithThirdParty('weibo', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+          debug: true,
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
         })
           .then(function (res) {console.log(res)})
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginIframe: function () {
-        BaaS.auth.loginWithThirdParty('weibo', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
           iframe: true,
+          debug: true,
           authModalStyle: {
             container: {
               background: 'gray',

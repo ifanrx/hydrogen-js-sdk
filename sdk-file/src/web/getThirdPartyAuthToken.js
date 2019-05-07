@@ -18,7 +18,9 @@ let getThirdPartyAuthToken = (options = {}) => {
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.FAIL) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> fail, ${event.data.error}`, )
         window.removeEventListener('message', handleRecieveMessage, false)
-        authWindow.close()
+        if (!options.debug) {
+          authWindow.close()
+        }
         return reject(new HError(613, event.data.error))
       }
     }
