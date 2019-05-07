@@ -35,6 +35,8 @@ class HError {
       return 'unsupported function'
     case 612:
       return 'anonymous user is not allowed'
+    case 613:
+      return 'third party authorization failed'
     default:
       return 'unknown error'
     }

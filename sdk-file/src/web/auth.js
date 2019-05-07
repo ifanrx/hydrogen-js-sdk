@@ -34,9 +34,9 @@ const createThirdPartyAuthFn = BaaS => () => {
       }
     }).catch(err => {
       let error = ''
-      if (err.data) {
+      if (err && err.data) {
         error = err.statusText || err.data
-      } else {
+      } else if (err) {
         error = err.message
       }
       refererWindow.postMessage({

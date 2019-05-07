@@ -32,10 +32,12 @@ describe('getThirdPartyAuthToken', () => {
     addEventListenerSpy = sinon.spy(dom.window, 'addEventListener')
     removeEventListenerSpy = sinon.spy(dom.window, 'removeEventListener')
   })
+
   afterEach(() => {
     addEventListenerSpy.restore()
     removeEventListenerSpy.restore()
   })
+
   it('should return token if recieve "access_allowed"', () => {
     const getThirdPartyAuthToken = rewire('../../sdk-file/src/web/getThirdPartyAuthToken')
     getThirdPartyAuthToken.__set__({
@@ -66,7 +68,7 @@ describe('getThirdPartyAuthToken', () => {
     const error = new Error('test error')
     dom.window.postMessage({status: 'fail', error}, '*')
     const job1 = getThirdPartyAuthToken().catch(err => {
-      expect(err).to.be.deep.equal(new HError(603, error))
+      expect(err).to.be.deep.equal(new HError(613, error))
       expect(addEventListenerSpy).to.have.been.calledOnce
       expect(removeEventListenerSpy).to.have.been.calledOnce
       expect(addEventListenerSpy.getCall(0).args).to.be.deep.equal(removeEventListenerSpy.getCall(0).args)

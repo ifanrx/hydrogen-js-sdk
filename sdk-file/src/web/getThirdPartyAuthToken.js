@@ -19,12 +19,12 @@ let getThirdPartyAuthToken = (options = {}) => {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> fail, ${event.data.error}`, )
         window.removeEventListener('message', handleRecieveMessage, false)
         authWindow.close()
-        return reject(new HError(603, event.data.error))
+        return reject(new HError(613, event.data.error))
       }
     }
     const onClose = () => {
       utils.log(constants.LOG_LEVEL.DEBUG, '<third-party-auth> close window, access_dinied')
-      return reject(new HError(603))
+      return reject(new HError(613, 'access_dinied'))
     }
     window.addEventListener('message', handleRecieveMessage, false)
     const windowType = options.iframe ? constants.AUTH_WINDOW_TYPE.IFRAME : constants.AUTH_WINDOW_TYPE.WINDOW

@@ -59,6 +59,7 @@
         <button :disabled="isLogin && !isAnonymousLogin" @click="register" type="button" class="btn btn-primary">注册账号</button>
       </div>
       <hr />
+      <button @click="thirdPartyLoginIframe" type="button" class="btn btn-primary">第三方登录(iframe)</button>
       <button @click="thirdPartyLogin" type="button" class="btn btn-primary">第三方登录</button>
       <hr />
       <button :disabled="!isLogin" @click="logout" type="button" class="btn btn-primary">退出登录</button>

@@ -145,7 +145,23 @@ function init() {
       },
       thirdPartyLogin() {
         BaaS.auth.loginWithThirdParty('weibo', '/auth.html', {
-          // iframe: true,
+          windowFeatures: `
+            left=100,
+            top=100,
+            width=800,
+            height=600,
+            menubar=yes,
+            resizable=yes,
+            scrollbars=yes,
+            status=yes
+          `,
+        })
+          .then(res => {console.log(res)})
+          .catch(err => console.log('err: ', err))
+      },
+      thirdPartyLoginIframe() {
+        BaaS.auth.loginWithThirdParty('weibo', '/auth.html', {
+          iframe: true,
           authModalStyle: {
             container: {
               background: 'gray',
@@ -157,16 +173,6 @@ function init() {
               // right: '50%',
             }
           },
-          windowFeatures: `
-            left=100,
-            top=100,
-            width=800,
-            height=600,
-            menubar=yes,
-            resizable=yes,
-            scrollbars=yes,
-            status=yes
-          `,
         })
           .then(res => {console.log(res)})
           .catch(err => console.log('err: ', err))
