@@ -126,6 +126,23 @@ describe('auth', () => {
     })
   })
 
+  describe('# silentLogin', () => {
+    it('should call silentLogin once', () => {
+      /**
+       * v2.0.8-a 中存在的 bug:
+       * 如果调用 silentLogin（直接调用或在 autoLogin 为 ture 的情况下，401 错误后自动调用），
+       * 并且同时调用 loginWithWechat，会发出两个 silent_login 的请求，可能会造成后端同时创建两个用户。
+       */
+      const job1 = BaaS.auth.silentLogin()
+      const job2 = BaaS.auth.loginWithWechat()
+      return Promise.all([job1, job2]).then(() => {
+        expect(requestStub).have.been.calledTwice
+        expect(requestStub.getCall(0).args[0].url).to.be.equal(config.API.WECHAT.SILENT_LOGIN)
+        expect(requestStub.getCall(1).args[0].url).to.not.be.equal(config.API.WECHAT.SILENT_LOGIN)
+      })
+    })
+  })
+
   describe('# linkWechat', () => {
     describe('# update_userprofile', () => {
       [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {

@@ -1,3 +1,6 @@
+## 2.0.8-b (2019-5-7)
+- [F] 修复 wechat 重复发起 silent_login 调用的问题
+
 ## 2.0.8-a (2019-4-18)
 - [A] ticket-report 接口增加频次限制（wechat、alipay）
 - [M] 内容库、内容分类 api 版本升级至 2.0
