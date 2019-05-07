@@ -45,7 +45,7 @@ describe('loginWithThirdParty', () => {
     }).then(res => {
       expect(res).to.be.deep.equal(currentUserData)
       expect(BaaS.request.getCall(0).args[0]).to.be.deep.equal({
-        url: `/hserve/v2.0/oauth/${provider}/login/`,
+        url: `/hserve/v2.0/idp/oauth/${provider}/login/`,
         method: 'POST',
         data: {
           token,

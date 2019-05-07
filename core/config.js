@@ -57,9 +57,9 @@ const API = {
   TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
 
   WEB: {
-    THIRD_PARTY_AUTH: '/hserve/v2.0/oauth/:provider/redirect/',
-    THIRD_PARTY_LOGIN: '/hserve/v2.0/oauth/:provider/login/',
-    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/oauth/:provider/associate/',
+    THIRD_PARTY_AUTH: '/hserve/v2.0/idp/oauth/:provider/redirect/',
+    THIRD_PARTY_LOGIN: '/hserve/v2.0/idp/oauth/:provider/login/',
+    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/oauth/:provider/associate/',
   },
 
   WECHAT: {

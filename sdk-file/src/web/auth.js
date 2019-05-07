@@ -34,10 +34,14 @@ const createThirdPartyAuthFn = BaaS => () => {
       }
     }).catch(err => {
       let error = ''
-      if (err && err.data) {
-        error = err.statusText || err.data
-      } else if (err) {
-        error = err.message
+      if (err) {
+        if (err.data && err.data.error_msg) {
+          error = err.data.error_msg
+        } else if (typeof err.data !== 'undefined') {
+          error = err.data || err.statusText
+        } else if (err.message) {   // error object
+          error = err.message
+        }
       }
       refererWindow.postMessage({
         status: constants.THIRD_PARTY_AUTH_STATUS.FAIL,

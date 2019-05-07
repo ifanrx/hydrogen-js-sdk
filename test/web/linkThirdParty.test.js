@@ -40,7 +40,7 @@ describe('linkThirdParty', () => {
       syncUserProfile: 'overwrite',
     }).then(() => {
       expect(BaaS.request.getCall(0).args[0]).to.be.deep.equal({
-        url: `/hserve/v2.0/oauth/${provider}/associate/`,
+        url: `/hserve/v2.0/idp/oauth/${provider}/associate/`,
         method: 'POST',
         data: {
           token,
