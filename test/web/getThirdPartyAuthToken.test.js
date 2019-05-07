@@ -8,6 +8,7 @@ const rewire = require('rewire')
 const jsdom = require('jsdom')
 const JSDOM = jsdom.JSDOM
 const constants = require('core-module/constants')
+const HError = require('core-module/HError')
 chai.use(sinonChai)
 let expect = chai.expect
 
@@ -64,17 +65,18 @@ describe('getThirdPartyAuthToken', () => {
     })
     const error = new Error('test error')
     dom.window.postMessage({status: 'fail', error}, '*')
-    getThirdPartyAuthToken().catch(err => {
-      expect(err).to.be.equal(error)
+    const job1 = getThirdPartyAuthToken().catch(err => {
+      expect(err).to.be.deep.equal(new HError(603, error))
       expect(addEventListenerSpy).to.have.been.calledOnce
       expect(removeEventListenerSpy).to.have.been.calledOnce
       expect(addEventListenerSpy.getCall(0).args).to.be.deep.equal(removeEventListenerSpy.getCall(0).args)
     })
-    expect(openSpy).to.have.been.calledOnce
-    return new Promise(resolve => {
+    const job2 = new Promise(resolve => {
       setTimeout(resolve, 1)
     }).then(() => {
       expect(closeSpy).to.have.been.calledOnce
     })
+    expect(openSpy).to.have.been.calledOnce
+    return Promise.all([job1, job2])
   })
 })

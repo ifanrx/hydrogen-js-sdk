@@ -35,9 +35,9 @@ describe('AuthIframe', () => {
   const {container, iframe, closeBtn} = rewire('../../../sdk-file/src/web/windowManager/getAuthModalElement')()
   const addEventListenerSpy = sinon.spy(closeBtn, 'addEventListener')
   const removeEventListenerSpy = sinon.spy(closeBtn, 'removeEventListener')
-  expect(container.style.display).to.be.equal('none')
 
   it('should show modal', () => {
+    expect(container.style.display).to.be.equal('none')
     authIframe.open()
     expect(iframe.src).to.be.equal(`${options.authPageUrl}?` + 
       `provider=${encodeURIComponent(options.provider)}&` +

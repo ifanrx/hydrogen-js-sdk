@@ -93,48 +93,6 @@ describe('auth', () => {
     })
   })
 
-  describe('# loginWithThirdParty', () => {
-    // it('should request "THIRD_PARTY_AUTH" if "token" param is not in url', () => {
-    //   global.window.location = {
-    //     search: '',
-    //   }
-    //   let provider = 'weibo'
-    //   let url = BaaS._config.API.WEB.THIRD_PARTY_AUTH.replace(':provider', provider)
-    //   return BaaS.auth.loginWithThirdParty(provider)
-    //     .catch(err => console.log(err))
-    //     .then(() => {
-    //       expect(requestStub).to.have.been.calledWith({
-    //         url,
-    //         method: 'GET',
-    //       })
-    //     })
-    // })
-    //
-    // it('should request "THIRD_PARTY_LOGIN" if "token" param is in url', () => {
-    //   const token = 'mock-token'
-    //   global.window.location = {
-    //     search: '?token=' + token,
-    //   }
-    //   let provider = 'weixin'
-    //   let url = BaaS._config.API.WEB.THIRD_PARTY_LOGIN.replace(':provider', provider)
-    //   return BaaS.auth.loginWithThirdParty(provider, {
-    //     createUser: false,
-    //   })
-    //     .catch(err => console.log(err))
-    //     .then(() => {
-    //       expect(requestStub).to.have.been.calledWith({
-    //         url,
-    //         method: 'POST',
-    //         data: {
-    //           token,
-    //           create_user: false,
-    //           update_userprofile: 'setnx',
-    //         },
-    //       })
-    //     })
-    // })
-  })
-
   describe("# register", () => {
     it('should set storage', () => {
       BaaS._baasRequest = BaaS.request
