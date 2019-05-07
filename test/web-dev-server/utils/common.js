@@ -21,10 +21,10 @@
   // hook request
   let r = window.BaaS.request
   window.BaaS.request = function () {
-    return r.apply(BaaS, arguments).then(res => {
+    return r.apply(BaaS, arguments).then(function (res) {
       notie.alert({type: 1, text: '成功'})
       return res
-    }).catch(res => {
+    }).catch(function (res) {
       notie.alert({type: 3, text: typeof res.data === 'object' ? JSON.stringify(res.data) : res.status})
       throw res
     })

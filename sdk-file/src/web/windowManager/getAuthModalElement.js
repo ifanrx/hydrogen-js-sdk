@@ -54,10 +54,9 @@ const createAuthModal = () => {
     background: url(${closeBtnIcon}) no-repeat center center/20px 20px;
     z-index: 100;
   `
-
-  container.append(iframe)
-  container.append(closeBtn)
-  document.body.append(container)
+  container.appendChild(iframe)
+  container.appendChild(closeBtn)
+  document.body.appendChild(container)
 }
 
 const setStyle = (element, style) => {
