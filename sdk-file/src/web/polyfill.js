@@ -1,6 +1,6 @@
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
-let getThirdPartyAuthToken = require('./getThirdPartyAuthToken')
+let thirdPartyAuthRequest = require('./thirdPartyAuthRequest')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -32,19 +32,7 @@ module.exports = function (BaaS) {
       }
     },
     linkThirdParty(provider, authPageUrl, options = {}) {
-      const {syncUserProfile, ...otherOptions} = options
-      return getThirdPartyAuthToken({...otherOptions, provider, authPageUrl})
-        .then(token => {
-          utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> token: ${token}`)
-          return BaaS.request({
-            url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_ASSOCIATE, {provider}),
-            method: 'POST',
-            data: {
-              token,
-              update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-            }
-          })
-        })
+      return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE})
     },
   })
 }

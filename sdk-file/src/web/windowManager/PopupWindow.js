@@ -1,12 +1,10 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
+const composeUrl = require('./composeUrl.js')
 
 class AuthWindow {
   constructor(options) {
-    this.authPageUrl = options.authPageUrl
-    this.provider = options.provider
-    this.onClose = options.onClose
-    this.windowFeatures = options.windowFeatures
+    this.options = options
     this.timer = null
   }
 
@@ -14,20 +12,17 @@ class AuthWindow {
     this.timer = setTimeout(() => {
       if (!this.window.closed) {
         this.watchWindowStatus()
-      } else if (typeof this.onClose === 'function') {
-        this.onClose()
+      } else if (typeof this.options.onClose === 'function') {
+        this.options.onClose()
         this.timer = null
       }
     }, 500)
   }
 
   open() {
-    const url = `${this.authPageUrl}?` +
-      `provider=${encodeURIComponent(this.provider)}&` +
-      `referer=${encodeURIComponent(window.location.href)}&` +
-      `iframe=false`
+    const url = composeUrl(this.options)
     utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> open window, url: "${url}"`)
-    this.window = window.open(url, 'third party authorization', this.windowFeatures)
+    this.window = window.open(url, 'third party authorization', this.options.windowFeatures)
     this.watchWindowStatus()
   }
 

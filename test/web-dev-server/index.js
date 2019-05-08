@@ -1,6 +1,11 @@
 function init() {
   const BaaS = window.BaaS
 
+  BaaS.auth.getRedirectResult()
+    .then(function (result) {console.log(result)})
+    // .then(function (result) {console.log(result);alert(JSON.stringify(result))})
+    .catch(function (err) {console.log(err)})
+
   new Vue({
     el: '#root',
     data: function () {
@@ -143,17 +148,37 @@ function init() {
           console.log(res)
         })
       },
+      linkThirdPartyRedirect: function () {
+        BaaS.auth.getCurrentUser().then(user => {
+          return user.linkThirdParty('oauth-wechat-mp', '/auth.html', {
+            debug: true,
+            mode: 'redirect',
+          })
+        })
+          .then(function (res) {console.log(res)})
+          .catch(function (err) {console.log('err: ', err)})
+      },
       thirdPartyLogin: function () {
         BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
           debug: true,
+          mode: 'popup-window',
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
+        })
+          .then(function (res) {console.log(res)})
+          .catch(function (err) {console.log('err: ', err)})
+      },
+      thirdPartyLoginRedirect: function () {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+          debug: true,
+          mode: 'redirect',
+          createUser: true,
         })
           .then(function (res) {console.log(res)})
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginIframe: function () {
         BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
-          iframe: true,
+          mode: 'popup-iframe',
           debug: true,
           authModalStyle: {
             container: {

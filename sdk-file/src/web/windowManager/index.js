@@ -1,16 +1,18 @@
 const constants = require('core-module/constants')
-const AuthWindow = require('./AuthWindow')
-const AuthIframe = require('./AuthIframe')
+const PopupWindow = require('./PopupWindow')
+const PopupIframe = require('./PopupIframe')
+const RedirectWindow = require('./RedirectWindow')
 
 const productMap = {
-  [constants.AUTH_WINDOW_TYPE.IFRAME]: AuthIframe,
-  [constants.AUTH_WINDOW_TYPE.WINDOW]: AuthWindow,
+  [constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME]: PopupIframe,
+  [constants.THIRD_PARTY_AUTH_MODE.POPUP_WINDOW]: PopupWindow,
+  [constants.THIRD_PARTY_AUTH_MODE.REDIRECT]: RedirectWindow,
 }
 
 module.exports = {
-  create: (type, options) => {
-    let Product = productMap[type]
-    if (!Product) Product = AuthWindow
+  create: (mode, options) => {
+    let Product = productMap[mode]
+    if (!Product) Product = PopupWindow
     return new Product(options)
   }
 }

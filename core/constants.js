@@ -81,13 +81,21 @@ module.exports = {
     }
   },
 
-  AUTH_WINDOW_TYPE: {
-    IFRAME: 'iframe',
-    WINDOW: 'window',
+  THIRD_PARTY_AUTH_MODE: {
+    POPUP_IFRAME: 'popup-iframe',
+    POPUP_WINDOW: 'popup-window',
+    REDIRECT: 'redirect',
   },
 
   THIRD_PARTY_AUTH_STATUS: {
-    ACCESS_ALLOWED: 'access_allowed',
+    SUCCESS: 'success',
     FAIL: 'fail',
-  }
+  },
+
+  THIRD_PARTY_AUTH_HANDLER: {
+    LOGIN: 'login',
+    ASSOCIATE: 'associate',
+  },
+
+  THIRD_PARTY_AUTH_RESULT: 'auth-result',
 }

@@ -58,8 +58,8 @@ const API = {
 
   WEB: {
     THIRD_PARTY_AUTH: '/hserve/v2.0/idp/oauth/:provider/redirect/',
-    THIRD_PARTY_LOGIN: '/hserve/v2.0/idp/oauth/:provider/login/',
-    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/oauth/:provider/associate/',
+    THIRD_PARTY_LOGIN: '/hserve/v2.0/idp/oauth/:provider/authenticate/',
+    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/oauth/:provider/user-associate/',
   },
 
   WECHAT: {
