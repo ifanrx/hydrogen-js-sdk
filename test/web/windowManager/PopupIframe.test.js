@@ -9,8 +9,9 @@ const jsdom = require('jsdom')
 const JSDOM = jsdom.JSDOM
 chai.use(sinonChai)
 let expect = chai.expect
+global.URL = require('url').URL
 
-describe('AuthIframe', () => {
+describe('PopupIframe', () => {
   const url = 'http://localhost:3000/index.html'
   const html = '<!DOCTYPE html><html><head></head><body><div>test</div></body></html>'
   const dom = new JSDOM(html, {
@@ -22,15 +23,19 @@ describe('AuthIframe', () => {
     authPageUrl: 'http://localhost:8000/',
     provider: 'test-wechat',
     windowFeatures: 'top=100,left=100',
+    handler: 'login',
     onClose,
   }
-  const AuthIframe = rewire('../../../sdk-file/src/web/windowManager/AuthIframe')
+  const PopupIframe = rewire('../../../sdk-file/src/web/windowManager/PopupIframe')
   const clearTimeoutSpy = sinon.spy()
-  AuthIframe.__set__({
+  const authPageUrl = 'http://test.html/?a=10&b=20'
+  const composeUrlStub = sinon.stub().returns(authPageUrl)
+  PopupIframe.__set__({
     window: dom.window,
     document: dom.window.document,
+    composeUrl: composeUrlStub,
   })
-  const authIframe = new AuthIframe(options)
+  const popupIframe = new PopupIframe(options)
   const openStub = sinon.stub(dom.window, 'open').returns(newDom.window)
   const {container, iframe, closeBtn} = rewire('../../../sdk-file/src/web/windowManager/getAuthModalElement')()
   const addEventListenerSpy = sinon.spy(closeBtn, 'addEventListener')
@@ -38,18 +43,14 @@ describe('AuthIframe', () => {
 
   it('should show modal', () => {
     expect(container.style.display).to.be.equal('none')
-    authIframe.open()
-    expect(iframe.src).to.be.equal(`${options.authPageUrl}?` + 
-      `provider=${encodeURIComponent(options.provider)}&` +
-      `referer=${encodeURIComponent(dom.window.location.href)}&` +
-      `iframe=true`
-    )
+    popupIframe.open()
+    expect(iframe.src).to.be.equal(authPageUrl)
     expect(container.style.display).to.be.equal('block')
     expect(addEventListenerSpy).to.have.been.calledOnce
   })
 
   it('should hide modal', () => {
-    authIframe.close()
+    popupIframe.close()
     expect(iframe.src).to.be.equal('')
     expect(container.style.display).to.be.equal('none')
     expect(removeEventListenerSpy).to.have.been.calledOnce

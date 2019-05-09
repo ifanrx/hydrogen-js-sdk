@@ -1,12 +1,13 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 const getAuthModalElement = require('./getAuthModalElement')
-const composeUrl = require('./composeUrl.js')
+let composeUrl = require('./composeUrl.js')
 
-class AuthIframe {
+class PopupIframe {
   constructor(options) {
     this.options = options
     this.authModal = null
+    this.options.mode = constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME
     this.handleCloseBtnClick = () => {
       if (typeof this.options.onClose === 'function') {
         this.options.onClose()
@@ -32,4 +33,4 @@ class AuthIframe {
   }
 }
 
-module.exports = AuthIframe
+module.exports = PopupIframe

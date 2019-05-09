@@ -8,6 +8,7 @@ mocha() {
 pattern_list=(
   "index.js"  # 类似于集成测试，旧版本的测试写法
   "**/*.test.js"  # 新版版的测试写法，能更加方便地进行 mock，以 test.js 作为后缀
+  "**/*.isolation.js"  # 防止全局环境互相干扰，单独跑。以 isolation.js 作为后缀
 )
 
 for pattern in ${pattern_list[@]}; do

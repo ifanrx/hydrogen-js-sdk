@@ -4,48 +4,39 @@ const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const rewire = require('rewire')
-const jsdom = require('jsdom')
-const JSDOM = jsdom.JSDOM
 chai.use(sinonChai)
 let expect = chai.expect
 require('./web-mock')
 
 describe('linkThirdParty', () => {
   var auth = rewire('../../sdk-file/src/web/auth')
-  let token = 'mock-token'
   const BaaS = {
-    request: sinon.stub().resolves({
-      status: 201,
-      data: {}
-    }),
-    _polyfill: require('core-module/polyfill'),
-    _config: require('core-module/config'),
-    auth: {
-      getCurrentUser: sinon.stub().resolves('user-data')
-    },
-    storage: {
-      set: sinon.spy(),
-    }
+    _polyfill: {},
   }
-  const polyfill = rewire('../../sdk-file/src/web/polyfill')
-  polyfill(BaaS)
+  let data = {
+    status: 'success',
+    handler: 'associate'
+  }
+  const thirdPartyAuthRequestStub = sinon.stub().resolves(data)
+  let polyfill = rewire('../../sdk-file/src/web/polyfill')
   polyfill.__set__({
-    getThirdPartyAuthToken: sinon.stub().resolves(token),
+    thirdPartyAuthRequest: thirdPartyAuthRequestStub,
   })
+  polyfill(BaaS)
   const linkThirdParty = BaaS._polyfill.linkThirdParty
 
-  it('should call "associate" api', () => {
-    const provider = 'test-wechat'
+  it('should call "thirdPartyAuthRequest"', () => {
+    const provider = 'test-weibo'
     return linkThirdParty(provider, 'http://localhost:3000/auth.html', {
       syncUserProfile: 'overwrite',
-    }).then(() => {
-      expect(BaaS.request.getCall(0).args[0]).to.be.deep.equal({
-        url: `/hserve/v2.0/idp/oauth/${provider}/associate/`,
-        method: 'POST',
-        data: {
-          token,
-          update_userprofile: 'overwrite',
-        }})
+    }).then(res => {
+      expect(thirdPartyAuthRequestStub).to.have.been.calledWith({
+        authPageUrl: 'http://localhost:3000/auth.html',
+        handler: 'associate',
+        provider,
+        syncUserProfile: 'overwrite',
+      })
+      expect(res).to.be.deep.equal(data)
     })
   })
 })

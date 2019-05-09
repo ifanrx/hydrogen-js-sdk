@@ -19,20 +19,17 @@ const createGetRedirectResultFn = BaaS => () => {
     authResult.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS
     && authResult.handler === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
   ) {
-    history.replaceState && history.pushState(null, '', url.toString())
+    history.replaceState && history.replaceState(null, '', url.toString())
     return BaaS.auth.getCurrentUser().then(user => {
-      return {
-        ...authResult,
-        user,
-      }
+      return {...authResult, user}
     })
   } else {
-    history.replaceState && history.pushState(null, '', url.toString())
+    history.replaceState && history.replaceState(null, '', url.toString())
     return Promise.resolve(authResult)
   }
 }
 
-const loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_userprofile} = {}) => {
+let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_userprofile} = {}) => {
   return BaaS.request({
     url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_LOGIN, {provider}),
     method: 'POST',
@@ -46,7 +43,7 @@ const loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_
   })
 }
 
-const linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {}) => {
+let linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {}) => {
   return BaaS.request({
     url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_ASSOCIATE, {provider}),
     method: 'POST',
@@ -58,7 +55,7 @@ const linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {})
 }
 
 // 回传信息至调用页面
-const sendMessage = (mode, referer, authResult) => {
+let sendMessage = (mode, referer, authResult) => {
   if (mode === constants.THIRD_PARTY_AUTH_MODE.REDIRECT) {
     const refererUrl = new URL(referer)
     refererUrl.searchParams.set(constants.THIRD_PARTY_AUTH_RESULT, JSON.stringify(authResult))
@@ -132,7 +129,7 @@ const createThirdPartyAuthFn = BaaS => () => {
       url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_AUTH, {provider}),
       method: 'GET',
     }).then(res => {
-      if (res.status === 200 && res.data.status === 'ok') {
+      if (res.status === constants.STATUS_CODE.SUCCESS && res.data.status === 'ok') {
         window.location.href = res.data.redirect_url
       } else {
         throw res

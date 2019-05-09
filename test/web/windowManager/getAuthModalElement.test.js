@@ -11,7 +11,7 @@ const normalizeHTMLString = (strings) => {
   return strings[0].replace(/(<.*?>)|\s+/g, (m, $1) => $1 ? $1 : '')
 }
 
-describe('should create new authModal', () => {
+describe('getAuthModalElement', () => {
   it('should init authModal', () => {
     const initHtml = normalizeHTMLString`
       <!DOCTYPE html>

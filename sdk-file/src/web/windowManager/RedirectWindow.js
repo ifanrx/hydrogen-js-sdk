@@ -1,10 +1,11 @@
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
-const composeUrl = require('./composeUrl.js')
+let composeUrl = require('./composeUrl.js')
 
 class RedirectWindow {
   constructor(options) {
     this.options = options
+    this.options.mode = constants.THIRD_PARTY_AUTH_MODE.REDIRECT
   }
 
   open() {

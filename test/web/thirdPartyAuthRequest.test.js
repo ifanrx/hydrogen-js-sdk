@@ -12,7 +12,7 @@ const HError = require('core-module/HError')
 chai.use(sinonChai)
 let expect = chai.expect
 
-describe('getThirdPartyAuthToken', () => {
+describe('thirdPartyAuthRequest', () => {
   const html = '<!DOCTYPE html><html><head></head><body></body></html>'
   const dom = new JSDOM(html)
   const token = 'mock-token'
@@ -38,15 +38,20 @@ describe('getThirdPartyAuthToken', () => {
     removeEventListenerSpy.restore()
   })
 
-  it('should return token if recieve "access_allowed"', () => {
-    const getThirdPartyAuthToken = rewire('../../sdk-file/src/web/getThirdPartyAuthToken')
-    getThirdPartyAuthToken.__set__({
+  it('should return data if recieve "success"', () => {
+    const thirdPartyAuthRequest = rewire('../../sdk-file/src/web/thirdPartyAuthRequest')
+    thirdPartyAuthRequest.__set__({
       window: dom.window,
       windowManager,
     })
-    dom.window.postMessage({status: 'access_allowed', token}, '*')
-    getThirdPartyAuthToken().then(token => {
-      expect(token).to.be.equal(token)
+    const data = {
+      status: 'success',
+      foo: 'bar',
+      bar: 'baz',
+    }
+    dom.window.postMessage(data, '*')
+    thirdPartyAuthRequest().then(result => {
+      expect(result).to.be.deep.equal(data)
       expect(addEventListenerSpy).to.have.been.calledOnce
       expect(removeEventListenerSpy).to.have.been.calledOnce
       expect(addEventListenerSpy.getCall(0).args).to.be.deep.equal(removeEventListenerSpy.getCall(0).args)
@@ -60,14 +65,14 @@ describe('getThirdPartyAuthToken', () => {
   })
 
   it('should throw error if recieve "fail"', () => {
-    const getThirdPartyAuthToken = rewire('../../sdk-file/src/web/getThirdPartyAuthToken')
-    getThirdPartyAuthToken.__set__({
+    const thirdPartyAuthRequest = rewire('../../sdk-file/src/web/thirdPartyAuthRequest')
+    thirdPartyAuthRequest.__set__({
       window: dom.window,
       windowManager,
     })
     const error = new Error('test error')
     dom.window.postMessage({status: 'fail', error}, '*')
-    const job1 = getThirdPartyAuthToken().catch(err => {
+    const job1 = thirdPartyAuthRequest().catch(err => {
       expect(err).to.be.deep.equal(new HError(613, error))
       expect(addEventListenerSpy).to.have.been.calledOnce
       expect(removeEventListenerSpy).to.have.been.calledOnce
