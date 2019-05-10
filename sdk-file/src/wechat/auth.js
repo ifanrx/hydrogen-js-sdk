@@ -79,7 +79,7 @@ module.exports = BaaS => {
     }
 
     return silentLogin({createUser}).then(() => {
-      return getUserInfo().then(detail => {
+      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
         let payload = {
           rawData: detail.rawData,
           signature: detail.signature,
@@ -115,9 +115,10 @@ module.exports = BaaS => {
     })
   }
 
-  const getUserInfo = () => {
+  const getUserInfo = ({lang} = {}) => {
     return new Promise((resolve, reject) => {
       BaaS._polyfill.wxGetUserInfo({
+        lang,
         success: resolve, fail: reject
       })
     })
@@ -133,7 +134,9 @@ module.exports = BaaS => {
 
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo ? getUserInfo() : Promise.resolve(null)
+      let getUserInfoPromise = refreshUserInfo
+        ? getUserInfo({lang: res.detail.userInfo.language})
+        : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {

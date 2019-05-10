@@ -17,7 +17,7 @@ describe('auth', () => {
   let openId = 'mock.open.id'
   let token = 'mock.token'
   let expiresIn = 2592000
-  let weGetUserInfoStub
+  let wxGetUserInfoStub
 
   beforeEach(() => {
     BaaS.clearSession()
@@ -59,7 +59,7 @@ describe('auth', () => {
       }
       return request(options)
     })
-    weGetUserInfoStub = sinon.stub(BaaS._polyfill, 'wxGetUserInfo').callsFake(({success, fail}) => {
+    wxGetUserInfoStub = sinon.stub(BaaS._polyfill, 'wxGetUserInfo').callsFake(({success, fail}) => {
       success({
         rawData: '',
         signature: '',
@@ -72,7 +72,7 @@ describe('auth', () => {
 
   afterEach(() => {
     requestStub.restore()
-    weGetUserInfoStub.restore()
+    wxGetUserInfoStub.restore()
   })
 
   it('#handleUserInfo param value is undefined', () => {
@@ -191,5 +191,44 @@ describe('auth', () => {
       .then(() => {
         expect(requestStub.getCall(0).args[0].url).to.equal(config.API.WECHAT.SILENT_LOGIN)
       })
+  })
+
+  describe('# getUserInfo', () => {
+    it('should recieve "lang" param (loginWithWechat)', () => {
+      const language = 'fake-language-1'
+      return BaaS.auth.loginWithWechat({detail: {userInfo: {language}}})
+        .then(res => {
+          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
+            lang: language,
+          })
+        })
+    })
+    it('should recieve "lang" param (BaaS.auth.handleUserInfo)', () => {
+      const language = 'fake-language-2'
+      return BaaS.auth.handleUserInfo({detail: {userInfo: {language}}})
+        .then(res => {
+          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
+            lang: language,
+          })
+        })
+    })
+    it('should recieve "lang" param (BaaS.handleUserInfo)', () => {
+      const language = 'fake-language-3'
+      return BaaS.handleUserInfo({detail: {userInfo: {language}}})
+        .then(res => {
+          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
+            lang: language,
+          })
+        })
+    })
+    it('should recieve "lang" param (linkWechat)', () => {
+      const language = 'fake-language-4'
+      return BaaS._polyfill.linkWechat({detail: {userInfo: {language}}})
+        .then(res => {
+          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
+            lang: language,
+          })
+        })
+    })
   })
 })
