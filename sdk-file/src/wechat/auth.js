@@ -45,12 +45,18 @@ module.exports = BaaS => {
     }, reject)
   }
 
-  const silentLogin = function (...args) {
+  /**
+   * v2.0.8-a 中存在的 bug:
+   * 如果调用 silentLogin（直接调用或在 autoLogin 为 ture 的情况下，401 错误后自动调用），
+   * 并且同时调用 loginWithWechat，会发出两个 silent_login 的请求，可能会造成后端同时创建两个用户。
+   * 因此，直接在 silentLogin 处做并发限制（loginWithWechat 会调用这个 silentLogin）。
+   */
+  const silentLogin = utils.rateLimit(function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
       return Promise.resolve()
     }
     return auth(...args)
-  }
+  })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   const handleUserInfo = res => {
@@ -73,7 +79,7 @@ module.exports = BaaS => {
     }
 
     return getLoginCode().then(code => {
-      return getUserInfo().then(detail => {
+      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
         let payload = {
           code,
           create_user: createUser,
@@ -105,9 +111,10 @@ module.exports = BaaS => {
     }).then(utils.validateStatusCode)
   }
 
-  const getUserInfo = () => {
+  const getUserInfo = ({lang} = {}) => {
     return new Promise((resolve, reject) => {
       BaaS._polyfill.wxGetUserInfo({
+        lang,
         success: resolve, fail: reject
       })
     })
@@ -123,7 +130,9 @@ module.exports = BaaS => {
 
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo ? getUserInfo() : Promise.resolve(null)
+      let getUserInfoPromise = refreshUserInfo
+        ? getUserInfo({lang: res.detail.userInfo.language})
+        : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
@@ -161,7 +170,7 @@ module.exports = BaaS => {
   }
 
   Object.assign(BaaS.auth, {
-    silentLogin: utils.rateLimit(silentLogin),
+    silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
     linkWechat: utils.rateLimit(linkWechat),

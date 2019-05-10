@@ -1,3 +1,8 @@
+## 2.0.9 (2019-5-10)
+- [F] 修复 wechat 重复发起 silent_login 调用的问题
+- [F] 修复 wechat 强制登录时，获取到的用户信息语言错误的问题
+- [A] wechat 强制登录接口支持自动获取 code，实现一步登录
+
 ## 2.0.8-a (2019-4-18)
 - [A] ticket-report 接口增加频次限制（wechat、alipay）
 - [M] 内容库、内容分类 api 版本升级至 2.0
