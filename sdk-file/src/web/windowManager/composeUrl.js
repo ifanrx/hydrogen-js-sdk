@@ -3,6 +3,9 @@ module.exports = function (options) {
   url.searchParams.append('provider', options.provider)
   url.searchParams.append('referer', window.location.href)
   url.searchParams.append('mode', options.mode)
+  if (options.debug) {
+    url.searchParams.append('debug', options.debug)
+  }
   if (options.createUser) {
     url.searchParams.append('create_user', options.createUser)
   }

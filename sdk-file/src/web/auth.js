@@ -29,6 +29,7 @@ const createGetRedirectResultFn = BaaS => () => {
   }
 }
 
+// “第三方登录”请求
 let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_userprofile} = {}) => {
   return BaaS.request({
     url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_LOGIN, {provider}),
@@ -43,6 +44,7 @@ let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_us
   })
 }
 
+// “关联第三方账号”请求
 let linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {}) => {
   return BaaS.request({
     url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_ASSOCIATE, {provider}),
@@ -68,6 +70,7 @@ let sendMessage = (mode, referer, authResult) => {
   }
 }
 
+// 第三方授权成功后的操作。'login' 为登录，'associate' 为关联账号
 const getHandler = handler => {
   const handlerList = [
     constants.THIRD_PARTY_AUTH_HANDLER.LOGIN,
@@ -100,6 +103,7 @@ const createThirdPartyAuthFn = BaaS => () => {
   const provider = params.get('provider')
   const referer = params.get('referer')
   const mode = params.get('mode')
+  const debug = params.get('debug')
   const handler = getHandler(params.get('handler'))
   const create_user = params.get('create_user')
   const update_userprofile = params.get('update_userprofile')
@@ -152,7 +156,9 @@ const createThirdPartyAuthFn = BaaS => () => {
         error,
         handler,
       }
-      sendMessage(mode, referer, authResult)
+      if (mode !== constants.THIRD_PARTY_AUTH_MODE.REDIRECT || !debug) {
+        sendMessage(mode, referer, authResult)
+      }
       utils.log(constants.LOG_LEVEL.ERROR, err)
     })
   }
