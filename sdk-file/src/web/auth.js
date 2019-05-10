@@ -81,6 +81,7 @@ const getHandler = handler => {
 
 const getErrorMsg = err => {
   let error = ''
+  if (!err) return ''
   if (err.data && (err.data.error_msg || err.data.error_message)) {
     error = err.data.error_msg || err.data.error_message
   } else if (typeof err.data !== 'undefined') {

@@ -5,6 +5,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const rewire = require('rewire')
 const HError = require('core-module/HError')
+const utils = require('../utils')
 chai.use(sinonChai)
 let expect = chai.expect
 global.URL = require('url').URL
@@ -52,6 +53,7 @@ describe('auth', () => {
     const getErrorMsg = authModule.__get__('getErrorMsg')
     it('should return correct message', () => {
       let err
+      expect(getErrorMsg(err)).to.be.equal('')
       err = {data: 'test-error'}
       expect(getErrorMsg(err)).to.be.equal(err.data)
       err = {data: '', statusText: 'test-error'}
@@ -161,17 +163,20 @@ describe('auth', () => {
       parent: parentWindow,
       opener: openerWindow,
     }
-    authModule.__set__('window', windowMock)
     it('should send message to parent', () => {
-      let result = {foo: 'bar'}
-      sendMessage('popup-window', 'test-referer', result)
-      expect(openerWindow.postMessage).to.have.been.calledOnce
-      expect(openerWindow.postMessage).to.have.been.calledWith(result, 'test-referer')
-      sendMessage('popup-iframe', 'test-referer-1', result)
-      expect(parentWindow.postMessage).to.have.been.calledOnce
-      expect(parentWindow.postMessage).to.have.been.calledWith(result, 'test-referer-1')
-      sendMessage('redirect', 'http://test.com/index.html', result)
-      expect(windowMock.location.href = 'http://test.com/index.html?auth-result=' + encodeURIComponent(JSON.stringify(result)))
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+      })(() => {
+        let result = {foo: 'bar'}
+        sendMessage('popup-window', 'test-referer', result)
+        expect(openerWindow.postMessage).to.have.been.calledOnce
+        expect(openerWindow.postMessage).to.have.been.calledWith(result, 'test-referer')
+        sendMessage('popup-iframe', 'test-referer-1', result)
+        expect(parentWindow.postMessage).to.have.been.calledOnce
+        expect(parentWindow.postMessage).to.have.been.calledWith(result, 'test-referer-1')
+        sendMessage('redirect', 'http://test.com/index.html', result)
+        expect(windowMock.location.href = 'http://test.com/index.html?auth-result=' + encodeURIComponent(JSON.stringify(result)))
+      })
     })
   })
 
@@ -184,12 +189,15 @@ describe('auth', () => {
           href: 'http://test.com/index.html?bar=foo',
         },
       }
-      authModule.__set__('window', windowMock)
-      const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
-      const BaaSMock = createBaaSMockObj()
-      const getRedirectResult = createGetRedirectResultFn(BaaSMock)
-      return getRedirectResult().catch(err => {
-        expect(err).to.be.deep.equal(new HError(613, 'auth result not found'))
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+      })(() => {
+        const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
+        const BaaSMock = createBaaSMockObj()
+        const getRedirectResult = createGetRedirectResultFn(BaaSMock)
+        return getRedirectResult().catch(err => {
+          expect(err).to.be.deep.equal(new HError(613, 'auth result not found'))
+        })
       })
     })
 
@@ -211,20 +219,23 @@ describe('auth', () => {
       const historyMock = {
         replaceState: sinon.spy()
       }
-      authModule.__set__('window', windowMock)
-      authModule.__set__('history', historyMock)
-      const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
-      const BaaSMock = createBaaSMockObj({
-        getCurrentUserStub: sinon.stub().resolves(user),
-      })
-      const getRedirectResult = createGetRedirectResultFn(BaaSMock)
-      return getRedirectResult().then(res => {
-        expect(res).to.be.deep.equal({
-          ...result,
-          user,
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+        history: historyMock,
+      })(() => {
+        const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
+        const BaaSMock = createBaaSMockObj({
+          getCurrentUserStub: sinon.stub().resolves(user),
         })
-        expect(historyMock.replaceState).have.been.calledOnce
-        expect(historyMock.replaceState).have.been.calledWith(null, '', baseUrl)
+        const getRedirectResult = createGetRedirectResultFn(BaaSMock)
+        return getRedirectResult().then(res => {
+          expect(res).to.be.deep.equal({
+            ...result,
+            user,
+          })
+          expect(historyMock.replaceState).have.been.calledOnce
+          expect(historyMock.replaceState).have.been.calledWith(null, '', baseUrl)
+        })
       })
     })
 
@@ -242,15 +253,18 @@ describe('auth', () => {
       const historyMock = {
         replaceState: sinon.spy()
       }
-      authModule.__set__('window', windowMock)
-      authModule.__set__('history', historyMock)
-      const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
-      const BaaSMock = createBaaSMockObj()
-      const getRedirectResult = createGetRedirectResultFn(BaaSMock)
-      return getRedirectResult().then(res => {
-        expect(res).to.be.deep.equal(result)
-        expect(historyMock.replaceState).have.been.calledOnce
-        expect(historyMock.replaceState).have.been.calledWith(null, '', baseUrl)
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+        history: historyMock,
+      })(() => {
+        const createGetRedirectResultFn = authModule.__get__('createGetRedirectResultFn')
+        const BaaSMock = createBaaSMockObj()
+        const getRedirectResult = createGetRedirectResultFn(BaaSMock)
+        return getRedirectResult().then(res => {
+          expect(res).to.be.deep.equal(result)
+          expect(historyMock.replaceState).have.been.calledOnce
+          expect(historyMock.replaceState).have.been.calledWith(null, '', baseUrl)
+        })
       })
     })
   })
@@ -273,15 +287,18 @@ describe('auth', () => {
           },
         })
       })
-      authModule.__set__('window', windowMock)
-      const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
-      const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
-      return thirdPartyAuth().then(() => {
-        expect(windowMock.location.href === 'auth-page-url')
-        expect(BaaSMock.request).have.been.calledOnce
-        expect(BaaSMock.request).have.been.calledWith({
-          url: '/foo/provider-mock/bar/baz/redirect/',
-          method: 'GET',
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+      })(() => {
+        const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
+        const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
+        return thirdPartyAuth().then(() => {
+          expect(windowMock.location.href === 'auth-page-url')
+          expect(BaaSMock.request).have.been.calledOnce
+          expect(BaaSMock.request).have.been.calledWith({
+            url: '/foo/provider-mock/bar/baz/redirect/',
+            method: 'GET',
+          })
         })
       })
     })
@@ -303,22 +320,25 @@ describe('auth', () => {
       })
       const loginWithThirdPartyRequestStub = sinon.stub().resolves()
       const sendMessageSpy = sinon.spy()
-      authModule.__set__('window', windowMock)
-      authModule.__set__('loginWithThirdPartyRequest', loginWithThirdPartyRequestStub)
-      authModule.__set__('sendMessage', sendMessageSpy)
-      const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
-      const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
-      return thirdPartyAuth().then(() => {
-        expect(loginWithThirdPartyRequestStub).have.been.calledWith(BaaSMock, {
-          provider: 'provider-mock',
-          token: 'token-mock',
-          create_user: '',
-          update_userprofile: 'false',
-        })
-        expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
-          status: 'success',
-          handler: 'login',
-        })
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+        loginWithThirdPartyRequest: loginWithThirdPartyRequestStub,
+        sendMessage: sendMessageSpy,
+      })(() => {
+          const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
+          const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
+          return thirdPartyAuth().then(() => {
+            expect(loginWithThirdPartyRequestStub).have.been.calledWith(BaaSMock, {
+              provider: 'provider-mock',
+              token: 'token-mock',
+              create_user: '',
+              update_userprofile: 'false',
+            })
+            expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
+              status: 'success',
+              handler: 'login',
+            })
+          })
       })
     })
 
@@ -339,21 +359,24 @@ describe('auth', () => {
       })
       const linkThirdPartyRequestStub = sinon.stub().resolves()
       const sendMessageSpy = sinon.spy()
-      authModule.__set__('window', windowMock)
-      authModule.__set__('linkThirdPartyRequest', linkThirdPartyRequestStub)
-      authModule.__set__('sendMessage', sendMessageSpy)
-      const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
-      const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
-      return thirdPartyAuth().then(() => {
-        expect(linkThirdPartyRequestStub).have.been.calledWith(BaaSMock, {
-          provider: 'provider-mock',
-          token: 'token-mock',
-          create_user: '',
-          update_userprofile: 'false',
-        })
-        expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
-          status: 'success',
-          handler: 'associate',
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+        linkThirdPartyRequest: linkThirdPartyRequestStub,
+        sendMessage: sendMessageSpy,
+      })(() => {
+        const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
+        const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
+        return thirdPartyAuth().then(() => {
+          expect(linkThirdPartyRequestStub).have.been.calledWith(BaaSMock, {
+            provider: 'provider-mock',
+            token: 'token-mock',
+            create_user: '',
+            update_userprofile: 'false',
+          })
+          expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
+            status: 'success',
+            handler: 'associate',
+          })
         })
       })
     })
