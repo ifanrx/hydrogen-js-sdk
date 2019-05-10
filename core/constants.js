@@ -98,4 +98,10 @@ module.exports = {
   },
 
   THIRD_PARTY_AUTH_RESULT: 'auth-result',
+
+  THIRD_PARTY_AUTH_PROVIDER: {
+    WECHAT_MP: 'oauth-wechat-mp',
+    WECHAT_WEB: 'oauth-wechat-web',
+    WEIBO: 'oauth-weibo',
+  }
 }

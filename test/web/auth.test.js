@@ -275,7 +275,7 @@ describe('auth', () => {
     it('should redirect to auth page', () => {
       const windowMock = {
         location: {
-          search: '?provider=provider-mock',
+          href: 'http://test.html/?provider=provider-mock',
         },
       }
       const BaaSMock = createBaaSMockObj({
@@ -283,7 +283,7 @@ describe('auth', () => {
           status: 200,
           data: {
             status: 'ok',
-            redirect_url: 'auth-page-url',
+            redirect_url: 'http://test.com/?a=10&b=20',
           },
         })
       })
@@ -293,7 +293,7 @@ describe('auth', () => {
         const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
         const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
         return thirdPartyAuth().then(() => {
-          expect(windowMock.location.href === 'auth-page-url')
+          expect(windowMock.location.href).to.be.equal('http://test.com/?a=10&b=20')
           expect(BaaSMock.request).have.been.calledOnce
           expect(BaaSMock.request).have.been.calledWith({
             url: '/foo/provider-mock/bar/baz/redirect/',
@@ -303,10 +303,62 @@ describe('auth', () => {
       })
     })
 
+    it('should redirect to auth page with "selt_redirect" param', () => {
+      const windowMock = {
+        location: {
+          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-iframe',
+        },
+      }
+      const BaaSMock = createBaaSMockObj({
+        requestStub: sinon.stub().resolves({
+          status: 200,
+          data: {
+            status: 'ok',
+            redirect_url: 'http://test.com/?a=10&b=20',
+          },
+        })
+      })
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+      })(() => {
+        const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
+        const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
+        return thirdPartyAuth().then(() => {
+          expect(windowMock.location.href).to.be.equal('http://test.com/?a=10&b=20&self_redirect=true')
+        })
+      })
+    })
+
+    it('should redirect to auth page without "selt_redirect" param', () => {
+      const windowMock = {
+        location: {
+          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-window',
+        },
+      }
+      const BaaSMock = createBaaSMockObj({
+        requestStub: sinon.stub().resolves({
+          status: 200,
+          data: {
+            status: 'ok',
+            redirect_url: 'http://test.com/?a=10&b=20',
+          },
+        })
+      })
+      return utils.assertWithRewireMocks(authModule, {
+        window: windowMock,
+      })(() => {
+        const createThirdPartyAuthFn = authModule.__get__('createThirdPartyAuthFn')
+        const thirdPartyAuth = createThirdPartyAuthFn(BaaSMock)
+        return thirdPartyAuth().then(() => {
+          expect(windowMock.location.href).to.be.equal('http://test.com/?a=10&b=20')
+        })
+      })
+    })
+
     it('should request login and send message', () => {
       const windowMock = {
         location: {
-          search: '?provider=provider-mock&token=token-mock&referer=referer-mock&mode=popup-window&handler=login&create_user&update_userprofile=false',
+          href: 'http://test.html/?provider=provider-mock&token=token-mock&referer=referer-mock&mode=popup-window&handler=login&create_user&update_userprofile=false',
         },
       }
       const BaaSMock = createBaaSMockObj({
@@ -345,7 +397,7 @@ describe('auth', () => {
     it('should request associate and send message', () => {
       const windowMock = {
         location: {
-          search: '?provider=provider-mock&token=token-mock&referer=referer-mock&mode=popup-window&handler=associate&create_user&update_userprofile=false',
+          href: 'http://test.html/?provider=provider-mock&token=token-mock&referer=referer-mock&mode=popup-window&handler=associate&create_user&update_userprofile=false',
         },
       }
       const BaaSMock = createBaaSMockObj({

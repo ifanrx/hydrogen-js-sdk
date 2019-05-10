@@ -159,12 +159,13 @@ function init() {
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLogin: function () {
-        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-web', '/auth.html', {
           debug: true,
           mode: 'popup-window',
+          // createUser: true,
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
         })
-          .then(function (res) {console.log(res)})
+          .then(function (res) {console.log('third party login success (window):', res)})
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginRedirect: function () {
@@ -177,9 +178,10 @@ function init() {
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginIframe: function () {
-        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-web', '/auth.html', {
           mode: 'popup-iframe',
           debug: true,
+          createUser: true,
           authModalStyle: {
             container: {
               background: 'gray',
@@ -192,7 +194,7 @@ function init() {
             }
           },
         })
-          .then(function (res) {console.log(res)})
+          .then(function (res) {console.log('third party login success (iframe):', res)})
           .catch(function (err) {console.log('err: ', err)})
       },
     },

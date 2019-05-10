@@ -82,8 +82,8 @@ const getHandler = handler => {
 const getErrorMsg = err => {
   let error = ''
   if (!err) return ''
-  if (err.data && (err.data.error_msg || err.data.error_message)) {
-    error = err.data.error_msg || err.data.error_message
+  if (err.data && typeof err.data === 'object') {
+    error = err.data.error_msg || err.data.message || err.data.error_message
   } else if (typeof err.data !== 'undefined') {
     error = err.data || err.statusText
   } else if (err.message) {   // error object
@@ -94,7 +94,8 @@ const getErrorMsg = err => {
 
 // 跳转到第三方授权页面；获取 token 后调用 login 或 associate
 const createThirdPartyAuthFn = BaaS => () => {
-  const params = new URLSearchParams(window.location.search)
+  const url = new URL(window.location.href)
+  const params = url.searchParams
   const accessToken = params.get('token')
   const provider = params.get('provider')
   const referer = params.get('referer')
@@ -131,7 +132,16 @@ const createThirdPartyAuthFn = BaaS => () => {
       method: 'GET',
     }).then(res => {
       if (res.status === constants.STATUS_CODE.SUCCESS && res.data.status === 'ok') {
-        window.location.href = res.data.redirect_url
+        const url = new URL(res.data.redirect_url)
+        if (provider === constants.THIRD_PARTY_AUTH_PROVIDER.WECHAT_WEB
+          && mode === constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME) {
+          /**
+           * 微信在 web 端 iframe 中授权时，在页面 URL 中添加 self_redirect 参数，使重定向发生在 iframe 中，
+           * 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
+           */
+          url.searchParams.set('self_redirect', true)
+        }
+        window.location.href = url.toString()
       } else {
         throw res
       }
