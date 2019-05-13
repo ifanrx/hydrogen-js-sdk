@@ -9,6 +9,7 @@ let thirdPartyAuthRequest = (options = {}) => {
     let authWindow
     let handleRecieveMessage
     handleRecieveMessage = event => {
+      if (event.origin !== window.location.origin) return  // 只处理同域页面传来的 message
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> success, result: ${JSON.stringify(event.data)}`)
         window.removeEventListener('message', handleRecieveMessage, false)
