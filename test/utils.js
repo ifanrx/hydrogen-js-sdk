@@ -14,6 +14,11 @@ const assertWithRewireMocks = (module, mocks) => func => {
   })
 }
 
+const normalizeHTMLString = (strings) => {
+  return strings[0].replace(/(<.*?>)|\s+/g, (m, $1) => $1 ? $1 : '')
+}
+
 module.exports = {
   assertWithRewireMocks,
+  normalizeHTMLString,
 }
