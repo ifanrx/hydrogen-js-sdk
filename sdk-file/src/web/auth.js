@@ -8,11 +8,11 @@ const createGetRedirectResultFn = BaaS => () => {
   const url = new URL(window.location.href)
   let authResult
   try {
-    authResult = JSON.parse(url.searchParams.get(constants.THIRD_PARTY_AUTH_RESULT))
+    authResult = JSON.parse(url.searchParams.get(constants.THIRD_PARTY_AUTH_URL_PARAM.AUTH_RESULT))
   } catch (e) {
     // pass
   }
-  url.searchParams.delete(constants.THIRD_PARTY_AUTH_RESULT)
+  url.searchParams.delete(constants.THIRD_PARTY_AUTH_URL_PARAM.AUTH_RESULT)
   if (!authResult) {
     return Promise.reject(new HError(613, 'auth result not found'))
   } else if (
@@ -95,18 +95,46 @@ const getErrorMsg = err => {
   return error
 }
 
+/**
+ * 微信在 web 端 iframe 中授权时，在页面 URL 中添加 self_redirect 参数，使重定向发生在 iframe 中，
+ * 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
+ */
+const setExtraUrlParams = (url, options = {}) => {
+  if (options.provider !== constants.THIRD_PARTY_AUTH_PROVIDER.WECHAT_WEB
+    || options.mode !== constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME) {
+    return url
+  }
+  url = new URL(url)
+  url.searchParams.set('self_redirect', true)
+  if (!options.wechatIframeContentStyle) return url.toString()
+  if (options.wechatIframeContentStyle.style) {
+    url.searchParams.set('style', options.wechatIframeContentStyle.style)
+  }
+  if (options.wechatIframeContentStyle.href) {
+    url.searchParams.set('href', options.wechatIframeContentStyle.href)
+  }
+  return url.toString()
+}
+
 // 跳转到第三方授权页面；获取 token 后调用 login 或 associate
 const createThirdPartyAuthFn = BaaS => () => {
+  const PARAM = constants.THIRD_PARTY_AUTH_URL_PARAM
   const url = new URL(window.location.href)
   const params = url.searchParams
-  const accessToken = params.get('token')
-  const provider = params.get('provider')
-  const referer = params.get('referer')
-  const mode = params.get('mode')
-  const debug = params.get('debug')
-  const handler = getHandler(params.get('handler'))
-  const create_user = params.get('create_user')
-  const update_userprofile = params.get('update_userprofile')
+  const accessToken = params.get(PARAM.TOKEN)
+  const provider = params.get(PARAM.PROVIDER)
+  const referer = params.get(PARAM.REFERER)
+  const mode = params.get(PARAM.MODE)
+  const debug = params.get(PARAM.DEBUG)
+  const handler = getHandler(params.get(PARAM.HANDLER))
+  const create_user = params.get(PARAM.CREATE_USER)
+  const update_userprofile = params.get(PARAM.UPDATE_USER_PROFILE)
+  let wechatIframeContentStyle = {}
+  try {
+    wechatIframeContentStyle = JSON.parse(params.get(PARAM.WECHAT_IFRAME_CONTENT_STYLE))
+  } catch (e) {
+    // pass
+  }
   const request = handler === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
     ? loginWithThirdPartyRequest
     : linkThirdPartyRequest
@@ -136,16 +164,8 @@ const createThirdPartyAuthFn = BaaS => () => {
       method: 'GET',
     }).then(res => {
       if (res.status === constants.STATUS_CODE.SUCCESS && res.data.status === 'ok') {
-        const url = new URL(res.data.redirect_url)
-        if (provider === constants.THIRD_PARTY_AUTH_PROVIDER.WECHAT_WEB
-          && mode === constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME) {
-          /**
-           * 微信在 web 端 iframe 中授权时，在页面 URL 中添加 self_redirect 参数，使重定向发生在 iframe 中，
-           * 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
-           */
-          url.searchParams.set('self_redirect', true)
-        }
-        window.location.href = url.toString()
+        const url = setExtraUrlParams(res.data.redirect_url, {provider, mode, wechatIframeContentStyle})
+        window.location.href = url
       } else {
         throw res
       }

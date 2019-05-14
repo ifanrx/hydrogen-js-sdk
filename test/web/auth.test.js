@@ -147,6 +147,47 @@ describe('auth', () => {
     })
   })
 
+  describe('# setExtraUrlParams', () => {
+    let authModule = rewire('../../sdk-file/src/web/auth.js')
+    const setExtraUrlParams = authModule.__get__('setExtraUrlParams')
+    it('should set extra params if provider is "oauth-wechat-web" and mode is "popup-iframe"', () => {
+      const url = 'http://test.com/index.html'
+      let result = setExtraUrlParams(url, {
+        provider: 'oauth-wechat-web',
+        mode: 'popup-iframe',
+        wechatIframeContentStyle: {style: 'bar', href: 'http://foo.com'},
+      })
+      expect(result).to.be.equal(`${url}?self_redirect=true&style=bar&href=${encodeURIComponent('http://foo.com')}`)
+
+      result = setExtraUrlParams(url, {
+        provider: 'others',
+        mode: 'popup-iframe',
+        wechatIframeContentStyle: {style: 'bar', href: 'http://foo.com'},
+      })
+      expect(result).to.be.equal(url)
+
+      result = setExtraUrlParams(url, {
+        provider: 'oauth-wechat-web',
+        mode: 'others',
+        wechatIframeContentStyle: {style: 'bar', href: 'http://foo.com'},
+      })
+      expect(result).to.be.equal(url)
+
+      result = setExtraUrlParams(url, {
+        provider: 'oauth-wechat-web',
+        mode: 'popup-iframe',
+        wechatIframeContentStyle: {foo: 'bar', baz: 'http://foo.com'},
+      })
+      expect(result).to.be.equal(`${url}?self_redirect=true`)
+
+      result = setExtraUrlParams(url, {
+        provider: 'oauth-wechat-web',
+        mode: 'popup-iframe',
+      })
+      expect(result).to.be.equal(`${url}?self_redirect=true`)
+    })
+  })
+
   describe('# sendMessage', () => {
     let authModule = rewire('../../sdk-file/src/web/auth.js')
     const sendMessage = authModule.__get__('sendMessage')
