@@ -149,7 +149,7 @@ function init() {
         })
       },
       linkThirdPartyRedirect: function () {
-        BaaS.auth.getCurrentUser().then(user => {
+        BaaS.auth.getCurrentUser().then(function (user) {
           return user.linkThirdParty('oauth-wechat-mp', '/auth.html', {
             debug: true,
             mode: 'redirect',
