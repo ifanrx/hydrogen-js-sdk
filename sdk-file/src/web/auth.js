@@ -17,7 +17,7 @@ const createGetRedirectResultFn = BaaS => () => {
     return Promise.reject(new HError(613, 'auth result not found'))
   } else if (
     authResult.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS
-    && authResult.handler === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
+    && authResult.action === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
   ) {
     history.replaceState && history.replaceState(null, '', url.toString())
     return BaaS.auth.getCurrentUser().then(user => {
@@ -60,7 +60,7 @@ let linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {}) =
 let sendMessage = (mode, referer, authResult) => {
   if (mode === constants.THIRD_PARTY_AUTH_MODE.REDIRECT) {
     const refererUrl = new URL(referer)
-    refererUrl.searchParams.set(constants.THIRD_PARTY_AUTH_RESULT, JSON.stringify(authResult))
+    refererUrl.searchParams.set(constants.THIRD_PARTY_AUTH_URL_PARAM.AUTH_RESULT, JSON.stringify(authResult))
     window.location.href = refererUrl.toString()
   } else {
     const refererWindow = mode === constants.THIRD_PARTY_AUTH_MODE.POPUP_IFRAME
@@ -144,7 +144,7 @@ const createThirdPartyAuthFn = BaaS => () => {
       .then(() => {
         const authResult = {
           status: constants.THIRD_PARTY_AUTH_STATUS.SUCCESS,
-          handler,
+          action: handler,
         }
         sendMessage(mode, referer, authResult)
       })
@@ -153,7 +153,7 @@ const createThirdPartyAuthFn = BaaS => () => {
         const authResult = {
           status: constants.THIRD_PARTY_AUTH_STATUS.FAIL,
           error,
-          handler,
+          action: handler,
         }
         sendMessage(mode, referer, authResult)
       })
@@ -174,7 +174,7 @@ const createThirdPartyAuthFn = BaaS => () => {
       const authResult = {
         status: constants.THIRD_PARTY_AUTH_STATUS.FAIL,
         error,
-        handler,
+        action: handler,
       }
       if (mode !== constants.THIRD_PARTY_AUTH_MODE.REDIRECT || !debug) {
         sendMessage(mode, referer, authResult)

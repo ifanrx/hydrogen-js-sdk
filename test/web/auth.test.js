@@ -249,7 +249,7 @@ describe('auth', () => {
       }
       const result = {
         status: 'success',
-        handler: 'login',
+        action: 'login',
       }
       const baseUrl = 'http://test.com/index.html?a=foo&b=bar'
       const windowMock = {
@@ -283,7 +283,7 @@ describe('auth', () => {
     it('should return result without user info', () => {
       const result = {
         status: 'success',
-        handler: 'associate',
+        action: 'associate',
       }
       const baseUrl = 'http://test.com/index.html?a=foo&b=bar'
       const windowMock = {
@@ -429,7 +429,7 @@ describe('auth', () => {
             })
             expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
               status: 'success',
-              handler: 'login',
+              action: 'login',
             })
           })
       })
@@ -468,7 +468,7 @@ describe('auth', () => {
           })
           expect(sendMessageSpy).have.been.calledWith('popup-window', 'referer-mock', {
             status: 'success',
-            handler: 'associate',
+            action: 'associate',
           })
         })
       })

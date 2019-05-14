@@ -162,7 +162,7 @@ function init() {
         BaaS.auth.loginWithThirdParty('oauth-wechat-web', '/auth.html', {
           debug: true,
           mode: 'popup-window',
-          // createUser: true,
+          createUser: true,
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
         })
           .then(function (res) {console.log('third party login success (window):', res)})
@@ -184,7 +184,8 @@ function init() {
           createUser: true,
           authModalStyle: {
             container: {
-              background: 'gray',
+              background: 'rgba(0, 0, 0, .5)',
+              paddingTop: '50px',
             },
             iframe: {
               // background: 'red',
@@ -193,6 +194,10 @@ function init() {
               // right: '50%',
             }
           },
+          wechatIframeContentStyle: {
+            style: 'white',
+            href: 'http://localhost:40034/wechat-iframe.css',
+          }
         })
           .then(function (res) {console.log('third party login success (iframe):', res)})
           .catch(function (err) {console.log('err: ', err)})
