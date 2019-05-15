@@ -161,7 +161,10 @@ const createThirdPartyAuthFn = BaaS => () => {
     // 跳转到第三方授权页面
     return BaaS.request({
       url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_AUTH, {provider}),
-      method: 'GET',
+      method: 'POST',
+      data: {
+        callback_url: window.location.href,
+      },
     }).then(res => {
       if (res.status === constants.STATUS_CODE.SUCCESS && res.data.status === 'ok') {
         const url = setExtraUrlParams(res.data.redirect_url, {provider, mode, wechatIframeContentStyle})

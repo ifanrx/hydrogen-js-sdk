@@ -338,7 +338,10 @@ describe('auth', () => {
           expect(BaaSMock.request).have.been.calledOnce
           expect(BaaSMock.request).have.been.calledWith({
             url: '/foo/provider-mock/bar/baz/redirect/',
-            method: 'GET',
+            method: 'POST',
+            data: {
+              callback_url: 'http://test.html/?provider=provider-mock',
+            }
           })
         })
       })

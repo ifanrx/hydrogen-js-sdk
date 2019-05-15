@@ -196,7 +196,7 @@ function init() {
           },
           wechatIframeContentStyle: {
             style: 'white',
-            href: 'http://localhost:40034/wechat-iframe.css',
+            href: 'https://localhost:40035/wechat-iframe.css',
           }
         })
           .then(function (res) {console.log('third party login success (iframe):', res)})
