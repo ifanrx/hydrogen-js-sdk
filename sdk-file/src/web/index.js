@@ -2,7 +2,6 @@ require('core-js/features/promise')
 require('core-js/es/number/is-integer')
 require('core-js/es/string/starts-with')
 require('core-js/web/url')
-require('./vendors/eventListener.polyfill')
 const core = require('core-module/index')
 const BaaS = require('core-module/baas')
 
