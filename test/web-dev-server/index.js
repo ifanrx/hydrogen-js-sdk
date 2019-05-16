@@ -1,12 +1,21 @@
+/*
+ * 以下代码由于没使用构建工具，请使用 es5 语法
+ */
+
 function init() {
   var BaaS = window.BaaS
 
   BaaS.auth.getRedirectResult()
-    .then(function (result) {console.log(result)})
+    .then(function (result) {
+      if (result.status === 'success') {
+        vm.isLogin = true
+      }
+      console.log(result)
+    })
     // .then(function (result) {console.log(result);alert(JSON.stringify(result))})
     .catch(function (err) {console.log(err)})
 
-  new Vue({
+  var vm = new Vue({
     el: '#root',
     data: function () {
       return {
@@ -43,26 +52,26 @@ function init() {
     },
     methods: {
       login: function () {
-        window.BaaS.auth.login(_.pickBy(this.loginForm, function (v) {return !!v})).then(function (res) {
+        window.BaaS.auth.login(_.pickBy(vm.loginForm, function (v) {return !!v})).then(function (res) {
           console.log(res)
-          this.isLogin = true
+          vm.isLogin = true
         })
       },
       register: function () {
-        window.BaaS.auth.register(_.pickBy(this.registerForm, function (v) {return !!v})).then(function (res) {
+        window.BaaS.auth.register(_.pickBy(vm.registerForm, function (v) {return !!v})).then(function (res) {
           console.log(res)
-          this.isLogin = true
+          vm.isLogin = true
         })
       },
       logout: function () {
         window.BaaS.auth.logout().then(function (res) {
-          this.isLogin = false
+          vm.isLogin = false
           console.log(res)
         })
       },
       anonymousLogin: function () {
         BaaS.auth.anonymousLogin().then(function (user) {
-          this.isAnonymousLogin = true
+          vm.isAnonymousLogin = true
           console.log('user.toJSON ', user.toJSON())
           console.log('isAnonymousUser ', user.get('isAnonymousUser'))
         })
@@ -73,13 +82,13 @@ function init() {
         })
       },
       requestPasswordReset: function () {
-        BaaS.auth.requestPasswordReset({email: this.forgetPassword.email}).then(function (res) {
+        BaaS.auth.requestPasswordReset({email: vm.forgetPassword.email}).then(function (res) {
           console.log(res)
         })
       },
       updatePassword: function () {
         BaaS.auth.getCurrentUser().then(function (user) {
-          user.updatePassword(this.passwordChangeForm).then(function (res) {
+          user.updatePassword(vm.passwordChangeForm).then(function (res) {
             console.log(res)
           })
         })
@@ -87,17 +96,17 @@ function init() {
       updateUserinfo: function () {
         BaaS.auth.getCurrentUser().then(function (user) {
           console.log('user', user.toJSON())
-          if (this.userInfoForm.username) {
+          if (vm.userInfoForm.username) {
             user.setUsername({
-              username: this.userInfoForm.username,
-              password: this.userInfoForm.password,
+              username: vm.userInfoForm.username,
+              password: vm.userInfoForm.password,
             }).then(function (res) {
               console.log(res)
             })
-          } else if (this.userInfoForm.email) {
+          } else if (vm.userInfoForm.email) {
             user.setEmail({
-              email: this.userInfoForm.email,
-              password: this.userInfoForm.password,
+              email: vm.userInfoForm.email,
+              password: vm.userInfoForm.password,
             }, {sendVerificationEmail: false}).then(function (res) {
               console.log(res)
             })
@@ -113,7 +122,7 @@ function init() {
 
       },
       showModal: function (content) {
-        this.modalText = content
+        vm.modalText = content
         $('#myModal').modal('show')
       },
 
@@ -135,7 +144,7 @@ function init() {
         })
       },
       sendSMSCode: function () {
-        BaaS.sendSmsCode({phone: this.sms.phone}).then(function (res) {
+        BaaS.sendSmsCode({phone: vm.sms.phone}).then(function (res) {
           // success
           console.log(res)
         }).catch(function (err) {
@@ -144,7 +153,7 @@ function init() {
         })
       },
       verifyPhone: function () {
-        BaaS.verifySmsCode({phone: this.sms.phone, code: this.sms.code}).then(function (res) {
+        BaaS.verifySmsCode({phone: vm.sms.phone, code: vm.sms.code}).then(function (res) {
           console.log(res)
         })
       },
@@ -165,7 +174,10 @@ function init() {
           createUser: true,
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
         })
-          .then(function (res) {console.log('third party login success (window):', res)})
+          .then(function (res) {
+            console.log('third party login success (window):', res)
+            vm.isLogin = true
+          })
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginRedirect: function () {
@@ -199,7 +211,10 @@ function init() {
             href: 'https://localhost:40035/wechat-iframe.css',
           }
         })
-          .then(function (res) {console.log('third party login success (iframe):', res)})
+          .then(function (res) {
+            console.log('third party login success (window):', res)
+            vm.isLogin = true
+          })
           .catch(function (err) {console.log('err: ', err)})
       },
     },
@@ -207,7 +222,7 @@ function init() {
     mounted: function () {
       BaaS.auth.getCurrentUser().then(function (res) {
         console.log(res)
-        this.isLogin = !!res
+        vm.isLogin = true
       })
     }
   })
