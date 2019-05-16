@@ -1,5 +1,5 @@
 function init() {
-  const BaaS = window.BaaS
+  var BaaS = window.BaaS
 
   BaaS.auth.getRedirectResult()
     .then(function (result) {console.log(result)})
