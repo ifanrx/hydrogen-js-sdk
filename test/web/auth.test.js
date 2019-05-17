@@ -38,13 +38,13 @@ describe('auth', () => {
       expect(getHandler('login')).to.be.equal('login')
       expect(getHandler('associate')).to.be.equal('associate')
     })
-    it('should return default handler', () => {
-      expect(getHandler('login-foo')).to.be.equal('login')
-      expect(getHandler('associate-bar')).to.be.equal('login')
-      expect(getHandler()).to.be.equal('login')
-      expect(getHandler(undefined)).to.be.equal('login')
-      expect(getHandler(null)).to.be.equal('login')
-      expect(getHandler({})).to.be.equal('login')
+    it('should throw error', () => {
+      expect(() => getHandler('login-a')).to.be.throw()
+      expect(() => getHandler('associate-a')).to.be.throw()
+      expect(() => getHandler()).to.be.throw()
+      expect(() => getHandler(undefined)).to.be.throw()
+      expect(() => getHandler(null)).to.be.throw()
+      expect(() => getHandler({})).to.be.throw()
     })
   })
 
@@ -237,7 +237,7 @@ describe('auth', () => {
         const BaaSMock = createBaaSMockObj()
         const getRedirectResult = createGetRedirectResultFn(BaaSMock)
         return getRedirectResult().catch(err => {
-          expect(err).to.be.deep.equal(new HError(613, 'auth result not found'))
+          expect(err).to.be.deep.equal(new HError(614, 'third party auth result not found'))
         })
       })
     })
@@ -316,7 +316,7 @@ describe('auth', () => {
     it('should redirect to auth page', () => {
       const windowMock = {
         location: {
-          href: 'http://test.html/?provider=provider-mock',
+          href: 'http://test.html/?provider=provider-mock&handler=login',
         },
       }
       const BaaSMock = createBaaSMockObj({
@@ -340,7 +340,7 @@ describe('auth', () => {
             url: '/foo/provider-mock/bar/baz/redirect/',
             method: 'POST',
             data: {
-              callback_url: 'http://test.html/?provider=provider-mock',
+              callback_url: 'http://test.html/?provider=provider-mock&handler=login',
             }
           })
         })
@@ -350,7 +350,7 @@ describe('auth', () => {
     it('should redirect to auth page with "selt_redirect" param', () => {
       const windowMock = {
         location: {
-          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-iframe',
+          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-iframe&handler=login',
         },
       }
       const BaaSMock = createBaaSMockObj({
@@ -376,7 +376,7 @@ describe('auth', () => {
     it('should redirect to auth page without "selt_redirect" param', () => {
       const windowMock = {
         location: {
-          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-window',
+          href: 'http://test.html/?provider=oauth-wechat-web&mode=popup-window&handler=login',
         },
       }
       const BaaSMock = createBaaSMockObj({

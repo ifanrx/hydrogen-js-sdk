@@ -9,12 +9,12 @@ const createGetRedirectResultFn = BaaS => () => {
   let authResult
   try {
     authResult = JSON.parse(url.searchParams.get(constants.THIRD_PARTY_AUTH_URL_PARAM.AUTH_RESULT))
-  } catch (e) {
-    // pass
+  } catch (err) {
+    utils.log(constants.LOG_LEVEL.ERROR, err)
   }
   url.searchParams.delete(constants.THIRD_PARTY_AUTH_URL_PARAM.AUTH_RESULT)
   if (!authResult) {
-    return Promise.reject(new HError(613, 'auth result not found'))
+    return Promise.reject(new HError(614, 'third party auth result not found'))
   } else if (
     authResult.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS
     && authResult.action === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
@@ -77,7 +77,7 @@ const getHandler = handler => {
     constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE,
   ]
   if (handlerList.indexOf(handler) === -1) {
-    handler = handlerList[0]
+    throw new HError(614, `handler "${handler}" not found`)
   }
   return handler
 }
@@ -132,8 +132,8 @@ const createThirdPartyAuthFn = BaaS => () => {
   let wechatIframeContentStyle = {}
   try {
     wechatIframeContentStyle = JSON.parse(params.get(PARAM.WECHAT_IFRAME_CONTENT_STYLE))
-  } catch (e) {
-    // pass
+  } catch (err) {
+    utils.log(constants.LOG_LEVEL.ERROR, err)
   }
   const request = handler === constants.THIRD_PARTY_AUTH_HANDLER.LOGIN
     ? loginWithThirdPartyRequest
@@ -155,7 +155,9 @@ const createThirdPartyAuthFn = BaaS => () => {
           error,
           action: handler,
         }
-        sendMessage(mode, referer, authResult)
+        if (mode !== constants.THIRD_PARTY_AUTH_MODE.REDIRECT || !debug) {
+          sendMessage(mode, referer, authResult)
+        }
       })
   } else {
     // 跳转到第三方授权页面

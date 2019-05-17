@@ -14,7 +14,10 @@ let thirdPartyAuthRequest = (options = {}) => {
        * 由于单元测试时，jsdom 中 event.origin 总为空，导致下面总会执行 return，
        * 所以添加了 test 参数。在测试时，会将 test 设为 ture，以跳过下一行代码。
        */
-      if (event.origin !== window.location.origin && !test) return  // 只处理同域页面传来的 message
+      if (event.origin !== window.location.origin && !test) {
+        utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> origin not matched, event origin: ${event.origin}, window origin: ${window.location.origin}`, )
+        return  // 只处理同源页面传来的 message
+      }
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> success, result: ${JSON.stringify(event.data)}`)
         window.removeEventListener('message', handleRecieveMessage, false)
@@ -27,12 +30,12 @@ let thirdPartyAuthRequest = (options = {}) => {
           window.removeEventListener('message', handleRecieveMessage, false)
           authWindow.close()
         }
-        return reject(new HError(613, event.data.error))
+        return reject(new HError(614, event.data.error))
       }
     }
     const onClose = () => {
-      utils.log(constants.LOG_LEVEL.DEBUG, '<third-party-auth> close window, access_dinied')
-      return reject(new HError(613, 'access_dinied'))
+      utils.log(constants.LOG_LEVEL.DEBUG, '<third-party-auth> close window, auth denied')
+      return reject(new HError(613))
     }
     window.addEventListener('message', handleRecieveMessage, false)
     authWindow = windowManager.create(options.mode, {...options, onClose})

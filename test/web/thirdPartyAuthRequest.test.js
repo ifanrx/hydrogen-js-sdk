@@ -80,7 +80,7 @@ describe('thirdPartyAuthRequest', () => {
       const error = new Error('test error')
       dom.window.postMessage({status: 'fail', error}, '*')
       const job1 = thirdPartyAuthRequest().catch(err => {
-        expect(err).to.be.deep.equal(new HError(613, error))
+        expect(err).to.be.deep.equal(new HError(614, error))
         expect(addEventListenerSpy).to.have.been.calledOnce
         expect(removeEventListenerSpy).to.have.been.calledOnce
         expect(addEventListenerSpy.getCall(0).args).to.be.deep.equal(removeEventListenerSpy.getCall(0).args)
