@@ -1,3 +1,4 @@
+require('./init')
 const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
@@ -19,8 +20,8 @@ describe('auth', () => {
     request = BaaS.request
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
-        options.url === BaaS._config.API.WEB.LOGIN_USERNAME ||
-        options.url === BaaS._config.API.WEB.REGISTER_USERNAME
+        options.url === BaaS._config.API.LOGIN_USERNAME ||
+        options.url === BaaS._config.API.REGISTER_USERNAME
       ) {
         return Promise.resolve({
           status: 201,
@@ -42,6 +43,8 @@ describe('auth', () => {
             _provider : {}
           }
         })
+      } else {
+        return Promise.resolve()
       }
       return request(options)
     })

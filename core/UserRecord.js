@@ -43,6 +43,16 @@ class UserRecord extends BaseRecord {
     return BaaS._polyfill.linkAlipay.apply(null, arguments)
   }
 
+  linkThirdParty() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    if (!BaaS._polyfill.linkThirdParty) {
+      return Promise.reject(new HError(605, 'linkThirdParty 方法未定义'))
+    }
+    return BaaS._polyfill.linkThirdParty.apply(null, arguments)
+  }
+
   /**
    * 更新密码
    */
@@ -51,7 +61,7 @@ class UserRecord extends BaseRecord {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
-      url: API.WEB.ACCOUNT_INFO,
+      url: API.ACCOUNT_INFO,
       method: 'PUT',
       data: {
         password,
@@ -72,7 +82,7 @@ class UserRecord extends BaseRecord {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
-      url: API.WEB.ACCOUNT_INFO,
+      url: API.ACCOUNT_INFO,
       method: 'PUT',
       data: {email},
     }).then(res => {
@@ -94,7 +104,7 @@ class UserRecord extends BaseRecord {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
-      url: API.WEB.ACCOUNT_INFO,
+      url: API.ACCOUNT_INFO,
       method: 'PUT',
       data: {username},
     }).then(res => {
@@ -112,7 +122,7 @@ class UserRecord extends BaseRecord {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
-      url: API.WEB.EMAIL_VERIFY,
+      url: API.EMAIL_VERIFY,
       method: 'POST',
     })
   }
@@ -131,7 +141,7 @@ class UserRecord extends BaseRecord {
     }
 
     return BaaS._baasRequest({
-      url: API.WEB.ACCOUNT_INFO,
+      url: API.ACCOUNT_INFO,
       method: 'PUT',
       data: accountInfo,
     }).then(res => {

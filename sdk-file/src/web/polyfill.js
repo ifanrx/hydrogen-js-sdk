@@ -1,4 +1,6 @@
 const constants = require('core-module/constants')
+const utils = require('core-module/utils')
+let thirdPartyAuthRequest = require('./thirdPartyAuthRequest')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -28,6 +30,9 @@ module.exports = function (BaaS) {
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       }
+    },
+    linkThirdParty(provider, authPageUrl, options = {}) {
+      return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE})
     },
   })
 }

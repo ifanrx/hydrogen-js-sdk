@@ -79,5 +79,40 @@ module.exports = {
       MAX_TIMES_PER_CYCLE: 20,
       CYCLE: 24 * 60 * 60 * 1000,
     }
+  },
+
+  THIRD_PARTY_AUTH_MODE: {
+    POPUP_IFRAME: 'popup-iframe',
+    POPUP_WINDOW: 'popup-window',
+    REDIRECT: 'redirect',
+  },
+
+  THIRD_PARTY_AUTH_STATUS: {
+    SUCCESS: 'success',
+    FAIL: 'fail',
+  },
+
+  THIRD_PARTY_AUTH_HANDLER: {
+    LOGIN: 'login',
+    ASSOCIATE: 'associate',
+  },
+
+  THIRD_PARTY_AUTH_PROVIDER: {
+    WECHAT_MP: 'oauth-wechat-mp',
+    WECHAT_WEB: 'oauth-wechat-web',
+    WEIBO: 'oauth-weibo',
+  },
+
+  THIRD_PARTY_AUTH_URL_PARAM: {
+    PROVIDER: 'provider',
+    REFERER: 'referer',
+    MODE: 'mode',
+    DEBUG: 'debug',
+    CREATE_USER: 'create_user',
+    UPDATE_USER_PROFILE: 'update_userprofile',
+    WECHAT_IFRAME_CONTENT_STYLE: 'wechat_iframe_content_style',
+    HANDLER: 'handler',
+    TOKEN: 'token',
+    AUTH_RESULT: 'auth-result',
   }
 }

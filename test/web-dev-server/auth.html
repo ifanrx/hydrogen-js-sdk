@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>授权页面</title>
+  </head>
+  <body>
+    <div>授权页面</div>
+    <button onclick="auth()">点击授权</button>
+    <script src="./sdk.dev.js"></script>
+    <script>
+      // window.BaaS.init('733b59d1b10ff4a37390', {
+      //   logLevel: 'debug',
+      // })
+      BaaS._config.DEBUG = true
+      BaaS.init('995140f59511a222c937', {logLevel: 'debug'})
+      BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com'
+      BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/
+
+      BaaS.auth.thirdPartyAuth()
+    </script>
+    <script>
+      function auth() {
+        window.location.href += '&token=mock-token'
+      }
+    </script>
+  </body>
+</html>
