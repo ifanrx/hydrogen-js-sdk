@@ -55,7 +55,37 @@ function init() {
           console.log('支付成功')
         }).catch(err => console.log(err))
       },
+
+      payWithAlipayPage() {
+        BaaS.payment.payWithAlipay({
+          gatewayType: 'alipay_page',
+          totalCost: 0.01,
+          merchandiseDescription: 'test-04',
+        }).then(res => {
+          window.open(res.data.payment_url)
+          return new Promise((resolve, reject) => this.checkPaymentStatus(res.data.trade_no, resolve, reject))
+        }).then(() => {
+          alert('支付成功')
+          console.log('支付成功')
+        }).catch(err => console.log(err))
+      },
+
+      payWithAlipayWap() {
+        BaaS.payment.payWithAlipay({
+          gatewayType: 'alipay_wap',
+          totalCost: 0.01,
+          merchandiseDescription: 'test-04',
+        }).then(res => {
+          window.location.href = res.data.payment_url
+          return new Promise((resolve, reject) => this.checkPaymentStatus(res.data.trade_no, resolve, reject))
+        }).then(() => {
+          alert('支付成功')
+          console.log('支付成功')
+        }).catch(err => console.log(err))
+      },
     },
+
+
     mounted() {
     },
   })
