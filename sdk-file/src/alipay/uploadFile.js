@@ -36,6 +36,7 @@ const myUpload = (config, resolve, reject) => {
       result.path = config.destLink
       result.file = {
         'id': config.id,
+        'path': config.destLink,
         'name': config.fileName,
         'created_at': data.time,
         'mime_type': data.mimetype,
@@ -80,7 +81,7 @@ const createUploadFileFn = () => (fileParams, metaData) => {
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
       fileType: fileParams.fileType,
-      destLink: res.data.file_link
+      destLink: res.data.path
     }
     myUpload(config, e => {
       rs(e)

@@ -21,6 +21,7 @@ const wxUpload = (config, resolve, reject, type) => {
       result.path = config.destLink
       result.file = {
         'id': config.id,
+        'path': config.destLink,
         'name': config.fileName,
         'created_at': data.time,
         'mime_type': data.mimetype,
@@ -113,7 +114,7 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.file_link
+      destLink: res.data.path
     }
     uploadTask = wxUpload(config, e => {
       if (isAborted) return rj(new Error('aborted'))
