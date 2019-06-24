@@ -73,6 +73,13 @@ const API = {
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   },
 
+  QQ: {
+    SILENT_LOGIN: '/hserve/v2.0/idp/qq/silent-login/',
+    AUTHENTICATE: '/hserve/v2.0/idp/qq/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
+    TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
+  },
+
   ALIPAY: {
     SILENT_LOGIN: '/hserve/v2.0/idp/alipay/silent-login/',
     AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
