@@ -13,7 +13,7 @@ const API = {
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   LOGOUT: '/hserve/v2.0/session/destroy/',
 
-  UPLOAD: '/hserve/v1/upload/',
+  UPLOAD: '/hserve/v2.1/upload/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v2.0/user/info/:userID/',
@@ -40,10 +40,10 @@ const API = {
   CONTENT_CATEGORY_LIST: '/hserve/v2.0/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v2.0/content/category/:categoryID/',
 
-  FILE_DETAIL: '/hserve/v1.3/uploaded-file/:fileID/',
-  FILE_LIST: '/hserve/v1.3/uploaded-file/',
-  DELETE_FILE: '/hserve/v1.3/uploaded-file/:fileID/',
-  DELETE_FILES: '/hserve/v1.3/uploaded-file/',
+  FILE_DETAIL: '/hserve/v2.1/uploaded-file/:fileID/',
+  FILE_LIST: '/hserve/v2.1/uploaded-file/',
+  DELETE_FILE: '/hserve/v2.1/uploaded-file/:fileID/',
+  DELETE_FILES: '/hserve/v2.1/uploaded-file/',
   FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
   CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
