@@ -4,7 +4,7 @@ const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 
 const wxRequestFail = function (reject) {
-  wx.getNetworkType({
+  BaaS._polyfill.getNetworkType({
     success: function (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
@@ -30,7 +30,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
 
-    wx.request({
+    BaaS._polyfill.wxRequest({
       method: method,
       url: url,
       data: data,

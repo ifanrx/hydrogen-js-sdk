@@ -4,6 +4,9 @@ const utils = require('core-module/utils')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 
 const wxUpload = (config, resolve, reject, type) => {
+  if (typeof qq != 'undefined') {
+    wx = qq
+  }
   return wx.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
