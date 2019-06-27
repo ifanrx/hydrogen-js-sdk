@@ -24,6 +24,9 @@ BaaS.auth.loginWithQQ = BaaS.auth.loginWithWechat
 BaaS.auth.linkQQ = BaaS.auth.linkWechat
 delete BaaS.auth.loginWithWechat
 delete BaaS.auth.linkWechat
+delete BaaS.login
+delete BaaS.logout
+delete BaaS.handleUserInfo
 
 // 暴露 BaaS 到小程序环境
 if (typeof qq !== 'undefined') {

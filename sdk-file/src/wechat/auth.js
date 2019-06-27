@@ -71,11 +71,14 @@ module.exports = BaaS => {
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
     if (!detail.userInfo) {
-      return Promise.reject(Object.assign(new HError(603), {
+      let userInfo = {
         id: storage.get(constants.STORAGE_KEY.UID),
         openid: storage.get(constants.STORAGE_KEY.OPENID),
-        unionid: storage.get(constants.STORAGE_KEY.UNIONID),
-      }))
+      }
+      if (typeof qq == 'undefined') {
+        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
+      }
+      return Promise.reject(Object.assign(new HError(603), userInfo))
     }
 
     return getLoginCode().then(code => {
@@ -93,7 +96,9 @@ module.exports = BaaS => {
         let userInfo = detail.userInfo
         userInfo.id = storage.get(constants.STORAGE_KEY.UID)
         userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
-        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
+        if (typeof qq == 'undefined') {
+          userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
+        }
         storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
         return getSensitiveData(payload)
       })
