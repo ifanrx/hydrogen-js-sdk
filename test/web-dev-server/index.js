@@ -172,6 +172,7 @@ function init() {
           debug: true,
           mode: 'popup-window',
           createUser: true,
+          syncUserProfile: 'overwrite',
           windowFeatures: 'left=100,top=100,width=800,height=600,menubar=yes,resizable=yes,scrollbars=yes,status=yes',
         })
           .then(function (res) {

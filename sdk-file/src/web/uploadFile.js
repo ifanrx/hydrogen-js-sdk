@@ -24,7 +24,7 @@ module.exports = function (BaaS) {
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
         filePath: fileObj.name,
-        destLink: res.data.file_link
+        destLink: res.data.path
       }
 
       let fd = new FormData()
@@ -40,6 +40,7 @@ module.exports = function (BaaS) {
       result.path = config.destLink
       result.file = {
         'id': config.id,
+        'path': config.destLink,
         'name': config.fileName,
         'created_at': data.time,
         'mime_type': data.mimetype,

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <script src="https://cdn.bootcss.com/vue/2.5.21/vue.js"></script>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.bootcss.com/notie/4.3.1/notie.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/notie/4.3.1/notie.min.js"></script>
+  <script src="../sdk.dev.js"></script>
+  <title>支付</title>
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }
+    .opt-btn {
+      width: 24px;
+      padding: 0;
+      text-align: center;
+    }
+    .list-group {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    ul.category {
+      display: flex;
+      list-style: none;
+      margin-bottom: 20px;
+      padding-left: 0;
+      overflow-x: auto;
+    }
+    .category li {
+      display: inline;
+      white-space: nowrap;
+    }
+    .category a {
+      color: inherit;
+      padding: 0 5px;
+    }
+    .category a.active {
+      color: #007bff;
+    }
+    .upload-btn {
+      position: relative;
+      display: inline-block;
+    }
+    .upload-input {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">文件测试</li>
+    </ol>
+  </nav>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">微信桌面端扫码支付</h5>
+      <img v-if="qrCode" :src="qrCode" alt="">
+      <button type="button" class="btn btn-primary" @click="payWithWechatNative">支付</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">微信 H5 支付</h5>
+      <button type="button" class="btn btn-primary" @click="payWithWechatWap">支付</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">支付宝桌面端支付</h5>
+      <button type="button" class="btn btn-primary" @click="payWithAlipayPage">支付</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">支付宝 H5 支付</h5>
+      <button type="button" class="btn btn-primary" @click="payWithAlipayWap">支付</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.3/qrcode.min.js"></script>
+<script src="../utils/common.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>
