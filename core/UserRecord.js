@@ -18,7 +18,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至微信账号
+   * 将当期用户关联至微信账号
    */
   linkWechat() {
     if (this._anonymous) {
@@ -31,7 +31,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至支付宝账号
+   * 将当期用户关联至支付宝账号
    */
   linkAlipay() {
     if (this._anonymous) {
@@ -44,7 +44,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至 QQ 账号
+   * 将当期用户关联至 QQ 账号
    */
   linkQQ() {
     if (this._anonymous) {

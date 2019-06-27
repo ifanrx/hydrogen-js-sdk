@@ -4,7 +4,6 @@ const wechatAuth = require('./auth')
 const polyfill = require('./polyfill')
 const censor = require('./censor')
 const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
-const reportTicket = require('./wxReportTicket')
 
 BaaS._config.VERSION = __VERSION_WECHAT__
 
@@ -13,7 +12,6 @@ BaaS.use(polyfill)
 BaaS.use(wechatAuth)
 BaaS.use(censor)
 BaaS.use(reportTemplateMsgAnalytics)
-BaaS.use(reportTicket)
 BaaS.pay = require('./pay')
 BaaS.order = require('./order')
 BaaS.request = require('./request')
@@ -21,6 +19,7 @@ BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')
 BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
+BaaS.wxReportTicket = require('./wxReportTicket')
 BaaS.ErrorTracker = require('./errorTracker')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境

@@ -3,8 +3,8 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 
-const wxRequestFail = function (reject) {
-  wx.getNetworkType({
+const qqRequestFail = function (reject) {
+  qq.getNetworkType({
     success: function (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
@@ -14,7 +14,6 @@ const wxRequestFail = function (reject) {
     }
   })
 }
-
 
 const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
   return new Promise((resolve, reject) => {
@@ -30,15 +29,15 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
 
-    wx.request({
+    qq.request({
       method: method,
       url: url,
       data: data,
       header: headers,
       dataType: dataType,
       success: resolve,
-      fail: () => {
-        wxRequestFail(reject)
+      fail: (err) => {
+        qqRequestFail(reject)
       }
     })
 
@@ -47,4 +46,4 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
 }
 
 module.exports = request
-module.exports.wxRequestFail = wxRequestFail
+module.exports.qqRequestFail = qqRequestFail

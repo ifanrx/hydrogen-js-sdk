@@ -3,8 +3,8 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 
-const wxUpload = (config, resolve, reject, type) => {
-  return wx.uploadFile({
+const qqUpload = (config, resolve, reject, type) => {
+  return qq.uploadFile({
     url: config.uploadUrl,
     filePath: config.filePath,
     name: constants.UPLOAD.UPLOAD_FILE_KEY,
@@ -21,6 +21,7 @@ const wxUpload = (config, resolve, reject, type) => {
       result.path = config.destLink
       result.file = {
         'id': config.id,
+        'path': config.destLink,
         'name': config.fileName,
         'created_at': data.time,
         'mime_type': data.mimetype,
@@ -113,9 +114,9 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.file_link
+      destLink: res.data.path
     }
-    uploadTask = wxUpload(config, e => {
+    uploadTask = qqUpload(config, e => {
       if (isAborted) return rj(new Error('aborted'))
       rs(e)
     }, rj, type)
