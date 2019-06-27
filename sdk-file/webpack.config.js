@@ -11,6 +11,7 @@ const copyFilesForDev = require('./webpack/copyFilesForDev')
 let plugins = [
   new webpack.DefinePlugin({
     __VERSION_WECHAT__: JSON.stringify(`v${(pkg.version)}`),
+    __VERSION_QQ__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
   }),
@@ -34,6 +35,7 @@ module.exports = {
     'wechat-plugin': './src/wechat-plugin/index.js',
     alipay: './src/alipay/index.js',
     web: './src/web/index.js',
+    qq: './src/qq/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),

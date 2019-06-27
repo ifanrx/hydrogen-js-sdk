@@ -43,6 +43,19 @@ class UserRecord extends BaseRecord {
     return BaaS._polyfill.linkAlipay.apply(null, arguments)
   }
 
+  /**
+   * 将当期用户关联至 QQ 账号
+   */
+  linkQQ() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    if (!BaaS._polyfill.linkQQ) {
+      return Promise.reject(new HError(605, 'linkQQ 方法未定义'))
+    }
+    return BaaS._polyfill.linkQQ.apply(null, arguments)
+  }
+
   linkThirdParty() {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
