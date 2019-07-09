@@ -218,6 +218,22 @@ function init() {
           })
           .catch(function (err) {console.log('err: ', err)})
       },
+
+      getSmsCode() {
+        BaaS.sendSmsCode({phone: this.mobilePhone}).then(() => {
+          // success
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      loginWithMobilePhone() {
+        BaaS.auth.loginWithMobilePhone(this.mobilePhone, this.smsCode).then(user => {
+          console.log(user)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
     },
     computed: {},
     mounted: function () {

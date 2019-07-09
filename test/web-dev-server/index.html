@@ -73,6 +73,17 @@
         </div>
       </div>
       <button :disabled="isLogin" @click="requestPasswordReset" type="button" class="btn btn-primary">忘记密码</button>
+      <hr />
+      <div class="form-row form-group">
+        <div class="col">
+          <input v-model="mobilePhone" placeholder="手机号码" class="form-control" />
+        </div>
+        <div class="col">
+          <input :disabled="isLogin" v-model="smsCode" placeholder="短信验证码" class="form-control" />
+        </div>
+      </div>
+      <button @click="getSmsCode" type="button" class="btn btn-primary">获取短信验证码</button>
+      <button :disabled="isLogin" @click="loginWithMobilePhone" type="button" class="btn btn-primary">手机号登录</button>
     </div>
   </div>
   <div class="card">
