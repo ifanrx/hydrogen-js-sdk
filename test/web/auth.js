@@ -21,7 +21,8 @@ describe('auth', () => {
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
         options.url === BaaS._config.API.LOGIN_USERNAME ||
-        options.url === BaaS._config.API.REGISTER_USERNAME
+        options.url === BaaS._config.API.REGISTER_USERNAME ||
+        options.url === BaaS._config.API.LOGIN_MOBILE_PHONE
       ) {
         return Promise.resolve({
           status: 201,
@@ -44,7 +45,10 @@ describe('auth', () => {
           }
         })
       } else {
-        return Promise.resolve()
+        return Promise.resolve({
+          status: 200,
+          data: {},
+        })
       }
       return request(options)
     })
@@ -174,6 +178,31 @@ describe('auth', () => {
           .then(() => {
             expect(successSpy).have.not.been.called
           })
+      })
+    })
+  })
+
+  describe('# loginWithMobilePhone', () => {
+    it('should call api with correct params', () => {
+      BaaS._baasRequest = BaaS.request
+      const phone = '15000000000'
+      const code = '123456'
+      const now = Date.now()
+      const nowStub = sinon.stub(Date, 'now').returns(now)
+      return BaaS.auth.loginWithMobilePhone(phone, code).then(() => {
+        expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
+          url: '',
+          data: {
+            phone,
+            code,
+          },
+          method: 'POST',
+        })
+        expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
+        expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
+        expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
+        expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
+        nowStub.restore()
       })
     })
   })

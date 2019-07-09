@@ -11,6 +11,7 @@ const API = {
   ACCOUNT_INFO: '/hserve/v2.0/user/account/',
   PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
+  LOGIN_MOBILE_PHONE: '',
   LOGOUT: '/hserve/v2.0/session/destroy/',
 
   UPLOAD: '/hserve/v2.1/upload/',

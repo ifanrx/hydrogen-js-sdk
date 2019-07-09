@@ -87,10 +87,22 @@ const getCurrentUser = () => {
   })
 }
 
+const loginWithMobilePhone = (mobilePhone, smsCode) => {
+  return BaaS.request({
+    url: API.LOGIN_MOBILE_PHONE,
+    data: {phone: mobilePhone, code: smsCode},
+    method: 'POST',
+  }).then(utils.validateStatusCode).then(res => {
+    BaaS._polyfill.handleLoginSuccess(res, false)
+    return getCurrentUser()
+  })
+}
+
 module.exports = {
   login: utils.rateLimit(login),
   logout,
   silentLogin,
+  loginWithMobilePhone: utils.rateLimit(loginWithMobilePhone),
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),
