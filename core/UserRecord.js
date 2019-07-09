@@ -166,21 +166,28 @@ class UserRecord extends BaseRecord {
 
   /**
    * 更改手机号
-   * @param mobile 手机号码
-   * @param smsCode 短信验证码
+   * @param mobile
+   * @param sendVerificationSMSCode
    */
-  updateMobilePhone(mobilePhone, smsCode) {
+  updateMobile(mobile, sendVerificationSMSCode = false) {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
-    return BaaS._baasRequest({
-      url: API.ACCOUNT_INFO,
-      method: 'POST',
-      data: {phone: mobilePhone, code: smsCode},
-    }).then(res => {
-      // Object.assign(this._attribute, res.data)
-      return this
-    })
+    if (sendVerificationSMSCode) {
+      this.requestMobileVerification(mobile)
+    }
+    // TODO：本期先不做
+  }
+
+  /**
+   * 发送手机号验证
+   * @param mobile
+   */
+  requestMobileVerification() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    // TODO：本期先不做
   }
 }
 
