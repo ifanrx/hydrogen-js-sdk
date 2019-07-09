@@ -7,11 +7,11 @@ const API = {
   REGISTER_EMAIL: '/hserve/v2.0/register/email/',
   LOGIN_USERNAME: '/hserve/v2.0/login/username/',
   LOGIN_EMAIL: '/hserve/v2.0/login/email/',
+  LOGIN_MOBILE_PHONE: '/hserve/v2.0/login/phone/',
   EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
   ACCOUNT_INFO: '/hserve/v2.0/user/account/',
   PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
-  LOGIN_MOBILE_PHONE: '',
   LOGOUT: '/hserve/v2.0/session/destroy/',
 
   UPLOAD: '/hserve/v2.1/upload/',

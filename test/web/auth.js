@@ -191,7 +191,7 @@ describe('auth', () => {
       const nowStub = sinon.stub(Date, 'now').returns(now)
       return BaaS.auth.loginWithMobilePhone(phone, code).then(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
-          url: '',
+          url: '/hserve/v2.0/login/phone/',
           data: {
             phone,
             code,
