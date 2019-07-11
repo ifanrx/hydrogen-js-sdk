@@ -22,7 +22,7 @@ describe('auth', () => {
       if (
         options.url === BaaS._config.API.LOGIN_USERNAME ||
         options.url === BaaS._config.API.REGISTER_USERNAME ||
-        options.url === BaaS._config.API.LOGIN_MOBILE_PHONE
+        options.url === BaaS._config.API.LOGIN_SMS
       ) {
         return Promise.resolve({
           status: 201,
@@ -182,16 +182,16 @@ describe('auth', () => {
     })
   })
 
-  describe('# loginWithMobilePhone', () => {
+  describe('# loginWithMobilePhoneSmsCode', () => {
     it('should call api with correct params', () => {
       BaaS._baasRequest = BaaS.request
       const phone = '15000000000'
       const code = '123456'
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.loginWithMobilePhone(phone, code).then(() => {
+      return BaaS.auth.loginWithMobilePhoneSmsCode(phone, code).then(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
-          url: '/hserve/v2.0/login/phone/',
+          url: '/hserve/v2.1/login/sms/',
           data: {
             phone,
             code,

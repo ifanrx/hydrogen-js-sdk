@@ -18,7 +18,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当期用户关联至微信账号
+   * 将当前用户关联至微信账号
    */
   linkWechat() {
     if (this._anonymous) {
@@ -31,7 +31,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当期用户关联至支付宝账号
+   * 将当前用户关联至支付宝账号
    */
   linkAlipay() {
     if (this._anonymous) {
@@ -44,7 +44,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当期用户关联至 QQ 账号
+   * 将当前用户关联至 QQ 账号
    */
   linkQQ() {
     if (this._anonymous) {
@@ -80,9 +80,7 @@ class UserRecord extends BaseRecord {
         password,
         new_password: newPassword,
       },
-    }).then(() => {
-      return this
-    })
+    }).then(() => this)
   }
 
   /**
@@ -126,7 +124,6 @@ class UserRecord extends BaseRecord {
     })
   }
 
-
   /**
    * 发送验证邮件
    */
@@ -137,7 +134,7 @@ class UserRecord extends BaseRecord {
     return BaaS._baasRequest({
       url: API.EMAIL_VERIFY,
       method: 'POST',
-    })
+    }).then(() => this)
   }
 
   /**
@@ -167,27 +164,34 @@ class UserRecord extends BaseRecord {
   /**
    * 更改手机号
    * @param mobile
-   * @param sendVerificationSMSCode
    */
-  updateMobile(mobile, sendVerificationSMSCode = false) {
+  setMobilePhone(mobile) {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
-    if (sendVerificationSMSCode) {
-      this.requestMobileVerification(mobile)
-    }
-    // TODO：本期先不做
+    return BaaS._baasRequest({
+      url: API.ACCOUNT_INFO,
+      method: 'PUT',
+      data: {mobile},
+    }).then(res => {
+      Object.assign(this._attribute, res.data)
+      return this
+    })
   }
 
   /**
-   * 发送手机号验证
-   * @param mobile
+   * 验证手机号
+   * @param code 短信验证码
    */
-  requestMobileVerification() {
+  verifyMobilePhone(code) {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
-    // TODO：本期先不做
+    return BaaS._baasRequest({
+      url: API.VERIFY_MOBILE,
+      method: 'POST',
+      data: {code},
+    }).then(() => this)
   }
 }
 

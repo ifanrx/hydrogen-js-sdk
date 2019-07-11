@@ -8,8 +8,25 @@ const User = require('./User')
 
 const API = BaaS._config.API
 
+function getAuthUrlAndAdjustRequestData(data, isLoginFunc) {
+  if (data.mobilePhone) {
+    delete data.username
+    delete data.email
+    return isLoginFunc ? API.LOGIN_PHONE : API.REGISTER_PHONE
+  } else if (data.email) {
+    delete data.username
+    delete data.mobilePhone
+    return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
+  } else {
+    data.username = data.username || ''
+    delete data.email
+    delete data.mobilePhone
+    return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
+  }
+}
+
 const login = data => {
-  let url = data.username ? API.LOGIN_USERNAME : API.LOGIN_EMAIL
+  let url = getAuthUrlAndAdjustRequestData(data, true)
   return BaaS.request({
     url,
     method: 'POST',
@@ -41,7 +58,7 @@ const silentLogin = () => {
 }
 
 const register = data => {
-  let url = data.username ? API.REGISTER_USERNAME : API.REGISTER_EMAIL
+  let url = getAuthUrlAndAdjustRequestData(data)
   return BaaS.request({
     url,
     method: 'POST',
@@ -74,7 +91,7 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
-const getCurrentUser = () => {
+let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
   if (!uid || !expiresAt || utils.isSessionExpired()) return Promise.reject(new HError(604))
@@ -87,9 +104,9 @@ const getCurrentUser = () => {
   })
 }
 
-const loginWithMobilePhone = (mobilePhone, smsCode) => {
+const loginWithMobilePhoneSmsCode = (mobilePhone, smsCode) => {
   return BaaS.request({
-    url: API.LOGIN_MOBILE_PHONE,
+    url: API.LOGIN_SMS,
     data: {phone: mobilePhone, code: smsCode},
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
@@ -102,7 +119,7 @@ module.exports = {
   login: utils.rateLimit(login),
   logout,
   silentLogin,
-  loginWithMobilePhone: utils.rateLimit(loginWithMobilePhone),
+  loginWithMobilePhoneSmsCode: utils.rateLimit(loginWithMobilePhoneSmsCode),
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),
