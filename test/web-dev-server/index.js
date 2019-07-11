@@ -25,11 +25,13 @@ function init() {
           email: '',
           username: '',
           password: '',
+          mobilePhone: '',
         },
         registerForm: {
           email: '',
           username: '',
           password: '',
+          mobilePhone: '',
         },
         passwordChangeForm: {
           password: '',
@@ -230,6 +232,22 @@ function init() {
       loginWithMobilePhone() {
         BaaS.auth.loginWithMobilePhone(this.mobilePhone, this.smsCode).then(user => {
           console.log(user)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      verifyMobilePhone() {
+        BaaS.auth.getCurrentUser().then(function (user) {
+          return user.verifyMobilePhone(this.smsCode)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      setMobilePhone() {
+        BaaS.auth.getCurrentUser().then(function (user) {
+          return user.setMobilePhone(this.mobilePhone)
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
         })

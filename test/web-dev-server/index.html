@@ -32,10 +32,13 @@
       <form>
         <div class="form-row form-group">
           <div class="col">
-            <input :disabled="!!loginForm.username" v-model="loginForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+            <input :disabled="!!loginForm.username || !!loginForm.mobilePhone" v-model="loginForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
-            <input :disabled="!!loginForm.email" v-model="loginForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+            <input :disabled="!!loginForm.email || !!loginForm.mobilePhone" v-model="loginForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input :disabled="!!loginForm.username || !!loginForm.email" v-model="loginForm.mobilePhone" placeholder="手机号" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
             <input v-model="loginForm.password" placeholder="密码" class="form-control" id="exampleInputPassword1">
@@ -47,10 +50,13 @@
       <div>
         <div class="form-row form-group">
           <div class="col">
-            <input :disabled="!!registerForm.username" v-model="registerForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
+            <input :disabled="!!registerForm.username || !!registerForm.mobilePhone" v-model="registerForm.email" placeholder="邮箱" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
-            <input :disabled="!!registerForm.email" v-model="registerForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+            <input :disabled="!!registerForm.email || !!registerForm.mobilePhone" v-model="registerForm.username" placeholder="用户名" class="form-control" aria-describedby="emailHelp">
+          </div>
+          <div class="col">
+            <input :disabled="!!registerForm.username || !!registerForm.email" v-model="registerForm.mobilePhone" placeholder="手机号" class="form-control" aria-describedby="emailHelp">
           </div>
           <div class="col">
             <input v-model="registerForm.password" placeholder="密码" class="form-control">
@@ -120,6 +126,24 @@
         </div>
         <button :disabled="!isLogin && !isAnonymousLogin" @click="updateUserinfo" type="button" class="btn btn-primary">修改用户信息</button>
       </div>
+      <hr />
+      <div class="form-row form-group">
+        <div class="col">
+          <input v-model="mobilePhone" placeholder="手机号码" class="form-control" />
+        </div>
+      </div>
+      <button :disabled="!isLogin" @click="setMobilePhone" type="button" class="btn btn-primary">修改手机号</button>
+      <hr />
+      <div class="form-row form-group">
+        <div class="col">
+          <input v-model="mobilePhone" placeholder="手机号码" class="form-control" />
+        </div>
+        <div class="col">
+          <input :disabled="isLogin" v-model="smsCode" placeholder="短信验证码" class="form-control" />
+        </div>
+      </div>
+      <button @click="getSmsCode" type="button" class="btn btn-primary">获取短信验证码</button>
+      <button :disabled="!isLogin" @click="verifyMobilePhone" type="button" class="btn btn-primary">验证手机号</button>
     </div>
   </div>
   <div class="card" v-show="isLogin || isAnonymousLogin">
