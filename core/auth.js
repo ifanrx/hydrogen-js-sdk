@@ -104,10 +104,10 @@ let getCurrentUser = () => {
   })
 }
 
-const loginWithMobilePhoneSmsCode = (mobilePhone, smsCode) => {
+const loginWithMobilePhoneSmsCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({
     url: API.LOGIN_SMS,
-    data: {phone: mobilePhone, code: smsCode},
+    data: {phone: mobilePhone, code: smsCode, create_user: createUser},
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res, false)

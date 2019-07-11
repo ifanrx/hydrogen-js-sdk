@@ -189,12 +189,13 @@ describe('auth', () => {
       const code = '123456'
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.loginWithMobilePhoneSmsCode(phone, code).then(() => {
+      return BaaS.auth.loginWithMobilePhoneSmsCode(phone, code, {createUser: false}).then(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
           url: '/hserve/v2.1/login/sms/',
           data: {
             phone,
             code,
+            create_user: false,
           },
           method: 'POST',
         })
