@@ -3,11 +3,11 @@ let VERSION = 'v2.0.1-a'
 let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
 
 const API = {
-  REGISTER_USERNAME: '/hserve/v2.0/register/username/',
-  REGISTER_EMAIL: '/hserve/v2.0/register/email/',
+  REGISTER_USERNAME: '/hserve/v2.1/register/username/',
+  REGISTER_EMAIL: '/hserve/v2.1/register/email/',
   REGISTER_PHONE: '/hserve/v2.1/register/phone/',
-  LOGIN_USERNAME: '/hserve/v2.0/login/username/',
-  LOGIN_EMAIL: '/hserve/v2.0/login/email/',
+  LOGIN_USERNAME: '/hserve/v2.1/login/username/',
+  LOGIN_EMAIL: '/hserve/v2.1/login/email/',
   LOGIN_PHONE: '/hserve/v2.1/login/phone/',
   LOGIN_SMS: '/hserve/v2.1/login/sms/',
   EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
@@ -67,8 +67,8 @@ const API = {
   },
 
   WECHAT: {
-    SILENT_LOGIN: '/hserve/v2.0/idp/wechat/silent-login/',
-    AUTHENTICATE: '/hserve/v2.0/idp/wechat/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.1/idp/wechat/silent-login/',
+    AUTHENTICATE: '/hserve/v2.1/idp/wechat/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
@@ -85,8 +85,8 @@ const API = {
   },
 
   ALIPAY: {
-    SILENT_LOGIN: '/hserve/v2.0/idp/alipay/silent-login/',
-    AUTHENTICATE: '/hserve/v2.0/idp/alipay/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.1/idp/alipay/silent-login/',
+    AUTHENTICATE: '/hserve/v2.1/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     MINIAPP_QR_CODE: '/hserve/v2.0/idp/alipay/miniapp-qr-code/',
