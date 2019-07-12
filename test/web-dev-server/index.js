@@ -182,7 +182,7 @@ function init() {
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginRedirect: function () {
-        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', './auth.html', {
           debug: true,
           mode: 'redirect',
           createUser: true,

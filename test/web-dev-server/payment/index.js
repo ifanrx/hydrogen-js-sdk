@@ -39,6 +39,16 @@ function init() {
         }).catch(err => console.log(err))
       },
 
+      payWithWechatJsApi() {
+        BaaS.payment.payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 0.01,
+          merchandiseDescription: 'test-04',
+        }).then(res => {
+          console.log(res)
+        }).catch(err => console.log(err))
+      },
+
       payWithWechatNative() {
         BaaS.payment.payWithWechat({
           gatewayType: 'weixin_tenpay_native',
