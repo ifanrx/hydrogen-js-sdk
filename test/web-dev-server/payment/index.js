@@ -45,8 +45,12 @@ function init() {
           totalCost: 0.01,
           merchandiseDescription: 'test-04',
         }).then(res => {
+          notie.alert({type: 1, text: '支付成功'});
           console.log(res)
-        }).catch(err => console.log(err))
+        }).catch(err => {
+          console.log(err)
+          notie.alert({type: 3, text: '支付失败'});
+        })
       },
 
       payWithWechatNative() {

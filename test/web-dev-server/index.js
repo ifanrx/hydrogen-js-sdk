@@ -10,6 +10,7 @@ function init() {
       if (result.status === 'success') {
         vm.isLogin = true
       }
+      notie.alert({type: 1, text: '登录成功'});
       console.log(result)
     })
     // .then(function (result) {console.log(result);alert(JSON.stringify(result))})
