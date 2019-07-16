@@ -165,14 +165,14 @@ class UserRecord extends BaseRecord {
    * 更改手机号
    * @param mobile
    */
-  setMobilePhone(mobile) {
+  setMobilePhone(phone) {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
     return BaaS._baasRequest({
       url: API.ACCOUNT_INFO,
       method: 'PUT',
-      data: {mobile},
+      data: {phone},
     }).then(res => {
       Object.assign(this._attribute, res.data)
       return this

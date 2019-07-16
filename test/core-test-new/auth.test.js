@@ -46,9 +46,9 @@ describe('auth', () => {
       })
 
       it(`should request ${action} api with mobilePhone`, () => {
-        return actionFunc({username: 'xxx', mobilePhone: 'abc', password: 'password'}).then(() => {
+        return actionFunc({username: 'xxx', phone: 'abc', password: 'password'}).then(() => {
           expect(BaaS.request.getCall(0).args[0].data).to.be.deep.equal({
-            mobilePhone: 'abc',
+            phone: 'abc',
             password: 'password',
           })
           expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.1/${action}/phone/`)
@@ -61,14 +61,14 @@ describe('auth', () => {
             email: 'abc',
             password: 'password',
           })
-          expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.0/${action}/email/`)
+          expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.1/${action}/email/`)
         })
       })
 
       it(`should request ${action} api with mobilePhone`, () => {
-        return actionFunc({username: 'xxx', mobilePhone: '12345', email: 'abc', password: 'password'}).then(() => {
+        return actionFunc({username: 'xxx', phone: '12345', email: 'abc', password: 'password'}).then(() => {
           expect(BaaS.request.getCall(0).args[0].data).to.be.deep.equal({
-            mobilePhone: '12345',
+            phone: '12345',
             password: 'password',
           })
           expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.1/${action}/phone/`)
@@ -81,7 +81,7 @@ describe('auth', () => {
             username: '',
             password: 'password',
           })
-          expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.0/${action}/username/`)
+          expect(BaaS.request.getCall(0).args[0].url).to.be.equal(`/hserve/v2.1/${action}/username/`)
         })
       })
     })

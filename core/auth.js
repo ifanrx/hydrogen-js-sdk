@@ -9,18 +9,18 @@ const User = require('./User')
 const API = BaaS._config.API
 
 function getAuthUrlAndAdjustRequestData(data, isLoginFunc) {
-  if (data.mobilePhone) {
+  if (data.phone) {
     delete data.username
     delete data.email
     return isLoginFunc ? API.LOGIN_PHONE : API.REGISTER_PHONE
   } else if (data.email) {
     delete data.username
-    delete data.mobilePhone
+    delete data.phone
     return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
   } else {
     data.username = data.username || ''
     delete data.email
-    delete data.mobilePhone
+    delete data.phone
     return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
   }
 }
