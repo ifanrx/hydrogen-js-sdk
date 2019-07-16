@@ -8,29 +8,42 @@ const User = require('./User')
 
 const API = BaaS._config.API
 
-function getAuthUrlAndAdjustRequestData(data, isLoginFunc) {
+function getAuthUrl(data, isLoginFunc) {
   if (data.phone) {
-    delete data.username
-    delete data.email
     return isLoginFunc ? API.LOGIN_PHONE : API.REGISTER_PHONE
   } else if (data.email) {
-    delete data.username
-    delete data.phone
     return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
   } else {
-    data.username = data.username || ''
-    delete data.email
-    delete data.phone
     return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
   }
 }
 
-const login = data => {
-  let url = getAuthUrlAndAdjustRequestData(data, true)
+function getAuthRequestData(data) {
+  if (data.phone) {
+    return {
+      phone: data.phone,
+      password: data.password,
+    }
+  } else if (data.email) {
+    return {
+      email: data.email,
+      password: data.password,
+    }
+  } else {
+    return {
+      username: data.username || '',
+      password: data.password,
+    }
+  }
+}
+
+const login = params => {
+  let url = getAuthUrl(params, true)
+  let data = getAuthRequestData(params)
   return BaaS.request({
     url,
     method: 'POST',
-    data: data,
+    data,
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
@@ -57,12 +70,13 @@ const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
 }
 
-const register = data => {
-  let url = getAuthUrlAndAdjustRequestData(data)
+const register = params => {
+  let url = getAuthUrl(params)
+  let data = getAuthRequestData(params)
   return BaaS.request({
     url,
     method: 'POST',
-    data: data,
+    data,
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
