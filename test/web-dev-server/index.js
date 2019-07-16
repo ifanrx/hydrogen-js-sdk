@@ -25,13 +25,13 @@ function init() {
           email: '',
           username: '',
           password: '',
-          mobilePhone: '',
+          phone: '',
         },
         registerForm: {
           email: '',
           username: '',
           password: '',
-          mobilePhone: '',
+          phone: '',
         },
         passwordChangeForm: {
           password: '',
@@ -222,7 +222,7 @@ function init() {
       },
 
       getSmsCode() {
-        BaaS.sendSmsCode({phone: this.mobilePhone}).then(() => {
+        BaaS.sendSmsCode({phone: vm.sms.phone}).then(() => {
           // success
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
@@ -230,7 +230,7 @@ function init() {
       },
 
       loginWithMobilePhone() {
-        BaaS.auth.loginWithMobilePhone(this.mobilePhone, this.smsCode).then(user => {
+        BaaS.auth.loginWithMobilePhone(vm.sms.phone, vm.sms.code).then(user => {
           console.log(user)
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
@@ -239,7 +239,7 @@ function init() {
 
       verifyMobilePhone() {
         BaaS.auth.getCurrentUser().then(function (user) {
-          return user.verifyMobilePhone(this.smsCode)
+          return user.verifyMobilePhone(vm.sms.code)
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
         })
@@ -247,7 +247,7 @@ function init() {
 
       setMobilePhone() {
         BaaS.auth.getCurrentUser().then(function (user) {
-          return user.setMobilePhone(this.mobilePhone)
+          return user.setMobilePhone(vm.sms.phone)
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
         })
