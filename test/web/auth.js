@@ -182,14 +182,14 @@ describe('auth', () => {
     })
   })
 
-  describe('# loginWithMobilePhoneSmsCode', () => {
+  describe('# loginWithSmsVerificationCode', () => {
     it('should call api with correct params', () => {
       BaaS._baasRequest = BaaS.request
       const phone = '15000000000'
       const code = '123456'
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.loginWithMobilePhoneSmsCode(phone, code, {createUser: false}).then(() => {
+      return BaaS.auth.loginWithSmsVerificationCode(phone, code, {createUser: false}).then(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
           url: '/hserve/v2.1/login/sms/',
           data: {

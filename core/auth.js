@@ -11,11 +11,11 @@ const API = BaaS._config.API
 function getAuthUrl(data, isLoginFunc) {
   if (data.phone) {
     return isLoginFunc ? API.LOGIN_PHONE : API.REGISTER_PHONE
-  } else if (data.email) {
-    return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
-  } else {
-    return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
   }
+  if (data.email) {
+    return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
+  }
+  return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
 }
 
 function getAuthRequestData(data) {
@@ -24,16 +24,16 @@ function getAuthRequestData(data) {
       phone: data.phone,
       password: data.password,
     }
-  } else if (data.email) {
+  }
+  if (data.email) {
     return {
       email: data.email,
       password: data.password,
     }
-  } else {
-    return {
-      username: data.username || '',
-      password: data.password,
-    }
+  }
+  return {
+    username: data.username || '',
+    password: data.password,
   }
 }
 
@@ -118,7 +118,7 @@ let getCurrentUser = () => {
   })
 }
 
-const loginWithMobilePhoneSmsCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
+const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({
     url: API.LOGIN_SMS,
     data: {phone: mobilePhone, code: smsCode, create_user: createUser},
@@ -133,7 +133,7 @@ module.exports = {
   login: utils.rateLimit(login),
   logout,
   silentLogin,
-  loginWithMobilePhoneSmsCode: utils.rateLimit(loginWithMobilePhoneSmsCode),
+  loginWithSmsVerificationCode: utils.rateLimit(loginWithSmsVerificationCode),
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),

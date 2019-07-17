@@ -230,7 +230,7 @@ function init() {
       },
 
       loginWithMobilePhone() {
-        BaaS.auth.loginWithMobilePhone(vm.sms.phone, vm.sms.code).then(user => {
+        BaaS.auth.loginWithSmsVerificationCode(vm.sms.phone, vm.sms.code).then(user => {
           console.log(user)
         }).catch(err => {
           notie.alert({type: 3, text: '请求失败'})
