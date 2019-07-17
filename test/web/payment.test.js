@@ -2,6 +2,7 @@ const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const constants = require('../../core/constants')
+const HError = require('../../core/HError')
 const utils = require('../../core/utils')
 const rewire = require('rewire')
 const paymentModule = rewire('../../sdk-file/src/web/payment')
@@ -45,6 +46,136 @@ describe('payment', () => {
             }
           })
         })
+      })
+    })
+
+    describe('#weixin_tenpay_js', () => {
+      const utils = paymentModule.__get__('utils')
+      let getWeixinJSBridgeStub
+      beforeEach(() => {
+        getWeixinJSBridgeStub = sinon.stub(utils, 'getWeixinJSBridge')
+      })
+
+      afterEach(() => {
+        getWeixinJSBridgeStub.restore()
+      })
+
+      it('should throw 615 error', () => {
+        const payWithWechat = createPayWithWechatFn(BaaS)
+        getWeixinJSBridgeStub.rejects()
+        let successSpy = sinon.spy()
+        let failSpy = sinon.spy()
+        return payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        })
+          .then(successSpy)
+          .catch(failSpy)
+          .then(() => {
+            expect(successSpy).have.not.been.called
+            expect(failSpy.getCall(0).args[0]).to.be.deep.equal(new HError(615))
+          })
+      })
+
+      it('should throw other error when get config fail', () => {
+        const payWithWechat = createPayWithWechatFn(BaaS)
+        getWeixinJSBridgeStub.resolves({invoke: (key, config, callback) => {
+          callback()
+        }})
+        BaaS._baasRequest.rejects(new Error('test-error'))
+        let successSpy = sinon.spy()
+        let failSpy = sinon.spy()
+        return payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        })
+          .then(successSpy)
+          .catch(failSpy)
+          .then(() => {
+            expect(successSpy).have.not.been.called
+            expect(failSpy.getCall(0).args[0]).to.be.deep.equal(new Error('test-error'))
+          })
+      })
+
+      it('should throw 607 error', () => {
+        const payWithWechat = createPayWithWechatFn(BaaS)
+        getWeixinJSBridgeStub.resolves({invoke: (key, config, callback) => {
+          callback({
+            err_msg: 'get_brand_wcpay_request:cancel',
+          })
+        }})
+        let successSpy = sinon.spy()
+        let failSpy = sinon.spy()
+        return payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        })
+          .then(successSpy)
+          .catch(failSpy)
+          .then(() => {
+            expect(successSpy).have.not.been.called
+            expect(failSpy.getCall(0).args[0]).to.be.deep.equal(new HError(607))
+          })
+      })
+
+      it('should throw 608 error', () => {
+        const payWithWechat = createPayWithWechatFn(BaaS)
+        getWeixinJSBridgeStub.resolves({invoke: (key, config, callback) => {
+          callback({
+            err_msg: 'xxx',
+          })
+        }})
+        let successSpy = sinon.spy()
+        let failSpy = sinon.spy()
+        return payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        })
+          .then(successSpy)
+          .catch(failSpy)
+          .then(() => {
+            expect(successSpy).have.not.been.called
+            expect(failSpy.getCall(0).args[0]).to.be.deep.equal(new HError(608, 'xxx'))
+          })
+      })
+
+      it('should pay successfully', () => {
+        const payWithWechat = createPayWithWechatFn(BaaS)
+        let config = {
+          transaction_no: 'foo',
+          trade_no: 'bar',
+        }
+        BaaS._baasRequest.resolves({
+          status: 200,
+          data: config,
+        })
+        let response = {
+          err_msg: 'get_brand_wcpay_request:ok',
+          data: 'mock data'
+        }
+        getWeixinJSBridgeStub.resolves({invoke: (key, config, callback) => {
+          callback(response)
+        }})
+        let successSpy = sinon.spy()
+        let failSpy = sinon.spy()
+        return payWithWechat({
+          gatewayType: 'weixin_tenpay_js',
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        })
+          .then(successSpy)
+          .catch(failSpy)
+          .then(() => {
+            expect(failSpy).have.not.been.called
+            expect(successSpy.getCall(0).args[0]).to.be.deep.equal({
+              ...response,
+              ...config,
+            })
+          })
       })
     })
 

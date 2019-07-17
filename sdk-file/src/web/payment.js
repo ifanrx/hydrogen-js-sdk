@@ -1,5 +1,5 @@
 const HError = require('core-module/HError')
-const utils = require('./utils')
+let utils = require('./utils')
 
 let WECHAT_GATEWAY_TYPE = {
   WAP: 'weixin_tenpay_wap',
