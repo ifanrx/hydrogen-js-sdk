@@ -40,7 +40,7 @@ class HError {
     case 614:
       return 'third party auth failed'
     case 615:
-      return 'gateway type "weixin_tenpay_js" can only be used in WeChat built-in browser'
+      return 'gateway type "weixin_tenpay_js" works in WeChat builtin browser only'
     default:
       return 'unknown error'
     }
