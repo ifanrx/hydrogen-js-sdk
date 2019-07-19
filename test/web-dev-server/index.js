@@ -10,6 +10,7 @@ function init() {
       if (result.status === 'success') {
         vm.isLogin = true
       }
+      notie.alert({type: 1, text: '登录成功'});
       console.log(result)
     })
     // .then(function (result) {console.log(result);alert(JSON.stringify(result))})
@@ -184,7 +185,7 @@ function init() {
           .catch(function (err) {console.log('err: ', err)})
       },
       thirdPartyLoginRedirect: function () {
-        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', '/auth.html', {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', './auth.html', {
           debug: true,
           mode: 'redirect',
           createUser: true,
