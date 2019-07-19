@@ -9,7 +9,8 @@
     "/lib"
   ],
   "scripts": {
-    "test": "npm run test-wechat && npm run test-web && npm run test-alipay",
+    "test": "npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay",
+    "test-core": "mocha test/core-test-new/*.test.js",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",
     "test-web": "./test/web/test.sh",

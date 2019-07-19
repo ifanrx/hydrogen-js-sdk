@@ -8,12 +8,42 @@ const User = require('./User')
 
 const API = BaaS._config.API
 
-const login = data => {
-  let url = data.username ? API.LOGIN_USERNAME : API.LOGIN_EMAIL
+function getAuthUrl(data, isLoginFunc) {
+  if (data.phone) {
+    return isLoginFunc ? API.LOGIN_PHONE : API.REGISTER_PHONE
+  }
+  if (data.email) {
+    return isLoginFunc ? API.LOGIN_EMAIL : API.REGISTER_EMAIL
+  }
+  return isLoginFunc ? API.LOGIN_USERNAME : API.REGISTER_USERNAME
+}
+
+function getAuthRequestData(data) {
+  if (data.phone) {
+    return {
+      phone: data.phone,
+      password: data.password,
+    }
+  }
+  if (data.email) {
+    return {
+      email: data.email,
+      password: data.password,
+    }
+  }
+  return {
+    username: data.username || '',
+    password: data.password,
+  }
+}
+
+const login = params => {
+  let url = getAuthUrl(params, true)
+  let data = getAuthRequestData(params)
   return BaaS.request({
     url,
     method: 'POST',
-    data: data,
+    data,
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
@@ -40,12 +70,13 @@ const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
 }
 
-const register = data => {
-  let url = data.username ? API.REGISTER_USERNAME : API.REGISTER_EMAIL
+const register = params => {
+  let url = getAuthUrl(params)
+  let data = getAuthRequestData(params)
   return BaaS.request({
     url,
     method: 'POST',
-    data: data,
+    data,
   }).then(utils.validateStatusCode).then(res => {
     BaaS._polyfill.handleLoginSuccess(res)
     return getCurrentUser()
@@ -74,7 +105,7 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
-const getCurrentUser = () => {
+let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
   if (!uid || !expiresAt || utils.isSessionExpired()) return Promise.reject(new HError(604))
@@ -87,10 +118,22 @@ const getCurrentUser = () => {
   })
 }
 
+const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
+  return BaaS.request({
+    url: API.LOGIN_SMS,
+    data: {phone: mobilePhone, code: smsCode, create_user: createUser},
+    method: 'POST',
+  }).then(utils.validateStatusCode).then(res => {
+    BaaS._polyfill.handleLoginSuccess(res, false)
+    return getCurrentUser()
+  })
+}
+
 module.exports = {
   login: utils.rateLimit(login),
   logout,
   silentLogin,
+  loginWithSmsVerificationCode: utils.rateLimit(loginWithSmsVerificationCode),
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),

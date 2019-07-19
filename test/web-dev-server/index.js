@@ -25,11 +25,13 @@ function init() {
           email: '',
           username: '',
           password: '',
+          phone: '',
         },
         registerForm: {
           email: '',
           username: '',
           password: '',
+          phone: '',
         },
         passwordChangeForm: {
           password: '',
@@ -217,6 +219,38 @@ function init() {
             vm.isLogin = true
           })
           .catch(function (err) {console.log('err: ', err)})
+      },
+
+      getSmsCode() {
+        BaaS.sendSmsCode({phone: vm.sms.phone}).then(() => {
+          // success
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      loginWithMobilePhone() {
+        BaaS.auth.loginWithSmsVerificationCode(vm.sms.phone, vm.sms.code).then(user => {
+          console.log(user)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      verifyMobilePhone() {
+        BaaS.auth.getCurrentUser().then(function (user) {
+          return user.verifyMobilePhone(vm.sms.code)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
+      },
+
+      setMobilePhone() {
+        BaaS.auth.getCurrentUser().then(function (user) {
+          return user.setMobilePhone(vm.sms.phone)
+        }).catch(err => {
+          notie.alert({type: 3, text: '请求失败'})
+        })
       },
     },
     computed: {},

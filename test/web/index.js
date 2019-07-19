@@ -10,7 +10,11 @@ if (typeof require !== 'undefined') {
   let BaaS = require('../../sdk-file/src/web')
   global.BaaS = BaaS
 
-  // 模拟 wx 方法
+  const sinon = require('sinon')
+  const sinonStubPromise = require('sinon-stub-promise')
+  sinonStubPromise(sinon)
+  global.sinon = sinon
+  global.expect = require('chai').expect
 }
 
 // BaaS 测试环境初始化设置（必须）
@@ -24,5 +28,18 @@ global.BaaS.init(BaaS.test.clientID)
 
 // 引入待测试模块
 require('./auth')
+require('../core/BaseQuery')
+require('../core/BaseRecord')
+require('../core/ContentGroup')
+require('../core/File')
+require('../core/FileCategory')
+require('../core/GeoPoint')
+require('../core/GeoPolygon')
+require('../core/Query')
+require('../core/storage')
+require('../core/TableObject')
+require('../core/TableRecord')
+require('../core/User')
+require('../core/UserRecord')
 require('./init')
 require('./ticketReportThrottle')
