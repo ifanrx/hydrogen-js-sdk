@@ -82,6 +82,7 @@ const API = {
     AUTHENTICATE: '/hserve/v2.0/idp/qq/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
+    DECRYPT: '/hserve/v2.0/qq/decrypt/',
   },
 
   ALIPAY: {

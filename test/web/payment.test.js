@@ -11,6 +11,7 @@ let expect = chai.expect
 
 const createPayWithWechatFn = paymentModule.__get__('createPayWithWechatFn')
 const createPayWithAlipayFn = paymentModule.__get__('createPayWithAlipayFn')
+const createPayWithQQFn = paymentModule.__get__('createPayWithQQFn')
 
 describe('payment', () => {
   let BaaS
@@ -276,6 +277,73 @@ describe('payment', () => {
       const payWithAlipay = createPayWithAlipayFn(BaaS)
       const successSpy = sinon.spy()
       return payWithAlipay({
+        gateway_type: 'bar',
+        total_cost: 12.34,
+        merchandise_description: 'foo.baz',
+      })
+        .then(successSpy)
+        .catch(err => {
+          expect(err.code).to.equal(608)
+        })
+        .then(() => {
+          expect(successSpy).have.not.been.called
+        })
+    })
+  })
+
+  describe('#payWithQQ', () => {
+    ['qpay_native',].forEach(type => {
+      it(`should request with correct params - "${type}"`, () => {
+        const payWithQQ = createPayWithQQFn(BaaS)
+        return payWithQQ({
+          gatewayType: type,
+          totalCost: 10.01,
+          merchandiseDescription: 'foo',
+        }).then(res => {
+          expect(res).to.equal('test-result')
+          expect(BaaS._baasRequest).to.have.been.calledWithMatch({
+            url: '/mock-url/',
+            method: 'POST',
+            data: {
+              gateway_type: type,
+              total_cost: 10.01,
+              merchandise_description: 'foo',
+            }
+          })
+        })
+      })
+    })
+
+    it(`should request with correct params (all params)`, () => {
+      const payWithQQ = createPayWithQQFn(BaaS)
+      return payWithQQ({
+        gatewayType: 'qpay_native',
+        totalCost: 12.34,
+        merchandiseDescription: 'foo.baz',
+        merchandiseSchemaID: '1234',
+        merchandiseRecordID: '5678',
+        merchandiseSnapshot: 'bar',
+      }).then(res => {
+        expect(res).to.equal('test-result')
+        expect(BaaS._baasRequest).to.have.been.calledWithMatch({
+          url: '/mock-url/',
+          method: 'POST',
+          data: {
+            gateway_type: 'qpay_native',
+            total_cost: 12.34,
+            merchandise_description: 'foo.baz',
+            merchandise_schema_id: '1234',
+            merchandise_record_id: '5678',
+            merchandise_snapshot: 'bar',
+          }
+        })
+      })
+    })
+
+    it ('should throw error', () => {
+      const payWithQQ = createPayWithQQFn(BaaS)
+      const successSpy = sinon.spy()
+      return payWithQQ({
         gateway_type: 'bar',
         total_cost: 12.34,
         merchandise_description: 'foo.baz',
