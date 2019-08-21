@@ -36,7 +36,11 @@ const createPayFn = BaaS => params => {
           return resolve(res)
         },
         fail: function (err) {
-          reject(new HError(608, err.errMsg))
+          if (err.errMsg == 'requestPayment:fail 用户取消') {
+            reject(new HError(607))
+          } else {
+            reject(new HError(608, err.errMsg))
+          }
         },
       })
     })
