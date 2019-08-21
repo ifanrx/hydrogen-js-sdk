@@ -106,6 +106,14 @@
       <button type="button" class="btn btn-primary" @click="payWithAlipayWap">支付</button>
     </div>
   </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">QQ 扫码支付</h5>
+      <img v-if="qqQrCode" :src="qqQrCode" alt="">
+      <button type="button" class="btn btn-primary" @click="payWithQQ">支付</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.3/qrcode.min.js"></script>

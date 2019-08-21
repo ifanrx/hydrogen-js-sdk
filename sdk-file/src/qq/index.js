@@ -4,6 +4,8 @@ const polyfill = require('./polyfill')
 const auth = require('./auth')
 const reportTicket = require('./reportTicket')
 const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
+const pay = require('./pay')
+const decryptData = require('./decryptData')
 
 BaaS._config.VERSION = __VERSION_QQ__
 
@@ -12,6 +14,8 @@ BaaS.use(polyfill)
 BaaS.use(auth)
 BaaS.use(reportTicket)
 BaaS.use(reportTemplateMsgAnalytics)
+BaaS.use(pay)
+BaaS.use(decryptData)
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')

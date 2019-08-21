@@ -34,7 +34,7 @@ class PayError extends HError {
   }
 }
 
-const createPayFn = BaaS => (params) => {
+const createPayFn = BaaS => params => {
   const API = BaaS._config.API
   let paramsObj = {}
 

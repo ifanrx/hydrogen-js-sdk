@@ -12,6 +12,10 @@ let ALIPAY_GATEWAY_TYPE = {
   PAGE: 'alipay_page',
 }
 
+let QQ_GATEWAY_TYPE = {
+  NATIVE: 'qpay_native',
+}
+
 const pay = (BaaS, options) => {
   let API = BaaS._config.API
   return BaaS._baasRequest({
@@ -73,9 +77,17 @@ const createPayWithAlipayFn = BaaS => options => {
   return pay(BaaS, options)
 }
 
+const createPayWithQQFn = BaaS => options => {
+  if (options.gatewayType !== QQ_GATEWAY_TYPE.NATIVE) {
+    return Promise.reject(new HError(608, 'incorrect gateway type'))
+  }
+  return pay(BaaS, options)
+}
+
 module.exports = function (BaaS) {
   BaaS.payment = {
     payWithWechat: createPayWithWechatFn(BaaS),
     payWithAlipay: createPayWithAlipayFn(BaaS),
+    payWithQQ: createPayWithQQFn(BaaS),
   }
 }
