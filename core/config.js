@@ -227,6 +227,7 @@ const requestParamsMap = {
   submissionType: 'submission_type',
   submissionValue: 'submission_value',
   categoryName: 'category_name',
+  signatureID: 'signature_id',
 }
 
 module.exports = {
