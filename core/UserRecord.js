@@ -56,6 +56,19 @@ class UserRecord extends BaseRecord {
     return BaaS._polyfill.linkQQ.apply(null, arguments)
   }
 
+  /**
+   * 将当前用户关联至百度账号
+   */
+  linkBaidu() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    if (!BaaS._polyfill.linkBaidu) {
+      return Promise.reject(new HError(605, 'linkBaidu 方法未定义'))
+    }
+    return BaaS._polyfill.linkBaidu.apply(null, arguments)
+  }
+
   linkThirdParty() {
     if (this._anonymous) {
       return Promise.reject(new HError(612))

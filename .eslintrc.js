@@ -17,6 +17,8 @@ module.exports = {
     describe: true,
     it: true,
     my: true,
+    qq: true,
+    swan: true,
     expect: true,
     beforeEach: true,
     before: true,
@@ -26,5 +28,7 @@ module.exports = {
     __VERSION_WEB__: true,
     __VERSION_ALIPAY__: true,
     __VERSION_WECHAT__: true,
+    __VERSION_QQ__: true,
+    __VERSION_BAIDU__: true,
   }
 }
