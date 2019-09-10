@@ -85,6 +85,12 @@ const API = {
     DECRYPT: '/hserve/v2.0/qq/decrypt/',
   },
 
+  BAIDU: {
+    SILENT_LOGIN: '/hserve/v2.1/idp/baidu/silent-login/',
+    AUTHENTICATE: '/hserve/v2.1/idp/baidu/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.1/idp/baidu/user-association/',
+  },
+
   ALIPAY: {
     SILENT_LOGIN: '/hserve/v2.1/idp/alipay/silent-login/',
     AUTHENTICATE: '/hserve/v2.1/idp/alipay/authenticate/',
