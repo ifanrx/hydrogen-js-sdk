@@ -3,7 +3,27 @@ const storage = require('./storage')
 const HError = require('./HError')
 const utils = require('./utils')
 
+/**
+ * @typedef InitOptions
+ * @property {boolean} autoLogin - 是否自动登录
+ * @property {string} logLevel - 日志输出等级
+ */
+
+/** @typedef CheckVersionOptions
+ * @property {string} platform 需要检测的平台
+ * @property {function} onSuccess - 接口请求成功时回调
+ * @property {function} onError - 接口请求失败时的回调
+ */
+
 module.exports = function (BaaS) {
+  /**
+   * SDK 初始化
+   *
+   * @function init
+   * @memberof BaaS
+   * @param {string} clientID
+   * @param {InitOptions} [options]
+   */
   BaaS.init = (clientID, {autoLogin = false, logLevel = ''} = {}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
@@ -17,15 +37,21 @@ module.exports = function (BaaS) {
     BaaS._polyfill.checkLatestVersion()
   }
 
+  /**
+   * 获取 token
+   *
+   * @memberof BaaS
+   * @return {string}
+   */
   BaaS.getAuthToken = () => {
     return storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
   }
 
   /**
+   * SDK 版本检查
    *
-   * @param platform 需要检测的平台
-   * @param onSuccess 接口请求成功时回调
-   * @param onError 接口请求失败时的回调
+   * @memberof BaaS
+   * @param {CheckVersionOptions} options
    */
   BaaS.checkVersion = ({platform, onSuccess, onError} = {}) => {
     if (!onSuccess) {
@@ -52,6 +78,11 @@ module.exports = function (BaaS) {
     BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(onSuccess, onError)
   }
 
+  /**
+   * 清除会话（退出登录）
+   *
+   * @memberof BaaS
+   */
   BaaS.clearSession = () => {
     // 清除客户端认证 Token
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')

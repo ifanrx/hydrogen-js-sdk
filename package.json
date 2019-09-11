@@ -18,7 +18,8 @@
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
-    "lint": "eslint core/**/*.js sdk-file/src/**/*.js"
+    "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
+    "gen-types": "npx jsdoc -t node_modules/@otris/jsdoc-tsd -r ./core/baas.js ./core/config.js ./core/index.js ./sdk-file/src/wechat/index.js -d out/baas.d.ts"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-object-assign": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
+    "@otris/jsdoc-tsd": "^1.0.4",
     "anywhere": "^1.5.0",
     "babel-loader": "^8.0.5",
     "chai": "^3.5.0",

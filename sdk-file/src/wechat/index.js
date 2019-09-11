@@ -24,6 +24,22 @@ BaaS.ErrorTracker = require('./errorTracker')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境
 if (typeof wx !== 'undefined') {
+  /**
+   * @interface WX
+   */
+
+  /**
+   * @constant
+   * @name wx
+   * @type {WX}
+   */
+
+  /**
+   * BaaS
+   * @type {BaaS}
+   * @name BaaS
+   * @memberof WX
+   */
   wx.BaaS = BaaS
 }
 
