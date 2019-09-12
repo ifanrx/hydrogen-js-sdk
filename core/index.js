@@ -9,7 +9,8 @@ const utils = require('./utils')
  * @property {string} logLevel - 日志输出等级
  */
 
-/** @typedef CheckVersionOptions
+/**
+ * @typedef CheckVersionOptions
  * @property {string} platform 需要检测的平台
  * @property {function} onSuccess - 接口请求成功时回调
  * @property {function} onError - 接口请求失败时的回调

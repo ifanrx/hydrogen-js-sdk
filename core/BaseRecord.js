@@ -16,6 +16,9 @@ function _serializeValueFuncFactory(config = ['BaseRecord']) {
   }
 }
 
+/**
+ * @class BaseRecord
+ */
 class BaseRecord {
   constructor(recordID) {
     this._recordID = recordID
@@ -29,6 +32,9 @@ class BaseRecord {
     }
   }
 
+  /**
+   * 设置属性
+   */
   set(...args) {
     const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
     const serializeArrayValue = _serializeValueFuncFactory(['Geo'])

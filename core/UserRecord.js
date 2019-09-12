@@ -6,6 +6,9 @@ const USER_PROFILE_BUILD_IN_FIELDS = constants.USER_PROFILE_BUILD_IN_FIELDS
 const HError = require('./HError')
 const API = BaaS._config.API
 
+/**
+ * @class UserRecord
+ */
 class UserRecord extends BaseRecord {
   constructor(userID) {
     super(userID)

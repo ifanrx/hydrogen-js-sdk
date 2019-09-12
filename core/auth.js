@@ -6,6 +6,11 @@ const utils = require('./utils')
 const UserRecord = require('./UserRecord')
 const User = require('./User')
 
+/**
+ * @typedef LoginOptions
+ * @property {boolean} [createUser] 是否创建用户
+ */
+
 const API = BaaS._config.API
 
 function getAuthUrl(data, isLoginFunc) {
@@ -37,6 +42,28 @@ function getAuthRequestData(data) {
   }
 }
 
+/**
+ * @typedef AuthWithUsernameOptions
+ * @property username {string} 用户名
+ * @property password {string} 密码
+ */
+/**
+ * @typedef AuthWithEmailOptions
+ * @property email {string} 邮箱
+ * @property password {string} 密码
+ */
+/**
+ * @typedef AuthWithPhoneOptions
+ * @property phone {string} 手机号码
+ * @property password {string} 密码
+ */
+/**
+ * 登录
+ *
+ * @memberof BaaS
+ * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
+ * @return {Promise<CurrentUser>}
+ */
 const login = params => {
   let url = getAuthUrl(params, true)
   let data = getAuthRequestData(params)
@@ -52,6 +79,9 @@ const login = params => {
 
 /**
  * 匿名登录
+ *
+ * @memberof BaaS
+ * @return {Promise<CurrentUser>}
  */
 const anonymousLogin = () => {
   return BaaS.request({
@@ -65,11 +95,21 @@ const anonymousLogin = () => {
 
 /**
  * 静默登录
+ *
+ * @memberof BaaS
+ * @return {Promise<CurrentUser>}
  */
 const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
 }
 
+/**
+ * 注册
+ *
+ * @memberof BaaS
+ * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
+ * @return {Promise<CurrentUser>}
+ */
 const register = params => {
   let url = getAuthUrl(params)
   let data = getAuthRequestData(params)
@@ -84,6 +124,12 @@ const register = params => {
 }
 
 
+/**
+ * 退出登录状态
+ *
+ * @memberof BaaS
+ * @return {Promise}
+ */
 const logout = () => {
   return BaaS.request({
     url: API.LOGOUT,
@@ -96,6 +142,9 @@ const logout = () => {
 
 /**
  * 忘记密码，发送重置密码邮件
+ *
+ * @memberof BaaS
+ * @return {Promise<any>}
  */
 const requestPasswordReset = ({email} = {}) => {
   return BaaS.request({
@@ -105,6 +154,12 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
+/**
+ * 获取当前用户
+ *
+ * @memberof BaaS
+ * @return {Promise<CurrentUser>}
+ */
 let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
@@ -118,6 +173,15 @@ let getCurrentUser = () => {
   })
 }
 
+/**
+ * 使用手机号 + 验证码登录
+ *
+ * @memberof BaaS
+ * @param {string} mobilePhone 手机号码
+ * @param {string} smsCode 验证码
+ * @param {LoginOptions} options
+ * @return {Promise<CurrentUser>}
+ */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({
     url: API.LOGIN_SMS,

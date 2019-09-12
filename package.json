@@ -19,7 +19,7 @@
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
     "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
-    "gen-types": "npx jsdoc -t node_modules/@otris/jsdoc-tsd -r ./core/baas.js ./core/config.js ./core/index.js ./sdk-file/src/wechat/index.js -d out/baas.d.ts"
+    "gen-types": "npx jsdoc -t node_modules/@otris/jsdoc-tsd -r ./core ./sdk-file/src/wechat/index.js -d out/baas.d.ts"
   },
   "repository": {
     "type": "git",

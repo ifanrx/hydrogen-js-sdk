@@ -4,6 +4,9 @@ const UserRecord = require('./UserRecord')
 const utils = require('./utils')
 const HError = require('./HError')
 
+/**
+ * @class User
+ */
 class User extends BaseQuery {
   constructor() {
     super()
