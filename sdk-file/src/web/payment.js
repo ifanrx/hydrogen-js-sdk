@@ -18,17 +18,21 @@ let QQ_GATEWAY_TYPE = {
 
 const pay = (BaaS, options) => {
   let API = BaaS._config.API
+  let data = {
+    gateway_type: options.gatewayType,
+    total_cost: options.totalCost,
+    merchandise_description: options.merchandiseDescription,
+    merchandise_schema_id: options.merchandiseSchemaID,
+    merchandise_record_id: options.merchandiseRecordID,
+    merchandise_snapshot: options.merchandiseSnapshot,
+  }
+  if (options.gatewayType.startsWith('weixin_tenpay_')) {
+    data.profit_sharing = options.profitSharing
+  }
   return BaaS._baasRequest({
     url: API.PAY,
     method: 'POST',
-    data: {
-      gateway_type: options.gatewayType,
-      total_cost: options.totalCost,
-      merchandise_description: options.merchandiseDescription,
-      merchandise_schema_id: options.merchandiseSchemaID,
-      merchandise_record_id: options.merchandiseRecordID,
-      merchandise_snapshot: options.merchandiseSnapshot,
-    },
+    data,
   })
 }
 
