@@ -8,24 +8,6 @@ const keysMap = {
   totalCost: 'total_cost', // required
 }
 
-class PayError extends HError {
-  mapErrorMessage(code) {
-    code = code.toString()
-    switch (code) {
-    case '10000':
-      return '签名校验失败'
-    case '10001':
-      return '参数错误'
-    case '10002':
-      return '系统错误'
-    case '10003':
-      return '系统内部错误，请稍后重试'
-    default:
-      return '未知错误'
-    }
-  }
-}
-
 const createPayFn = BaaS => (params, bannedChannels) => {
   const API = BaaS._config.API
   let paramsObj = {}
