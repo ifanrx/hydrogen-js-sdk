@@ -6,6 +6,9 @@ const BaseRecord = require('./BaseRecord')
 
 const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
+/**
+ * @class
+ */
 class Query {
   constructor() {
     this.queryObject = {}
@@ -31,6 +34,15 @@ class Query {
     return newQuery
   }
 
+  /**
+   * 比较判断，将 Record[key] 与 value 使用 operator 进行判断，筛选出
+   * 符合条件的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {string} operator - 判断操作符
+   * @param {string} value - 用于判断的值
+   * @returns {this}
+   */
   compare(key, operator, value) {
     let op = 'eq'
     switch(operator) {
@@ -59,6 +71,13 @@ class Query {
     return this
   }
 
+  /**
+   * 包含判断，筛选出符合条件（Record[key] 包含了字符串 str）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {string} str - 用于判断的字符串
+   * @returns {this}
+   */
   contains(key, str) {
     if (str && utils.isString(str)) {
       this._addQueryObject(key, {contains: str})
@@ -68,6 +87,13 @@ class Query {
     }
   }
 
+  /**
+   * 正则判断，筛选出符合条件（正则表达式 regExp 能匹配 Record[key]）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {RegExp} regExp - 正则表达式
+   * @returns {this}
+   */
   matches(key, regExp) {
     if (regExp && regExp instanceof RegExp) {
       let result = utils.parseRegExp(regExp)

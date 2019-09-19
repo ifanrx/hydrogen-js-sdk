@@ -1,0 +1,13 @@
+{
+  "plugins": [
+  ],
+  "recurseDepth": 10,
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "templates": {
+    "@otris/jsdoc-tsd": true
+  }
+}

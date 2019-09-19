@@ -7,6 +7,10 @@ const UserRecord = require('./UserRecord')
 const User = require('./User')
 
 /**
+ * @interface auth
+ */
+
+/**
  * @typedef LoginOptions
  * @property {boolean} [createUser] 是否创建用户
  */
@@ -60,7 +64,7 @@ function getAuthRequestData(data) {
 /**
  * 登录
  *
- * @memberof BaaS
+ * @memberof auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
  * @return {Promise<CurrentUser>}
  */
@@ -80,7 +84,7 @@ const login = params => {
 /**
  * 匿名登录
  *
- * @memberof BaaS
+ * @memberof auth
  * @return {Promise<CurrentUser>}
  */
 const anonymousLogin = () => {
@@ -96,7 +100,7 @@ const anonymousLogin = () => {
 /**
  * 静默登录
  *
- * @memberof BaaS
+ * @memberof auth
  * @return {Promise<CurrentUser>}
  */
 const silentLogin = () => {
@@ -106,7 +110,7 @@ const silentLogin = () => {
 /**
  * 注册
  *
- * @memberof BaaS
+ * @memberof auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
  * @return {Promise<CurrentUser>}
  */
@@ -127,7 +131,7 @@ const register = params => {
 /**
  * 退出登录状态
  *
- * @memberof BaaS
+ * @memberof auth
  * @return {Promise}
  */
 const logout = () => {
@@ -143,7 +147,7 @@ const logout = () => {
 /**
  * 忘记密码，发送重置密码邮件
  *
- * @memberof BaaS
+ * @memberof auth
  * @return {Promise<any>}
  */
 const requestPasswordReset = ({email} = {}) => {
@@ -157,7 +161,7 @@ const requestPasswordReset = ({email} = {}) => {
 /**
  * 获取当前用户
  *
- * @memberof BaaS
+ * @memberof auth
  * @return {Promise<CurrentUser>}
  */
 let getCurrentUser = () => {
@@ -176,7 +180,7 @@ let getCurrentUser = () => {
 /**
  * 使用手机号 + 验证码登录
  *
- * @memberof BaaS
+ * @memberof auth
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码
  * @param {LoginOptions} options

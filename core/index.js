@@ -11,7 +11,7 @@ const utils = require('./utils')
 
 /**
  * @typedef CheckVersionOptions
- * @property {string} platform 需要检测的平台
+ * @property {string} platform - 需要检测的平台
  * @property {function} onSuccess - 接口请求成功时回调
  * @property {function} onError - 接口请求失败时的回调
  */
@@ -104,6 +104,9 @@ module.exports = function (BaaS) {
   }
 
   // 暴露指定 BaaS 方法
+  /**
+   * @type auth
+   */
   BaaS.auth = require('./auth')
   BaaS.ContentGroup = require('./ContentGroup')
   BaaS.File = require('./File')
@@ -112,6 +115,11 @@ module.exports = function (BaaS) {
   BaaS.GeoPolygon = require('./GeoPolygon')
   BaaS.invokeFunction = require('./invokeFunction')
   BaaS.invoke = require('./invokeFunction')
+
+
+  /**
+   * @type {Class<Query>}
+   */
   BaaS.Query = require('./Query')
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')

@@ -7,6 +7,8 @@ const isProd = process.env.NODE_ENV === 'production'
 const isCI = process.env.NODE_ENV === 'ci'
 const CopyOutputFilePlugin = require('./webpack/CopyOutputFilePlugin')
 const copyFilesForDev = require('./webpack/copyFilesForDev')
+const shell = require('shelljs')
+const exec = require('child_process').exec
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -27,6 +29,19 @@ let plugins = [
     fileNameInOutputDir: isDEV ? 'sdk-wechat-plugin.dev.js' : `sdk-wechat-plugin.${pkg.version}.js`,
     targetFileName: '../../sdk-plugin/plugin/api/sdk-wechat.js',
   }),
+  {
+    apply: (compiler) => {
+      compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+        let genTypes = shell.exec('npm run gen-types-wechat', {async:true})
+        shell.exec(`echo "
+declare interface Class<T> {
+  new (...args: any): T
+}
+        " >> ./out/baas-wx.d.ts`)
+        shell.cp('./out/baas-wx.d.ts', '~/ifanr/sdk-test-minapp/wechat/baas.d.ts')
+      });
+    }
+  },
 ]
 
 module.exports = {
