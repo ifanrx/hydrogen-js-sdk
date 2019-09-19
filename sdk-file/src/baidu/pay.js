@@ -26,7 +26,7 @@ const createPayFn = BaaS => (params, bannedChannels) => {
     let data = res.data || {}
     return new Promise((resolve, reject) => {
       swan.requestPolymerPayment({
-        orderInfo: data.data,
+        orderInfo: data,
         bannedChannels: bannedChannels || [],
         success: function (res) {
           res.transaction_no = data.transaction_no
