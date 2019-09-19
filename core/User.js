@@ -5,7 +5,8 @@ const utils = require('./utils')
 const HError = require('./HError')
 
 /**
- * @class User
+ * @memberof BaaS
+ * @instance
  */
 class User extends BaseQuery {
   constructor() {
@@ -33,6 +34,10 @@ class User extends BaseQuery {
     }
   }
 
+  /**
+   *
+   * @returns {UserRecord}
+   */
   getCurrentUserWithoutData() {
     return new UserRecord()
   }

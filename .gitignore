@@ -6,6 +6,7 @@ sdk-file/dist/sdk-web-latest.js
 sdk-file/dist/*.map
 sdk-file/dist/*.zip
 sdk-file/webpack/copyFilesForDev.local.js
+sdk-file/webpack/genTyepsConfig.local.js
 lib/
 yarn-error.log
 *.swp
@@ -14,4 +15,5 @@ test/web-dev-server/sdk.dev.js
 scripts/config.js
 sdk-plugin/plugin/api/sdk-wechat.js
 test-storage/
-out/
+docs/
+types/

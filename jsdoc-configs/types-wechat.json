@@ -1,0 +1,21 @@
+{
+  "plugins": [],
+  "opts": {
+    "template": "node_modules/@otris/jsdoc-tsd",
+    "encoding": "utf8",
+    "destination": "./types/baas-wx.d.ts",
+    "recurse": true
+  },
+  "source": {
+    "include": [
+      "core",
+      "sdk-file/src/wechat/index.js"
+    ]
+  },
+  "recurseDepth": 10,
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  }
+}

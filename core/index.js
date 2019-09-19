@@ -22,8 +22,8 @@ module.exports = function (BaaS) {
    *
    * @function init
    * @memberof BaaS
-   * @param {string} clientID
-   * @param {InitOptions} [options]
+   * @param {string} clientID - 知晓云应用的 client id
+   * @param {InitOptions} [options] - 其他选项
    */
   BaaS.init = (clientID, {autoLogin = false, logLevel = ''} = {}) => {
     if (!utils.isString(clientID)) {
@@ -104,9 +104,6 @@ module.exports = function (BaaS) {
   }
 
   // 暴露指定 BaaS 方法
-  /**
-   * @type auth
-   */
   BaaS.auth = require('./auth')
   BaaS.ContentGroup = require('./ContentGroup')
   BaaS.File = require('./File')
@@ -116,13 +113,16 @@ module.exports = function (BaaS) {
   BaaS.invokeFunction = require('./invokeFunction')
   BaaS.invoke = require('./invokeFunction')
 
-
-  /**
+  /*
    * @type {Class<Query>}
    */
   BaaS.Query = require('./Query')
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
+
+  /*
+   * @type {Class<User>}
+   */
   BaaS.User = require('./User')
   BaaS.Order = require('./Order')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象

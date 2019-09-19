@@ -17,7 +17,8 @@ function _serializeValueFuncFactory(config = ['BaseRecord']) {
 }
 
 /**
- * @class BaseRecord
+ * @memberof BaaS
+ * @instance
  */
 class BaseRecord {
   constructor(recordID) {

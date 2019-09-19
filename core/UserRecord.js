@@ -7,7 +7,8 @@ const HError = require('./HError')
 const API = BaaS._config.API
 
 /**
- * @class UserRecord
+ * @memberof BaaS
+ * @inner
  */
 class UserRecord extends BaseRecord {
   constructor(userID) {
@@ -21,7 +22,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至微信账号
+   * 将当前用户关联至微信账号，非当前用户与匿名用户无法调用
    */
   linkWechat() {
     if (this._anonymous) {
@@ -34,7 +35,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至支付宝账号
+   * 将当前用户关联至支付宝账号，非当前用户与匿名用户无法调用
    */
   linkAlipay() {
     if (this._anonymous) {
@@ -47,7 +48,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至 QQ 账号
+   * 将当前用户关联至 QQ 账号，非当前用户与匿名用户无法调用
    */
   linkQQ() {
     if (this._anonymous) {
@@ -60,7 +61,7 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * 将当前用户关联至百度账号
+   * 将当前用户关联至百度账号，非当前用户与匿名用户无法调用
    */
   linkBaidu() {
     if (this._anonymous) {
@@ -72,6 +73,10 @@ class UserRecord extends BaseRecord {
     return BaaS._polyfill.linkBaidu.apply(null, arguments)
   }
 
+
+  /**
+   * 将当前用户关联至第三方账号，非当前用户与匿名用户无法调用
+   */
   linkThirdParty() {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
@@ -83,7 +88,16 @@ class UserRecord extends BaseRecord {
   }
 
   /**
+   * @typedef UpdatePasswordOption
+   * @property {string} password 旧密码
+   * @property {string} newPassword 新密码
+   */
+
+  /**
    * 更新密码
+   * 
+   * @param {UpdatePasswordOption} options 
+   * @returns {this} UserRecord 实例
    */
   updatePassword({password, newPassword}) {
     if (this._anonymous) {

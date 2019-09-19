@@ -1,0 +1,20 @@
+{
+  "plugins": [],
+  "opts": {
+    "encoding": "utf8",
+    "destination": "./docs",
+    "recurse": true
+  },
+  "source": {
+    "include": [
+      "core",
+      "sdk-file/src/wechat/index.js"
+    ]
+  },
+  "recurseDepth": 10,
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  }
+}

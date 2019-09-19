@@ -7,7 +7,8 @@ const UserRecord = require('./UserRecord')
 const User = require('./User')
 
 /**
- * @interface auth
+ * @namespace auth
+ * @memberof BaaS
  */
 
 /**
@@ -64,9 +65,9 @@ function getAuthRequestData(data) {
 /**
  * 登录
  *
- * @memberof auth
+ * @memberof BaaS.auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
- * @return {Promise<CurrentUser>}
+ * @return {Promise<UserRecord>}
  */
 const login = params => {
   let url = getAuthUrl(params, true)
@@ -84,8 +85,8 @@ const login = params => {
 /**
  * 匿名登录
  *
- * @memberof auth
- * @return {Promise<CurrentUser>}
+ * @memberof BaaS.auth
+ * @return {Promise<UserRecord>}
  */
 const anonymousLogin = () => {
   return BaaS.request({
@@ -100,8 +101,8 @@ const anonymousLogin = () => {
 /**
  * 静默登录
  *
- * @memberof auth
- * @return {Promise<CurrentUser>}
+ * @memberof BaaS.auth
+ * @return {Promise<UserRecord>}
  */
 const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
@@ -110,9 +111,9 @@ const silentLogin = () => {
 /**
  * 注册
  *
- * @memberof auth
+ * @memberof BaaS.auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
- * @return {Promise<CurrentUser>}
+ * @return {Promise<UserRecord>}
  */
 const register = params => {
   let url = getAuthUrl(params)
@@ -131,7 +132,7 @@ const register = params => {
 /**
  * 退出登录状态
  *
- * @memberof auth
+ * @memberof BaaS.auth
  * @return {Promise}
  */
 const logout = () => {
@@ -147,7 +148,7 @@ const logout = () => {
 /**
  * 忘记密码，发送重置密码邮件
  *
- * @memberof auth
+ * @memberof BaaS.auth
  * @return {Promise<any>}
  */
 const requestPasswordReset = ({email} = {}) => {
@@ -161,8 +162,8 @@ const requestPasswordReset = ({email} = {}) => {
 /**
  * 获取当前用户
  *
- * @memberof auth
- * @return {Promise<CurrentUser>}
+ * @memberof BaaS.auth
+ * @return {Promise<UserRecord>}
  */
 let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
@@ -180,11 +181,11 @@ let getCurrentUser = () => {
 /**
  * 使用手机号 + 验证码登录
  *
- * @memberof auth
+ * @memberof BaaS.auth
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码
  * @param {LoginOptions} options
- * @return {Promise<CurrentUser>}
+ * @return {Promise<UserRecord>}
  */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({

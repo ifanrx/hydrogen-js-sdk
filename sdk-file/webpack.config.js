@@ -32,13 +32,8 @@ let plugins = [
   {
     apply: (compiler) => {
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-        let genTypes = shell.exec('npm run gen-types-wechat', {async:true})
-        shell.exec(`echo "
-declare interface Class<T> {
-  new (...args: any): T
-}
-        " >> ./out/baas-wx.d.ts`)
-        shell.cp('./out/baas-wx.d.ts', '~/ifanr/sdk-test-minapp/wechat/baas.d.ts')
+        let config = require('./webpack/genTyepsConfig')
+        shell.exec(`scripts/gen-types.sh wechat ${config.wechat}`, {async:true})
       });
     }
   },
