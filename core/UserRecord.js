@@ -8,7 +8,8 @@ const API = BaaS._config.API
 
 /**
  * @memberof BaaS
- * @inner
+ * @extends BaaS.BaseRecord
+ * @package
  */
 class UserRecord extends BaseRecord {
   constructor(userID) {

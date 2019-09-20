@@ -6,7 +6,8 @@ const HError = require('./HError')
 
 /**
  * @memberof BaaS
- * @instance
+ * @extends BaaS.BaseQuery
+ * @public
  */
 class User extends BaseQuery {
   constructor() {

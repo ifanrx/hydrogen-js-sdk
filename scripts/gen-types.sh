@@ -13,13 +13,26 @@ fi
 ./node_modules/.bin/jsdoc -c $config -d $dest
 echo Generated *.d.ts file of $1
 
-sed -i '' 's/^/    /g' $dest
+# sed -i '' 's/^/    /g' $dest
+#
+# sed -i '' '1i\
+# declare namespace wx {
+# ' $dest
+# sed -i '' '$i\
+# }' $dest
 
-sed -i '' '1i\
-declare namespace wx {
-' $dest
-sed -i '' '$i\
-}' $dest
+echo "
+declare namespace WechatMiniprogram {
+    interface Wx {
+        /**
+         * 知晓云 SDK 命名空间
+         */
+        BaaS: typeof BaaS;
+    }
+}
+
+declare const wx: WechatMiniprogram.Wx
+" >> $dest
 
 # 将 'Class<xxx>' 转换为 Typescript 的 'typeof xxx'
 # sed -i "" "s/Class\<\(.*\)\>/typeof \1/g" $dest

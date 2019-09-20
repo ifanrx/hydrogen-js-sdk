@@ -1,7 +1,3 @@
-/**
- * @interface Config
- */
-
 const API_HOST = 'https://api.myminapp.com'
 let VERSION = 'v2.0.1-a'
 let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
@@ -244,21 +240,15 @@ module.exports = {
   API: API,
   AUTH_PREFIX: 'Hydrogen-r1',
   METHOD_MAP_LIST: methodMapList,
-  /**
-   * 是否开启 debug 模式
-   *
-   * @type boolean
-   * @memberof Config
-   */
   DEBUG: false,
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
   SDK_DOWNLOAD_PAGE: SDK_DOWNLOAD_PAGE,
   /**
-   * 版本号
+   * SDK 版本号
    *
    * @type string
-   * @memberof Config
+   * @memberof BaaS._config
    */
   VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }

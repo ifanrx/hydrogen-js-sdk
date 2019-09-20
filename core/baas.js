@@ -6,25 +6,25 @@
 const BaaS = global.BaaS || {}
 
 /**
- * @type {Config}
- * @memberof BaaS
+ * @namespace BaaS._config
  */
 BaaS._config = require('./config')
 BaaS._polyfill = require('./polyfill')
 
 /**
- * 插件
+ * 模块
  *
- * @typedef {Function} Plugin
- * @param {BaaS} BaaS - BaaS 对象
+ * @typedef {Function} Module
+ * @param {any} BaaS - BaaS 对象
  * @memberof BaaS
  */
 
 /**
- * 应用插件
+ * 应用模块
  *
- * @param {Plugin} fn
+ * @param {Module} fn
  * @memberof BaaS
+ * @private
  */
 BaaS.use = fn => fn(BaaS)
 

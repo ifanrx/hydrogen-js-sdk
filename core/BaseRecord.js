@@ -18,7 +18,7 @@ function _serializeValueFuncFactory(config = ['BaseRecord']) {
 
 /**
  * @memberof BaaS
- * @instance
+ * @package
  */
 class BaseRecord {
   constructor(recordID) {
@@ -35,6 +35,15 @@ class BaseRecord {
 
   /**
    * 设置属性
+   * @method
+   * @param {string} key 字段名称
+   * @param {string} value 值
+   * @return {this}
+   *//**
+   * 设置属性
+   * @method
+   * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
+   * @return {this}
    */
   set(...args) {
     const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])

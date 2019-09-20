@@ -20,7 +20,7 @@ class Query {
    *
    * @static
    * @function
-   * @param {...Query} querys Query 对象
+   * @param {...Query[]} querys Query 对象
    * @returns {Query} - 新的 Query 对象
    */
   static and(...queryObjects) {
@@ -38,7 +38,7 @@ class Query {
    *
    * @static
    * @function
-   * @param {...Query} querys Query 对象
+   * @param {...Query[]} querys Query 对象
    * @returns {Query} - 新的 Query 对象
    */
   static or(...queryObjects) {

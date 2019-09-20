@@ -133,7 +133,7 @@ const register = params => {
  * 退出登录状态
  *
  * @memberof BaaS.auth
- * @return {Promise}
+ * @return {Promise<any>}
  */
 const logout = () => {
   return BaaS.request({
