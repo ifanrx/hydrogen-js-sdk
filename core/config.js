@@ -55,7 +55,7 @@ const API = {
   SEND_SMS_CODE: '/hserve/v2.2/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 
-  PAY: '/hserve/v2.0/idp/pay/order/',
+  PAY: '/hserve/v2.2/idp/pay/order/',
   ORDER: '/hserve/v2.0/idp/pay/order/:transactionID/',
 
   TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
