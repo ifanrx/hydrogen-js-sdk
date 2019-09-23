@@ -36,7 +36,7 @@ module.exports = BaaS => {
       return Promise.reject(new HError(605))
     }
     return BaaS._baasRequest({
-      url: BaaS._polyfill.getAPIHost() + BaaS._config.API.WECHAT.CENSOR_MSG,
+      url: BaaS._config.API.WECHAT.CENSOR_MSG,
       method: 'POST',
       data: {
         content: text
@@ -44,6 +44,24 @@ module.exports = BaaS => {
     })
   }
 
+  const censorAsync = fileId => {
+    return BaaS._baasRequest({
+      url: BaaS._config.API.WECHAT.CENSOR_ASYNC,
+      method: 'POST',
+      data: {
+        file_id: fileId,
+      }
+    })
+  }
+
+  const getCensorResult = id => {
+    return BaaS._baasRequest({
+      url: `${BaaS._config.API.WECHAT.CENSOR_ASYNC}${id}/`,
+    })
+  }
+
   BaaS.wxCensorImage = wxCensorImage
   BaaS.wxCensorText = wxCensorText
+  BaaS.censorAsync = censorAsync
+  BaaS.getCensorResult = getCensorResult
 }
