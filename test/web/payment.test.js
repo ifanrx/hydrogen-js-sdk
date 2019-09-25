@@ -35,6 +35,7 @@ describe('payment', () => {
           gatewayType: type,
           totalCost: 10.01,
           merchandiseDescription: 'foo',
+          profitSharing: true,
         }).then(res => {
           expect(res).to.equal('test-result')
           expect(BaaS._baasRequest).to.have.been.calledWithMatch({
@@ -44,6 +45,7 @@ describe('payment', () => {
               gateway_type: type,
               total_cost: 10.01,
               merchandise_description: 'foo',
+              profit_sharing: true,
             }
           })
         })
@@ -70,6 +72,7 @@ describe('payment', () => {
           gatewayType: 'weixin_tenpay_js',
           totalCost: 10.01,
           merchandiseDescription: 'foo',
+          profitSharing: true,
         })
           .then(successSpy)
           .catch(failSpy)
@@ -189,6 +192,7 @@ describe('payment', () => {
         merchandiseSchemaID: '1234',
         merchandiseRecordID: '5678',
         merchandiseSnapshot: 'bar',
+        profitSharing: true,
       }).then(res => {
         expect(res).to.equal('test-result')
         expect(BaaS._baasRequest).to.have.been.calledWithMatch({
@@ -201,6 +205,7 @@ describe('payment', () => {
             merchandise_schema_id: '1234',
             merchandise_record_id: '5678',
             merchandise_snapshot: 'bar',
+            profit_sharing: true,
           }
         })
       })
@@ -232,6 +237,7 @@ describe('payment', () => {
           gatewayType: type,
           totalCost: 10.01,
           merchandiseDescription: 'foo',
+          profitSharing: true,
         }).then(res => {
           expect(res).to.equal('test-result')
           expect(BaaS._baasRequest).to.have.been.calledWithMatch({
@@ -256,6 +262,7 @@ describe('payment', () => {
         merchandiseSchemaID: '1234',
         merchandiseRecordID: '5678',
         merchandiseSnapshot: 'bar',
+        profitSharing: true,
       }).then(res => {
         expect(res).to.equal('test-result')
         expect(BaaS._baasRequest).to.have.been.calledWithMatch({
@@ -299,6 +306,7 @@ describe('payment', () => {
           gatewayType: type,
           totalCost: 10.01,
           merchandiseDescription: 'foo',
+          profitSharing: true,
         }).then(res => {
           expect(res).to.equal('test-result')
           expect(BaaS._baasRequest).to.have.been.calledWithMatch({
@@ -323,6 +331,7 @@ describe('payment', () => {
         merchandiseSchemaID: '1234',
         merchandiseRecordID: '5678',
         merchandiseSnapshot: 'bar',
+        profitSharing: true,
       }).then(res => {
         expect(res).to.equal('test-result')
         expect(BaaS._baasRequest).to.have.been.calledWithMatch({

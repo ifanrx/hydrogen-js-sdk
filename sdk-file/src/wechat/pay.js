@@ -9,6 +9,7 @@ const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
   merchandiseRecordID: 'merchandise_record_id', // optional
   merchandiseSnapshot: 'merchandise_snapshot', // optional
+  profitSharing: 'profit_sharing', // optional
   merchandiseDescription: 'merchandise_description', // required
   totalCost: 'total_cost', // required
 }
