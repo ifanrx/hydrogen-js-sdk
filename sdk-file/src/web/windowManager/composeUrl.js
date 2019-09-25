@@ -9,8 +9,8 @@ module.exports = function (options) {
   if (options.debug) {
     url.searchParams.set(PARAM.DEBUG, options.debug)
   }
-  if (options.createUser) {
-    url.searchParams.set(PARAM.CREATE_USER, options.createUser)
+  if (options.createUser || typeof options.createUser === 'undefined') {
+    url.searchParams.set(PARAM.CREATE_USER, true)
   }
   if (options.syncUserProfile) {
     url.searchParams.set(PARAM.UPDATE_USER_PROFILE, options.syncUserProfile)
