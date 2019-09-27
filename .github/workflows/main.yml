@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - generate-type-definition
-  repository_dispatch
+  repository_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
