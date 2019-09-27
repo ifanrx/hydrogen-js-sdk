@@ -1,0 +1,16 @@
+name: BUILD DOCS
+on:
+  push:
+    branches:
+      - generate-type-definition
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Webhook
+      uses: zzzze/webhook-action@master
+      with:
+        data: "{\"event_type\":\"generate-type-definition\"}"
+        webhook_url: ${{ secrets.WEBHOOK_URL }}
+        options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.TOKEN }}\""
