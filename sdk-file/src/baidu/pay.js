@@ -29,8 +29,7 @@ const createPayFn = BaaS => (params, bannedChannels) => {
         orderInfo: data,
         bannedChannels: bannedChannels || [],
         success: function (res) {
-          res.transaction_no = data.transaction_no
-          res.trade_no = data.trade_no
+          res.transaction_no = data.tpOrderId
           return resolve(res)
         },
         fail: function (err) {

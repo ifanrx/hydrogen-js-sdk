@@ -10,8 +10,7 @@ test('swan.pay', t => {
     _baasRequest: sinon.stub().resolves({
       data: {
         data: 'test-data',
-        transaction_no: 'foo',
-        trade_no: 'bar',
+        tpOrderId: 'foo', // 最终的 transaction_no
       },
     }),
     _config: {
@@ -37,11 +36,10 @@ test('swan.pay', t => {
     t.deepEqual(res, {
       test: 'test-result',
       transaction_no: 'foo',
-      trade_no: 'bar',
     })
     t.is(global.swan.requestPolymerPayment.callCount, 1)
     t.is(BaaS._baasRequest.callCount, 1)
-    t.is(global.swan.requestPolymerPayment.getCall(0).args[0].orderInfo, 'test-data')
+    t.is(global.swan.requestPolymerPayment.getCall(0).args[0].orderInfo.data, 'test-data')
     t.deepEqual(BaaS._baasRequest.getCall(0).args, [{
       data: {
         gateway_type: 'baidu_miniapp_pay',
