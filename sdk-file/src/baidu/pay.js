@@ -29,6 +29,12 @@ const createPayFn = BaaS => (params, bannedChannels) => {
         orderInfo: data,
         bannedChannels: bannedChannels || [],
         success: function (res) {
+          // 百度 iOS 客户端 bug: res 为 string 类型，导致支付成功后，用户无法获取到 transaction_no
+          if (typeof res === 'string') {
+            res = {
+              responseData: res,
+            }
+          }
           res.transaction_no = data.tpOrderId
           return resolve(res)
         },
