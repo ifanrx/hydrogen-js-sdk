@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Webhook
-      uses: zzzze/webhook-action@master
+    - name: Webhook Trigger
+      uses: zzzze/webhook-trigger@v1.0.0
       with:
         data: "{\"event_type\":\"generate-type-definition\"}"
         webhook_url: ${{ secrets.WEBHOOK_URL_FOR_BUILD_DOCS }}

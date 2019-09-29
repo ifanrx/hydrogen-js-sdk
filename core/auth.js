@@ -7,6 +7,7 @@ const UserRecord = require('./UserRecord')
 const User = require('./User')
 
 /**
+ * 用户认证
  * @namespace auth
  * @memberof BaaS
  */

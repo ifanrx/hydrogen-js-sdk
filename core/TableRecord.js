@@ -2,19 +2,42 @@ const BaaS = require('./baas')
 const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
 
+/**
+ * 数据记录
+ * @memberof BaaS
+ * @extends BaaS.BaseRecord
+ * @package
+ */
 class TableRecord extends BaseRecord {
+  /**
+   * @private
+   */
   constructor(tableID, recordID, queryObject = {}) {
     super(recordID)
     this._tableID = tableID
     this._queryObject = queryObject
   }
 
+  /**
+   * 保存数据记录
+   * @return {Promise<any>}
+   */
   save() {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     return BaaS.createRecord({tableID: this._tableID, data: record.$set})
   }
 
+  /**
+   * @typedef BatchUpdateParams
+   * @property {boolean} enableTrigger 是否触发触发器
+   */
+
+  /**
+   * 更新数据记录
+   * @param {BatchUpdateParams} [options] 批量更新参数
+   * @return {Promise<any>}
+   */
   update({enableTrigger = true} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()

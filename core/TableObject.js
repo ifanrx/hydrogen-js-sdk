@@ -6,16 +6,40 @@ const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
 
+/**
+ * 数据表
+ * @memberof BaaS
+ * @extends BaaS.BaseQuery
+ * @public
+ */
 class TableObject extends BaseQuery {
+  /**
+   * @param {string} tableName 数据表名称
+   */
   constructor(tableID) {
     super()
     this._tableID = tableID
   }
 
+  /**
+   * 创建一条数据记录
+   * @return {TableRecord}
+   */
   create() {
     return new TableRecord(this._tableID)
   }
 
+  /**
+   * @typedef CreateManyParams
+   * @property {boolean} enableTrigger 是否触发触发器
+   */
+
+  /**
+   * 批量创建数据记录
+   * @param {object[]} args 数据记录列表
+   * @param {CreateManyParams} [options] 批量创建参数
+   * @return {Promise<any>}
+   */
   createMany(args, {enableTrigger = true} = {}) {
     const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
@@ -36,6 +60,15 @@ class TableObject extends BaseQuery {
     }
   }
 
+  /**
+   * 删除数据记录
+   * @param {number} 数据记录 ID
+   * @return {Promise<any>}
+   *//**
+   * 批量删除数据记录
+   * @param {Query} 数据记录查询条件
+   * @return {Promise<any>}
+   */
   delete(args, {enableTrigger = true} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})

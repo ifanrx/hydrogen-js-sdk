@@ -1,4 +1,11 @@
+/**
+ * @package
+ */
 class HError {
+  /**
+   * @param {number} code 错误码
+   * @param {string} msg 错误信息
+   */
   constructor(code, msg) {
     let error = new Error()
 
