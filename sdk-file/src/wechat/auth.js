@@ -4,6 +4,20 @@ const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
+/**
+ * @typedef UserInfoDetail
+ * @property {object} userInfo 用户信息对象，不包含 openid 等敏感信息
+ * @property {string} rawData 不包括敏感信息的原始数据字符串，用于计算签名
+ * @property {string} signature 使用 sha1( rawData + sessionkey ) 得到字符串，用于校验用户信息
+ * @property {string} encryptedData 包括敏感数据在内的完整用户信息的加密数据
+ * @property {string} iv 加密算法的初始向量
+ */
+
+/**
+ * @typedef AuthData
+ * @property {UserInfoDetail} detail 用户信息
+ */
+
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -45,11 +59,16 @@ module.exports = BaaS => {
     }, reject)
   }
 
-  /**
+  /*
    * v2.0.8-a 中存在的 bug:
    * 如果调用 silentLogin（直接调用或在 autoLogin 为 ture 的情况下，401 错误后自动调用），
    * 并且同时调用 loginWithWechat，会发出两个 silent_login 的请求，可能会造成后端同时创建两个用户。
    * 因此，直接在 silentLogin 处做并发限制（loginWithWechat 会调用这个 silentLogin）。
+   */
+  /**
+   * 静默登录
+   * @function
+   * @memberof BaaS.auth
    */
   const silentLogin = utils.rateLimit(function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
@@ -59,6 +78,16 @@ module.exports = BaaS => {
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  /**
+   * 获取用户信息
+   * @deprecated
+   * @function
+   * @memberof BaaS.auth
+   * @param {object} options 参数
+   * @param {UserInfoDetail} options.detail 用户信息
+   * @param {boolean} options.createUser 是否创建用户
+   * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
+   */
   const handleUserInfo = res => {
     if (!res || !res.detail) {
       throw new HError(603)
@@ -120,6 +149,19 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * @typedef LinkOptions
+   * @property {boolean} syncUserProfile 是否同步第一层级用户信息
+   */
+
+  /**
+   * 关联微信账号
+   * @function
+   * @since v2.0.0
+   * @memberof BaaS.auth
+   * @param {AuthData|null} authData 用户信息
+   * @param {LinkOptions} params 用户信息参数
+   */
   const linkWechat = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -153,6 +195,20 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * @typedef LoginOptions
+   * @property {boolean} createUser 是否创建用户
+   * @property {boolean} syncUserProfile 是否同步第一层级用户信息
+   */
+
+  /**
+   * 强制登录
+   * @function
+   * @since v2.0.0
+   * @memberof BaaS.auth
+   * @param {AuthData|null} authData 用户信息
+   * @param {LoginOptions} options 其他选项
+   */
   const loginWithWechat = (authData, {
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
@@ -177,8 +233,20 @@ module.exports = BaaS => {
   })
 
 
-  // 兼容原有的 API
+  /*
+   * 兼容原有的 API
+   * /
 
+  /**
+   * 微信登录（仅支持静默登录）
+   * @deprecated
+   * @function
+   * @memberof BaaS
+   * @param {boolean} forceLogin 是否是强制登录
+   * @example
+   * BaaS.login(false)
+   * @return {Promive<any>}
+   */
   BaaS.login = function (args) {
     if (args === false) {
       return silentLogin().then(() => ({
@@ -192,6 +260,16 @@ module.exports = BaaS => {
     }
   }
 
+  /**
+   * 获取用户信息
+   * @deprecated
+   * @function
+   * @memberof BaaS
+   * @param {object} options 参数
+   * @param {UserInfoDetail} options.detail 用户信息
+   * @param {boolean} options.createUser 是否创建用户
+   * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
+   */
   BaaS.handleUserInfo = function (res) {
     return BaaS.auth.handleUserInfo(res).then(() => commonAuth.getCurrentUser()).then(user => {
       return user.toJSON()

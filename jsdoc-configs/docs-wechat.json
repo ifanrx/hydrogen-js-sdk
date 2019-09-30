@@ -8,7 +8,7 @@
   "source": {
     "include": [
       "core",
-      "sdk-file/src/wechat/index.js"
+      "sdk-file/src/wechat"
     ]
   },
   "recurseDepth": 10,

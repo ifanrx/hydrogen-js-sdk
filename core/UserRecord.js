@@ -16,6 +16,11 @@ class UserRecord extends BaseRecord {
     super(userID)
   }
 
+  /**
+   * 更新用户数据。
+   * @method
+   * @return {Promise<any>}
+   */
   update() {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
@@ -24,6 +29,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至微信账号，非当前用户与匿名用户无法调用
+   * @returns {Promise<this>} UserRecord 实例
    */
   linkWechat() {
     if (this._anonymous) {
@@ -37,6 +43,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至支付宝账号，非当前用户与匿名用户无法调用
+   * @returns {Promise<this>} UserRecord 实例
    */
   linkAlipay() {
     if (this._anonymous) {
@@ -50,6 +57,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至 QQ 账号，非当前用户与匿名用户无法调用
+   * @returns {Promise<this>} UserRecord 实例
    */
   linkQQ() {
     if (this._anonymous) {
@@ -63,6 +71,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至百度账号，非当前用户与匿名用户无法调用
+   * @returns {Promise<this>} UserRecord 实例
    */
   linkBaidu() {
     if (this._anonymous) {
@@ -77,6 +86,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至第三方账号，非当前用户与匿名用户无法调用
+   * @returns {Promise<this>} UserRecord 实例
    */
   linkThirdParty() {
     if (this._anonymous) {
@@ -96,9 +106,9 @@ class UserRecord extends BaseRecord {
 
   /**
    * 更新密码
-   * 
+   *
    * @param {UpdatePasswordOption} options 
-   * @returns {this} UserRecord 实例
+   * @returns {Promise<this>} UserRecord 实例
    */
   updatePassword({password, newPassword}) {
     if (this._anonymous) {
@@ -118,6 +128,7 @@ class UserRecord extends BaseRecord {
    * 更新邮箱
    * @param email
    * @param sendVerificationEmail
+   * @returns {Promise<this>} UserRecord 实例
    */
   setEmail(email, {sendVerificationEmail = false} = {}) {
     if (this._anonymous) {
@@ -139,7 +150,7 @@ class UserRecord extends BaseRecord {
   /**
    * 更新用户名
    * @param username
-   * @return {*}
+   * @returns {Promise<this>} UserRecord 实例
    */
   setUsername(username) {
     if (this._anonymous) {
@@ -157,6 +168,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 发送验证邮件
+   * @returns {Promise<this>} UserRecord 实例
    */
   requestEmailVerification() {
     if (this._anonymous) {
@@ -169,8 +181,21 @@ class UserRecord extends BaseRecord {
   }
 
   /**
+   * @typedef SetAccountParmasUsername
+   * @property {string} username 用户名
+   * @property {string} password 密码
+   */
+
+  /**
+   * @typedef SetAccountParmasEmail
+   * @property {string} email 邮箱
+   * @property {string} password 密码
+   */
+
+  /**
    * 初次设置账号信息
-   * @param {object}  accountInfo
+   * @param {SetAccountParmasUsername|SetAccountParmasEmail}  accountInfo
+   * @returns {Promise<this>} UserRecord 实例
    */
   setAccount(accountInfo = {}) {
     if (this._anonymous) {
@@ -194,7 +219,8 @@ class UserRecord extends BaseRecord {
 
   /**
    * 更改手机号
-   * @param mobile
+   * @param {string} phone 手机号码
+   * @returns {Promise<this>} UserRecord 实例
    */
   setMobilePhone(phone) {
     if (this._anonymous) {
@@ -212,7 +238,8 @@ class UserRecord extends BaseRecord {
 
   /**
    * 验证手机号
-   * @param code 短信验证码
+   * @param {string} code 短信验证码
+   * @returns {Promise<this>} UserRecord 实例
    */
   verifyMobilePhone(code) {
     if (this._anonymous) {
@@ -228,6 +255,7 @@ class UserRecord extends BaseRecord {
 
 /**
  * 创建一个 currentUser 对象
+ * @private
  * @param userInfo
  */
 UserRecord.initCurrentUser = function (userInfo) {

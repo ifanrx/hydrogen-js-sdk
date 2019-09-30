@@ -62,11 +62,11 @@ class TableObject extends BaseQuery {
 
   /**
    * 删除数据记录
-   * @param {number} 数据记录 ID
+   * @param {number} recordID 数据记录 ID
    * @return {Promise<any>}
    *//**
    * 批量删除数据记录
-   * @param {Query} 数据记录查询条件
+   * @param {Query} query 数据记录查询条件
    * @return {Promise<any>}
    */
   delete(args, {enableTrigger = true} = {}) {
@@ -87,6 +87,15 @@ class TableObject extends BaseQuery {
     }
   }
 
+  /**
+   * 获取一个数据记录（仅引用，非数据）
+   * @param {number} recordID 数据记录 ID
+   * @return {Promise<TableRecord>}
+   *//**
+   * 获取多个数据记录（仅引用，非数据）
+   * @param {Query} query 数据记录查询条件
+   * @return {Promise<TableRecord>}
+   */
   getWithoutData(args) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return new TableRecord(this._tableID, args)
@@ -102,6 +111,12 @@ class TableObject extends BaseQuery {
     }
   }
 
+  /**
+   * 获取数据记录详情。
+   * @method
+   * @param {string} recordID 数据记录 ID
+   * @return {Promise<any>}
+   */
   get(recordID) {
     let params = {tableID: this._tableID, recordID}
 
@@ -124,12 +139,22 @@ class TableObject extends BaseQuery {
     return condition
   }
 
+  /**
+   * 获取数据记录列表。
+   * @method
+   * @return {Promise<any>}
+   */
   find() {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
     return BaaS.queryRecordList(condition)
   }
 
+  /**
+   * 获取数据记录列表长度。
+   * @method
+   * @return {Promise<number>}
+   */
   count() {
     return this.limit(1).find().then(res => {
       let {total_count} = res.data.meta

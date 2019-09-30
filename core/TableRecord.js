@@ -9,9 +9,6 @@ const utils = require('./utils')
  * @package
  */
 class TableRecord extends BaseRecord {
-  /**
-   * @private
-   */
   constructor(tableID, recordID, queryObject = {}) {
     super(recordID)
     this._tableID = tableID
