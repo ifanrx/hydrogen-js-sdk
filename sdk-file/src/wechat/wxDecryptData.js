@@ -3,6 +3,15 @@ const HError = require('core-module/HError')
 
 const API = BaaS._config.API
 
+/**
+ * 微信加密数据解密
+ * @function
+ * @memberof BaaS
+ * @param {string} encryptedData 加密的数据
+ * @param {string} vi 加密算法的初始向量
+ * @param {string} type 数据类型
+ * @return {Promise<any>}
+ */
 const wxDecryptData = (...params) => {
   if (!validateParams(params)) {
     throw new HError(605)

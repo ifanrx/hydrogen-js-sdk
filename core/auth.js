@@ -65,7 +65,7 @@ function getAuthRequestData(data) {
  */
 /**
  * 登录
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
  * @return {Promise<UserRecord>}
@@ -85,7 +85,7 @@ const login = params => {
 
 /**
  * 匿名登录
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<UserRecord>}
  */
@@ -101,7 +101,7 @@ const anonymousLogin = () => {
 
 /**
  * 静默登录
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<UserRecord>}
  */
@@ -111,7 +111,7 @@ const silentLogin = () => {
 
 /**
  * 注册
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
  * @return {Promise<UserRecord>}
@@ -132,7 +132,7 @@ const register = params => {
 
 /**
  * 退出登录状态
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<any>}
  */
@@ -148,7 +148,7 @@ const logout = () => {
 
 /**
  * 忘记密码，发送重置密码邮件
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<any>}
  */
@@ -162,7 +162,7 @@ const requestPasswordReset = ({email} = {}) => {
 
 /**
  * 获取当前用户
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<UserRecord>}
  */
@@ -181,7 +181,7 @@ let getCurrentUser = () => {
 
 /**
  * 使用手机号 + 验证码登录
- *
+ * @since v2.0.0
  * @memberof BaaS.auth
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码

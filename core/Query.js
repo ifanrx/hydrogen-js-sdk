@@ -7,8 +7,9 @@ const BaseRecord = require('./BaseRecord')
 const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
 /**
+ * 查询
  * @memberof BaaS
- * @instance
+ * @public
  */
 class Query {
   constructor() {

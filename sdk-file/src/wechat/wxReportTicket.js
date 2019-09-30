@@ -3,6 +3,13 @@ const utils = require('core-module/utils')
 
 const API = BaaS._config.API
 
+/**
+ * 上报模板消息所需 formID
+ * @function
+ * @memberof BaaS
+ * @param {string} formID formID
+ * @return {Promise<any>}
+ */
 const wxReportTicket = (formID) => {
   let paramsObj = utils.makeReportTicketParam(formID)
 

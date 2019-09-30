@@ -4,6 +4,7 @@ const API = BaaS._config.API
 
 /**
  * @typedef FileOperationResult
+ * @memberof BaaS
  * @property {number} created_at 创建时间 （格式为 unix 时间戳)
  * @property {string} path 路径
  * @property {number} created_by 创建者 ID
@@ -32,6 +33,7 @@ class File extends BaseQuery {
 
   /**
    * @typedef FileParams
+   * @memberof BaaS
    * @property {string} [filePath] 本地资源路径（非 Web）
    * @property {object} [fileObj] 本地资源路径（Web）
    * @property {'image'|'video'|'audio'} [fileType] 本地资源路径（Alipay）
@@ -39,6 +41,7 @@ class File extends BaseQuery {
 
   /**
    * @typedef FileMeta
+   * @memberof BaaS
    * @property {string} categoryID 文件分类 ID
    * @property {string} categoryName 要上传的文件分类名
    */
@@ -46,8 +49,8 @@ class File extends BaseQuery {
   /**
    * 上传文件。
    * @method
-   * @param {FileParams} fileParams 文件参数
-   * @param {FileMeta} metaData 文件元信息
+   * @param {BaaS.FileParams} fileParams 文件参数
+   * @param {BaaS.FileMeta} metaData 文件元信息
    * @return {Promise<any>}
    */
   upload(fileParams, metaData) {
@@ -91,6 +94,7 @@ class File extends BaseQuery {
 
   /**
    * @typedef VideoSnapshotParams
+   * @memberof BaaS
    * @property {string} source 视频文件的 id
    * @property {string} save_as	截图保存的文件名
    * @property {string} point	截图时间格式，格式：HH:MM:SS
@@ -103,8 +107,8 @@ class File extends BaseQuery {
   /**
    * 生成视频截图。
    * @method
-   * @param {VideoSnapshotParams} params 截图参数
-   * @return {Promise<FileOperationResult>}
+   * @param {BaaS.VideoSnapshotParams} params 截图参数
+   * @return {Promise<BaaS.FileOperationResult>}
    */
   genVideoSnapshot(params) {
     return BaaS._baasRequest({
@@ -117,7 +121,8 @@ class File extends BaseQuery {
   }
 
   /**
-   * @typedef VideoSnapshotParams
+   * @typedef VideoConcatParams
+   * @memberof BaaS
    * @property {string[]} m3u8s 视频文件的 id 列表，按提交的顺序进行拼接
    * @property {string} save_as	视频保存的文件名
    * @property {string} [category_id]	文件所属类别 ID
@@ -127,8 +132,8 @@ class File extends BaseQuery {
   /**
    * M3U8 视频拼接。
    * @method
-   * @param {VideoConcatParams} params 拼接参数
-   * @return {Promise<FileOperationResult>}
+   * @param {BaaS.VideoConcatParams} params 拼接参数
+   * @return {Promise<BaaS.FileOperationResult>}
    */
   videoConcat(params) {
     return BaaS._baasRequest({
@@ -142,6 +147,7 @@ class File extends BaseQuery {
 
   /**
    * @typedef VideoClipParams
+   * @memberof BaaS
    * @property {string} m3u8s 视频文件的 id 列表，按提交的顺序进行拼接
    * @property {string} save_as	保存的文件名
    * @property {string} [category_id]	文件所属类别 ID
@@ -154,7 +160,7 @@ class File extends BaseQuery {
   /**
    * M3U8 视频剪辑。
    * @method
-   * @param {VideoClipParams} params 剪辑参数
+   * @param {BaaS.VideoClipParams} params 剪辑参数
    * @return {Promise<FileOperationResult>}
    */
   videoClip(params) {
@@ -169,27 +175,30 @@ class File extends BaseQuery {
 
   /**
    * @typedef VideoMetaParams
+   * @memberof BaaS
    * @property {string} m3u8s 视频文件的 id 列表，按提交的顺序进行拼接
    */
 
   /*
    * @typedef VideoMeta
+   * @memberof BaaS
    * @property {number} duartion m3u8 时长
    * @property {number[]} points 时间点
    */
 
   /**
    * @typedef VideoMetaResult
+   * @memberof BaaS
    * @property {number} status_code 状态码
    * @property {string} message 返回信息
-   * @property {VideoMeta} meta 元信息
+   * @property {BaaS.VideoMeta} meta 元信息
    */
 
   /**
    * M3U8 时长和分片信息。
    * @method
-   * @param {VideoMetaParams} params 分片信息参数
-   * @return {Promise<VideoMetaResult>}
+   * @param {BaaS.VideoMetaParams} params 分片信息参数
+   * @return {Promise<BaaS.VideoMetaResult>}
    */
   videoMeta(params) {
     return BaaS._baasRequest({

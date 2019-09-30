@@ -15,5 +15,6 @@ test/web-dev-server/sdk.dev.js
 scripts/config.js
 sdk-plugin/plugin/api/sdk-wechat.js
 test-storage/
-docs/
+docs/*
+!docs/index.html
 types/

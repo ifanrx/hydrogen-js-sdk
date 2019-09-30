@@ -112,17 +112,9 @@ module.exports = function (BaaS) {
   BaaS.GeoPolygon = require('./GeoPolygon')
   BaaS.invokeFunction = require('./invokeFunction')
   BaaS.invoke = require('./invokeFunction')
-
-  /*
-   * @type {Class<Query>}
-   */
   BaaS.Query = require('./Query')
   BaaS.storage = require('./storage')
   BaaS.TableObject = require('./TableObject')
-
-  /*
-   * @type {Class<User>}
-   */
   BaaS.User = require('./User')
   BaaS.Order = require('./Order')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象

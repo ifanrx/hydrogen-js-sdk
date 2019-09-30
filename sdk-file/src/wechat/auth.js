@@ -235,16 +235,14 @@ module.exports = BaaS => {
 
   /*
    * 兼容原有的 API
-   * /
+   */
 
   /**
    * 微信登录（仅支持静默登录）
-   * @deprecated
+   * @deprecated since v2.0.0
    * @function
    * @memberof BaaS
    * @param {boolean} forceLogin 是否是强制登录
-   * @example
-   * BaaS.login(false)
    * @return {Promive<any>}
    */
   BaaS.login = function (args) {
@@ -262,13 +260,14 @@ module.exports = BaaS => {
 
   /**
    * 获取用户信息
-   * @deprecated
+   * @deprecated since v2.0.0
    * @function
    * @memberof BaaS
    * @param {object} options 参数
    * @param {UserInfoDetail} options.detail 用户信息
    * @param {boolean} options.createUser 是否创建用户
    * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
+   * @return {Promive<any>}
    */
   BaaS.handleUserInfo = function (res) {
     return BaaS.auth.handleUserInfo(res).then(() => commonAuth.getCurrentUser()).then(user => {
@@ -276,5 +275,12 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 退出登录状态
+   * @deprecated since v2.0.0
+   * @function
+   * @memberof BaaS
+   * @return {Promise<any>}
+   */
   BaaS.logout = BaaS.auth.logout
 }

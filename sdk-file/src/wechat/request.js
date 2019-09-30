@@ -15,7 +15,22 @@ const wxRequestFail = function (reject) {
   })
 }
 
+/**
+ * @typedef RequestParams
+ * @property {string} url 请求的 URL
+ * @property {string} [method] HTTP 请求方法，默认为 'GET'
+ * @property {object} [data] 请求的参数
+ * @property {object} [header] 请求的 header
+ * @property {string} [dataType] 返回的数据格式
+ */
 
+/**
+ * 网络请求
+ * @function
+ * @memberof BaaS
+ * @param {RequestParams} params 参数
+ * @return {Promise<any>}
+ */
 const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
   return new Promise((resolve, reject) => {
 

@@ -2,7 +2,7 @@
   "plugins": [],
   "opts": {
     "encoding": "utf8",
-    "destination": "./docs",
+    "destination": "./docs/wechat",
     "recurse": true
   },
   "source": {
