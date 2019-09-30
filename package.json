@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "2.5.0",
+  "version": "2.8.1",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -9,12 +9,13 @@
     "/lib"
   ],
   "scripts": {
-    "test": "npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq",
+    "test": "npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
     "test-core": "mocha test/core-test-new/*.test.js",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",
     "test-web": "./test/web/test.sh",
     "test-qq": "ava test/qq/*.test.js",
+    "test-baidu": "ava test/baidu/*.test.js",
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
@@ -36,8 +37,8 @@
   },
   "homepage": "https://github.com/ifanrx/repository#readme",
   "versions": {
-    "alipay": "2.5.0",
-    "web": "2.5.0"
+    "alipay": "2.8.1",
+    "web": "2.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

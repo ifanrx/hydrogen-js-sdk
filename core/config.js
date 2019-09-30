@@ -52,10 +52,10 @@ const API = {
   FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
   CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
-  SEND_SMS_CODE: '/hserve/v2.1/sms-verification-code/',
+  SEND_SMS_CODE: '/hserve/v2.2/sms-verification-code/',
   VERIFY_SMS_CODE: '/hserve/v1.8/sms-verification-code/verify/',
 
-  PAY: '/hserve/v2.0/idp/pay/order/',
+  PAY: '/hserve/v2.2/idp/pay/order/',
   ORDER: '/hserve/v2.0/idp/pay/order/:transactionID/',
 
   TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
@@ -75,6 +75,7 @@ const API = {
     WXACODE: '/hserve/v1.4/miniappcode/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
+    CENSOR_ASYNC: '/hserve/v2.2/async-censor/',
   },
 
   QQ: {
@@ -233,6 +234,7 @@ const requestParamsMap = {
   submissionType: 'submission_type',
   submissionValue: 'submission_value',
   categoryName: 'category_name',
+  signatureID: 'signature_id',
 }
 
 module.exports = {

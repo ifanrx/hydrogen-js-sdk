@@ -1,10 +1,12 @@
 const HError = require('core-module/HError')
 let utils = require('./utils')
 
+let WECHAT_GATEWAY_PREFIX = 'weixin_tenpay_'
+
 let WECHAT_GATEWAY_TYPE = {
-  WAP: 'weixin_tenpay_wap',
-  NATIVE: 'weixin_tenpay_native',
-  JS_API: 'weixin_tenpay_js',
+  WAP: `${WECHAT_GATEWAY_PREFIX}wap`,
+  NATIVE: `${WECHAT_GATEWAY_PREFIX}native`,
+  JS_API: `${WECHAT_GATEWAY_PREFIX}js`,
 }
 
 let ALIPAY_GATEWAY_TYPE = {
@@ -18,17 +20,21 @@ let QQ_GATEWAY_TYPE = {
 
 const pay = (BaaS, options) => {
   let API = BaaS._config.API
+  let data = {
+    gateway_type: options.gatewayType,
+    total_cost: options.totalCost,
+    merchandise_description: options.merchandiseDescription,
+    merchandise_schema_id: options.merchandiseSchemaID,
+    merchandise_record_id: options.merchandiseRecordID,
+    merchandise_snapshot: options.merchandiseSnapshot,
+  }
+  if (options.gatewayType.startsWith(WECHAT_GATEWAY_PREFIX)) {
+    data.profit_sharing = options.profitSharing
+  }
   return BaaS._baasRequest({
     url: API.PAY,
     method: 'POST',
-    data: {
-      gateway_type: options.gatewayType,
-      total_cost: options.totalCost,
-      merchandise_description: options.merchandiseDescription,
-      merchandise_schema_id: options.merchandiseSchemaID,
-      merchandise_record_id: options.merchandiseRecordID,
-      merchandise_snapshot: options.merchandiseSnapshot,
-    },
+    data,
   })
 }
 
