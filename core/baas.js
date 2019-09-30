@@ -12,17 +12,9 @@ BaaS._config = require('./config')
 BaaS._polyfill = require('./polyfill')
 
 /**
- * 模块
- *
- * @typedef {Function} Module
- * @param {any} BaaS - BaaS 对象
- * @memberof BaaS
- */
-
-/**
  * 应用模块
  *
- * @param {Module} fn
+ * @param {BaaS.Module} fn
  * @memberof BaaS
  * @private
  */

@@ -4,19 +4,6 @@ const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
-/**
- * @typedef UserInfoDetail
- * @property {object} userInfo 用户信息对象，不包含 openid 等敏感信息
- * @property {string} rawData 不包括敏感信息的原始数据字符串，用于计算签名
- * @property {string} signature 使用 sha1( rawData + sessionkey ) 得到字符串，用于校验用户信息
- * @property {string} encryptedData 包括敏感数据在内的完整用户信息的加密数据
- * @property {string} iv 加密算法的初始向量
- */
-
-/**
- * @typedef AuthData
- * @property {UserInfoDetail} detail 用户信息
- */
 
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
@@ -84,7 +71,7 @@ module.exports = BaaS => {
    * @function
    * @memberof BaaS.auth
    * @param {object} options 参数
-   * @param {UserInfoDetail} options.detail 用户信息
+   * @param {BaaS.UserInfoDetail} options.detail 用户信息
    * @param {boolean} options.createUser 是否创建用户
    * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
    */
@@ -150,17 +137,12 @@ module.exports = BaaS => {
   }
 
   /**
-   * @typedef LinkOptions
-   * @property {boolean} syncUserProfile 是否同步第一层级用户信息
-   */
-
-  /**
    * 关联微信账号
    * @function
    * @since v2.0.0
    * @memberof BaaS.auth
-   * @param {AuthData|null} authData 用户信息
-   * @param {LinkOptions} params 用户信息参数
+   * @param {BaaS.AuthData|null} authData 用户信息
+   * @param {BaaS.LinkOptions} params 用户信息参数
    */
   const linkWechat = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
@@ -195,19 +177,14 @@ module.exports = BaaS => {
     })
   }
 
-  /**
-   * @typedef LoginOptions
-   * @property {boolean} createUser 是否创建用户
-   * @property {boolean} syncUserProfile 是否同步第一层级用户信息
-   */
 
   /**
    * 强制登录
    * @function
    * @since v2.0.0
    * @memberof BaaS.auth
-   * @param {AuthData|null} authData 用户信息
-   * @param {LoginOptions} options 其他选项
+   * @param {BaaS.AuthData|null} authData 用户信息
+   * @param {BaaS.LoginOptions} options 其他选项
    */
   const loginWithWechat = (authData, {
     createUser = true,
@@ -264,7 +241,7 @@ module.exports = BaaS => {
    * @function
    * @memberof BaaS
    * @param {object} options 参数
-   * @param {UserInfoDetail} options.detail 用户信息
+   * @param {BaaS.UserInfoDetail} options.detail 用户信息
    * @param {boolean} options.createUser 是否创建用户
    * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
    * @return {Promive<any>}

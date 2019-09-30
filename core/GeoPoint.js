@@ -1,13 +1,7 @@
 const utils = require('./utils')
 
 /**
- * @typedef GeoJson
- * @property {string} type 类型
- * @property {number[]} coordinates 坐标
- */
-
-/**
- * GeoPoint
+ * Geo 点
  * @memberof BaaS
  * @public
  */
@@ -27,7 +21,7 @@ class GeoPoint {
 
   /**
    * 转换为 GeoJSON
-   * @return {GeoJson}
+   * @return {BaaS.GeoJson}
    */
   toGeoJSON() {
     return utils.cloneDeep(this.geoJSON)

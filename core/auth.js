@@ -12,11 +12,6 @@ const User = require('./User')
  * @memberof BaaS
  */
 
-/**
- * @typedef LoginOptions
- * @property {boolean} [createUser] 是否创建用户
- */
-
 const API = BaaS._config.API
 
 function getAuthUrl(data, isLoginFunc) {
@@ -49,25 +44,10 @@ function getAuthRequestData(data) {
 }
 
 /**
- * @typedef AuthWithUsernameOptions
- * @property username {string} 用户名
- * @property password {string} 密码
- */
-/**
- * @typedef AuthWithEmailOptions
- * @property email {string} 邮箱
- * @property password {string} 密码
- */
-/**
- * @typedef AuthWithPhoneOptions
- * @property phone {string} 手机号码
- * @property password {string} 密码
- */
-/**
  * 登录
  * @since v2.0.0
  * @memberof BaaS.auth
- * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
+ * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
  * @return {Promise<UserRecord>}
  */
 const login = params => {
@@ -113,7 +93,7 @@ const silentLogin = () => {
  * 注册
  * @since v2.0.0
  * @memberof BaaS.auth
- * @param {(AuthWithUsernameOptions|AuthWithEmailOptions|AuthWithPhoneOptions)} options
+ * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
  * @return {Promise<UserRecord>}
  */
 const register = params => {
@@ -185,7 +165,7 @@ let getCurrentUser = () => {
  * @memberof BaaS.auth
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码
- * @param {LoginOptions} options
+ * @param {BaaS.LoginOptions} options
  * @return {Promise<UserRecord>}
  */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {

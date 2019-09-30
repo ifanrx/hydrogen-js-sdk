@@ -99,15 +99,11 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * @typedef UpdatePasswordOption
-   * @property {string} password 旧密码
-   * @property {string} newPassword 新密码
-   */
-
-  /**
    * 更新密码
    *
-   * @param {UpdatePasswordOption} options 
+   * @param {Object} options 
+   * @param {string} options.password 旧密码 
+   * @param {string} options.newPassword 新密码 
    * @returns {Promise<this>} UserRecord 实例
    */
   updatePassword({password, newPassword}) {
@@ -181,20 +177,8 @@ class UserRecord extends BaseRecord {
   }
 
   /**
-   * @typedef SetAccountParmasUsername
-   * @property {string} username 用户名
-   * @property {string} password 密码
-   */
-
-  /**
-   * @typedef SetAccountParmasEmail
-   * @property {string} email 邮箱
-   * @property {string} password 密码
-   */
-
-  /**
    * 初次设置账号信息
-   * @param {SetAccountParmasUsername|SetAccountParmasEmail}  accountInfo
+   * @param {BaaS.SetAccountParmasUsername|BaaS.SetAccountParmasEmail}  accountInfo
    * @returns {Promise<this>} UserRecord 实例
    */
   setAccount(accountInfo = {}) {

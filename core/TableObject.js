@@ -30,14 +30,9 @@ class TableObject extends BaseQuery {
   }
 
   /**
-   * @typedef CreateManyParams
-   * @property {boolean} enableTrigger 是否触发触发器
-   */
-
-  /**
    * 批量创建数据记录
    * @param {object[]} args 数据记录列表
-   * @param {CreateManyParams} [options] 批量创建参数
+   * @param {BaaS.CreateManyParams} [options] 批量创建参数
    * @return {Promise<any>}
    */
   createMany(args, {enableTrigger = true} = {}) {

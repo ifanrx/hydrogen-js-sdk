@@ -26,13 +26,8 @@ class TableRecord extends BaseRecord {
   }
 
   /**
-   * @typedef BatchUpdateParams
-   * @property {boolean} enableTrigger 是否触发触发器
-   */
-
-  /**
    * 更新数据记录
-   * @param {BatchUpdateParams} [options] 批量更新参数
+   * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
    * @return {Promise<any>}
    */
   update({enableTrigger = true} = {}) {

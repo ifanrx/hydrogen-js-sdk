@@ -3,19 +3,6 @@ const storage = require('./storage')
 const HError = require('./HError')
 const utils = require('./utils')
 
-/**
- * @typedef InitOptions
- * @property {boolean} autoLogin - 是否自动登录
- * @property {string} logLevel - 日志输出等级
- */
-
-/**
- * @typedef CheckVersionOptions
- * @property {string} platform - 需要检测的平台
- * @property {function} onSuccess - 接口请求成功时回调
- * @property {function} onError - 接口请求失败时的回调
- */
-
 module.exports = function (BaaS) {
   /**
    * SDK 初始化
@@ -23,7 +10,7 @@ module.exports = function (BaaS) {
    * @function init
    * @memberof BaaS
    * @param {string} clientID - 知晓云应用的 client id
-   * @param {InitOptions} [options] - 其他选项
+   * @param {BaaS.InitOptions} [options] - 其他选项
    */
   BaaS.init = (clientID, {autoLogin = false, logLevel = ''} = {}) => {
     if (!utils.isString(clientID)) {
@@ -52,7 +39,7 @@ module.exports = function (BaaS) {
    * SDK 版本检查
    *
    * @memberof BaaS
-   * @param {CheckVersionOptions} options
+   * @param {BaaS.CheckVersionOptions} options
    */
   BaaS.checkVersion = ({platform, onSuccess, onError} = {}) => {
     if (!onSuccess) {
