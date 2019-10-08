@@ -90,6 +90,7 @@ const API = {
     SILENT_LOGIN: '/hserve/v2.1/idp/baidu/silent-login/',
     AUTHENTICATE: '/hserve/v2.1/idp/baidu/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.1/idp/baidu/user-association/',
+    TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
   },
 
   ALIPAY: {
