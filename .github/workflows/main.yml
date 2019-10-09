@@ -1,6 +1,6 @@
 name: BUILD DOCS
 on:
-  repository_dispatch
+  repository_dispatch:
   push:
     branches:
       - generate-type-definition
