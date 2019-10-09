@@ -1,9 +1,9 @@
 name: BUILD DOCS
 on:
+  repository_dispatch
   push:
     branches:
       - generate-type-definition
-  repository_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
