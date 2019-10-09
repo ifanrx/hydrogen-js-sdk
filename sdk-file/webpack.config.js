@@ -33,7 +33,7 @@ let plugins = [
     apply: (compiler) => {
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
         let config = require('./webpack/genTyepsConfig')
-        shell.exec(`scripts/gen-types.sh wechat ${config.wechat}`, {async:true})
+        shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
       });
     }
   },

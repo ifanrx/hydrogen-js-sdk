@@ -98,12 +98,11 @@ class UserRecord extends BaseRecord {
     return BaaS._polyfill.linkThirdParty.apply(null, arguments)
   }
 
+
   /**
    * 更新密码
    *
-   * @param {Object} options 
-   * @param {string} options.password 旧密码 
-   * @param {string} options.newPassword 新密码 
+   * @param {BaaS.UpdatePasswordParams} options
    * @returns {Promise<this>} UserRecord 实例
    */
   updatePassword({password, newPassword}) {

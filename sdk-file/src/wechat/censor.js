@@ -59,21 +59,12 @@ module.exports = BaaS => {
   }
 
   /**
-   * @typedef CensorAsyncResult
-   * @property {string} id 文件 ID
-   * @property {string} [error_code] 错误码，=0 时不返回此字段
-   * @property {string} [error_message] 错误信息，error_code=0 时不返回此字段
-   * @property {number} status_code 默认为：0，4294966288(-1008)为链接无法下载
-   * @property {boolean} risky 是否为违规内容，true 为风险，false 为未检测到风险，null 为微信尚未推送检查结果
-   */
-
-  /**
    * 异步检测图片、音频
    * @function
    * @since v2.8.0
    * @memberof BaaS
    * @param {string} fileID 文件 ID
-   * @return {Promise<CensorAsyncResult>}
+   * @return {Promise<BaaS.CensorAsyncResult>}
    */
   const censorAsync = fileId => {
     return BaaS._baasRequest({
@@ -91,7 +82,7 @@ module.exports = BaaS => {
    * @since v2.8.0
    * @memberof BaaS
    * @param {string} id 检测记录 ID
-   * @return {Promise<CensorAsyncResult>}
+   * @return {Promise<BaaS.CensorAsyncResult>}
    */
   const getCensorResult = id => {
     return BaaS._baasRequest({

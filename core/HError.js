@@ -1,4 +1,5 @@
 /**
+ * @memberof BaaS
  * @package
  */
 class HError {

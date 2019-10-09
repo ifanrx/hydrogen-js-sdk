@@ -56,6 +56,15 @@
  */
 
 /**
+ * 登录可选参数
+ * @typedef {Object} handleUserInfoOptions
+ * @memberof BaaS
+ * @property {BaaS.UserInfoDetail} options.detail 用户信息
+ * @property {boolean} [createUser] 是否创建用户
+ * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ */
+
+/**
  * 关联账号可选参数
  * @typedef {Object} LinkOptions
  * @memberof BaaS
@@ -267,5 +276,46 @@
  * @memberof BaaS
  * @property {string} email 邮箱
  * @property {string} password 密码
+ */
+
+/**
+ * 更新密码
+ * @typedef UpdatePasswordParams
+ * @memberof BaaS
+ * @property {string} password 旧密码
+ * @property {string} newPassword 新密码
+ */
+
+/**
+ * @typedef CensorAsyncResult
+ * @memberof BaaS
+ * @property {string} id 文件 ID
+ * @property {string} [error_code] 错误码，=0 时不返回此字段
+ * @property {string} [error_message] 错误信息，error_code=0 时不返回此字段
+ * @property {number} status_code 默认为：0，4294966288(-1008)为链接无法下载
+ * @property {boolean} risky 是否为违规内容，true 为风险，false 为未检测到风险，null 为微信尚未推送检查结果
+ */
+
+/**
+ * 支付参数
+ * @typedef PaymentParams
+ * @memberof BaaS
+ * @property {string} merchandiseDescription 微信支付凭证-商品详情的内容
+ * @property {number} totalCost 支付总额，单位：元
+ * @property {string} [merchandiseSchemaID] 商品数据表 ID，可用于定位用户购买的物品
+ * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品
+ * @property {string} [merchandiseSnapshot] 根据业务需求自定义的数据
+ * @property {string} [profitSharing] 当前订单是否需要分账
+ */
+
+/**
+ * 请求参数
+ * @typedef RequestParams
+ * @memberof BaaS
+ * @property {string} url 请求的 URL
+ * @property {string} [method] HTTP 请求方法，默认为 'GET'
+ * @property {object} [data] 请求的参数
+ * @property {object} [header] 请求的 header
+ * @property {string} [dataType] 返回的数据格式
  */
 

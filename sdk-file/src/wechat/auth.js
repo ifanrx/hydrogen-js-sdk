@@ -70,10 +70,8 @@ module.exports = BaaS => {
    * @deprecated
    * @function
    * @memberof BaaS.auth
-   * @param {object} options 参数
-   * @param {BaaS.UserInfoDetail} options.detail 用户信息
-   * @param {boolean} options.createUser 是否创建用户
-   * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
+   * @param {BaaS.handleUserInfoOptions} options 参数
+   * @return {Promive<any>}
    */
   const handleUserInfo = res => {
     if (!res || !res.detail) {
@@ -240,10 +238,7 @@ module.exports = BaaS => {
    * @deprecated since v2.0.0
    * @function
    * @memberof BaaS
-   * @param {object} options 参数
-   * @param {BaaS.UserInfoDetail} options.detail 用户信息
-   * @param {boolean} options.createUser 是否创建用户
-   * @param {boolean} options.syncUserProfile 是否同步第一层级用户信息
+   * @param {BaaS.handleUserInfoOptions} options 参数
    * @return {Promive<any>}
    */
   BaaS.handleUserInfo = function (res) {

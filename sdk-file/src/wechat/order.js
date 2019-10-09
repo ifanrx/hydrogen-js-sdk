@@ -1,12 +1,17 @@
 const BaaS = require('core-module/baas')
 
 /**
+ * @typedef OrderParams
+ * @memberof BaaS
+ * @property {string} transactionID 支付流水号
+ */
+
+/**
  * 获取支付订单
  * @function
  * @deprecated
  * @memberof BaaS
- * @param {object} params 参数
- * @param {string} params.transactionID 支付流水号
+ * @param {BaaS.OrderParams} params 参数
  * @return {Promise<any>}
  */
 const order = function (params) {
