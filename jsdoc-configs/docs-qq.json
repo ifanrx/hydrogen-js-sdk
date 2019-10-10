@@ -1,14 +1,14 @@
 {
   "plugins": [],
   "opts": {
-    "template": "node_modules/@otris/jsdoc-tsd",
     "encoding": "utf8",
+    "destination": "./docs/qq",
     "recurse": true
   },
   "source": {
     "include": [
       "core",
-      "sdk-file/src/qq"
+      "sdk-file/src/web"
     ]
   },
   "recurseDepth": 10,

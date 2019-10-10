@@ -3,8 +3,7 @@ const BaaS = require('core-module/baas')
 const constants = require('core-module/constants')
 const storage = require('core-module/storage')
 
-/**
- *
+/*
  * @param {object} payload
  */
 function tryResendRequest(payload) {

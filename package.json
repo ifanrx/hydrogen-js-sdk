@@ -23,7 +23,8 @@
     "gen-types-wechat": "scripts/gen-types.sh wechat",
     "gen-docs-wechat": "jsdoc -c jsdoc-configs/docs-wechat.json",
     "gen-docs-web": "jsdoc -c jsdoc-configs/docs-web.json",
-    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web"
+    "gen-docs-qq": "jsdoc -c jsdoc-configs/docs-qq.json",
+    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web && npm run gen-docs-qq"
   },
   "repository": {
     "type": "git",

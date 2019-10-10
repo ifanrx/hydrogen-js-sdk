@@ -8,7 +8,7 @@ const API = BaaS._config.API
  * @function
  * @memberof BaaS
  * @param {string} encryptedData 加密的数据
- * @param {string} vi 加密算法的初始向量
+ * @param {string} iv 加密算法的初始向量
  * @param {string} type 数据类型
  * @return {Promise<any>}
  */
