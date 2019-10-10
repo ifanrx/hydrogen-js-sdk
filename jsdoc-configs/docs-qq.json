@@ -8,7 +8,7 @@
   "source": {
     "include": [
       "core",
-      "sdk-file/src/web"
+      "sdk-file/src/qq"
     ]
   },
   "recurseDepth": 10,
