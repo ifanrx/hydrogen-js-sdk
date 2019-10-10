@@ -10,6 +10,13 @@ axios.interceptors.response.use(function (response) {
   throw error.response
 })
 
+/**
+ * 网络请求
+ * @function
+ * @memberof BaaS
+ * @param {BaaS.RequestParams} params 参数
+ * @return {Promise<BaaS.Response<any>>}
+ */
 module.exports = function (BaaS) {
   BaaS.request = ({url, method = 'GET', data = {}, header = {}, headers = {}}) => {
     return new Promise((resolve, reject) => {

@@ -183,6 +183,7 @@ module.exports = BaaS => {
    * @memberof BaaS.auth
    * @param {BaaS.AuthData|null} authData 用户信息
    * @param {BaaS.LoginOptions} options 其他选项
+   * @return {Promise<UserRecord>}
    */
   const loginWithWechat = (authData, {
     createUser = true,
