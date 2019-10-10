@@ -21,7 +21,9 @@
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
     "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
     "gen-types-wechat": "scripts/gen-types.sh wechat",
-    "gen-docs-wechat": "jsdoc -c jsdoc-configs/docs-wechat.json"
+    "gen-docs-wechat": "jsdoc -c jsdoc-configs/docs-wechat.json",
+    "gen-docs-web": "jsdoc -c jsdoc-configs/docs-web.json",
+    "gen-docs": "gen-docs-wechat && gen-docs-web"
   },
   "repository": {
     "type": "git",
