@@ -20,7 +20,7 @@ const wxRequestFail = function (reject) {
  * @function
  * @memberof BaaS
  * @param {BaaS.RequestParams} params 参数
- * @return {Promise<any>}
+ * @return {Promise<BaaS.Response<any>>}
  */
 const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
   return new Promise((resolve, reject) => {

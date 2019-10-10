@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 ./scripts/gen-types-wechat.sh
-./scripts/gen-types-vscode.sh $1
+./scripts/gen-types-cross-platform.sh $1

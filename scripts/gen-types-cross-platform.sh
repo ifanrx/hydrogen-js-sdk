@@ -3,7 +3,7 @@ tmp_dir=./scripts/tmp
 
 getConfigFilePath() {
   platform=$1
-  echo ./jsdoc-configs/types-vscode-$platform.json
+  echo ./jsdoc-configs/types-cp-$platform.json
 }
 
 getPlatformNamespace() {
@@ -59,12 +59,12 @@ buildTypes() {
   ./node_modules/.bin/jsdoc -c $config -d $dest
 
   # 将各个平台的 BaaS 命名空间区分开
-  sed -i "" "s/BaaS/`getBaaSNamespace $platform`/" $dest
+  sed -i "" "s/BaaS/`getBaaSNamespace $platform`/g" $dest
 
   # 将 BaaS 暴露到各个平台的某个变量下
   if [ $platform != "web" ];then
     echo "
-    declare namespace `getPlatformNamespace $platform` {
+declare namespace `getPlatformNamespace $platform` {
     interface `getInterface $platform` {
     /**
     * 知晓云 SDK 命名空间
@@ -91,7 +91,7 @@ interface Window {
 }
 
 # build 出一份包含多个平台代码的 d.ts 文件
-buildTypesForMultiplatform() {
+buildTypesForCrossPlatform() {
   platforms=(wechat qq baidu alipay web)
 
   # 判断平台名称是否有效（是否有对应的配置）
@@ -117,12 +117,12 @@ buildTypesForMultiplatform() {
 
   # merge
   j=0
-  dest=./types/baas-vscode.d.ts
+  dest=./types/baas-cp.d.ts
   for filepath in ${filepaths[*]}; do
     if [ $j -eq 0 ]; then
-      echo -e "/******************************************************/\n${platforms[j]}\n/******************************************************/\n" > $dest
+      echo -e "/******************************************************\n${platforms[j]}\n******************************************************/\n" > $dest
     else
-      echo -e "\n\n\n/******************************************************/\n${platforms[j]}\n/******************************************************/\n" >> $dest
+      echo -e "\n\n\n/******************************************************\n${platforms[j]}\n******************************************************/\n" >> $dest
     fi
     cat $filepath >> $dest
     let j+=1
@@ -131,7 +131,7 @@ buildTypesForMultiplatform() {
   rm -rf $tmp_dir
 }
 
-buildTypesForMultiplatform
+buildTypesForCrossPlatform
 
 # 将 build 出来的文件移动到测试项目的目录下
 if [ "$1" != "" ];then
