@@ -6,10 +6,14 @@
   "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
   "files": [
-    "/lib"
+    "/lib",
+    "index.d.ts"
   ],
+  "tsd": {
+    "directory": "types/test"
+  },
   "scripts": {
-    "test": "npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
+    "test": "npm run gen-types-wechat && npm run tsd && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
     "test-core": "mocha test/core-test-new/*.test.js",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",
@@ -26,7 +30,8 @@
     "gen-docs-qq": "jsdoc -c jsdoc-configs/docs-qq.json",
     "gen-docs-alipay": "jsdoc -c jsdoc-configs/docs-alipay.json",
     "gen-docs-baidu": "jsdoc -c jsdoc-configs/docs-baidu.json",
-    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web && npm run gen-docs-qq && npm run gen-docs-baidu && npm run gen-docs-alipay"
+    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web && npm run gen-docs-qq && npm run gen-docs-baidu && npm run gen-docs-alipay",
+    "tsd": "tsd"
   },
   "repository": {
     "type": "git",
@@ -72,6 +77,7 @@
     "sinon": "^3.2.0",
     "sinon-chai": "^3.3.0",
     "sinon-stub-promise": "^4.0.0",
+    "tsd": "^0.9.0",
     "webpack": "^4.28.3",
     "webpack-cli": "^3.2.1"
   },

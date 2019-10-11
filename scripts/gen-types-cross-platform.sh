@@ -87,7 +87,11 @@ interface Window {
 " >> $dest
   fi
 
-  sed -i "" $'s/\r//' $dest  # 移除 ^M (\r)
+  # 移除 ^M (\r)
+  sed -i "" $'s/\r//' $dest
+
+  # Promise.<WechatBaaS.Response.<any>>  --->   Promise<WechatBaaS.Response<any>>
+  sed -i "" "s/\.\(<\)/\1/g" $dest
   echo $dest
 }
 

@@ -15,7 +15,6 @@
  * @memberof BaaS
  * @property {string} status 状态。 'success' / 'fail'
  * @property {string} action 操作。'login'(第三方登录) / 'associate'(关联第三方账号)
- * @property {string} action 操作。'login'(第三方登录) / 'associate'(关联第三方账号)
  * @property {BaaS.UserRecord} user 当前用户对象，仅 status 为 'success' 且 action 为 'login' 时返回
  */
 

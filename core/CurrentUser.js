@@ -28,7 +28,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 以 JSON Object 的形式返回用户信息
-   * @returns {Object<any>} 用户信息
+   * @returns {Object} 用户信息
    */
   toJSON() {
     return this._attribute

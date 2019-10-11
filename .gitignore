@@ -17,4 +17,5 @@ sdk-plugin/plugin/api/sdk-wechat.js
 test-storage/
 docs/*
 !docs/index.html
-types/
+types/*
+!types/test

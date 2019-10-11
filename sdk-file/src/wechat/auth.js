@@ -71,7 +71,7 @@ module.exports = BaaS => {
    * @function
    * @memberof BaaS.auth
    * @param {BaaS.handleUserInfoOptions} options 参数
-   * @return {Promive<any>}
+   * @return {Promise<any>}
    */
   const handleUserInfo = res => {
     if (!res || !res.detail) {
@@ -173,8 +173,8 @@ module.exports = BaaS => {
    * @function
    * @since v2.0.0
    * @memberof BaaS.auth
-   * @param {BaaS.AuthData|null} authData 用户信息，值为 null 时是静默登录
-   * @param {BaaS.LoginOptions} options 其他选项
+   * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
+   * @param {BaaS.LoginOptions} [options] 其他选项
    * @return {Promise<BaaS.CurrentUser>}
    */
   const loginWithWechat = (authData, {
@@ -211,7 +211,7 @@ module.exports = BaaS => {
    * @function
    * @memberof BaaS
    * @param {boolean} forceLogin 是否是强制登录
-   * @return {Promive<any>}
+   * @return {Promise<any>}
    */
   BaaS.login = function (args) {
     if (args === false) {
@@ -232,7 +232,7 @@ module.exports = BaaS => {
    * @function
    * @memberof BaaS
    * @param {BaaS.handleUserInfoOptions} options 参数
-   * @return {Promive<any>}
+   * @return {Promise<any>}
    */
   BaaS.handleUserInfo = function (res) {
     return BaaS.auth.handleUserInfo(res).then(() => commonAuth.getCurrentUser()).then(user => {
