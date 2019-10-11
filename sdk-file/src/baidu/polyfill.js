@@ -14,7 +14,7 @@ module.exports = BaaS => {
     checkLatestVersion() {
       let info = swan.getSystemInfoSync()
       if (info.platform === 'devtools') {
-        BaaS.checkVersion({platform: 'baidu_miniapp'})
+        BaaS.checkVersion({platform: constants.PLATFORM.BAIDU})
       }
     },
     linkBaidu(...args) {

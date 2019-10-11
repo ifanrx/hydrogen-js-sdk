@@ -114,5 +114,12 @@ module.exports = {
     HANDLER: 'handler',
     TOKEN: 'token',
     AUTH_RESULT: 'auth-result',
-  }
+  },
+
+  PLATFORM: {
+    WECHAT: 'wechat_miniapp',
+    ALIPAY: 'alipay_miniapp',
+    QQ: 'qq_miniapp',
+    BAIDU: 'baidu_miniapp',
+  },
 }
