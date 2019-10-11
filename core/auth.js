@@ -48,7 +48,7 @@ function getAuthRequestData(data) {
  * @since v2.0.0
  * @memberof BaaS.auth
  * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const login = params => {
   let url = getAuthUrl(params, true)
@@ -67,7 +67,7 @@ const login = params => {
  * 匿名登录
  * @since v2.0.0
  * @memberof BaaS.auth
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const anonymousLogin = () => {
   return BaaS.request({
@@ -83,7 +83,7 @@ const anonymousLogin = () => {
  * 静默登录
  * @since v2.0.0
  * @memberof BaaS.auth
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
@@ -94,7 +94,7 @@ const silentLogin = () => {
  * @since v2.0.0
  * @memberof BaaS.auth
  * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const register = params => {
   let url = getAuthUrl(params)
@@ -144,7 +144,7 @@ const requestPasswordReset = ({email} = {}) => {
  * 获取当前用户
  * @since v2.0.0
  * @memberof BaaS.auth
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
@@ -166,7 +166,7 @@ let getCurrentUser = () => {
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码
  * @param {BaaS.LoginOptions} options
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({

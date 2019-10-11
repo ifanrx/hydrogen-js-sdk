@@ -322,3 +322,14 @@
  * @property {AuthData} [authData] 是否强制登录
  * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
  */
+
+/**
+ * @typedef LinkThirdPartyParams
+ * @memberof BaaS
+ * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {boolean} [debug] 是否开启 debug 模式
+ * @property {string} [mode] 授权窗口打开模式
+ * @property {Object} [authModalStyle] popup-iframe 模式下，授权模态框的样式
+ * @property {Object} [wechatIframeContentStyle] 微信 web 授权，在 popup-iframe 模式下，微信授权页面的样式
+ * @property {string} [windowFeatures] popup-window 模式下，授权窗口的特性，详见 {@link https://developer.mozilla.org/zh-CN/docs/Web/API/Window/open}
+ */

@@ -37,7 +37,7 @@ class User extends BaseQuery {
   /**
    * 获取一个用户记录（仅引用，非数据）。
    * @param {number} userID 用户 ID
-   * @return {Promise<UserRecord>}
+   * @return {Promise<BaaS.UserRecord>}
    */
   getWithoutData(userID) {
     if (utils.isString(userID) || Number.isInteger(userID)) {
@@ -50,7 +50,7 @@ class User extends BaseQuery {
   /**
    * 获取当前用户记录（仅引用，非数据）。
    * @param {number} userID 用户 ID
-   * @returns {UserRecord}
+   * @returns {BaaS.UserRecord}
    */
   getCurrentUserWithoutData() {
     return new UserRecord()

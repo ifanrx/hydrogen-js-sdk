@@ -134,14 +134,6 @@ module.exports = BaaS => {
     })
   }
 
-  /**
-   * 关联微信账号
-   * @function
-   * @since v2.0.0
-   * @memberof BaaS.auth
-   * @param {BaaS.AuthData|null} authData 用户信息
-   * @param {BaaS.LinkOptions} params 用户信息参数
-   */
   const linkWechat = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -183,7 +175,7 @@ module.exports = BaaS => {
    * @memberof BaaS.auth
    * @param {BaaS.AuthData|null} authData 用户信息，值为 null 时是静默登录
    * @param {BaaS.LoginOptions} options 其他选项
-   * @return {Promise<UserRecord>}
+   * @return {Promise<BaaS.CurrentUser>}
    */
   const loginWithWechat = (authData, {
     createUser = true,

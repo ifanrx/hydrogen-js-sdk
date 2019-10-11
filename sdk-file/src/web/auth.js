@@ -212,7 +212,7 @@ const createThirdPartyAuthFn = BaaS => () => {
  * @param {string} providor 第三方平台
  * @param {string} authPageUrl 授权页面 URL
  * @param {BaaS.ThirdPartyLoginOptions} options 其他选项
- * @return {Promise<UserRecord>}
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}) => {
   return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN})
