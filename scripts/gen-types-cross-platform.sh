@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 tmp_dir=./scripts/tmp
 
 getConfigFilePath() {

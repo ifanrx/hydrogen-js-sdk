@@ -43,6 +43,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至支付宝账号，非当前用户与匿名用户无法调用
+   * @param {BaaS.LinkAlipayParams} options 参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkAlipay() {
@@ -71,6 +72,7 @@ class UserRecord extends BaseRecord {
 
   /**
    * 将当前用户关联至百度账号，非当前用户与匿名用户无法调用
+   * @param {BaaS.LinkBaiduParams} options 参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkBaidu() {

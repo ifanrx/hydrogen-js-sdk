@@ -307,3 +307,18 @@
  * @property {string} [dataType] 返回的数据格式
  */
 
+/**
+ * 关联支付宝账号参数
+ * @typedef LinkAlipayParams
+ * @memberof BaaS
+ * @property {boolean} [forceLogin] 是否强制登录
+ * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ */
+
+/**
+ * 关联百度账号参数
+ * @typedef LinkBaiduParams
+ * @memberof BaaS
+ * @property {AuthData} [authData] 是否强制登录
+ * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ */

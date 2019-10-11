@@ -1,14 +1,14 @@
 {
   "plugins": [],
   "opts": {
-    "template": "node_modules/@otris/jsdoc-tsd",
     "encoding": "utf8",
+    "destination": "./docs/baidu",
     "recurse": true
   },
   "source": {
     "include": [
       "core",
-      "sdk-file/src/alipay"
+      "sdk-file/src/baidu"
     ]
   },
   "recurseDepth": 10,

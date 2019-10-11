@@ -1,8 +1,8 @@
 {
   "plugins": [],
   "opts": {
-    "template": "node_modules/@otris/jsdoc-tsd",
     "encoding": "utf8",
+    "destination": "./docs/alipay",
     "recurse": true
   },
   "source": {
