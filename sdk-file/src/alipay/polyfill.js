@@ -37,7 +37,7 @@ module.exports = function (BaaS) {
       my.getRunScene({
         success(result) {
           if (result.envVersion === 'develop') {
-            BaaS.checkVersion({platform: 'alipay_miniapp'})
+            BaaS.checkVersion({platform: constants.PLATFORM.ALIPAY})
           }
         }
       })

@@ -15,7 +15,7 @@ module.exports = BaaS => {
     checkLatestVersion() {
       let info = qq.getSystemInfoSync()
       if (info.platform === 'devtools') {
-        BaaS.checkVersion({platform: 'qq_miniapp'})
+        BaaS.checkVersion({platform: constants.PLATFORM.QQ})
       }
     },
     linkQQ(...args) {

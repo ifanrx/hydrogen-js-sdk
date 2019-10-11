@@ -37,7 +37,7 @@ module.exports = BaaS => {
     checkLatestVersion() {
       let info = wx.getSystemInfoSync()
       if (info.platform === 'devtools') {
-        BaaS.checkVersion({platform: 'wechat_miniapp'})
+        BaaS.checkVersion({platform: constants.PLATFORM.WECHAT})
       }
     },
     handleLoginSuccess(res, isAnonymous) {
