@@ -1,4 +1,5 @@
 const utils = require('core-module/utils')
+const constants = require('core-module/constants')
 
 /**
  * 上报模板消息所需 formID
@@ -12,7 +13,7 @@ const utils = require('core-module/utils')
 const createReportTicket = BaaS => (formID) => {
   const API = BaaS._config.API
   let paramsObj = utils.makeReportTicketParam(formID)
-  paramsObj.platform = 'qq_miniapp'
+  paramsObj.platform = constants.PLATFORM.QQ
 
   return BaaS._baasRequest({
     url: API.QQ.TEMPLATE_MESSAGE,

@@ -54,7 +54,8 @@ module.exports = function (BaaS) {
         'cdn_path': data.url,
         'size': data.file_size,
       }
-      return result
+      res.data = result
+      return res
     })
   }
 }

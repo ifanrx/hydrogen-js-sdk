@@ -64,7 +64,13 @@ const createPayWithWechatFn = BaaS => options => {
   }
   // JSAPI 支付
   let tasks = [
-    requestPaymentConfig.then(res => res.data).catch(err => err),
+    requestPaymentConfig.then(res => res.data).catch(err => {
+      if (err.data) {
+        return new Error(JSON.stringify(err.data))
+      } else {
+        return new Error(err.status + ' ' + err.statusText)
+      }
+    }),
     utils.getWeixinJSBridge().catch(() => new HError(615)),
   ]
   return Promise.all(tasks).then(result => {
