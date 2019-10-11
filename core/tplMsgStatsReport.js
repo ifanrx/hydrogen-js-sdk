@@ -15,12 +15,26 @@ function pushStats(statsId) {
 function reportStatsFromHeadOfQueue() {
   const statsIdToReport = tpl_msg_stats_report_queue[0]
   utils.log(constants.LOG_LEVEL.DEBUG, `<report-stats> [${statsIdToReport}]: begin`)
+  let platform = constants.PLATFORM.WECHAT
+  switch (BaaS._polyfill.CLIENT_PLATFORM) {
+  case 'ALIPAY':
+    platform = constants.PLATFORM.ALIPAY
+    break
+  case 'QQ':
+    platform = constants.PLATFORM.QQ
+    break
+  case 'BAIDU':
+    platform = constants.PLATFORM.BAIDU
+    break
+  default:
+    platform = constants.PLATFORM.WECHAT
+  }
   return BaaS._baasRequest({
     url: BaaS._config.API.TEMPLATE_MESSAGE_EVENT_REPORT,
     method: 'POST',
     data: {
       stats_id: statsIdToReport,
-      platform: BaaS._polyfill.CLIENT_PLATFORM === 'ALIPAY' ? 'alipay_miniapp' : 'wechat_miniapp'
+      platform: platform
     }
   }).then(() => {
     utils.log(constants.LOG_LEVEL.DEBUG, `<report-stats> [${statsIdToReport}]: finish`)
