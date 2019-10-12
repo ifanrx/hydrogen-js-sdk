@@ -24,7 +24,7 @@ class Order extends BaseQuery {
   /**
    * 获取支付订单列表。
    * @method
-   * @param {BaaS.GetOrderListParams} params 筛选参数
+   * @param {BaaS.GetOrderListParams} [params] 筛选参数
    * @return {Promise<BaaS.Response<any>>}
    */
   getOrderList(params = {}) {

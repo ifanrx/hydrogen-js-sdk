@@ -135,14 +135,14 @@
  * @property {string} [category_id]	文件所属类别 ID
  * @property {boolean} [random_file_link]	是否使用随机字符串作为文件的下载地址，不随机可能会覆盖之前的文件，默认为 true
  * @property {string} [size] 截图尺寸，格式为 宽 x 高，默认是视频尺寸
- * @property {string} [format] 截图格式，可选值为 jpg，png, webp, 默认根据 save_as 的后缀生成
+ * @property {string} [format] 截sf格式，可选值为 jpg，png, webp, 默认根据 save_as 的后缀生成
  */
 
 /**
  * 视频拼接参数
  * @typedef VideoConcatParams
  * @memberof BaaS
- * @property {string[]} m3u8s 视频文件的 id 列表，按提交的顺序进行拼接
+ * @property {string[]} m3u8s 视频件的 id 列表，按提交的顺序进行拼接
  * @property {string} save_as	视频保存的文件名
  * @property {string} [category_id]	文件所属类别 ID
  * @property {boolean} [random_file_link]	是否使用随机字符串作为文件的下载地址，不随机可能会覆盖之前的文件，默认为 true
@@ -240,12 +240,12 @@
  * 获取支付订单参数
  * @typedef GetOrderListParams
  * @memberof BaaS
- * @property {string} merchandise_record_id 商品记录 ID，可用于定位用户购买的物品
- * @property {number} merchandise_schema_id 商品表 ID，可用于定位用户购买的物品
- * @property {'complete'|'pending'|'success'|'partial'} status 订单支付状态
- * @property {string} trade_no 真正的交易 ID, 业务方在服务方后台对账时可看到此字段
- * @property {string} transactionID 知晓云平台所记录的流水号
- * @property {string} gateway_type 支付方法，可选值有：weixin_tenpay（微信支付）、alipay（支付宝支付）等
+ * @property {string} [merchandise_record_id] 商品记录 ID，可用于定位用户购买的物品
+ * @property {string} [merchandise_schema_id] 商品表 ID，可用于定位用户购买的物品
+ * @property {'complete'|'pending'|'success'|'partial'} [status] 订单支付状态
+ * @property {string} [trade_no] 真正的交易 ID, 业务方在服务方后台对账时可看到此字段
+ * @property {string} [transactionID] 知晓云平台所记录的流水号
+ * @property {string} [gateway_type] 支付方法，可选值有：weixin_tenpay（微信支付）、alipay（支付宝支付）等
  */
 
 /**
