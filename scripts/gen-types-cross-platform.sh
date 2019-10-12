@@ -83,7 +83,8 @@ interface Window {
     * 知晓云 SDK 命名空间
     */
     BaaS: typeof `getBaaSNamespace $platform`;
-  }
+}
+declare var window: Window & typeof globalThis
 " >> $dest
   fi
 

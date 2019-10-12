@@ -9,6 +9,11 @@ const utils = require('./utils')
  * @package
  */
 class TableRecord extends BaseRecord {
+  /**
+   * @param {string} tableName 数据表名
+   * @param {string} recordID 数据记录 ID
+   * @param {object} [queryObject] 查询对象
+   */
   constructor(tableID, recordID, queryObject = {}) {
     super(recordID)
     this._tableID = tableID
@@ -17,7 +22,7 @@ class TableRecord extends BaseRecord {
 
   /**
    * 保存数据记录
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   save() {
     let record = utils.cloneDeep(this._record)
@@ -28,7 +33,7 @@ class TableRecord extends BaseRecord {
   /**
    * 更新数据记录
    * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   update({enableTrigger = true} = {}) {
     let record = utils.cloneDeep(this._record)

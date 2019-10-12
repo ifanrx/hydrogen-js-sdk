@@ -17,8 +17,8 @@ class File extends BaseQuery {
    * 上传文件。
    * @method
    * @param {BaaS.FileParams} fileParams 文件参数
-   * @param {BaaS.FileMeta} metaData 文件元信息
-   * @return {Promise<any>}
+   * @param {BaaS.FileMeta} [metaData] 文件元信息
+   * @return {Promise<BaaS.Response<any>>}
    */
   upload(fileParams, metaData) {
     return BaaS.uploadFile(fileParams, metaData, 'json')
@@ -28,7 +28,7 @@ class File extends BaseQuery {
    * 删除文件。
    * @method
    * @param {string} id 文件 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   delete(id) {
     if(id instanceof Array) {
@@ -42,7 +42,7 @@ class File extends BaseQuery {
    * 获取文件详情。
    * @method
    * @param {string} fileID 文件 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   get(fileID) {
     return BaaS.getFileDetail({fileID})
@@ -51,7 +51,7 @@ class File extends BaseQuery {
   /**
    * 获取文件列表。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   find() {
     let condition = this._handleAllQueryConditions()

@@ -114,7 +114,7 @@ const register = params => {
  * 退出登录状态
  * @since v2.0.0
  * @memberof BaaS.auth
- * @return {Promise<any>}
+ * @return {Promise<BaaS.Response<any>>}
  */
 const logout = () => {
   return BaaS.request({
@@ -130,7 +130,8 @@ const logout = () => {
  * 忘记密码，发送重置密码邮件
  * @since v2.0.0
  * @memberof BaaS.auth
- * @return {Promise<any>}
+ * @param {BaaS.PasswordResetParam} param 账号信息
+ * @return {Promise<BaaS.Response<any>>}
  */
 const requestPasswordReset = ({email} = {}) => {
   return BaaS.request({
@@ -165,7 +166,7 @@ let getCurrentUser = () => {
  * @memberof BaaS.auth
  * @param {string} mobilePhone 手机号码
  * @param {string} smsCode 验证码
- * @param {BaaS.LoginOptions} options
+ * @param {BaaS.LoginOptions} [options] 可选配置
  * @return {Promise<BaaS.CurrentUser>}
  */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {

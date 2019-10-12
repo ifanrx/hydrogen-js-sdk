@@ -120,7 +120,7 @@ class BaseRecord {
    * 自增（原子操作）。
    * @method
    * @param {string} key 字段名称
-   * @param {string} value 值
+   * @param {number} value 值
    * @return {this}
    */
   incrementBy(key, value) {
@@ -149,7 +149,7 @@ class BaseRecord {
    * 数组添加元素（原子操作）。
    * @method
    * @param {string} key 字段名称
-   * @param {string} value 值
+   * @param {string[]|string} value 值
    * @return {this}
    */
   uAppend(key, value) {

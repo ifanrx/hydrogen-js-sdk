@@ -12,6 +12,9 @@ const API = BaaS._config.API
  * @package
  */
 class CurrentUser extends UserRecord {
+  /**
+   * @param {Object} attribute 用户信息
+   */
   constructor(attribute) {
     super()
     if (!utils.isObject(attribute)) {
@@ -45,8 +48,8 @@ class CurrentUser extends UserRecord {
 
   /**
    * 将当前用户关联至微信账号，匿名用户无法调用
-   * @param {BaaS.AuthData|null} authData 用户信息
-   * @param {BaaS.LinkOptions} params 用户信息参数
+   * @param {BaaS.AuthData|null} [authData] 用户信息
+   * @param {BaaS.LinkOptions} [params] 用户信息参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkWechat() {
@@ -61,7 +64,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 将当前用户关联至支付宝账号，匿名用户无法调用
-   * @param {BaaS.LinkAlipayParams} options 参数
+   * @param {BaaS.LinkAlipayParams} [options] 参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkAlipay() {
@@ -76,8 +79,8 @@ class CurrentUser extends UserRecord {
 
   /**
    * 将当前用户关联至 QQ 账号，匿名用户无法调用
-   * @param {BaaS.AuthData|null} authData 用户信息
-   * @param {BaaS.LinkOptions} params 用户信息参数
+   * @param {BaaS.AuthData|null} [authData] 用户信息
+   * @param {BaaS.LinkOptions} [params] 用户信息参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkQQ() {
@@ -92,8 +95,9 @@ class CurrentUser extends UserRecord {
 
   /**
    * 将当前用户关联至百度账号，匿名用户无法调用
-   * @param {BaaS.LinkBaiduParams} options 参数
-   * @returns {Promise<this>} UserRecord 实例
+   * @param {BaaS.AuthData|null} [authData] 用户信息
+   * @param {BaaS.LinkOptions} [params] 用户信息参数
+   * @returns {Promise<this>} [UserRecord] 实例
    */
   linkBaidu() {
     if (this._anonymous) {
@@ -105,13 +109,12 @@ class CurrentUser extends UserRecord {
     return BaaS._polyfill.linkBaidu.apply(null, arguments)
   }
 
-
   /**
    * 将当前用户关联至第三方账号，匿名用户无法调用
    * @since v2.1.0
    * @param {string} providor 第三方平台
    * @param {string} authPageUrl 授权页面 URL
-   * @param {BaaS.LinkThirdPartyParams} options 其他选项
+   * @param {BaaS.LinkThirdPartyParams} [options] 其他选项
    * @returns {Promise<this>} UserRecord 实例
    */
   linkThirdParty() {
@@ -123,7 +126,6 @@ class CurrentUser extends UserRecord {
     }
     return BaaS._polyfill.linkThirdParty.apply(null, arguments)
   }
-
 
   /**
    * 更新密码
@@ -147,8 +149,8 @@ class CurrentUser extends UserRecord {
 
   /**
    * 更新邮箱
-   * @param email
-   * @param sendVerificationEmail
+   * @param {string} email email 地址
+   * @param {SetEmailOptions} [options] 可选参数
    * @returns {Promise<this>} UserRecord 实例
    */
   setEmail(email, {sendVerificationEmail = false} = {}) {
@@ -170,7 +172,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 更新用户名
-   * @param username
+   * @param {string} username 用户名
    * @returns {Promise<this>} UserRecord 实例
    */
   setUsername(username) {
@@ -203,7 +205,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 初次设置账号信息
-   * @param {BaaS.SetAccountParmasUsername|BaaS.SetAccountParmasEmail}  accountInfo
+   * @param {BaaS.SetAccountParmas} accountInfo
    * @returns {Promise<this>} UserRecord 实例
    */
   setAccount(accountInfo = {}) {

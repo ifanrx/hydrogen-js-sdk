@@ -17,7 +17,7 @@ class FileCategory extends BaseQuery {
    * 获取文件分类详情。
    * @method
    * @param {string} categoryID 文件分类 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   get(categoryID) {
     return BaaS.getFileCategoryDetail({categoryID})
@@ -27,7 +27,7 @@ class FileCategory extends BaseQuery {
    * 通过文件分类 ID 获取分类下的所有文件。
    * @method
    * @param {string} categoryID 文件分类 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   getFileList(categoryID) {
     let query = new Query()
@@ -38,7 +38,7 @@ class FileCategory extends BaseQuery {
   /**
    * 获取文件分类列表。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   find() {
     let condition = this._handleAllQueryConditions()

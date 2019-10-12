@@ -2,8 +2,8 @@
  * SDK 初始化选项
  * @typedef InitOptions
  * @memberof BaaS
- * @property {boolean} autoLogin - 是否自动登录
- * @property {string} logLevel - 日志输出等级
+ * @property {boolean} [autoLogin] - 是否自动登录
+ * @property {string} [logLevel] - 日志输出等级
  */
 
 /**
@@ -121,8 +121,8 @@
  * 文件元信息（文件上传）
  * @typedef FileMeta
  * @memberof BaaS
- * @property {string} categoryID 文件分类 ID
- * @property {string} categoryName 要上传的文件分类名
+ * @property {string} [categoryID] 文件分类 ID
+ * @property {string} [categoryName] 要上传的文件分类名
  */
 
 /**
@@ -263,19 +263,12 @@
  */
 
 /**
- * 设置账号（用户名 + 密码）
- * @typedef SetAccountParmasUsername
+ * 设置账号参数
+ * @typedef SetAccountParmas
  * @memberof BaaS
- * @property {string} username 用户名
- * @property {string} password 密码
- */
-
-/**
- * 设置账号（邮箱 + 密码）
- * @typedef SetAccountParmasEmail
- * @memberof BaaS
- * @property {string} email 邮箱
- * @property {string} password 密码
+ * @property {string} [username] 用户名
+ * @property {string} [email] 邮箱
+ * @property {string} [password] 密码
  */
 
 /**
@@ -316,20 +309,24 @@
  */
 
 /**
- * 关联百度账号参数
- * @typedef LinkBaiduParams
- * @memberof BaaS
- * @property {AuthData} [authData] 是否强制登录
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
- */
-
-/**
  * @typedef LinkThirdPartyParams
  * @memberof BaaS
  * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
  * @property {boolean} [debug] 是否开启 debug 模式
- * @property {string} [mode] 授权窗口打开模式
+ * @property {'popup-window'|'popup-iframe'|'redirect'} [mode] 授权窗口打开模式
  * @property {Object} [authModalStyle] popup-iframe 模式下，授权模态框的样式
  * @property {Object} [wechatIframeContentStyle] 微信 web 授权，在 popup-iframe 模式下，微信授权页面的样式
  * @property {string} [windowFeatures] popup-window 模式下，授权窗口的特性，详见 {@link https://developer.mozilla.org/zh-CN/docs/Web/API/Window/open}
+ */
+
+/**
+ * @typedef SetEmailOptions
+ * @memberof BaaS
+ * @property {boolean} sendVerificationEmail 是否发送验证邮件
+ */
+
+/**
+ * @typedef PasswordResetParam
+ * @memberof BaaS
+ * @property {string} email email 地址
  */

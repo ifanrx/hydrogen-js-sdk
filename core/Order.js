@@ -13,7 +13,7 @@ class Order extends BaseQuery {
    * 获取支付订单详情。
    * @method
    * @param {string} transactionID 支付流水 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   get(transactionID) {
     const API = BaaS._config.API
@@ -25,7 +25,7 @@ class Order extends BaseQuery {
    * 获取支付订单列表。
    * @method
    * @param {BaaS.GetOrderListParams} params 筛选参数
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   getOrderList(params = {}) {
     let condition = Object.assign({}, this._handleAllQueryConditions(), params)

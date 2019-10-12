@@ -19,7 +19,7 @@ class User extends BaseQuery {
    * 获取用户详情。
    * @method
    * @param {string} userID 用户 ID
-   * @return {Promise<any>}
+   * @return {Promise<Response<any>>}
    */
   get(userID) {
     let params = {userID}
@@ -36,8 +36,8 @@ class User extends BaseQuery {
 
   /**
    * 获取一个用户记录（仅引用，非数据）。
-   * @param {number} userID 用户 ID
-   * @return {Promise<BaaS.UserRecord>}
+   * @param {string} userID 用户 ID
+   * @return {BaaS.UserRecord}
    */
   getWithoutData(userID) {
     if (utils.isString(userID) || Number.isInteger(userID)) {
@@ -49,7 +49,6 @@ class User extends BaseQuery {
 
   /**
    * 获取当前用户记录（仅引用，非数据）。
-   * @param {number} userID 用户 ID
    * @returns {BaaS.UserRecord}
    */
   getCurrentUserWithoutData() {
@@ -59,7 +58,7 @@ class User extends BaseQuery {
   /**
    * 获取用户列表。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<Response<any>>}
    */
   find() {
     let condition = this._handleAllQueryConditions()

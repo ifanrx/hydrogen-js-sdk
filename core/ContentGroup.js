@@ -9,6 +9,9 @@ const Query = require('./Query')
  * @public
  */
 class ContentGroup extends BaseQuery {
+  /**
+   * @param {string} contentGroupID 内容库 ID
+   */
   constructor(contentGroupID) {
     super()
     this._contentGroupID = contentGroupID
@@ -18,7 +21,7 @@ class ContentGroup extends BaseQuery {
    * 获取内容。
    * @method
    * @param {string} richTextID 内容 ID
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   getContent(richTextID) {
     let params = {richTextID}
@@ -36,7 +39,7 @@ class ContentGroup extends BaseQuery {
   /**
    * 查找内容。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   find() {
     let condition = this._handleAllQueryConditions()
@@ -48,7 +51,7 @@ class ContentGroup extends BaseQuery {
   /**
    * 获取内容分类列表。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   getCategoryList() {
     return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID, limit: 100})
@@ -57,7 +60,7 @@ class ContentGroup extends BaseQuery {
   /**
    * 获取内容分类详情。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<BaaS.Response<any>>}
    */
   getCategory(categoryID) {
     let query = new Query()

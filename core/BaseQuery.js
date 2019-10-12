@@ -38,7 +38,7 @@ class BaseQuery {
   /**
    * 选择只返回某些字段
    * 
-   * @param {...string[]} key 字段名称
+   * @param {string[]|string} key 字段名称
    * @return {this}
    */
   select(args) {
@@ -53,7 +53,7 @@ class BaseQuery {
   /**
    * 设置需要展开的 pointer 类型字段
    * 
-   * @param {...string[]} key 字段名称
+   * @param {string[]|string} key 字段名称
    * @return {this}
    */
   expand(args) {
@@ -96,7 +96,7 @@ class BaseQuery {
   /**
    * 设置排序依据
    * 
-   * @param {...string[]} key 字段名称
+   * @param {string[]|string} key 字段名称
    * @return {this}
    */
   orderBy(args) {

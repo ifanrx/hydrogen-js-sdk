@@ -1,5 +1,5 @@
 {
-  "plugins": [],
+  "plugins": ["plugins/overloadHelper"],
   "opts": {
     "encoding": "utf8",
     "destination": "./docs/qq",

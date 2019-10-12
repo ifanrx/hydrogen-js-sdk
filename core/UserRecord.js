@@ -9,6 +9,9 @@ const utils = require('./utils')
  * @package
  */
 class UserRecord extends BaseRecord {
+  /**
+   * @param {string} userID 用户 ID
+   */
   constructor(userID) {
     super(userID)
   }
@@ -16,7 +19,7 @@ class UserRecord extends BaseRecord {
   /**
    * 更新用户数据。
    * @method
-   * @return {Promise<any>}
+   * @return {Promise<Response<any>>}
    */
   update() {
     let record = utils.cloneDeep(this._record)
