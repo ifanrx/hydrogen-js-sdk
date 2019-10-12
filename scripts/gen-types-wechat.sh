@@ -19,7 +19,7 @@ declare namespace wx {
 " >> $dest
 
 # 移除 ^M (\r)
-sed -i "" $'s/\r//' $dest
+sed -i $'s/\r//' $dest
 
 # Promise.<WechatBaaS.Response.<any>>  --->   Promise<WechatBaaS.Response<any>>
-sed -i "" "s/\.\(<\)/\1/g" $dest
+sed -i "s/\.\(<\)/\1/g" $dest

@@ -60,7 +60,7 @@ buildTypes() {
   ./node_modules/.bin/jsdoc -c $config -d $dest
 
   # 将各个平台的 BaaS 命名空间区分开
-  sed -i "" "s/BaaS/`getBaaSNamespace $platform`/g" $dest
+  sed -i "s/BaaS/`getBaaSNamespace $platform`/g" $dest
 
   # 将 BaaS 暴露到各个平台的某个变量下
   if [ $platform != "web" ];then
@@ -89,10 +89,10 @@ declare var window: Window & typeof globalThis
   fi
 
   # 移除 ^M (\r)
-  sed -i "" $'s/\r//' $dest
+  sed -i $'s/\r//' $dest
 
   # Promise.<WechatBaaS.Response.<any>>  --->   Promise<WechatBaaS.Response<any>>
-  sed -i "" "s/\.\(<\)/\1/g" $dest
+  sed -i "s/\.\(<\)/\1/g" $dest
   echo $dest
 }
 
