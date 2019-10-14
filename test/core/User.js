@@ -46,11 +46,25 @@ describe('User', () => {
     })
   })
 
+  it('#_handleAllQueryConditions with limit', () => {
+    let query = new Query()
+    query.compare('age', '>', randomNumber)
+    user.setQuery(query)
+    user.limit(30)
+    user.orderBy('-age')
+    expect(user._handleAllQueryConditions()).to.deep.equal({
+      limit: 30,
+      offset: 0,
+      order_by: '-age',
+      where: `{"$and":[{"age":{"$gt":${randomNumber}}}]}`
+    })
+  })
+
   it('clear query params when query', () => {
 
     let getUserListStub = sinon.stub(BaaS, 'getUserList').resolves()
     return user.limit(10).find(() => {
-      expect(user._limit).to.equal(20)
+      expect(user._limit).to.equal(null)
       getUserListStub.restore()
     })
   })

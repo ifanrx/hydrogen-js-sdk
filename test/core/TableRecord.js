@@ -50,7 +50,7 @@ describe('TableRecord', () => {
     updateRecord.restore()
   })
 
-  it('#update more', () => {
+  it('#update more without enableTrigger', () => {
     let query = new Query()
     const randomArray = helper.generateRandomArray()
     query.in('price', randomArray)
@@ -74,10 +74,74 @@ describe('TableRecord', () => {
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
         offset: 0,
         limit: 20,
-        enable_trigger: 1,
+        enable_trigger: 0,
       })
     })
     records.update()
+    expect(records._queryObject).to.deep.equal({})
+    updateRecordList.restore()
+  })
+
+  it('#update more with enableTrigger=false', () => {
+    let query = new Query()
+    const randomArray = helper.generateRandomArray()
+    query.in('price', randomArray)
+    const queryObject = {
+      where: query.queryObject,
+      limit: null,
+      offset: 0
+    }
+    let records = new TableRecord(randomNumber1, null, queryObject)
+    records.set('price', 6)
+    expect(records._recordID).to.be.equal.null
+    const updateRecordList = sinon.stub(BaaS, 'updateRecordList').callsFake(args => {
+      expect(args).to.deep.equal({
+        tableID: randomNumber1,
+        data: {
+          $set: {
+            price: 6
+          },
+          $unset: {}
+        },
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        offset: 0,
+        limit: undefined,
+        enable_trigger: 0,
+      })
+    })
+    records.update({enableTrigger: false})
+    expect(records._queryObject).to.deep.equal({})
+    updateRecordList.restore()
+  })
+
+  it('#update more with enableTrigger=true', () => {
+    let query = new Query()
+    const randomArray = helper.generateRandomArray()
+    query.in('price', randomArray)
+    const queryObject = {
+      where: query.queryObject,
+      limit: null,
+      offset: 0
+    }
+    let records = new TableRecord(randomNumber1, null, queryObject)
+    records.set('price', 6)
+    expect(records._recordID).to.be.equal.null
+    const updateRecordList = sinon.stub(BaaS, 'updateRecordList').callsFake(args => {
+      expect(args).to.deep.equal({
+        tableID: randomNumber1,
+        data: {
+          $set: {
+            price: 6
+          },
+          $unset: {}
+        },
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        offset: 0,
+        limit: 20,
+        enable_trigger: 1,
+      })
+    })
+    records.update({enableTrigger: true})
     expect(records._queryObject).to.deep.equal({})
     updateRecordList.restore()
   })

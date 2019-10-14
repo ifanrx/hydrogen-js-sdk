@@ -5,6 +5,7 @@ const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
+const constants = require('./constants')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {
@@ -16,7 +17,7 @@ class TableObject extends BaseQuery {
     return new TableRecord(this._tableID)
   }
 
-  createMany(args, {enableTrigger = true} = {}) {
+  createMany(args, {enableTrigger = false} = {}) {
     const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
     if (utils.isArray(args)) {
@@ -36,13 +37,13 @@ class TableObject extends BaseQuery {
     }
   }
 
-  delete(args, {enableTrigger = true} = {}) {
+  delete(args, {enableTrigger = false} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {
       const params = {
         tableID: this._tableID,
-        limit: this._limit,
+        limit: utils.getLimitationWithEnableTigger(this._limit, enableTrigger),
         offset: this._offset,
         where: JSON.stringify(args.queryObject),
         enable_trigger: enableTrigger ? 1 : 0
