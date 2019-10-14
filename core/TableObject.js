@@ -17,7 +17,7 @@ class TableObject extends BaseQuery {
     return new TableRecord(this._tableID)
   }
 
-  createMany(args, {enableTrigger = false} = {}) {
+  createMany(args, {enableTrigger = true} = {}) {
     const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
     if (utils.isArray(args)) {
@@ -37,7 +37,7 @@ class TableObject extends BaseQuery {
     }
   }
 
-  delete(args, {enableTrigger = false} = {}) {
+  delete(args, {enableTrigger = true} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {

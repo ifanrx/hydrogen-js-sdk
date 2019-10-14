@@ -15,7 +15,7 @@ class TableRecord extends BaseRecord {
     return BaaS.createRecord({tableID: this._tableID, data: record.$set})
   }
 
-  update({enableTrigger = false} = {}) {
+  update({enableTrigger = true} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     if (this._recordID) {
