@@ -71,6 +71,7 @@ const API = {
     AUTHENTICATE: '/hserve/v2.1/idp/wechat/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
+    SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
     WXACODE: '/hserve/v1.4/miniappcode/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
