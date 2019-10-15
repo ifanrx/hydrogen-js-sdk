@@ -107,6 +107,7 @@ const API = {
   M3U8_META: '/hserve/v1/media/m3u8-meta/',
   VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
 
+  GET_ASYNC_JOB_RESULT: '/hserve/v1/bulk-operation/:id/',
   LATEST_VERSION: '/hserve/v1/latest-sdk-version/',
 }
 
@@ -221,7 +222,7 @@ const methodMapList = [{
 }, {
   getOrderList: {
     url: API.PAY,
-  }
+  },
 }]
 
 const RANDOM_OPTION = {
