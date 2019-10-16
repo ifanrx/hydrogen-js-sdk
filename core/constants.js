@@ -1,4 +1,6 @@
 module.exports = {
+  QUERY_LIMITATION_DEFAULT: 20,
+
   // 存储信息
   STORAGE_KEY: {
     AUTH_TOKEN: 'auth_token',

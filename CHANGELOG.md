@@ -1,6 +1,7 @@
 ## Standby
 - [A] QQ 小程序 SDK 添加内容安全检测接口
 - [A] 百度小程序 SDK 支持百度模版消息 formId 上报
+- [M] 数据表批量操作，enableTrigger 为 false 时，移除默认的 limit
 - [F] 修复 web 端微信 JSAPI 支付在获取支付配置出错时，依然发起支付的 bug
 - [F] 修复 web 端上传文件成功后，返回值与其他平台不一致的 bug
 

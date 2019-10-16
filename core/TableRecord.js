@@ -25,7 +25,7 @@ class TableRecord extends BaseRecord {
         tableID: this._tableID,
         data: record,
         where: JSON.stringify(this._queryObject.where),
-        limit: this._queryObject.limit,
+        limit: utils.getLimitationWithEnableTigger(this._queryObject.limit, enableTrigger),
         offset: this._queryObject.offset,
         enable_trigger: enableTrigger ? 1 : 0
       }

@@ -34,7 +34,7 @@ describe('TableObject', () => {
       expect(args).to.deep.equal({
         tableID: randomNumber,
         data: randomArray,
-        enable_trigger: 1
+        enable_trigger: 1,
       })
     })
     Product.createMany(randomArray)
@@ -49,20 +49,54 @@ describe('TableObject', () => {
     })
   })
 
-  it('#delete more', () => {
+  it('#delete more without enable_trigger', () => {
     let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
-        limit: 500,
+        limit: 20,
         offset: 0,
         enable_trigger: 1,
       })
     })
     let query = new Query()
     query.in('price', randomArray)
-    Product.offset(0).limit(500).delete(query)
-    expect(Product._limit).to.be.equal(20)
+    Product.offset(0).delete(query)
+    expect(Product._limit).to.be.equal(null)
+    deleteRecordList.restore()
+  })
+
+  it('#delete more with enable_trigger=false', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: undefined,
+        offset: 0,
+        enable_trigger: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).delete(query, {enableTrigger: false})
+    expect(Product._limit).to.be.equal(null)
+    deleteRecordList.restore()
+  })
+
+  it('#delete more with enable_trigger=true', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        enable_trigger: 1,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).delete(query, {enableTrigger: true})
+    expect(Product._limit).to.be.equal(null)
     deleteRecordList.restore()
   })
 
@@ -88,7 +122,7 @@ describe('TableObject', () => {
       limit: 350
     })
     expect(records._recordID).to.be.null
-    expect(Product._limit).to.be.equal(20)
+    expect(Product._limit).to.be.equal(null)
     expect(Product._offset).to.be.equal(0)
   })
 
@@ -141,6 +175,21 @@ describe('TableObject', () => {
     })
   })
 
+  it('#_handleAllQueryConditions with limit', () => {
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.setQuery(query)
+    Product.limit(30)
+    Product.orderBy('-amount')
+    expect(Product._handleAllQueryConditions()).to.deep.equal({
+      tableID: randomNumber,
+      limit: 30,
+      offset: 0,
+      order_by: '-amount',
+      where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
+    })
+  })
+
   it('clear query params when get', () => {
     let getRecordStub = sinon.stub(BaaS, 'getRecord').resolves()
     return Product.expand('created_by').get(randomNumber).then(() => {
@@ -152,7 +201,7 @@ describe('TableObject', () => {
   it('clear query params when query', () => {
     let queryRecordListStub = sinon.stub(BaaS, 'queryRecordList').resolves()
     return Product.expand('created_by').limit(10).find(res => {
-      expect(Product._limit).to.equal(20)
+      expect(Product._limit).to.equal(null)
       queryRecordListStub.restore()
     })
   })
