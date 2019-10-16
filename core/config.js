@@ -84,6 +84,8 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v2.0/qq/decrypt/',
+    CENSOR_IMAGE: '/hserve/v2.2/qq/censor-image/',
+    CENSOR_MSG: '/hserve/v2.2/qq/censor-msg/',
   },
 
   BAIDU: {
@@ -107,6 +109,7 @@ const API = {
   M3U8_META: '/hserve/v1/media/m3u8-meta/',
   VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
 
+  GET_ASYNC_JOB_RESULT: '/hserve/v1/bulk-operation/:id/',
   LATEST_VERSION: '/hserve/v1/latest-sdk-version/',
 }
 
@@ -221,7 +224,7 @@ const methodMapList = [{
 }, {
   getOrderList: {
     url: API.PAY,
-  }
+  },
 }]
 
 const RANDOM_OPTION = {

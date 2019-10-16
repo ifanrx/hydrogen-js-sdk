@@ -5,6 +5,7 @@ const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
+const constants = require('./constants')
 
 /**
  * 数据表
@@ -71,7 +72,7 @@ class TableObject extends BaseQuery {
     } else if (args instanceof Query) {
       const params = {
         tableID: this._tableID,
-        limit: this._limit,
+        limit: utils.getLimitationWithEnableTigger(this._limit, enableTrigger),
         offset: this._offset,
         where: JSON.stringify(args.queryObject),
         enable_trigger: enableTrigger ? 1 : 0

@@ -1,6 +1,7 @@
 const HError = require('./HError')
 const Query = require('./Query')
 const utils = require('./utils')
+const constants = require('./constants')
 
 /**
  * @memberof BaaS
@@ -13,7 +14,7 @@ class BaseQuery {
 
   _initQueryParams() {
     this._queryObject = {}
-    this._limit = 20
+    this._limit = null
     this._offset = 0
     this._orderBy = null
     this._keys = null
@@ -110,7 +111,7 @@ class BaseQuery {
 
   _handleAllQueryConditions() {
     let conditions = {}
-    conditions.limit = this._limit
+    conditions.limit = this._limit === null ? constants.QUERY_LIMITATION_DEFAULT : this._limit
     conditions.offset = this._offset
 
     if (this._orderBy) {

@@ -104,5 +104,6 @@ module.exports = function (BaaS) {
   BaaS.TableObject = require('./TableObject')
   BaaS.User = require('./User')
   BaaS.Order = require('./Order')
+  BaaS.getAsyncJobResult = require('./getAsyncJobResult')
   // 初始化 BaaS 逻辑，添加更多的方法到 BaaS 对象
 }
