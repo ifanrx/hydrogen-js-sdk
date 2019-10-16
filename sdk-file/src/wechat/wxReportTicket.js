@@ -8,7 +8,7 @@ const API = BaaS._config.API
  * @function
  * @memberof BaaS
  * @param {string} formID formID
- * @return {Promise<any>}
+ * @return {Promise<BaaS.Response<any>>}
  */
 const wxReportTicket = (formID) => {
   let paramsObj = utils.makeReportTicketParam(formID)

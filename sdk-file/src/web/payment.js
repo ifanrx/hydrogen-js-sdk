@@ -114,10 +114,10 @@ const createPayWithAlipayFn = BaaS => options => {
 }
 
 /**
- * 支付宝支付
+ * QQ 支付
  * @function
- * @name payWithAlipay
- * @since v2.2.0
+ * @name payWithQQ
+ * @since v2.4.0
  * @memberof BaaS.payment
  * @param {BaaS.PaymentParams} params 参数
  * @return {Promise<any>}

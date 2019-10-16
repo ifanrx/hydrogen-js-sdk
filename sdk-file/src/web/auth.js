@@ -129,7 +129,6 @@ const setExtraUrlParams = (url, options = {}) => {
  * @name thirdPartyAuth
  * @since v2.1.0
  * @memberof BaaS.auth
- * @return {Promise<any>}
  */
 const createThirdPartyAuthFn = BaaS => () => {
   const PARAM = constants.THIRD_PARTY_AUTH_URL_PARAM
@@ -209,9 +208,9 @@ const createThirdPartyAuthFn = BaaS => () => {
  * @name loginWithThirdParty
  * @since v2.1.0
  * @memberof BaaS.auth
- * @param {string} providor 第三方平台
+ * @param {string} provider 第三方平台
  * @param {string} authPageUrl 授权页面 URL
- * @param {BaaS.ThirdPartyLoginOptions} options 其他选项
+ * @param {BaaS.ThirdPartyLoginOptions} [options] 其他选项
  * @return {Promise<BaaS.CurrentUser>}
  */
 const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}) => {

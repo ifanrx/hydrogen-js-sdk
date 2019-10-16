@@ -64,7 +64,7 @@ module.exports = BaaS => {
    * @since v2.8.0
    * @memberof BaaS
    * @param {string} fileID 文件 ID
-   * @return {Promise<BaaS.CensorAsyncResult>}
+   * @return {Promise<BaaS.Response<BaaS.CensorAsyncResult>>}
    */
   const censorAsync = fileId => {
     return BaaS._baasRequest({
@@ -81,8 +81,8 @@ module.exports = BaaS => {
    * @function
    * @since v2.8.0
    * @memberof BaaS
-   * @param {string} id 检测记录 ID
-   * @return {Promise<BaaS.CensorAsyncResult>}
+   * @param {string|number} id 检测记录 ID
+   * @return {Promise<BaaS.Response<BaaS.CensorAsyncResult>>}
    */
   const getCensorResult = id => {
     return BaaS._baasRequest({

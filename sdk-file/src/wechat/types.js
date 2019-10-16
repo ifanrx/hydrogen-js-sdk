@@ -15,6 +15,12 @@
  * @property {number} totalCost 支付总额，单位：元
  * @property {string} [merchandiseSchemaID] 商品数据表 ID，可用于定位用户购买的物品
  * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品
- * @property {string} [merchandiseSnapshot] 根据业务需求自定义的数据
- * @property {string} [profitSharing] 当前订单是否需要分账
+ * @property {Object} [merchandiseSnapshot] 根据业务需求自定义的数据
+ * @property {boolean} [profitSharing] 当前订单是否需要分账
+ */
+
+/**
+ * @typedef OrderParams
+ * @memberof BaaS
+ * @property {string} transactionID 支付流水号
  */

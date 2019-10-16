@@ -15,7 +15,7 @@ const keysMap = {
  * @since v2.8.0
  * @memberof BaaS
  * @param {BaaS.PaymentParams} params 参数
- * @param {string[]} bannedChannels 需要隐藏的支付方式
+ * @param {string[]} [bannedChannels] 需要隐藏的支付方式
  * @return {Promise<any>}
  */
 const createPayFn = BaaS => (params, bannedChannels) => {

@@ -35,8 +35,8 @@
  * @property {number} totalCost 支付总额，单位：元
  * @property {string} [merchandiseSchemaID] 商品数据表 ID，可用于定位用户购买的物品
  * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品
- * @property {string} [merchandiseSnapshot] 根据业务需求自定义的数据
- * @property {string} [profitSharing] 当前订单是否需要分账
+ * @property {object} [merchandiseSnapshot] 根据业务需求自定义的数据
+ * @property {boolean} [profitSharing] 当前订单是否需要分账
  */
 
 /**
@@ -47,5 +47,17 @@
  * @property {number} totalCost 支付总额，单位：元
  * @property {string} [merchandiseSchemaID] 商品数据表 ID，可用于定位用户购买的物品
  * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品
- * @property {string} [merchandiseSnapshot] 根据业务需求自定义的数据
+ * @property {object} [merchandiseSnapshot] 根据业务需求自定义的数据
+ */
+
+/**
+ * 请求参数
+ * @typedef WebRequestParams
+ * @memberof BaaS
+ * @property {string} url 请求的 URL
+ * @property {string} [method] HTTP 请求方法，默认为 'GET'
+ * @property {object} [data] 请求的参数
+ * @property {object} [header] 请求的 header
+ * @property {object} [headers] 请求的 header
+ * @property {string} [dataType] 返回的数据格式
  */

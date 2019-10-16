@@ -55,6 +55,7 @@ module.exports = BaaS => {
   /**
    * 静默登录
    * @function
+   * @deprecated since v2.0.0
    * @memberof BaaS.auth
    */
   const silentLogin = utils.rateLimit(function (...args) {
