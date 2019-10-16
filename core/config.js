@@ -84,6 +84,8 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v2.0/qq/decrypt/',
+    CENSOR_IMAGE: '/hserve/v2.2/qq/censor-image/',
+    CENSOR_MSG: '/hserve/v2.2/qq/censor-msg/',
   },
 
   BAIDU: {
