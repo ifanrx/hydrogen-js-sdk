@@ -1,4 +1,5 @@
 ## Standby
+- [A] 微信小程序 SDK 支持上报订阅消息订阅关系
 - [A] QQ 小程序 SDK 添加内容安全检测接口
 - [A] 百度小程序 SDK 支持百度模版消息 formId 上报
 - [M] 数据表批量操作，enableTrigger 为 false 时，移除默认的 limit
