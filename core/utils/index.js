@@ -82,8 +82,20 @@ const getSysPlatform = () => {
 const format = (url, params) => {
   params = params || {}
   for (let key in params) {
-    let reg = new RegExp(':' + key, 'g')
-    url = url.replace(reg, encodeURIComponent(params[key]))
+    // 1. 先替换 queryString 中的参数
+    let regForQueryString = new RegExp('(&?)' + key + '=:' + key, 'g')
+    let value = encodeURIComponent(params[key])
+    if (value !== 'undefined') {
+      url = url.replace(regForQueryString, function (match, p1) {
+        return p1 + key + '=' + value
+      })
+    } else {
+      url = url.replace(regForQueryString, '')
+    }
+
+    // 2. 替换 pathname 中的参数
+    let regForPathname = new RegExp(':' + key, 'g')
+    url = url.replace(regForPathname, encodeURIComponent(params[key]))
   }
   return url.replace(/([^:])\/\//g, (m, m1) => {
     return m1 + '/'
@@ -394,4 +406,5 @@ module.exports = {
   extend,
   getUpdateUserProfileParam,
   ticketReportThrottle,
+  getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
 }
