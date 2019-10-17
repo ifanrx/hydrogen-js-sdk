@@ -13,7 +13,7 @@
     "directory": "types/test"
   },
   "scripts": {
-    "test": "npm run gen-types-wechat && npm run tsd && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
+    "test": "npm run gen-types && npm run tsd && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
     "test-core": "mocha test/core-test-new/*.test.js",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",

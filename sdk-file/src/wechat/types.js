@@ -24,3 +24,16 @@
  * @memberof BaaS
  * @property {string} transactionID 支付流水号
  */
+
+/**
+ * @typedef Subscription
+ * @memberof BaaS
+ * @property {string} template_id 模版 ID
+ * @property {string} subscription_type 模版类型
+ */
+
+/**
+ * @typedef SubscribeMessageOptions
+ * @memberof BaaS
+ * @property {BaaS.Subscription[]} subscription 订阅关系
+ */

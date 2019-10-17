@@ -77,3 +77,9 @@ expectType<Promise<any>>(wx.BaaS.wxDecryptData('encryptedData', 'iv', 'type'))
  * wxReportTicket
  */
 expectType<Promise<any>>(wx.BaaS.wxReportTicket('formid'))
+
+
+/**
+ * subscribeMessage
+ */
+expectType<Promise<any>>(wx.BaaS.subscribeMessage({subscription: [{template_id: '123', subscription_type: '456'}, {template_id: '234', subscription_type: '567'}]}))
