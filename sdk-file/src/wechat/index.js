@@ -4,6 +4,7 @@ const wechatAuth = require('./auth')
 const polyfill = require('./polyfill')
 const censor = require('./censor')
 const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
+const subscribeMessage = require('./subscribeMessage')
 
 BaaS._config.VERSION = __VERSION_WECHAT__
 
@@ -12,6 +13,7 @@ BaaS.use(polyfill)
 BaaS.use(wechatAuth)
 BaaS.use(censor)
 BaaS.use(reportTemplateMsgAnalytics)
+BaaS.use(subscribeMessage)
 BaaS.pay = require('./pay')
 BaaS.order = require('./order')
 BaaS.request = require('./request')
