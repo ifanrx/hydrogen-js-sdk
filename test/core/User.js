@@ -3,12 +3,13 @@ const faker = require('faker')
 const Query = require('../../core/Query')
 const User = require('../../core/User')
 const UserRecord = require('../../core/UserRecord')
+const helper = require('./helper')
 
 const randomOption = config.RANDOM_OPTION
 
 describe('User', () => {
   let user = null
-  let randomNumber, randomString
+  let randomNumber, randomString, randomArray
 
   beforeEach(() => {
     user = new User()
@@ -17,6 +18,7 @@ describe('User', () => {
   before(() => {
     randomNumber = faker.random.number(randomOption)
     randomString = faker.lorem.words(1)
+    randomArray = helper.generateRandomArray()
   })
 
   it('#get', () => {
@@ -61,11 +63,57 @@ describe('User', () => {
   })
 
   it('clear query params when query', () => {
+    let getUserListStub = sinon.stub(BaaS, 'getUserList')
+    user.limit(10).find()
+    expect(user._limit).to.equal(null)
+    getUserListStub.restore()
+  })
 
-    let getUserListStub = sinon.stub(BaaS, 'getUserList').resolves()
-    return user.limit(10).find(() => {
-      expect(user._limit).to.equal(null)
-      getUserListStub.restore()
+  it('#find without returnTotalCount', () => {
+    let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
     })
+    let query = new Query()
+    query.in('price', randomArray)
+    user.setQuery(query).offset(0).find()
+    expect(user._limit).to.be.equal(null)
+    getUserListStub.restore()
+  })
+
+  it('#find with returnTotalCount=true', () => {
+    let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 1,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    user.setQuery(query).offset(0).find({returnTotalCount: true})
+    expect(user._limit).to.be.equal(null)
+    getUserListStub.restore()
+  })
+
+  it('#find with returnTotalCount=false', () => {
+    let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    user.setQuery(query).offset(0).find({returnTotalCount: false})
+    expect(user._limit).to.be.equal(null)
+    getUserListStub.restore()
   })
 })

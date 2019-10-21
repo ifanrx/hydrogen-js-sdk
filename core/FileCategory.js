@@ -17,10 +17,12 @@ class FileCategory extends BaseQuery {
     return BaaS.getFileList({where: JSON.stringify(query.queryObject)})
   }
 
-  find() {
+  find({returnTotalCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.getFileCategoryList(condition)
+    return BaaS.getFileCategoryList(Object.assign({}, condition, {
+      return_total_count: returnTotalCount ? 1 : 0,
+    }))
   }
 }
 

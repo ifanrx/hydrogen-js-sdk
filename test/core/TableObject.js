@@ -57,6 +57,7 @@ describe('TableObject', () => {
         limit: 20,
         offset: 0,
         enable_trigger: 1,
+        return_total_count: 0,
       })
     })
     let query = new Query()
@@ -74,6 +75,7 @@ describe('TableObject', () => {
         limit: undefined,
         offset: 0,
         enable_trigger: 0,
+        return_total_count: 0,
       })
     })
     let query = new Query()
@@ -91,11 +93,66 @@ describe('TableObject', () => {
         limit: 20,
         offset: 0,
         enable_trigger: 1,
+        return_total_count: 0,
       })
     })
     let query = new Query()
     query.in('price', randomArray)
     Product.offset(0).delete(query, {enableTrigger: true})
+    expect(Product._limit).to.be.equal(null)
+    deleteRecordList.restore()
+  })
+
+  it('#delete more with returnTotalCount=true', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        enable_trigger: 1,
+        return_total_count: 1,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).delete(query, {returnTotalCount: true})
+    expect(Product._limit).to.be.equal(null)
+    deleteRecordList.restore()
+  })
+
+  it('#delete more with returnTotalCount=false', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        enable_trigger: 1,
+        return_total_count: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).delete(query, {returnTotalCount: false})
+    expect(Product._limit).to.be.equal(null)
+    deleteRecordList.restore()
+  })
+
+  it('#delete more without returnTotalCount', () => {
+    let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        enable_trigger: 1,
+        return_total_count: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.offset(0).delete(query)
     expect(Product._limit).to.be.equal(null)
     deleteRecordList.restore()
   })
@@ -200,9 +257,59 @@ describe('TableObject', () => {
 
   it('clear query params when query', () => {
     let queryRecordListStub = sinon.stub(BaaS, 'queryRecordList').resolves()
-    return Product.expand('created_by').limit(10).find(res => {
-      expect(Product._limit).to.equal(null)
-      queryRecordListStub.restore()
+    Product.expand('created_by').limit(10).find()
+    expect(Product._limit).to.equal(null)
+    queryRecordListStub.restore()
+  })
+
+  it('#find without returnTotalCount', () => {
+    let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
     })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.setQuery(query).offset(0).find()
+    expect(Product._limit).to.be.equal(null)
+    queryRecordList.restore()
+  })
+
+  it('#find with returnTotalCount=true', () => {
+    let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 1,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.setQuery(query).offset(0).find({returnTotalCount: true})
+    expect(Product._limit).to.be.equal(null)
+    queryRecordList.restore()
+  })
+
+  it('#find with returnTotalCount=false', () => {
+    let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        tableID: randomNumber,
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    Product.setQuery(query).offset(0).find({returnTotalCount: false})
+    expect(Product._limit).to.be.equal(null)
+    queryRecordList.restore()
   })
 })

@@ -34,10 +34,12 @@ class User extends BaseQuery {
     return new UserRecord()
   }
 
-  find() {
+  find({returnTotalCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.getUserList(condition)
+    return BaaS.getUserList(Object.assign({}, condition, {
+      return_total_count: returnTotalCount ? 1 : 0,
+    }))
   }
 }
 

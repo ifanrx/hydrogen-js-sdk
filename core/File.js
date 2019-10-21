@@ -23,10 +23,12 @@ class File extends BaseQuery {
     return BaaS.getFileDetail({fileID})
   }
 
-  find() {
+  find({returnTotalCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.getFileList(condition)
+    return BaaS.getFileList(Object.assign({}, condition, {
+      return_total_count: returnTotalCount ? 1 : 0,
+    }))
   }
 
   genVideoSnapshot(params) {

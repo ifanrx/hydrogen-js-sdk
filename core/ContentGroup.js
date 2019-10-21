@@ -21,15 +21,21 @@ class ContentGroup extends BaseQuery {
     return BaaS.getContent(params)
   }
 
-  find() {
+  find({returnTotalCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     condition.contentGroupID = this._contentGroupID
     this._initQueryParams()
-    return BaaS.getContentList2(condition)
+    return BaaS.getContentListV2(Object.assign({}, condition, {
+      return_total_count: returnTotalCount ? 1 : 0,
+    }))
   }
 
-  getCategoryList() {
-    return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID, limit: 100})
+  getCategoryList({returnTotalCount = false} = {}) {
+    return BaaS.getContentCategoryList({
+      contentGroupID: this._contentGroupID,
+      limit: 100,
+      return_total_count: returnTotalCount ? 1 : 0,
+    })
   }
 
   getCategory(categoryID) {

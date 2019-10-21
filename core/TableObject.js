@@ -5,7 +5,6 @@ const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
-const constants = require('./constants')
 
 class TableObject extends BaseQuery {
   constructor(tableID) {
@@ -37,7 +36,7 @@ class TableObject extends BaseQuery {
     }
   }
 
-  delete(args, {enableTrigger = true} = {}) {
+  delete(args, {enableTrigger = true, returnTotalCount = false} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {
@@ -46,7 +45,8 @@ class TableObject extends BaseQuery {
         limit: utils.getLimitationWithEnableTigger(this._limit, enableTrigger),
         offset: this._offset,
         where: JSON.stringify(args.queryObject),
-        enable_trigger: enableTrigger ? 1 : 0
+        enable_trigger: enableTrigger ? 1 : 0,
+        return_total_count: returnTotalCount ? 1 : 0,
       }
       this._initQueryParams()
       return BaaS.deleteRecordList(params)
@@ -92,10 +92,12 @@ class TableObject extends BaseQuery {
     return condition
   }
 
-  find() {
+  find({returnTotalCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.queryRecordList(condition)
+    return BaaS.queryRecordList(Object.assign({}, condition, {
+      return_total_count: returnTotalCount ? 1 : 0,
+    }))
   }
 
   count() {
