@@ -36,7 +36,7 @@ class TableObject extends BaseQuery {
     }
   }
 
-  delete(args, {enableTrigger = true, returnTotalCount = false} = {}) {
+  delete(args, {enableTrigger = true, withCount = false} = {}) {
     if (utils.isString(args) || Number.isInteger(args)) {
       return BaaS.deleteRecord({tableID: this._tableID, recordID: args})
     } else if (args instanceof Query) {
@@ -46,7 +46,7 @@ class TableObject extends BaseQuery {
         offset: this._offset,
         where: JSON.stringify(args.queryObject),
         enable_trigger: enableTrigger ? 1 : 0,
-        return_total_count: returnTotalCount ? 1 : 0,
+        return_total_count: withCount ? 1 : 0,
       }
       this._initQueryParams()
       return BaaS.deleteRecordList(params)
@@ -92,16 +92,16 @@ class TableObject extends BaseQuery {
     return condition
   }
 
-  find({returnTotalCount = false} = {}) {
+  find({withCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
     return BaaS.queryRecordList(Object.assign({}, condition, {
-      return_total_count: returnTotalCount ? 1 : 0,
+      return_total_count: withCount ? 1 : 0,
     }))
   }
 
   count() {
-    return this.limit(1).find().then(res => {
+    return this.limit(1).find({withCount: true}).then(res => {
       let {total_count} = res.data.meta
       return total_count
     })

@@ -15,7 +15,7 @@ class TableRecord extends BaseRecord {
     return BaaS.createRecord({tableID: this._tableID, data: record.$set})
   }
 
-  update({enableTrigger = true, returnTotalCount = false} = {}) {
+  update({enableTrigger = true, withCount = false} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     if (this._recordID) {
@@ -28,7 +28,7 @@ class TableRecord extends BaseRecord {
         limit: utils.getLimitationWithEnableTigger(this._queryObject.limit, enableTrigger),
         offset: this._queryObject.offset,
         enable_trigger: enableTrigger ? 1 : 0,
-        return_total_count: returnTotalCount ? 1 : 0,
+        return_total_count: withCount ? 1 : 0,
       }
       this._queryObject = {}
       return BaaS.updateRecordList(params)

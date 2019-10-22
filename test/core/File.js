@@ -35,7 +35,7 @@ describe('File', () => {
     getFileListStub.restore()
   })
 
-  it('#find without returnTotalCount', () => {
+  it('#find without withCount', () => {
     let getFileList = sinon.stub(BaaS, 'getFileList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -50,7 +50,7 @@ describe('File', () => {
     getFileList.restore()
   })
 
-  it('#find with returnTotalCount=true', () => {
+  it('#find with withCount=true', () => {
     let getFileList = sinon.stub(BaaS, 'getFileList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -61,11 +61,11 @@ describe('File', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    file.setQuery(query).offset(0).find({returnTotalCount: true})
+    file.setQuery(query).offset(0).find({withCount: true})
     getFileList.restore()
   })
 
-  it('#find with returnTotalCount=false', () => {
+  it('#find with withCount=false', () => {
     let getFileList = sinon.stub(BaaS, 'getFileList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -76,7 +76,7 @@ describe('File', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    file.setQuery(query).offset(0).find({returnTotalCount: false})
+    file.setQuery(query).offset(0).find({withCount: false})
     getFileList.restore()
   })
 })

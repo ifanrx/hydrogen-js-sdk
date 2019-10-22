@@ -69,7 +69,7 @@ describe('User', () => {
     getUserListStub.restore()
   })
 
-  it('#find without returnTotalCount', () => {
+  it('#find without withCount', () => {
     let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -85,7 +85,7 @@ describe('User', () => {
     getUserListStub.restore()
   })
 
-  it('#find with returnTotalCount=true', () => {
+  it('#find with withCount=true', () => {
     let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -96,12 +96,12 @@ describe('User', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    user.setQuery(query).offset(0).find({returnTotalCount: true})
+    user.setQuery(query).offset(0).find({withCount: true})
     expect(user._limit).to.be.equal(null)
     getUserListStub.restore()
   })
 
-  it('#find with returnTotalCount=false', () => {
+  it('#find with withCount=false', () => {
     let getUserListStub = sinon.stub(BaaS, 'getUserList').callsFake(function (args) {
       expect(args).to.deep.equal({
         where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
@@ -112,7 +112,7 @@ describe('User', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    user.setQuery(query).offset(0).find({returnTotalCount: false})
+    user.setQuery(query).offset(0).find({withCount: false})
     expect(user._limit).to.be.equal(null)
     getUserListStub.restore()
   })

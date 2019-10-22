@@ -149,7 +149,7 @@ describe('TableRecord', () => {
     updateRecordList.restore()
   })
 
-  it('#update more without returnTotalCount', () => {
+  it('#update more without withCount', () => {
     let query = new Query()
     const randomArray = helper.generateRandomArray()
     query.in('price', randomArray)
@@ -182,7 +182,7 @@ describe('TableRecord', () => {
     updateRecordList.restore()
   })
 
-  it('#update more with returnTotalCount=true', () => {
+  it('#update more with withCount=true', () => {
     let query = new Query()
     const randomArray = helper.generateRandomArray()
     query.in('price', randomArray)
@@ -210,12 +210,12 @@ describe('TableRecord', () => {
         return_total_count: 1,
       })
     })
-    records.update({returnTotalCount: true})
+    records.update({withCount: true})
     expect(records._queryObject).to.deep.equal({})
     updateRecordList.restore()
   })
 
-  it('#update more with returnTotalCount=false', () => {
+  it('#update more with withCount=false', () => {
     let query = new Query()
     const randomArray = helper.generateRandomArray()
     query.in('price', randomArray)
@@ -243,7 +243,7 @@ describe('TableRecord', () => {
         return_total_count: 0,
       })
     })
-    records.update({returnTotalCount: false})
+    records.update({withCount: false})
     expect(records._queryObject).to.deep.equal({})
     updateRecordList.restore()
   })

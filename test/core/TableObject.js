@@ -103,7 +103,7 @@ describe('TableObject', () => {
     deleteRecordList.restore()
   })
 
-  it('#delete more with returnTotalCount=true', () => {
+  it('#delete more with withCount=true', () => {
     let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -116,12 +116,12 @@ describe('TableObject', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    Product.offset(0).delete(query, {returnTotalCount: true})
+    Product.offset(0).delete(query, {withCount: true})
     expect(Product._limit).to.be.equal(null)
     deleteRecordList.restore()
   })
 
-  it('#delete more with returnTotalCount=false', () => {
+  it('#delete more with withCount=false', () => {
     let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -134,12 +134,12 @@ describe('TableObject', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    Product.offset(0).delete(query, {returnTotalCount: false})
+    Product.offset(0).delete(query, {withCount: false})
     expect(Product._limit).to.be.equal(null)
     deleteRecordList.restore()
   })
 
-  it('#delete more without returnTotalCount', () => {
+  it('#delete more without withCount', () => {
     let deleteRecordList = sinon.stub(BaaS, 'deleteRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -262,7 +262,7 @@ describe('TableObject', () => {
     queryRecordListStub.restore()
   })
 
-  it('#find without returnTotalCount', () => {
+  it('#find without withCount', () => {
     let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -279,7 +279,7 @@ describe('TableObject', () => {
     queryRecordList.restore()
   })
 
-  it('#find with returnTotalCount=true', () => {
+  it('#find with withCount=true', () => {
     let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -291,12 +291,12 @@ describe('TableObject', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    Product.setQuery(query).offset(0).find({returnTotalCount: true})
+    Product.setQuery(query).offset(0).find({withCount: true})
     expect(Product._limit).to.be.equal(null)
     queryRecordList.restore()
   })
 
-  it('#find with returnTotalCount=false', () => {
+  it('#find with withCount=false', () => {
     let queryRecordList = sinon.stub(BaaS, 'queryRecordList').callsFake(function (args) {
       expect(args).to.deep.equal({
         tableID: randomNumber,
@@ -308,7 +308,7 @@ describe('TableObject', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    Product.setQuery(query).offset(0).find({returnTotalCount: false})
+    Product.setQuery(query).offset(0).find({withCount: false})
     expect(Product._limit).to.be.equal(null)
     queryRecordList.restore()
   })

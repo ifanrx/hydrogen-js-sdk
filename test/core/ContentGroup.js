@@ -34,7 +34,7 @@ describe('ContentGroup', () => {
     })
   })
 
-  it('#find without returnTotalCount', () => {
+  it('#find without withCount', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentListV2 = sinon.stub(BaaS, 'getContentListV2').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -51,7 +51,7 @@ describe('ContentGroup', () => {
     getContentListV2.restore()
   })
 
-  it('#find with returnTotalCount=true', () => {
+  it('#find with withCount=true', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentListV2 = sinon.stub(BaaS, 'getContentListV2').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -64,11 +64,11 @@ describe('ContentGroup', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    contentGroup.setQuery(query).offset(0).find({returnTotalCount: true})
+    contentGroup.setQuery(query).offset(0).find({withCount: true})
     getContentListV2.restore()
   })
 
-  it('#find with returnTotalCount=false', () => {
+  it('#find with withCount=false', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentListV2 = sinon.stub(BaaS, 'getContentListV2').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -81,11 +81,11 @@ describe('ContentGroup', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    contentGroup.setQuery(query).offset(0).find({returnTotalCount: false})
+    contentGroup.setQuery(query).offset(0).find({withCount: false})
     getContentListV2.restore()
   })
 
-  it('#getCategoryList without returnTotalCount', () => {
+  it('#getCategoryList without withCount', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentCategoryList = sinon.stub(BaaS, 'getContentCategoryList').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -100,7 +100,7 @@ describe('ContentGroup', () => {
     getContentCategoryList.restore()
   })
 
-  it('#getCategoryList with returnTotalCount=true', () => {
+  it('#getCategoryList with withCount=true', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentCategoryList = sinon.stub(BaaS, 'getContentCategoryList').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -111,11 +111,11 @@ describe('ContentGroup', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    contentGroup.getCategoryList({returnTotalCount: true})
+    contentGroup.getCategoryList({withCount: true})
     getContentCategoryList.restore()
   })
 
-  it('#getCategoryList with returnTotalCount=false', () => {
+  it('#getCategoryList with withCount=false', () => {
     let contentGroup = new ContentGroup(randomNumber)
     let getContentCategoryList = sinon.stub(BaaS, 'getContentCategoryList').callsFake(function (args) {
       expect(args).to.deep.equal({
@@ -126,7 +126,7 @@ describe('ContentGroup', () => {
     })
     let query = new Query()
     query.in('price', randomArray)
-    contentGroup.getCategoryList({returnTotalCount: false})
+    contentGroup.getCategoryList({withCount: false})
     getContentCategoryList.restore()
   })
 })
