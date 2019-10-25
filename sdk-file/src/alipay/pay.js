@@ -34,6 +34,14 @@ class PayError extends HError {
   }
 }
 
+/**
+ * 支付宝支付
+ * @function
+ * @name pay
+ * @memberof BaaS
+ * @param {BaaS.PaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const createPayFn = BaaS => params => {
   const API = BaaS._config.API
   let paramsObj = {}

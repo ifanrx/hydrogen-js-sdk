@@ -3,7 +3,14 @@ const HError = require('core-module/HError')
 const constants = require('core-module/constants')
 let thirdPartyAuthRequest = require('./thirdPartyAuthRequest')
 
-// 获取授权结果
+/**
+ * 获取授权结果
+ * @function
+ * @name getRedirectResult
+ * @since v2.1.0
+ * @memberof BaaS.auth
+ * @return {Promise<BaaS.RedirectLoginResult>}
+ */
 const createGetRedirectResultFn = BaaS => () => {
   const url = new URL(window.location.href)
   let authResult
@@ -95,7 +102,7 @@ const getErrorMsg = err => {
   return error
 }
 
-/**
+/*
  * 微信在 web 端 iframe 中授权时，在页面 URL 中添加 self_redirect 参数，使重定向发生在 iframe 中，
  * 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
  */
@@ -116,7 +123,13 @@ const setExtraUrlParams = (url, options = {}) => {
   return url.toString()
 }
 
-// 跳转到第三方授权页面；获取 token 后调用 login 或 associate
+/**
+ * 跳转到第三方授权页面；获取 token 后调用 login 或 associate
+ * @function
+ * @name thirdPartyAuth
+ * @since v2.1.0
+ * @memberof BaaS.auth
+ */
 const createThirdPartyAuthFn = BaaS => () => {
   const PARAM = constants.THIRD_PARTY_AUTH_URL_PARAM
   const url = new URL(window.location.href)
@@ -189,6 +202,17 @@ const createThirdPartyAuthFn = BaaS => () => {
   }
 }
 
+/**
+ * 第三方登录
+ * @function
+ * @name loginWithThirdParty
+ * @since v2.1.0
+ * @memberof BaaS.auth
+ * @param {string} provider 第三方平台
+ * @param {string} authPageUrl 授权页面 URL
+ * @param {BaaS.ThirdPartyLoginOptions} [options] 其他选项
+ * @return {Promise<BaaS.CurrentUser>}
+ */
 const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}) => {
   return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN})
     .then(() => BaaS.auth.getCurrentUser())

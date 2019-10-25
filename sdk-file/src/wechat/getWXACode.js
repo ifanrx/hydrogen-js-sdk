@@ -68,6 +68,16 @@ const makeRealParams = (type, params, cdn, categoryName) => {
   return realParams
 }
 
+/**
+ * 获取二维码
+ * @function
+ * @memberof BaaS
+ * @param {string} type 类型
+ * @param {object} params 参数
+ * @param {boolean} [cdn] 是否上传二维码到文件存储并返回图片链接，默认为 false
+ * @param {string} [categoryName] 指定上传文件分类名，cdn 为 true 时有效，不指定该参数或分类名不存在，则默认上传到根目录
+ * @return {Promise<BaaS.Response<any>>}
+ */
 const getWXACode = (type, params, cdn, categoryName) => {
   let realParams = makeRealParams(type, params, cdn, categoryName)
 

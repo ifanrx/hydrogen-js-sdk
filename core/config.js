@@ -71,6 +71,7 @@ const API = {
     AUTHENTICATE: '/hserve/v2.1/idp/wechat/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
+    SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
     WXACODE: '/hserve/v1.4/miniappcode/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
@@ -84,6 +85,8 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v2.0/qq/decrypt/',
+    CENSOR_IMAGE: '/hserve/v2.2/qq/censor-image/',
+    CENSOR_MSG: '/hserve/v2.2/qq/censor-msg/',
   },
 
   BAIDU: {
@@ -107,6 +110,7 @@ const API = {
   M3U8_META: '/hserve/v1/media/m3u8-meta/',
   VIDEO_AUDIO_META: '/hserve/v1/media/audio-video-meta/',
 
+  GET_ASYNC_JOB_RESULT: '/hserve/v1/bulk-operation/:id/',
   LATEST_VERSION: '/hserve/v1/latest-sdk-version/',
 }
 
@@ -221,7 +225,7 @@ const methodMapList = [{
 }, {
   getOrderList: {
     url: API.PAY,
-  }
+  },
 }]
 
 const RANDOM_OPTION = {
@@ -247,5 +251,11 @@ module.exports = {
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
   SDK_DOWNLOAD_PAGE: SDK_DOWNLOAD_PAGE,
+  /**
+   * SDK 版本号
+   *
+   * @type string
+   * @memberof BaaS._config
+   */
   VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }

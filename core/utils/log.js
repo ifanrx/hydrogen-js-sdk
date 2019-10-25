@@ -17,6 +17,7 @@ const setLogLevel = function (level) {
 
 /**
  * 日志记录
+ * @private
  * @param  {String} level 级别
  * @param  {String} msg 日志信息
  */

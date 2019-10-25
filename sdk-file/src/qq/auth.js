@@ -105,7 +105,6 @@ module.exports = BaaS => {
     })
   }
 
-
   const linkQQ = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -139,6 +138,15 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * QQ 登录
+   * @function
+   * @since v2.2.0
+   * @memberof BaaS.auth
+   * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
+   * @param {BaaS.LoginOptions} [options] 其他选项
+   * @return {Promise<BaaS.CurrentUser>}
+   */
   const loginWithQQ = (authData, {
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,

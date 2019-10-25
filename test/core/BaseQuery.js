@@ -110,4 +110,20 @@ describe('BaseQuery', () => {
       where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
     })
   })
+
+  it('#_handleAllQueryConditions with limit', () => {
+    let query = new Query()
+    query.in('price', randomArray)
+    baseQuery.setQuery(query)
+    baseQuery.limit(30)
+    baseQuery.orderBy('-amount')
+    baseQuery.select(['-amount', 'price'])
+    expect(baseQuery._handleAllQueryConditions()).to.deep.equal({
+      limit: 30,
+      offset: 0,
+      order_by: '-amount',
+      keys: '-amount,price',
+      where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`
+    })
+  })
 })
