@@ -139,7 +139,7 @@ class TableObject extends BaseQuery {
   /**
    * 获取数据记录列表。
    * @method
-   * @param {BaaS.FindOptions} options 参数
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
   find({withCount = false} = {}) {
@@ -151,7 +151,7 @@ class TableObject extends BaseQuery {
   }
 
   /**
-   * 获取数据记录列表长度。
+   * 获取数据记录数量。
    * @method
    * @return {Promise<number>}
    */

@@ -27,18 +27,22 @@ class FileCategory extends BaseQuery {
    * 通过文件分类 ID 获取分类下的所有文件。
    * @method
    * @param {string} categoryID 文件分类 ID
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  getFileList(categoryID) {
+  getFileList(categoryID, {withCount = false} = {}) {
     let query = new Query()
     query.in('category_id', [categoryID])
-    return BaaS.getFileList({where: JSON.stringify(query.queryObject)})
+    return BaaS.getFileList({
+      where: JSON.stringify(query.queryObject),
+      return_total_count: withCount ? 1 : 0,
+    })
   }
 
   /**
    * 获取文件分类列表。
    * @method
-   * @param {BaaS.FindOptions} options 参数
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
   find({withCount = false} = {}) {
@@ -49,6 +53,12 @@ class FileCategory extends BaseQuery {
     }))
   }
 
+  /**
+   * 获取文件分类数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
   count() {
     return this.limit(1).find({withCount: true}).then(res => {
       let {total_count} = res.data.meta

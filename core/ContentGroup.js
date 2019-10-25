@@ -39,7 +39,7 @@ class ContentGroup extends BaseQuery {
   /**
    * 查找内容。
    * @method
-   * @param {BaaS.FindOptions} options 参数
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
   find({withCount = false} = {}) {
@@ -51,6 +51,12 @@ class ContentGroup extends BaseQuery {
     }))
   }
 
+  /**
+   * 获取内容数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
   count() {
     return this.limit(1).find({withCount: true}).then(res => {
       let {total_count} = res.data.meta
@@ -61,7 +67,7 @@ class ContentGroup extends BaseQuery {
   /**
    * 获取内容分类列表。
    * @method
-   * @param {BaaS.FindOptions} options 参数
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
   getCategoryList({withCount = false} = {}) {

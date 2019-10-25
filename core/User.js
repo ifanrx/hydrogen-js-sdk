@@ -58,7 +58,7 @@ class User extends BaseQuery {
   /**
    * 获取用户列表。
    * @method
-   * @param {BaaS.FindOptions} options 参数
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<Response<any>>}
    */
   find({withCount = false} = {}) {
@@ -69,6 +69,12 @@ class User extends BaseQuery {
     }))
   }
 
+  /**
+   * 获取用户数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
   count() {
     return this.limit(1).find({withCount: true}).then(res => {
       let {total_count} = res.data.meta

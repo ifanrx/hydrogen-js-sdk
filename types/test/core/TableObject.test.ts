@@ -1,101 +1,225 @@
 import {expectType} from 'tsd'
 
+let tableObject_wx = new wx.BaaS.TableObject('123')
+let tableObject_qq = new qq.BaaS.TableObject('123')
+let tableObject_my = new my.BaaS.TableObject('123')
+let tableObject_swan = new swan.BaaS.TableObject('123')
+let tableObject_window = new window.BaaS.TableObject('123')
+
+/**
+ * TableObject#createMany
+ */
 // wechat
-let tableObject_1 = new wx.BaaS.TableObject('123')
-tableObject_1.createMany([{a: 10}, {b: 20}])
-tableObject_1.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
+tableObject_wx.createMany([{a: 10}, {b: 20}])
+tableObject_wx.createMany([{a: 10}, {b: 20}], {})
+tableObject_wx.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
   .then(res => expectType<WechatBaaS.Response<any>>(res))
-tableObject_1.delete('123')
-tableObject_1.delete(new wx.BaaS.Query())
-tableObject_1.delete(new wx.BaaS.Query(), {enableTrigger: true})
-  .then(res => expectType<WechatBaaS.Response<any>>(res))
-tableObject_1.getWithoutData(new wx.BaaS.Query())
-tableObject_1.get('123')
-  .then(res => expectType<WechatBaaS.Response<any>>(res))
-tableObject_1.find()
-  .then(res => expectType<WechatBaaS.Response<any>>(res))
-tableObject_1.count()
-  .then(res => expectType<number>(res))
-expectType<WechatBaaS.BaseQuery>(tableObject_1 as WechatBaaS.BaseQuery)
-expectType<WechatBaaS.TableRecord>(tableObject_1.create())
-expectType<WechatBaaS.TableRecord>(tableObject_1.getWithoutData('123'))
 
 // qq
-let tableObject_2 = new qq.BaaS.TableObject('123')
-tableObject_2.createMany([{a: 10}, {b: 20}])
-tableObject_2.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
+tableObject_qq.createMany([{a: 10}, {b: 20}])
+tableObject_qq.createMany([{a: 10}, {b: 20}], {})
+tableObject_qq.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
   .then(res => expectType<QqBaaS.Response<any>>(res))
-tableObject_2.delete('123')
-tableObject_2.delete(new qq.BaaS.Query())
-tableObject_2.delete(new qq.BaaS.Query(), {enableTrigger: true})
-  .then(res => expectType<QqBaaS.Response<any>>(res))
-tableObject_2.getWithoutData(new qq.BaaS.Query())
-tableObject_2.get('123')
-  .then(res => expectType<QqBaaS.Response<any>>(res))
-tableObject_2.find()
-  .then(res => expectType<QqBaaS.Response<any>>(res))
-tableObject_2.count()
-  .then(res => expectType<number>(res))
-expectType<QqBaaS.BaseQuery>(tableObject_2 as QqBaaS.BaseQuery)
-expectType<QqBaaS.TableRecord>(tableObject_2.create())
-expectType<QqBaaS.TableRecord>(tableObject_2.getWithoutData('123'))
 
 // alipay
-let tableObject_3 = new my.BaaS.TableObject('123')
-tableObject_3.createMany([{a: 10}, {b: 20}])
-tableObject_3.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
+tableObject_my.createMany([{a: 10}, {b: 20}])
+tableObject_my.createMany([{a: 10}, {b: 20}], {})
+tableObject_my.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
   .then(res => expectType<AlipayBaaS.Response<any>>(res))
-tableObject_3.delete('123')
-tableObject_3.delete(new my.BaaS.Query())
-tableObject_3.delete(new my.BaaS.Query(), {enableTrigger: true})
-  .then(res => expectType<AlipayBaaS.Response<any>>(res))
-tableObject_3.getWithoutData(new my.BaaS.Query())
-tableObject_3.get('123')
-  .then(res => expectType<AlipayBaaS.Response<any>>(res))
-tableObject_3.find()
-  .then(res => expectType<AlipayBaaS.Response<any>>(res))
-tableObject_3.count()
-  .then(res => expectType<number>(res))
-expectType<AlipayBaaS.BaseQuery>(tableObject_3 as AlipayBaaS.BaseQuery)
-expectType<AlipayBaaS.TableRecord>(tableObject_3.create())
-expectType<AlipayBaaS.TableRecord>(tableObject_3.getWithoutData('123'))
 
 // baidu
-let tableObject_4 = new swan.BaaS.TableObject('123')
-tableObject_4.createMany([{a: 10}, {b: 20}])
-tableObject_4.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
+tableObject_swan.createMany([{a: 10}, {b: 20}])
+tableObject_swan.createMany([{a: 10}, {b: 20}], {})
+tableObject_swan.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
   .then(res => expectType<BaiduBaaS.Response<any>>(res))
-tableObject_4.delete('123')
-tableObject_4.delete(new swan.BaaS.Query())
-tableObject_4.delete(new swan.BaaS.Query(), {enableTrigger: true})
-  .then(res => expectType<BaiduBaaS.Response<any>>(res))
-tableObject_4.getWithoutData(new swan.BaaS.Query())
-tableObject_4.get('123')
-  .then(res => expectType<BaiduBaaS.Response<any>>(res))
-tableObject_4.find()
-  .then(res => expectType<BaiduBaaS.Response<any>>(res))
-tableObject_4.count()
-  .then(res => expectType<number>(res))
-expectType<BaiduBaaS.BaseQuery>(tableObject_4 as BaiduBaaS.BaseQuery)
-expectType<BaiduBaaS.TableRecord>(tableObject_4.create())
-expectType<BaiduBaaS.TableRecord>(tableObject_4.getWithoutData('123'))
 
 // web
-let tableObject_5 = new window.BaaS.TableObject('123')
-tableObject_5.createMany([{a: 10}, {b: 20}])
-tableObject_5.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
+tableObject_window.createMany([{a: 10}, {b: 20}])
+tableObject_window.createMany([{a: 10}, {b: 20}], {})
+tableObject_window.createMany([{a: 10}, {b: 20}], {enableTrigger: false})
   .then(res => expectType<WebBaaS.Response<any>>(res))
-tableObject_5.delete('123')
-tableObject_5.delete(new window.BaaS.Query())
-tableObject_5.delete(new window.BaaS.Query(), {enableTrigger: true})
+
+
+/**
+ * TableObject#delete
+ */
+// wechat
+tableObject_wx.delete('123')
+tableObject_wx.delete(new wx.BaaS.Query())
+tableObject_wx.delete(new wx.BaaS.Query(), {})
+tableObject_wx.delete(new wx.BaaS.Query(), {enableTrigger: true})
+tableObject_wx.delete(new wx.BaaS.Query(), {withCount: true})
+tableObject_wx.delete(new wx.BaaS.Query(), {enableTrigger: true, withCount: true})
+  .then(res => expectType<WechatBaaS.Response<any>>(res))
+
+// qq
+tableObject_qq.delete('123')
+tableObject_qq.delete(new qq.BaaS.Query())
+tableObject_qq.delete(new qq.BaaS.Query(), {})
+tableObject_qq.delete(new qq.BaaS.Query(), {enableTrigger: true})
+tableObject_qq.delete(new qq.BaaS.Query(), {withCount: true})
+tableObject_qq.delete(new qq.BaaS.Query(), {enableTrigger: true, withCount: true})
+  .then(res => expectType<QqBaaS.Response<any>>(res))
+
+// alipay
+tableObject_my.delete('123')
+tableObject_my.delete(new my.BaaS.Query())
+tableObject_my.delete(new my.BaaS.Query(), {})
+tableObject_my.delete(new my.BaaS.Query(), {enableTrigger: true})
+tableObject_my.delete(new my.BaaS.Query(), {withCount: true})
+tableObject_my.delete(new my.BaaS.Query(), {enableTrigger: true, withCount: true})
+  .then(res => expectType<AlipayBaaS.Response<any>>(res))
+
+// baidu
+tableObject_swan.delete('123')
+tableObject_swan.delete(new swan.BaaS.Query())
+tableObject_swan.delete(new swan.BaaS.Query(), {})
+tableObject_swan.delete(new swan.BaaS.Query(), {enableTrigger: true})
+tableObject_swan.delete(new swan.BaaS.Query(), {withCount: true})
+tableObject_swan.delete(new swan.BaaS.Query(), {enableTrigger: true, withCount: true})
+  .then(res => expectType<BaiduBaaS.Response<any>>(res))
+
+// web
+tableObject_window.delete('123')
+tableObject_window.delete(new window.BaaS.Query())
+tableObject_window.delete(new window.BaaS.Query(), {})
+tableObject_window.delete(new window.BaaS.Query(), {enableTrigger: true})
+tableObject_window.delete(new window.BaaS.Query(), {withCount: true})
+tableObject_window.delete(new window.BaaS.Query(), {enableTrigger: true, withCount: true})
   .then(res => expectType<WebBaaS.Response<any>>(res))
-tableObject_5.getWithoutData(new window.BaaS.Query())
-tableObject_5.get('123')
+
+
+/**
+ * TableObject#getWithoutData
+ */
+// wechat
+tableObject_wx.getWithoutData(new wx.BaaS.Query())
+expectType<WechatBaaS.TableRecord>(tableObject_wx.getWithoutData('123'))
+
+// qq
+tableObject_qq.getWithoutData(new qq.BaaS.Query())
+expectType<QqBaaS.TableRecord>(tableObject_qq.getWithoutData('123'))
+
+// alipay
+tableObject_my.getWithoutData(new my.BaaS.Query())
+expectType<AlipayBaaS.TableRecord>(tableObject_my.getWithoutData('123'))
+// baidu
+tableObject_swan.getWithoutData(new swan.BaaS.Query())
+expectType<BaiduBaaS.TableRecord>(tableObject_swan.getWithoutData('123'))
+// web
+tableObject_window.getWithoutData(new window.BaaS.Query())
+expectType<WebBaaS.TableRecord>(tableObject_window.getWithoutData('123'))
+
+
+/**
+ * TableObject#get
+ */
+// wechat
+tableObject_wx.get('123')
+  .then(res => expectType<WechatBaaS.Response<any>>(res))
+// qq
+tableObject_qq.get('123')
+  .then(res => expectType<QqBaaS.Response<any>>(res))
+// alipay
+tableObject_my.get('123')
+  .then(res => expectType<AlipayBaaS.Response<any>>(res))
+// baidu
+tableObject_swan.get('123')
+  .then(res => expectType<BaiduBaaS.Response<any>>(res))
+// web
+tableObject_window.get('123')
   .then(res => expectType<WebBaaS.Response<any>>(res))
-tableObject_5.find()
+
+
+/**
+ * TableObject#find
+ */
+// wechat
+tableObject_wx.find({})
+tableObject_wx.find({withCount: true})
+tableObject_wx.find()
+  .then(res => expectType<WechatBaaS.Response<any>>(res))
+
+// qq
+tableObject_qq.find()
+tableObject_qq.find({})
+tableObject_qq.find({withCount: true})
+  .then(res => expectType<QqBaaS.Response<any>>(res))
+
+// alipay
+tableObject_my.find()
+tableObject_my.find({})
+tableObject_my.find({withCount: true})
+  .then(res => expectType<AlipayBaaS.Response<any>>(res))
+
+// baidu
+tableObject_swan.find()
+tableObject_swan.find({})
+tableObject_swan.find({withCount: true})
+  .then(res => expectType<BaiduBaaS.Response<any>>(res))
+
+// web
+tableObject_window.find()
+tableObject_window.find({})
+tableObject_window.find({withCount: true})
   .then(res => expectType<WebBaaS.Response<any>>(res))
-tableObject_5.count()
+
+
+/**
+ * TableObject#create
+ */
+// wechat
+expectType<WechatBaaS.TableRecord>(tableObject_wx.create())
+
+// qq
+expectType<QqBaaS.TableRecord>(tableObject_qq.create())
+
+// alipay
+expectType<AlipayBaaS.TableRecord>(tableObject_my.create())
+
+// baidu
+expectType<BaiduBaaS.TableRecord>(tableObject_swan.create())
+
+// web
+expectType<WebBaaS.TableRecord>(tableObject_window.create())
+
+
+/**
+ * TableObject#count
+ */
+// wechat
+tableObject_wx.count()
   .then(res => expectType<number>(res))
-expectType<WebBaaS.BaseQuery>(tableObject_5 as WebBaaS.BaseQuery)
-expectType<WebBaaS.TableRecord>(tableObject_5.create())
-expectType<WebBaaS.TableRecord>(tableObject_5.getWithoutData('123'))
+
+// qq
+tableObject_qq.count()
+  .then(res => expectType<number>(res))
+
+// alipay
+tableObject_my.count()
+  .then(res => expectType<number>(res))
+
+// baidu
+tableObject_swan.count()
+  .then(res => expectType<number>(res))
+
+// web
+tableObject_window.count()
+  .then(res => expectType<number>(res))
+
+
+
+// wechat
+expectType<WechatBaaS.BaseQuery>(tableObject_wx as WechatBaaS.BaseQuery)
+
+// qq
+expectType<QqBaaS.BaseQuery>(tableObject_qq as QqBaaS.BaseQuery)
+
+// alipay
+expectType<AlipayBaaS.BaseQuery>(tableObject_my as AlipayBaaS.BaseQuery)
+
+// baidu
+expectType<BaiduBaaS.BaseQuery>(tableObject_swan as BaiduBaaS.BaseQuery)
+
+// web
+expectType<WebBaaS.BaseQuery>(tableObject_window as WebBaaS.BaseQuery)
