@@ -60,6 +60,7 @@ if (!Array.prototype.includes) {
 
 /**
  * 获取系统 Platform 信息
+ * @private
  * @return {String}
  */
 const getSysPlatform = () => {
@@ -75,6 +76,7 @@ const getSysPlatform = () => {
 
 /**
  * 转换 API 参数
+ * @private
  * @param  {String} url    API URL
  * @param  {Object} params API 参数
  * @return {String}        转换参数后的 API URL
@@ -109,6 +111,7 @@ const getFileNameFromPath = (path) => {
 
 /**
  * 对 RegExp 类型的变量解析出不含左右斜杠和 flag 的正则字符串和 flags
+ * @private
  * @param  {RegExp} regExp
  * @return {Array} 包含正则字符串和 flags
  */
@@ -128,6 +131,7 @@ const parseRegExp = (regExp) => {
 
 /**
  * 将查询参数 (?categoryID=xxx) 替换为服务端可接受的格式 (?category_id=xxx) eg. categoryID => category_id
+ * @private
  */
 const replaceQueryParams = (params = {}) => {
   let requestParamsMap = BaaS._config.REQUEST_PARAMS_MAP
@@ -199,6 +203,7 @@ const cloneDeep = source => {
 
 /**
  * session 是否已经过期，若不存在 EXPIRES_AT 缓存，则当做已过期
+ * @private
  * @return {boolean} expired
  */
 function isSessionExpired() {
@@ -207,6 +212,7 @@ function isSessionExpired() {
 
 /**
  * 把 URL 中的参数占位替换为真实数据，同时将这些数据从 params 中移除， params 的剩余参数传给 data eg. xxx/:tabelID/xxx => xxx/1001/xxx
+ * @private
  * @param  {Object} params 参数对象, 包含传给 url 的参数，也包含传给 data 的参数
  */
 const excludeParams = (URL, params) => {
@@ -220,6 +226,7 @@ const excludeParams = (URL, params) => {
 
 /**
  * 根据 methodMap 创建对应的 BaaS Method
+ * @private
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
 const doCreateRequestMethod = (methodMap) => {
@@ -260,6 +267,7 @@ const doCreateRequestMethod = (methodMap) => {
 
 /**
  * 设置 BaaS.request 请求头
+ * @private
  * @param  {Object} header 自定义请求头
  * @return {Object}        扩展后的请求
  */
@@ -280,6 +288,7 @@ const mergeRequestHeader = header => {
 
 /**
  * 处理 request.then 回调中出现 40x, 50x 的情况
+ * @private
  * @param res
  * @return {*}
  */
@@ -295,6 +304,7 @@ const validateStatusCode = res => {
 
 /**
  * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
+ * @private
  * @param fn
  * @return {function(): *}
  */
@@ -321,6 +331,7 @@ const fnUnsupportedHandler = () => {
 
 /**
  * 对比版本号
+ * @private
  * @param {string} versionStr1
  * @param {string} versionStr2
  * @return {number}

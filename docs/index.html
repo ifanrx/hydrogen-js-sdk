@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+.guide-section {
+  position: relative;
+  border-radius: 4px;
+  padding: 24px 32px 0;
+  box-shadow: 0 0 4px 0 #c5d9e8;
+}
+.guide-section.disabled {
+  opacity: .3;
+}
+.guide-section .guide-content {
+    display: flex;
+}
+.guide-section .logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e6ecf2;
+    margin-right: 16px;
+}
+.guide-section .tool-info {
+    flex: 1;
+}
+.guide-section .title {
+    font-size: 16px;
+    color: #2c405a;
+    padding-bottom: 8px;
+    line-height: 22px;
+}
+.guide-section .inner-content {
+    display: flex;
+    height: 60px;
+}
+.guide-section .desc {
+    font-size: 14px;
+    color: #8dabc4;
+    line-height: 20px;
+}
+.footer {
+    text-align: center;
+    background: #fff;
+    padding: 18px 0;
+    border-top: 1px solid #e9eff3;
+    margin-top: 16px;
+}
+.footer a {
+    color: #8dabc4;
+    font-size: 14px;
+    line-height: 30px;
+}
+    </style>
+  </head>
+  <body>
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">知晓云 JS SDK API 文档</h1>
+          <p class="lead text-muted">本文档主要记录 SDK BaaS 对象中的所有类以及函数的使用方法。</p>
+          <p>
+            <a href="https://doc.minapp.com/js-sdk/" class="btn btn-primary my-2">查看 SDK 使用文档</a>
+            <a href="https://github.com/ifanrx/hydrogen-js-sdk/issues" class="btn btn-secondary my-2">反馈问题</a>
+          </p>
+        </div>
+      </section>
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="guide-section">
+                  <div class="guide-content">
+                    <img class="logo" src="https://mcache.ifanr.cn/static/hydrogen/dist/img/logo-weixinminiapp.png">
+                    <div class="tool-info">
+                      <div class="title">微信小程序</div>
+                      <div class="inner-content">
+                        <p class="desc">微信小程序 JS SDK API 文档，BaaS 对象挂载于 wx 对象上（即 wx.BaaS）。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <a href="./wechat/index.html">查看文档</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="guide-section">
+                  <div class="guide-content">
+                    <img class="logo" src="https://mcache.ifanr.cn/static/hydrogen/dist/img/logo-alipayminiapp.png">
+                    <div class="tool-info">
+                      <div class="title">支付宝小程序</div>
+                      <div class="inner-content">
+                        <p class="desc">支付宝小程序 JS SDK API 文档，BaaS 对象挂载于 my 对象上（即 my.BaaS）。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <a href="./alipay/index.html">查看文档</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="guide-section">
+                  <div class="guide-content">
+                    <img class="logo" src="https://mcache.ifanr.cn/static/hydrogen/dist/img/logo-qqminiapp.png">
+                    <div class="tool-info">
+                      <div class="title">QQ 小程序</div>
+                      <div class="inner-content">
+                        <p class="desc">QQ 小程序 JS SDK API 文档，BaaS 对象挂载于 qq 对象上（即 qq.BaaS）。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <a href="./qq/index.html">查看文档</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="guide-section">
+                  <div class="guide-content">
+                    <img class="logo" src="https://mcache.ifanr.cn/static/hydrogen/dist/img/logo-web.png">
+                    <div class="tool-info">
+                      <div class="title">Web</div>
+                      <div class="inner-content">
+                        <p class="desc">Web 端 JS SDK API 文档，BaaS 对象挂载于 window 对象上（即 window.BaaS）。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <a href="./web/index.html">查看文档</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="guide-section">
+                  <div class="guide-content">
+                    <img class="logo" src="https://mcache.ifanr.cn/static/hydrogen/dist/img/logo-baiduminiapp.jpg">
+                    <div class="tool-info">
+                      <div class="title">百度小程序</div>
+                      <div class="inner-content">
+                        <p class="desc">百度小程序 JS SDK API 文档，BaaS 对象挂载于 swan 对象上（即 swan.BaaS）。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <a href="./baidu/index.html">查看文档</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </body>
+</html>

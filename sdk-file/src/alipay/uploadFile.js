@@ -53,6 +53,15 @@ const myUpload = (config, resolve, reject) => {
   })
 }
 
+/**
+ * 上传文件。
+ * @function
+ * @name uploadFile
+ * @memberof BaaS
+ * @param {FileParams} fileParams 文件参数
+ * @param {FileMeta} metaData 文件元信息
+ * @return {Promise<any>}
+ */
 const createUploadFileFn = () => (fileParams, metaData) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new HError(605)

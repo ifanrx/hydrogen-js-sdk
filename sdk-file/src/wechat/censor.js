@@ -3,6 +3,13 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 
 module.exports = BaaS => {
+  /**
+   * 检测违规图片
+   * @function
+   * @memberof BaaS
+   * @param {string} filePath 带检测的图片路径
+   * @return {Promise<any>}
+   */
   const wxCensorImage = filePath => {
     return new Promise((resolve, reject) => {
       wx.uploadFile({
@@ -31,6 +38,13 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 检测违规文本
+   * @function
+   * @memberof BaaS
+   * @param {string} text 带检测的文本内容
+   * @return {Promise<any>}
+   */
   const wxCensorText = text => {
     if (!text || typeof text !== 'string') {
       return Promise.reject(new HError(605))
@@ -44,6 +58,14 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 异步检测图片、音频
+   * @function
+   * @since v2.8.0
+   * @memberof BaaS
+   * @param {string} fileID 文件 ID
+   * @return {Promise<BaaS.Response<BaaS.CensorAsyncResult>>}
+   */
   const censorAsync = fileId => {
     return BaaS._baasRequest({
       url: BaaS._config.API.WECHAT.CENSOR_ASYNC,
@@ -54,6 +76,14 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 获取异步检测结果
+   * @function
+   * @since v2.8.0
+   * @memberof BaaS
+   * @param {string|number} id 检测记录 ID
+   * @return {Promise<BaaS.Response<BaaS.CensorAsyncResult>>}
+   */
   const getCensorResult = id => {
     return BaaS._baasRequest({
       url: `${BaaS._config.API.WECHAT.CENSOR_ASYNC}${id}/`,

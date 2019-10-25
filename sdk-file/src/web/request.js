@@ -11,6 +11,13 @@ axios.interceptors.response.use(function (response) {
 })
 
 module.exports = function (BaaS) {
+  /**
+   * 网络请求
+   * @function
+   * @memberof BaaS
+   * @param {BaaS.WebRequestParams} params 参数
+   * @return {Promise<BaaS.Response<any>>}
+   */
   BaaS.request = ({url, method = 'GET', data = {}, header = {}, headers = {}}) => {
     return new Promise((resolve, reject) => {
       if (!BaaS._config.CLIENT_ID) {

@@ -49,6 +49,14 @@ const qqUpload = (config, resolve, reject, type) => {
   })
 }
 
+/**
+ * 上传文件。
+ * @memberof BaaS
+ * @param {FileParams} fileParams 文件参数
+ * @param {FileMeta} metaData 文件元信息
+ * @param {string} type 文件类型
+ * @return {Promise<any>}
+ */
 const uploadFile = (fileParams, metaData, type) => {
   if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath) {
     throw new HError(605)

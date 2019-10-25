@@ -33,6 +33,14 @@ const extractErrorMsg = (res) => {
   }
 }
 
+/**
+ * 网络请求
+ * @function
+ * @name request
+ * @memberof BaaS
+ * @param {BaaS.AlipayRequestParams} params 参数
+ * @return {Promise<BaaS.Response<any>>}
+ */
 const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, headers = {}, dataType = 'json'}) => {
   const config = BaaS._config
   return new Promise((resolve, reject) => {

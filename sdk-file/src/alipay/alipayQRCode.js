@@ -1,3 +1,11 @@
+/**
+ * 获取二维码
+ * @function
+ * @name getAlipayQRCode
+ * @memberof BaaS
+ * @param {BaaS.AlipayQRCodeParams} options 参数
+ * @return {Promise<BaaS.AlipayQRCodeResult>}
+ */
 const createGetAlipayQRCode = BaaS => ({urlParam, queryParam, describe}) => {
   const API = BaaS._config.API
   return BaaS._baasRequest({

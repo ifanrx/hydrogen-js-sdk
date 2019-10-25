@@ -251,5 +251,11 @@ module.exports = {
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
   SDK_DOWNLOAD_PAGE: SDK_DOWNLOAD_PAGE,
+  /**
+   * SDK 版本号
+   *
+   * @type string
+   * @memberof BaaS._config
+   */
   VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }

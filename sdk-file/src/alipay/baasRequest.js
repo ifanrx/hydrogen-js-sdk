@@ -15,7 +15,7 @@ const createBaasRequestFn = BaaS => (args) => {
     })
 }
 
-/**
+/*
  * @param {object} payload
  */
 function tryResendRequest(BaaS, payload) {

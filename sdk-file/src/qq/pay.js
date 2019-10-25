@@ -11,6 +11,15 @@ const keysMap = {
   totalCost: 'total_cost', // required
 }
 
+/**
+ * QQ 支付
+ * @function
+ * @name pay
+ * @since v2.4.0
+ * @memberof BaaS
+ * @param {BaaS.PaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const createPayFn = BaaS => params => {
   const API = BaaS._config.API
   let paramsObj = {}

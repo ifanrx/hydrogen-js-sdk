@@ -14,6 +14,13 @@ const keysMap = {
   totalCost: 'total_cost', // required
 }
 
+/**
+ * 微信支付
+ * @function
+ * @memberof BaaS
+ * @param {BaaS.PaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const pay = (params) => {
   let paramsObj = {}
 
