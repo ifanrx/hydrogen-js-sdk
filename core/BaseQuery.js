@@ -37,7 +37,7 @@ class BaseQuery {
   }
 
   /**
-   * 选择只返回某些字段
+   * 选择只返回指定字段
    * 
    * @param {string[]|string} key 字段名称
    * @return {this}
@@ -52,7 +52,7 @@ class BaseQuery {
   }
 
   /**
-   * 设置需要展开的 pointer 类型字段
+   * 指定需要展开的 pointer 类型字段
    * 
    * @param {string[]|string} key 字段名称
    * @return {this}
@@ -67,7 +67,7 @@ class BaseQuery {
   }
 
   /**
-   * 设置返回数量
+   * 指定最多返回数量
    * 
    * @param {number} count 数量
    * @return {this}

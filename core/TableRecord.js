@@ -3,7 +3,7 @@ const BaseRecord = require('./BaseRecord')
 const utils = require('./utils')
 
 /**
- * 数据记录
+ * 数据记录。
  * @memberof BaaS
  * @extends BaaS.BaseRecord
  * @package
@@ -21,7 +21,7 @@ class TableRecord extends BaseRecord {
   }
 
   /**
-   * 保存数据记录
+   * 保存数据记录。
    * @return {Promise<BaaS.Response<any>>}
    */
   save() {
@@ -31,7 +31,8 @@ class TableRecord extends BaseRecord {
   }
 
   /**
-   * 更新数据记录
+   * 更新数据记录。
+   * 批量更新时，如果不需要触发触发器，可以设置 options.enableTrigger 为 false
    * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
    * @return {Promise<BaaS.Response<any>>}
    */

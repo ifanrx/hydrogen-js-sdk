@@ -34,13 +34,13 @@ class BaseRecord {
   }
 
   /**
-   * 设置属性
+   * 给字段赋值
    * @method
    * @param {string} key 字段名称
    * @param {string} value 值
    * @return {this}
    *//**
-   * 设置属性
+   * 给字段赋值
    * @method
    * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
    * @return {this}
@@ -85,12 +85,12 @@ class BaseRecord {
   }
 
   /**
-   * 移除属性
+   * 移除字段
    * @method
    * @param {string} key 字段名称
    * @return {this}
    *//**
-   * 移除属性
+   * 移除字段
    * @method
    * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
    * @return {this}

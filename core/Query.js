@@ -178,7 +178,7 @@ class Query {
   }
 
   /**
-   * 为 Null 判断。
+   * 字段为 Null 判断。
    * 判断逻辑：Record[key] 是 null
    *
    * @param {string} key - 用于查询判断的字段
@@ -196,7 +196,7 @@ class Query {
   }
 
   /**
-   * 不为 Null 判断。
+   * 字段不为 Null 判断。
    * 判断逻辑：Record[key] 不是 null
    *
    * @param {string} key - 用于查询判断的字段
@@ -214,7 +214,7 @@ class Query {
   }
 
   /**
-   * 存在判断。
+   * 字段存在判断。
    * 判断逻辑：Record[key] 不是 undefined
    *
    * @param {string} key - 用于查询判断的字段
@@ -232,7 +232,7 @@ class Query {
   }
 
   /**
-   * 不存在判断。
+   * 字段不存在判断。
    * 判断逻辑：Record[key] 是 undefined
    *
    * @param {string} key - 用于查询判断的字段
@@ -332,7 +332,7 @@ class Query {
   }
 
   /**
-   * 存在字段判断。
+   * Object 类型字段的属性存在判断。
    * 判断逻辑：Record[key] 为 Object 类型，且 Record[key][fieldName] 不为 undefined
    *
    * @param {string} key - 用于查询判断的字段

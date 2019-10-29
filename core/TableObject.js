@@ -85,11 +85,11 @@ class TableObject extends BaseQuery {
   }
 
   /**
-   * 获取一个数据记录（仅引用，非数据）
+   * 获取一个数据记录，用于更新等操作（仅引用，非数据）
    * @param {string} recordID 数据记录 ID
    * @return {TableRecord}
    *//**
-   * 获取多个数据记录（仅引用，非数据）
+   * 获取多个数据记录，用于更新等操作（仅引用，非数据）
    * @param {Query} query 数据记录查询条件
    * @return {TableRecord}
    */
@@ -109,7 +109,7 @@ class TableObject extends BaseQuery {
   }
 
   /**
-   * 获取数据记录详情。
+   * 获取单条数据记录。
    * @method
    * @param {string} recordID 数据记录 ID
    * @return {Promise<BaaS.Response<any>>}

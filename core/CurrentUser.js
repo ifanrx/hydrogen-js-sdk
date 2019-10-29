@@ -47,7 +47,7 @@ class CurrentUser extends UserRecord {
   }
 
   /**
-   * 将当前用户关联至微信账号，匿名用户无法调用
+   * 将微信账号绑定到当前用户，匿名用户无法调用
    * @param {BaaS.AuthData|null} [authData] 用户信息
    * @param {BaaS.LinkOptions} [params] 用户信息参数
    * @returns {Promise<this>} UserRecord 实例
@@ -63,7 +63,7 @@ class CurrentUser extends UserRecord {
   }
 
   /**
-   * 将当前用户关联至支付宝账号，匿名用户无法调用
+   * 将支付宝账号绑定到当前用户，匿名用户无法调用
    * @param {BaaS.LinkAlipayParams} [options] 参数
    * @returns {Promise<this>} UserRecord 实例
    */
@@ -78,7 +78,7 @@ class CurrentUser extends UserRecord {
   }
 
   /**
-   * 将当前用户关联至 QQ 账号，匿名用户无法调用
+   * 将 QQ 账号绑定到当前用户，匿名用户无法调用
    * @param {BaaS.AuthData|null} [authData] 用户信息
    * @param {BaaS.LinkOptions} [params] 用户信息参数
    * @returns {Promise<this>} UserRecord 实例
@@ -94,7 +94,7 @@ class CurrentUser extends UserRecord {
   }
 
   /**
-   * 将当前用户关联至百度账号，匿名用户无法调用
+   * 将百度账号绑定到当前用户，匿名用户无法调用
    * @param {BaaS.AuthData|null} [authData] 用户信息
    * @param {BaaS.LinkOptions} [params] 用户信息参数
    * @returns {Promise<this>} [UserRecord] 实例
@@ -110,7 +110,7 @@ class CurrentUser extends UserRecord {
   }
 
   /**
-   * 将当前用户关联至第三方账号，匿名用户无法调用
+   * 将第三方账号绑定到当前用户，匿名用户无法调用
    * @since v2.1.0
    * @param {string} providor 第三方平台
    * @param {string} authPageUrl 授权页面 URL
