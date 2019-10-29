@@ -40,7 +40,7 @@ class BaseRecord {
    * @param {string} value 值
    * @return {this}
    *//**
-   * 给字段赋值
+   * 批量给字段赋值
    * @method
    * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
    * @return {this}
@@ -90,7 +90,7 @@ class BaseRecord {
    * @param {string} key 字段名称
    * @return {this}
    *//**
-   * 移除字段
+   * 批量移除字段
    * @method
    * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
    * @return {this}
