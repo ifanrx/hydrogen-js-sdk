@@ -92,7 +92,8 @@ class BaseRecord {
    *//**
    * 批量移除字段
    * @method
-   * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
+   * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象，
+   *                              接口会忽略 Object 里所有的 value，参照所有的 key 来执行移除操作。
    * @return {this}
    */
   unset(...args) {
