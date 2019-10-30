@@ -56,7 +56,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       method = 'POST'
     }
     if (!/https?:\/\//.test(url)) {
-      const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
+      const API_HOST = BaaS._polyfill.getAPIHost()
       url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
     let requestFn = my.canIUse('request') ? my.request : my.httpRequest
