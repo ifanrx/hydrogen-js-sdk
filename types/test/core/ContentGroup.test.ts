@@ -49,18 +49,28 @@ expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getContent('123456'
  */
 // wechat
 expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.find())
+expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.find({}))
+expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.find({withCount: true}))
 
 // qq
 expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.find())
+expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.find({}))
+expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.find({withCount: true}))
 
 // alipay
 expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.find())
+expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.find({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.find({withCount: true}))
 
 // baidu
 expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.find())
+expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.find({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.find({withCount: true}))
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.find())
+expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.find({}))
+expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.find({withCount: true}))
 
 
 /**
@@ -68,18 +78,53 @@ expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.find())
  */
 // wechat
 expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.getCategoryList())
+expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.getCategoryList({}))
+expectType<Promise<WechatBaaS.Response<any>>>(MyContentGroupWechat.getCategoryList({withCount: true}))
 
 // qq
 expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.getCategoryList())
+expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.getCategoryList({}))
+expectType<Promise<QqBaaS.Response<any>>>(MyContentGroupQq.getCategoryList({withCount: true}))
 
 // alipay
 expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.getCategoryList())
+expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.getCategoryList({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyContentGroupAlipay.getCategoryList({withCount: true}))
 
 // baidu
 expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList())
+expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList({withCount: true}))
 
 // web
-expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList())
+expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
+expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({}))
+expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({withCount: true}))
+
+
+/**
+ * BaaS.ContentGroup#count
+ */
+// wechat
+MyContentGroupWechat.count()
+  .then(res => expectType<number>(res))
+
+// qq
+MyContentGroupQq.count()
+  .then(res => expectType<number>(res))
+
+// alipay
+MyContentGroupAlipay.count()
+  .then(res => expectType<number>(res))
+
+// baidu
+MyContentGroupBaidu.count()
+  .then(res => expectType<number>(res))
+
+// web
+MyContentGroupWeb.count()
+  .then(res => expectType<number>(res))
+
 
 
 /**

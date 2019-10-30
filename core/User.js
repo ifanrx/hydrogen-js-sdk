@@ -58,12 +58,28 @@ class User extends BaseQuery {
   /**
    * 获取用户列表。
    * @method
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<Response<any>>}
    */
-  find() {
+  find({withCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.getUserList(condition)
+    return BaaS.getUserList(Object.assign({}, condition, {
+      return_total_count: withCount ? 1 : 0,
+    }))
+  }
+
+  /**
+   * 获取用户数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
+  count() {
+    return this.limit(1).find({withCount: true}).then(res => {
+      let {total_count} = res.data.meta
+      return total_count
+    })
   }
 }
 

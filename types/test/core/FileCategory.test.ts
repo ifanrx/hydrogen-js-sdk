@@ -48,18 +48,28 @@ expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.get('123456'))
  */
 // wechat
 expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.getFileList('123456'))
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.getFileList('123456', {}))
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.getFileList('123456', {withCount: true}))
 
 // qq
 expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.getFileList('123456'))
+expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.getFileList('123456', {}))
+expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.getFileList('123456', {withCount: true}))
 
 // alipay
 expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.getFileList('123456'))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.getFileList('123456', {}))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.getFileList('123456', {withCount: true}))
 
 // baidu
 expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.getFileList('123456'))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.getFileList('123456', {}))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.getFileList('123456', {withCount: true}))
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.getFileList('123456'))
+expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.getFileList('123456', {}))
+expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.getFileList('123456', {withCount: true}))
 
 
 /**
@@ -67,15 +77,49 @@ expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.getFileList('123456
  */
 // wechat
 expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.find())
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.find({}))
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileCategoryWechat.find({withCount: true}))
 
 // qq
 expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.find())
+expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.find({}))
+expectType<Promise<QqBaaS.Response<any>>>(MyFileCategoryQq.find({withCount: true}))
 
 // alipay
 expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.find())
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.find({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileCategoryAlipay.find({withCount: true}))
 
 // baidu
 expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.find())
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.find({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileCategoryBaidu.find({withCount: true}))
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.find())
+expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.find({}))
+expectType<Promise<WebBaaS.Response<any>>>(MyFileCategoryWeb.find({withCount: true}))
+
+
+/**
+ * BaaS.FileCategory#count
+ */
+// wechat
+MyFileCategoryWechat.count()
+  .then(res => expectType<number>(res))
+
+// qq
+MyFileCategoryQq.count()
+  .then(res => expectType<number>(res))
+
+// alipay
+MyFileCategoryAlipay.count()
+  .then(res => expectType<number>(res))
+
+// baidu
+MyFileCategoryBaidu.count()
+  .then(res => expectType<number>(res))
+
+// web
+MyFileCategoryWeb.count()
+  .then(res => expectType<number>(res))

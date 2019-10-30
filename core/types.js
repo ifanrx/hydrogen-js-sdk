@@ -252,14 +252,22 @@
  * 批量创建参数
  * @typedef CreateManyParams
  * @memberof BaaS
- * @property {boolean} enableTrigger 是否触发触发器
+ * @property {boolean} [enableTrigger] 是否触发触发器
+ */
+
+/**
+ * 查询参数
+ * @typedef FindOptions
+ * @memberof BaaS
+ * @property {boolean} [withCount] 是否返回 total_count
  */
 
 /**
  * 批量更新参数
  * @typedef BatchUpdateParams
  * @memberof BaaS
- * @property {boolean} enableTrigger 是否触发触发器
+ * @property {boolean} [enableTrigger] 是否触发触发器
+ * @property {boolean} [withCount] 是否返回 total_count
  */
 
 /**

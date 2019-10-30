@@ -97,18 +97,53 @@ expectType<Promise<WebBaaS.Response<any>>>(MyFileWeb.get('123'))
  */
 // wechat
 expectType<Promise<WechatBaaS.Response<any>>>(MyFileWechat.find())
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileWechat.find({}))
+expectType<Promise<WechatBaaS.Response<any>>>(MyFileWechat.find({withCount: true}))
 
 // qq
 expectType<Promise<QqBaaS.Response<any>>>(MyFileQq.find())
+expectType<Promise<QqBaaS.Response<any>>>(MyFileQq.find({}))
+expectType<Promise<QqBaaS.Response<any>>>(MyFileQq.find({withCount: true}))
 
 // alipay
 expectType<Promise<AlipayBaaS.Response<any>>>(MyFileAlipay.find())
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileAlipay.find({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(MyFileAlipay.find({withCount: true}))
 
 // baidu
 expectType<Promise<BaiduBaaS.Response<any>>>(MyFileBaidu.find())
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileBaidu.find({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(MyFileBaidu.find({withCount: true}))
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyFileWeb.find())
+expectType<Promise<WebBaaS.Response<any>>>(MyFileWeb.find({}))
+expectType<Promise<WebBaaS.Response<any>>>(MyFileWeb.find({withCount: true}))
+
+
+/**
+ * File#count
+ */
+// wechat
+MyFileWechat.count()
+  .then(res => expectType<number>(res))
+
+// qq
+MyFileQq.count()
+  .then(res => expectType<number>(res))
+
+// alipay
+MyFileAlipay.count()
+  .then(res => expectType<number>(res))
+
+// baidu
+MyFileBaidu.count()
+  .then(res => expectType<number>(res))
+
+// web
+MyFileWeb.count()
+  .then(res => expectType<number>(res))
+
 
 
 /**

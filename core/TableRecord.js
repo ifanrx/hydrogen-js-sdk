@@ -36,7 +36,7 @@ class TableRecord extends BaseRecord {
    * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  update({enableTrigger = true} = {}) {
+  update({enableTrigger = true, withCount = false} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     if (this._recordID) {
@@ -48,7 +48,8 @@ class TableRecord extends BaseRecord {
         where: JSON.stringify(this._queryObject.where),
         limit: utils.getLimitationWithEnableTigger(this._queryObject.limit, enableTrigger),
         offset: this._queryObject.offset,
-        enable_trigger: enableTrigger ? 1 : 0
+        enable_trigger: enableTrigger ? 1 : 0,
+        return_total_count: withCount ? 1 : 0,
       }
       this._queryObject = {}
       return BaaS.updateRecordList(params)

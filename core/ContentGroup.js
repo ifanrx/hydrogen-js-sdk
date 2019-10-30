@@ -39,22 +39,43 @@ class ContentGroup extends BaseQuery {
   /**
    * 查找内容。
    * @method
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  find() {
+  find({withCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     condition.contentGroupID = this._contentGroupID
     this._initQueryParams()
-    return BaaS.getContentList2(condition)
+    return BaaS.getContentListV2(Object.assign({}, condition, {
+      return_total_count: withCount ? 1 : 0,
+    }))
+  }
+
+  /**
+   * 获取内容数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
+  count() {
+    return this.limit(1).find({withCount: true}).then(res => {
+      let {total_count} = res.data.meta
+      return total_count
+    })
   }
 
   /**
    * 获取内容分类列表。
    * @method
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  getCategoryList() {
-    return BaaS.getContentCategoryList({contentGroupID: this._contentGroupID, limit: 100})
+  getCategoryList({withCount = false} = {}) {
+    return BaaS.getContentCategoryList({
+      contentGroupID: this._contentGroupID,
+      limit: 100,
+      return_total_count: withCount ? 1 : 0,
+    })
   }
 
   /**

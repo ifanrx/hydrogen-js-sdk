@@ -51,12 +51,28 @@ class File extends BaseQuery {
   /**
    * 获取文件列表。
    * @method
+   * @param {BaaS.FindOptions} [options] 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  find() {
+  find({withCount = false} = {}) {
     let condition = this._handleAllQueryConditions()
     this._initQueryParams()
-    return BaaS.getFileList(condition)
+    return BaaS.getFileList(Object.assign({}, condition, {
+      return_total_count: withCount ? 1 : 0,
+    }))
+  }
+
+  /**
+   * 获取文件数量。
+   * @method
+   * @since v3.0.0
+   * @return {Promise<number>}
+   */
+  count() {
+    return this.limit(1).find({withCount: true}).then(res => {
+      let {total_count} = res.data.meta
+      return total_count
+    })
   }
 
   /**
