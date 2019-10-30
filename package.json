@@ -61,8 +61,6 @@
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "4.19.1",
     "faker": "^4.1.0",
-    "ftp-deploy": "^2.3.1",
-    "github-api": "^3.0.0",
     "jsdoc": "^3.6.3",
     "jsdoc-typeof-plugin": "^1.0.0",
     "jsdom": "^15.0.0",
@@ -83,7 +81,7 @@
   },
   "dependencies": {
     "ava": "^2.3.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "console-log-level": "^1.4.1",
     "core-js": "^3.0.1"
   }
