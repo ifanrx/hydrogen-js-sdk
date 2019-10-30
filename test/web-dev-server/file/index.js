@@ -99,8 +99,8 @@ function init() {
           let fileParams = {fileObj: file}
 
           File.upload(fileParams, this.selectedCateID !== 'all' ? metaData : null).then((res) => {
+            console.log('file', res)
             let data = res.data.file
-            console.log(data)
             setTimeout(resolve, 1000)
             // showSuccessToast()
             notie.alert({type: 1, text: '上传成功'})

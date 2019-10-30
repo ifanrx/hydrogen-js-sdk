@@ -21,35 +21,35 @@ const API = {
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v2.0/user/info/:userID/',
-  USER_LIST: '/hserve/v2.0/user/info/',
+  USER_LIST: '/hserve/v2.2/user/info/',
   UPDATE_USER: '/hserve/v2.0/user/info/',
 
   TABLE_LIST: '/hserve/v2.0/table/',
   TABLE_DETAIL: '/hserve/v2.0/table/:tableID/',
   RECORD_LIST: '/hserve/v2.0/table/:tableID/record/',
-  QUERY_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/',
+  QUERY_RECORD_LIST: '/hserve/v2.2/table/:tableID/record/',
   CREATE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?enable_trigger=:enable_trigger',
   RECORD_DETAIL: '/hserve/v2.0/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v2.0/table/:tableID/record/',
   UPDATE_RECORD: '/hserve/v2.0/table/:tableID/record/:recordID/',
-  UPDATE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
+  UPDATE_RECORD_LIST: '/hserve/v2.2/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger&return_total_count=:return_total_count',
   DELETE_RECORD: '/hserve/v2.0/table/:tableID/record/:recordID/',
-  DELETE_RECORD_LIST: '/hserve/v2.0/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger',
+  DELETE_RECORD_LIST: '/hserve/v2.2/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger&return_total_count=:return_total_count',
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
-  CONTENT_LIST: '/hserve/v2.0/content/detail/',
+  CONTENT_LIST: '/hserve/v2.2/content/detail/',
   CONTENT_GROUP_LIST: '/hserve/v2.0/content/group/',
   CONTENT_DETAIL: '/hserve/v2.0/content/detail/:richTextID/',
   CONTENT_GROUP_DETAIL: '/hserve/v2.0/content/group/',
-  CONTENT_CATEGORY_LIST: '/hserve/v2.0/content/category/',
+  CONTENT_CATEGORY_LIST: '/hserve/v2.2/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v2.0/content/category/:categoryID/',
 
   FILE_DETAIL: '/hserve/v2.1/uploaded-file/:fileID/',
-  FILE_LIST: '/hserve/v2.1/uploaded-file/',
+  FILE_LIST: '/hserve/v2.2/uploaded-file/',
   DELETE_FILE: '/hserve/v2.1/uploaded-file/:fileID/',
   DELETE_FILES: '/hserve/v2.1/uploaded-file/',
   FILE_CATEGORY_DETAIL: '/hserve/v1.3/file-category/:categoryID/',
-  FILE_CATEGORY_LIST: '/hserve/v1.3/file-category/',
+  FILE_CATEGORY_LIST: '/hserve/v2.2/file-category/',
   CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
   CENSOR_MSG: '/hserve/v1.7/censor-msg/',
   SEND_SMS_CODE: '/hserve/v2.2/sms-verification-code/',
@@ -175,7 +175,7 @@ const methodMapList = [{
   getContentList: {
     url: API.LAGECY_CONTENT_LIST
   },
-  getContentList2: {
+  getContentListV2: {
     url: API.CONTENT_LIST
   },
   getContent: {
@@ -251,5 +251,11 @@ module.exports = {
   RANDOM_OPTION: RANDOM_OPTION,
   REQUEST_PARAMS_MAP: requestParamsMap,
   SDK_DOWNLOAD_PAGE: SDK_DOWNLOAD_PAGE,
+  /**
+   * SDK 版本号
+   *
+   * @type string
+   * @memberof BaaS._config
+   */
   VERSION: VERSION  // package.json 中的 version 也需要同步修改。
 }

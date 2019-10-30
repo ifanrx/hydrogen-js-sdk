@@ -33,6 +33,14 @@ const extractErrorMsg = (res) => {
   }
 }
 
+/**
+ * 网络请求
+ * @function
+ * @name request
+ * @memberof BaaS
+ * @param {BaaS.AlipayRequestParams} params 参数
+ * @return {Promise<BaaS.Response<any>>}
+ */
 const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, headers = {}, dataType = 'json'}) => {
   const config = BaaS._config
   return new Promise((resolve, reject) => {
@@ -48,7 +56,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       method = 'POST'
     }
     if (!/https?:\/\//.test(url)) {
-      const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
+      const API_HOST = BaaS._polyfill.getAPIHost()
       url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
     }
     let requestFn = my.canIUse('request') ? my.request : my.httpRequest

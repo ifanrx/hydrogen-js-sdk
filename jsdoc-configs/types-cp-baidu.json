@@ -1,0 +1,20 @@
+{
+  "plugins": ["plugins/overloadHelper"],
+  "opts": {
+    "template": "node_modules/@otris/jsdoc-tsd",
+    "encoding": "utf8",
+    "recurse": true
+  },
+  "source": {
+    "include": [
+      "core",
+      "sdk-file/src/baidu"
+    ]
+  },
+  "recurseDepth": 10,
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  }
+}

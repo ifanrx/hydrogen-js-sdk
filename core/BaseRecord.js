@@ -16,6 +16,10 @@ function _serializeValueFuncFactory(config = ['BaseRecord']) {
   }
 }
 
+/**
+ * @memberof BaaS
+ * @package
+ */
 class BaseRecord {
   constructor(recordID) {
     this._recordID = recordID
@@ -29,6 +33,18 @@ class BaseRecord {
     }
   }
 
+  /**
+   * 给字段赋值
+   * @method
+   * @param {string} key 字段名称
+   * @param {string} value 值
+   * @return {this}
+   *//**
+   * 批量给字段赋值
+   * @method
+   * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象
+   * @return {this}
+   */
   set(...args) {
     const serializeValue = _serializeValueFuncFactory(['BaseRecord', 'Geo'])
     const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
@@ -68,6 +84,18 @@ class BaseRecord {
     return this
   }
 
+  /**
+   * 移除字段
+   * @method
+   * @param {string} key 字段名称
+   * @return {this}
+   *//**
+   * 批量移除字段
+   * @method
+   * @param {Object<string, any>} particialRecord 由字段名称与值组成的键值对对象，
+   *                              接口会忽略 Object 里所有的 value，参照所有的 key 来执行移除操作。
+   * @return {this}
+   */
   unset(...args) {
     if (typeof args[0] === 'object') {
       let recordToUnset = {}
@@ -89,11 +117,25 @@ class BaseRecord {
     return this
   }
 
+  /**
+   * 自增（原子操作）。
+   * @method
+   * @param {string} key 字段名称
+   * @param {number} value 值
+   * @return {this}
+   */
   incrementBy(key, value) {
     this._record.$set[key] = {$incr_by: value}
     return this
   }
 
+  /**
+   * 数组添加元素。
+   * @method
+   * @param {string} key 字段名称
+   * @param {string} value 值
+   * @return {this}
+   */
   append(key, value) {
     const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
@@ -104,6 +146,13 @@ class BaseRecord {
     return this
   }
 
+  /**
+   * 数组添加元素（原子操作）。
+   * @method
+   * @param {string} key 字段名称
+   * @param {string[]|string} value 值
+   * @return {this}
+   */
   uAppend(key, value) {
     const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
@@ -114,6 +163,13 @@ class BaseRecord {
     return this
   }
 
+  /**
+   * 数组移除元素。
+   * @method
+   * @param {string} key 字段名称
+   * @param {string} value 值
+   * @return {this}
+   */
   remove(key, value) {
     const serializeArrayValue = _serializeValueFuncFactory(['Geo'])
     if (!(value instanceof Array)) {
@@ -124,6 +180,13 @@ class BaseRecord {
     return this
   }
 
+  /**
+   * Object 类型字段修改。
+   * @method
+   * @param {string} key 字段名称
+   * @param {object} value 值
+   * @return {this}
+   */
   patchObject(key, value) {
     if (Object.prototype.toString.call(value) !== '[object Object]') {
       throw new HError(605)

@@ -38,5 +38,13 @@ const createLoginFn = BaaS => (opts = {}) => {
 module.exports = function (BaaS) {
   const login = createLoginFn(BaaS)
   BaaS.auth.silentLogin = login.bind(null, {forceLogin: false})
+
+  /**
+   * 支付宝登录
+   * @function
+   * @memberof BaaS.auth
+   * @param {BaaS.LoginWithAlipayParams} [options] 登录参数
+   * @return {Promise<BaaS.CurrentUser>}
+   */
   BaaS.auth.loginWithAlipay = opts => login(opts).then(BaaS.auth.getCurrentUser)
 }

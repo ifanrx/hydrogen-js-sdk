@@ -3,6 +3,13 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 
 module.exports = BaaS => {
+  /**
+   * 检测违规图片
+   * @function
+   * @memberof BaaS
+   * @param {string} filePath 带检测的图片路径
+   * @return {Promise<any>}
+   */
   const censorImage = filePath => {
     return new Promise((resolve, reject) => {
       qq.uploadFile({
@@ -31,6 +38,13 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 检测违规文本
+   * @function
+   * @memberof BaaS
+   * @param {string} text 带检测的文本内容
+   * @return {Promise<any>}
+   */
   const censorText = text => {
     if (!text || typeof text !== 'string') {
       return Promise.reject(new HError(605))

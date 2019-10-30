@@ -1,0 +1,17 @@
+name: BUILD DOCS
+on:
+  repository_dispatch:
+  push:
+    branches:
+      - generate-type-definition
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Webhook Trigger
+      uses: zzzze/webhook-trigger@v1.0.0
+      with:
+        data: "{\"event_type\":\"generate-type-definition\"}"
+        webhook_url: ${{ secrets.WEBHOOK_URL_FOR_BUILD_DOCS }}
+        options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.TOKEN_FOR_BUILD_DOCS }}\""

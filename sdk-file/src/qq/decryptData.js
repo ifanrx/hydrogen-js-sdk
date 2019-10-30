@@ -1,5 +1,16 @@
 const HError = require('core-module/HError')
 
+/**
+ * QQ 加密数据解密
+ * @function
+ * @name decryptData
+ * @since v2.4.0
+ * @memberof BaaS
+ * @param {string} encryptedData 加密的数据
+ * @param {string} iv 加密算法的初始向量
+ * @param {string} type 数据类型
+ * @return {Promise<any>}
+ */
 const createDecryptDataFn = BaaS => (...params) => {
   const API = BaaS._config.API
 

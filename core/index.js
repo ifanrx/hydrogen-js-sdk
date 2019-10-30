@@ -4,7 +4,15 @@ const HError = require('./HError')
 const utils = require('./utils')
 
 module.exports = function (BaaS) {
-  BaaS.init = (clientID, {autoLogin = false, logLevel = ''} = {}) => {
+  /**
+   * SDK 初始化
+   *
+   * @function init
+   * @memberof BaaS
+   * @param {string} clientID - 知晓云应用的 client id
+   * @param {BaaS.InitOptions} [options] - 其他选项
+   */
+  BaaS.init = (clientID, {autoLogin = false, logLevel = '', host = ''} = {}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
@@ -13,19 +21,25 @@ module.exports = function (BaaS) {
     }
     BaaS._config.AUTO_LOGIN = autoLogin
     BaaS._config.CLIENT_ID = clientID
-    BaaS._config.API_HOST = BaaS._polyfill.getAPIHost(clientID)
+    BaaS._config.API_HOST = host
     BaaS._polyfill.checkLatestVersion()
   }
 
+  /**
+   * 获取 token
+   *
+   * @memberof BaaS
+   * @return {string}
+   */
   BaaS.getAuthToken = () => {
     return storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
   }
 
   /**
+   * SDK 版本检查
    *
-   * @param platform 需要检测的平台
-   * @param onSuccess 接口请求成功时回调
-   * @param onError 接口请求失败时的回调
+   * @memberof BaaS
+   * @param {BaaS.CheckVersionOptions} options
    */
   BaaS.checkVersion = ({platform, onSuccess, onError} = {}) => {
     if (!onSuccess) {
@@ -52,6 +66,11 @@ module.exports = function (BaaS) {
     BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(onSuccess, onError)
   }
 
+  /**
+   * 清除会话（退出登录）
+   *
+   * @memberof BaaS
+   */
   BaaS.clearSession = () => {
     // 清除客户端认证 Token
     storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')

@@ -4,6 +4,13 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const {getUploadFileConfig} = require('core-module/upload')
 module.exports = function (BaaS) {
+  /**
+   * 上传文件。
+   * @memberof BaaS
+   * @param {FileParams} fileParams 文件参数
+   * @param {FileMeta} metaData 文件元信息
+   * @return {Promise<any>}
+   */
   BaaS.uploadFile = function (fileParams, metaData) {
     let fileObj = fileParams.fileObj
     if (!fileObj || typeof fileObj !== 'object' || !fileObj.name) {

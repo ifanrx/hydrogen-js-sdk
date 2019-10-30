@@ -29,10 +29,54 @@ describe('FileCategory', () => {
   })
 
   it('clear query params when query', () => {
-    let getFileCategoryListStub = sinon.stub(BaaS, 'getFileCategoryList').resolves()
-    return fileCategory.limit(10).find(() => {
-      expect(fileCategory._limit).to.equal(20)
-      getFileCategoryListStub.restore()
+    let getFileCategoryListStub = sinon.stub(BaaS, 'getFileCategoryList')
+    fileCategory.limit(10).find()
+    expect(fileCategory._limit).to.equal(null)
+    getFileCategoryListStub.restore()
+  })
+
+  it('#find without withCount', () => {
+    let getFileCategoryList = sinon.stub(BaaS, 'getFileCategoryList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
     })
+    let query = new Query()
+    query.in('price', randomArray)
+    fileCategory.setQuery(query).offset(0).find()
+    getFileCategoryList.restore()
+  })
+
+  it('#find with withCount=true', () => {
+    let getFileCategoryList = sinon.stub(BaaS, 'getFileCategoryList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 1,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    fileCategory.setQuery(query).offset(0).find({withCount: true})
+    getFileCategoryList.restore()
+  })
+
+  it('#find with withCount=false', () => {
+    let getFileCategoryList = sinon.stub(BaaS, 'getFileCategoryList').callsFake(function (args) {
+      expect(args).to.deep.equal({
+        where: `{"$and":[{"price":{"$in":[${randomArray.join(',')}]}}]}`,
+        limit: 20,
+        offset: 0,
+        return_total_count: 0,
+      })
+    })
+    let query = new Query()
+    query.in('price', randomArray)
+    fileCategory.setQuery(query).offset(0).find({withCount: false})
+    getFileCategoryList.restore()
   })
 })

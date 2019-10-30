@@ -1,0 +1,20 @@
+{
+  "plugins": ["plugins/overloadHelper"],
+  "opts": {
+    "encoding": "utf8",
+    "destination": "./docs/qq",
+    "recurse": true
+  },
+  "source": {
+    "include": [
+      "core",
+      "sdk-file/src/qq"
+    ]
+  },
+  "recurseDepth": 10,
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  }
+}

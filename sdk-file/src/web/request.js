@@ -11,6 +11,13 @@ axios.interceptors.response.use(function (response) {
 })
 
 module.exports = function (BaaS) {
+  /**
+   * 网络请求
+   * @function
+   * @memberof BaaS
+   * @param {BaaS.WebRequestParams} params 参数
+   * @return {Promise<BaaS.Response<any>>}
+   */
   BaaS.request = ({url, method = 'GET', data = {}, header = {}, headers = {}}) => {
     return new Promise((resolve, reject) => {
       if (!BaaS._config.CLIENT_ID) {
@@ -18,7 +25,7 @@ module.exports = function (BaaS) {
       }
 
       if (!/https?:\/\//.test(url)) {
-        const API_HOST = BaaS._config.DEBUG ? BaaS._config.API_HOST : BaaS._polyfill.getAPIHost()
+        const API_HOST = BaaS._polyfill.getAPIHost()
         url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
       }
 

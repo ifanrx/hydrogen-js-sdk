@@ -6,11 +6,24 @@ const BaseRecord = require('./BaseRecord')
 
 const serializeValue = BaseRecord._serializeValueFuncFactory(['BaseRecord'])
 
+/**
+ * 查询
+ * @memberof BaaS
+ * @public
+ */
 class Query {
   constructor() {
     this.queryObject = {}
   }
 
+  /**
+   * and 操作符。将多个 Query 对象使用 and 操作符进行合并
+   *
+   * @static
+   * @function
+   * @param {...Query[]} querys Query 对象
+   * @returns {Query} - 新的 Query 对象
+   */
   static and(...queryObjects) {
     let newQuery = new Query()
     let andQuery = {$and: []}
@@ -21,6 +34,14 @@ class Query {
     return newQuery
   }
 
+  /**
+   * or 操作符。将多个 Query 对象使用 or 操作符进行合并
+   *
+   * @static
+   * @function
+   * @param {...Query[]} querys Query 对象
+   * @returns {Query} - 新的 Query 对象
+   */
   static or(...queryObjects) {
     let newQuery = new Query()
     let orQuery = {$or: []}
@@ -31,6 +52,15 @@ class Query {
     return newQuery
   }
 
+  /**
+   * 比较判断，将 Record[key] 与 value 使用 operator 进行判断，筛选出
+   * 符合条件的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {string} operator - 判断操作符
+   * @param {string} value - 用于判断的值
+   * @returns {this} Query 实例
+   */
   compare(key, operator, value) {
     let op = 'eq'
     switch(operator) {
@@ -59,6 +89,13 @@ class Query {
     return this
   }
 
+  /**
+   * 包含判断，筛选出符合条件（Record[key] 包含了字符串 str）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {string} str - 用于判断的字符串
+   * @returns {this} Query 实例
+   */
   contains(key, str) {
     if (str && utils.isString(str)) {
       this._addQueryObject(key, {contains: str})
@@ -68,6 +105,13 @@ class Query {
     }
   }
 
+  /**
+   * 正则判断，筛选出符合条件（正则表达式 regExp 能匹配 Record[key]）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {RegExp} regExp - 正则表达式
+   * @returns {this} Query 实例
+   */
   matches(key, regExp) {
     if (regExp && regExp instanceof RegExp) {
       let result = utils.parseRegExp(regExp)
@@ -84,6 +128,13 @@ class Query {
     }
   }
 
+  /**
+   * 包含判断，筛选出符合条件（数组 arr 包含 Record[key]）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {Array<any>} arr - 用于判断的数组
+   * @returns {this} Query 实例
+   */
   in(key, arr) {
     if (arr && arr instanceof Array) {
       this._addQueryObject(key, {in: arr.map(v => serializeValue(v))})
@@ -93,6 +144,13 @@ class Query {
     }
   }
 
+  /**
+   * 不包含判断，筛选出符合条件（数组 arr 不包含 Record[key]）的 Record。
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {Array<any>} arr - 用于判断的数组
+   * @returns {this} Query 实例
+   */
   notIn(key, arr) {
     if (arr && arr instanceof Array) {
       this._addQueryObject(key, {nin: arr.map(v => serializeValue(v))})
@@ -102,6 +160,14 @@ class Query {
     }
   }
 
+  /**
+   * 数组包含判断。
+   * 判断逻辑：Record[key] 是数组类型，且包含 arr 数组中的元素
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {Array<any>} arr - 用于判断的数组
+   * @returns {this} Query 实例
+   */
   arrayContains(key, arr) {
     if (arr && arr instanceof Array) {
       this._addQueryObject(key, {all: arr})
@@ -111,6 +177,13 @@ class Query {
     }
   }
 
+  /**
+   * 字段为 Null 判断。
+   * 判断逻辑：Record[key] 是 null
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @returns {this} Query 实例
+   */
   isNull(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
@@ -122,6 +195,13 @@ class Query {
     return this
   }
 
+  /**
+   * 字段不为 Null 判断。
+   * 判断逻辑：Record[key] 不是 null
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @returns {this} Query 实例
+   */
   isNotNull(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
@@ -133,6 +213,13 @@ class Query {
     return this
   }
 
+  /**
+   * 字段存在判断。
+   * 判断逻辑：Record[key] 不是 undefined
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @returns {this} Query 实例
+   */
   exists(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
@@ -144,6 +231,13 @@ class Query {
     return this
   }
 
+  /**
+   * 字段不存在判断。
+   * 判断逻辑：Record[key] 是 undefined
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @returns {this} Query 实例
+   */
   notExists(key) {
     if (key && key instanceof Array) {
       key.forEach((k) => {
@@ -155,7 +249,14 @@ class Query {
     return this
   }
 
-  // 在指定多边形集合中找出包含某一点的多边形
+  /**
+   * 多边形包含判断，在指定多边形集合中找出包含某一点的多边形（geojson 类型）。
+   * 判断逻辑：Record[key] 包含 point
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {GeoPoint} point - 点
+   * @returns {this} Query 实例
+   */
   include(key, point) {
     if (point && point instanceof GeoPoint) {
       this._addQueryObject(key, {intersects: point.toGeoJSON()})
@@ -165,7 +266,14 @@ class Query {
     }
   }
 
-  // 在指定点集合中，查找包含于指定的多边形区域的点
+  /**
+   * 多边形包含判断，在指定点集合中，查找包含于指定的多边形区域的点（geojson 类型）。
+   * 判断逻辑：polygon 包含 Record[key]
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {GeoPolygon} polygon - 多边形
+   * @returns {this} Query 实例
+   */
   within(key, polygon) {
     if (polygon && polygon instanceof GeoPolygon) {
       this._addQueryObject(key, {within: polygon.toGeoJSON()})
@@ -175,7 +283,15 @@ class Query {
     }
   }
 
-  // 在指定点集合中，查找包含在指定圆心和指定半径所构成的圆形区域中的点
+  /**
+   * 圆包含判断，在指定点集合中，查找包含在指定圆心和指定半径所构成的圆形区域中的点（geojson 类型）。
+   * 判断逻辑：以 point 为圆心、以 redius 为半径的圆包含 Record[key]
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {GeoPoint} point - 圆心
+   * @param {number} radius - 半径
+   * @returns {this} Query 实例
+   */
   withinCircle(key, point, radius) {
     if (point && point instanceof GeoPoint) {
       let data = {
@@ -189,7 +305,16 @@ class Query {
     }
   }
 
-  // 在指定点集合中，查找包含在以某点为起点的最大和最小距离所构成的圆环区域中的点
+  /**
+   * 圆环包含判断，在指定点集合中，查找包含在以某点为起点的最大和最小距离所构成的圆环区域中的点（geojson 类型）。
+   * 判断逻辑：以 point 为圆心、以 minDistance 最小半径、以 maxDistance 为最大半径的圆环包含 Record[key]
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {GeoPoint} point - 圆心
+   * @param {number} maxDistance - 最大半径
+   * @param {number} [minDistance] - 最小半径
+   * @returns {this} Query 实例
+   */
   withinRegion(key, point, maxDistance, minDistance = 0) {
     if (point && point instanceof GeoPoint) {
       let data = {
@@ -206,6 +331,14 @@ class Query {
     }
   }
 
+  /**
+   * Object 类型字段的属性存在判断。
+   * 判断逻辑：Record[key] 为 Object 类型，且 Record[key][fieldName] 不为 undefined
+   *
+   * @param {string} key - 用于查询判断的字段
+   * @param {string} fieldName - 字段名称
+   * @returns {this} Query 实例
+   */
   hasKey(key, fieldName) {
     if (typeof key !== 'string' || typeof fieldName !== 'string') {
       throw HError(605)

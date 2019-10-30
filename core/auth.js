@@ -6,6 +6,12 @@ const utils = require('./utils')
 const UserRecord = require('./UserRecord')
 const User = require('./User')
 
+/**
+ * 用户认证
+ * @namespace auth
+ * @memberof BaaS
+ */
+
 const API = BaaS._config.API
 
 function getAuthUrl(data, isLoginFunc) {
@@ -37,6 +43,13 @@ function getAuthRequestData(data) {
   }
 }
 
+/**
+ * 登录
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
+ * @return {Promise<BaaS.CurrentUser>}
+ */
 const login = params => {
   let url = getAuthUrl(params, true)
   let data = getAuthRequestData(params)
@@ -52,6 +65,9 @@ const login = params => {
 
 /**
  * 匿名登录
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const anonymousLogin = () => {
   return BaaS.request({
@@ -65,11 +81,21 @@ const anonymousLogin = () => {
 
 /**
  * 静默登录
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @return {Promise<BaaS.CurrentUser>}
  */
 const silentLogin = () => {
   return Promise.reject(new HError(605, 'silentLogin 方法未定义'))
 }
 
+/**
+ * 注册
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @param {(BaaS.AuthWithUsernameOptions|BaaS.AuthWithEmailOptions|BaaS.AuthWithPhoneOptions)} options
+ * @return {Promise<BaaS.CurrentUser>}
+ */
 const register = params => {
   let url = getAuthUrl(params)
   let data = getAuthRequestData(params)
@@ -84,6 +110,12 @@ const register = params => {
 }
 
 
+/**
+ * 退出登录状态
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @return {Promise<BaaS.Response<any>>}
+ */
 const logout = () => {
   return BaaS.request({
     url: API.LOGOUT,
@@ -96,6 +128,10 @@ const logout = () => {
 
 /**
  * 忘记密码，发送重置密码邮件
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @param {BaaS.PasswordResetParam} param 账号信息
+ * @return {Promise<BaaS.Response<any>>}
  */
 const requestPasswordReset = ({email} = {}) => {
   return BaaS.request({
@@ -105,6 +141,12 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
+/**
+ * 获取当前用户
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @return {Promise<BaaS.CurrentUser>}
+ */
 let getCurrentUser = () => {
   let uid = storage.get(constants.STORAGE_KEY.UID)
   let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
@@ -118,6 +160,15 @@ let getCurrentUser = () => {
   })
 }
 
+/**
+ * 使用手机号 + 验证码登录
+ * @since v2.0.0
+ * @memberof BaaS.auth
+ * @param {string} mobilePhone 手机号码
+ * @param {string} smsCode 验证码
+ * @param {BaaS.LoginOptions} [options] 可选配置
+ * @return {Promise<BaaS.CurrentUser>}
+ */
 const loginWithSmsVerificationCode = (mobilePhone, smsCode, {createUser = true} = {}) => {
   return BaaS.request({
     url: API.LOGIN_SMS,

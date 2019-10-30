@@ -4,6 +4,7 @@ const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
+
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -45,11 +46,17 @@ module.exports = BaaS => {
     }, reject)
   }
 
-  /**
+  /*
    * v2.0.8-a 中存在的 bug:
    * 如果调用 silentLogin（直接调用或在 autoLogin 为 ture 的情况下，401 错误后自动调用），
    * 并且同时调用 loginWithWechat，会发出两个 silent_login 的请求，可能会造成后端同时创建两个用户。
    * 因此，直接在 silentLogin 处做并发限制（loginWithWechat 会调用这个 silentLogin）。
+   */
+  /**
+   * 静默登录
+   * @function
+   * @deprecated since v2.0.0
+   * @memberof BaaS.auth
    */
   const silentLogin = utils.rateLimit(function (...args) {
     if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
@@ -59,6 +66,14 @@ module.exports = BaaS => {
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  /**
+   * 获取用户信息
+   * @deprecated
+   * @function
+   * @memberof BaaS.auth
+   * @param {BaaS.handleUserInfoOptions} options 参数
+   * @return {Promise<any>}
+   */
   const handleUserInfo = res => {
     if (!res || !res.detail) {
       throw new HError(603)
@@ -153,6 +168,16 @@ module.exports = BaaS => {
     })
   }
 
+
+  /**
+   * 微信登录
+   * @function
+   * @since v2.0.0
+   * @memberof BaaS.auth
+   * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
+   * @param {BaaS.LoginOptions} [options] 其他选项
+   * @return {Promise<BaaS.CurrentUser>}
+   */
   const loginWithWechat = (authData, {
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
@@ -177,8 +202,18 @@ module.exports = BaaS => {
   })
 
 
-  // 兼容原有的 API
+  /*
+   * 兼容原有的 API
+   */
 
+  /**
+   * 微信登录（仅支持静默登录）
+   * @deprecated since v2.0.0
+   * @function
+   * @memberof BaaS
+   * @param {boolean} forceLogin 是否是强制登录
+   * @return {Promise<any>}
+   */
   BaaS.login = function (args) {
     if (args === false) {
       return silentLogin().then(() => ({
@@ -192,11 +227,26 @@ module.exports = BaaS => {
     }
   }
 
+  /**
+   * 获取用户信息
+   * @deprecated since v2.0.0
+   * @function
+   * @memberof BaaS
+   * @param {BaaS.handleUserInfoOptions} options 参数
+   * @return {Promise<any>}
+   */
   BaaS.handleUserInfo = function (res) {
     return BaaS.auth.handleUserInfo(res).then(() => commonAuth.getCurrentUser()).then(user => {
       return user.toJSON()
     })
   }
 
+  /**
+   * 退出登录状态
+   * @deprecated since v2.0.0
+   * @function
+   * @memberof BaaS
+   * @return {Promise<any>}
+   */
   BaaS.logout = BaaS.auth.logout
 }

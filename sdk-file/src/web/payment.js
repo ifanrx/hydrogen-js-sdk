@@ -1,3 +1,9 @@
+/**
+ * 支付
+ * @namespace payment
+ * @memberof BaaS
+ */
+
 const HError = require('core-module/HError')
 let utils = require('./utils')
 
@@ -38,6 +44,15 @@ const pay = (BaaS, options) => {
   })
 }
 
+/**
+ * 微信支付
+ * @function
+ * @name payWithWechat
+ * @since v2.2.0
+ * @memberof BaaS.payment
+ * @param {BaaS.WechatPaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const createPayWithWechatFn = BaaS => options => {
   if (!~[WECHAT_GATEWAY_TYPE.WAP, WECHAT_GATEWAY_TYPE.NATIVE, WECHAT_GATEWAY_TYPE.JS_API].indexOf(options.gatewayType)) {
     return Promise.reject(new HError(608, 'incorrect gateway type'))
@@ -82,6 +97,15 @@ const createPayWithWechatFn = BaaS => options => {
   })
 }
 
+/**
+ * 支付宝支付
+ * @function
+ * @name payWithAlipay
+ * @since v2.2.0
+ * @memberof BaaS.payment
+ * @param {BaaS.PaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const createPayWithAlipayFn = BaaS => options => {
   if (!~[ALIPAY_GATEWAY_TYPE.WAP, ALIPAY_GATEWAY_TYPE.PAGE].indexOf(options.gatewayType)) {
     return Promise.reject(new HError(608, 'incorrect gateway type'))
@@ -89,6 +113,15 @@ const createPayWithAlipayFn = BaaS => options => {
   return pay(BaaS, options)
 }
 
+/**
+ * QQ 支付
+ * @function
+ * @name payWithQQ
+ * @since v2.4.0
+ * @memberof BaaS.payment
+ * @param {BaaS.PaymentParams} params 参数
+ * @return {Promise<any>}
+ */
 const createPayWithQQFn = BaaS => options => {
   if (options.gatewayType !== QQ_GATEWAY_TYPE.NATIVE) {
     return Promise.reject(new HError(608, 'incorrect gateway type'))

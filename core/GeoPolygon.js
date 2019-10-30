@@ -2,7 +2,15 @@ const GeoPoint = require('./GeoPoint')
 const HError = require('./HError')
 const utils = require('./utils')
 
+/**
+ * Geo 多边形
+ * @memberof BaaS
+ * @public
+ */
 class GeoPolygon {
+  /**
+   * @param {number[][]} args 点坐标
+   */
   constructor(args) {
     if (args && args instanceof Array) {
       if (args.length < 4) {
@@ -19,6 +27,10 @@ class GeoPolygon {
     }
   }
 
+  /**
+   * 转换为 GeoJSON
+   * @return {GeoJson}
+   */
   toGeoJSON() {
     let face = []
     this.points.forEach((point) => {
