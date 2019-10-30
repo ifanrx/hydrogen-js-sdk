@@ -3,7 +3,7 @@ on:
   repository_dispatch:
   push:
     branches:
-      - generate-type-definition
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +12,6 @@ jobs:
     - name: Webhook Trigger
       uses: zzzze/webhook-trigger@v1.0.0
       with:
-        data: "{\"event_type\":\"generate-type-definition\"}"
+        data: "{\"event_type\":\"master\"}"
         webhook_url: ${{ secrets.WEBHOOK_URL_FOR_BUILD_DOCS }}
         options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.TOKEN_FOR_BUILD_DOCS }}\""

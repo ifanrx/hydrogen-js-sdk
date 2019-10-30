@@ -1,1 +1,1 @@
-/// <reference path="./types/baas-cp.d.ts" />
+/// <reference path="./types/baas.d.ts" />

@@ -123,7 +123,7 @@ buildTypesForCrossPlatform() {
 
   # merge
   j=0
-  dest=./types/baas-cp.d.ts
+  dest=./types/baas.d.ts
   for filepath in ${filepaths[*]}; do
     if [ $j -eq 0 ]; then
       echo -e "/******************************************************\n${platforms[j]}\n******************************************************/\n" > $dest
