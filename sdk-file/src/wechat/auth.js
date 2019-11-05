@@ -105,15 +105,14 @@ module.exports = BaaS => {
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
 
-        let userInfo = detail.userInfo
-        userInfo.id = storage.get(constants.STORAGE_KEY.UID)
-        userInfo.openid = storage.get(constants.STORAGE_KEY.OPENID)
-        userInfo.unionid = storage.get(constants.STORAGE_KEY.UNIONID)
-        storage.set(constants.STORAGE_KEY.USERINFO, userInfo)
         return getSensitiveData(payload)
       })
     }).then(res => {
-      BaaS._polyfill.handleLoginSuccess(res)
+      let userInfo = detail.userInfo
+      userInfo.id = res.data.user_id
+      userInfo.openid = res.data.openid
+      userInfo.unionid = res.data.unionid
+      BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
     })
   }
 
