@@ -418,4 +418,5 @@ module.exports = {
   getUpdateUserProfileParam,
   ticketReportThrottle,
   getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
+  getResendPayload: require('./getResendPayload'),
 }
