@@ -101,7 +101,6 @@ expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({}))
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({withCount: true}))
 
-
 /**
  * BaaS.ContentGroup#count
  */
@@ -144,3 +143,65 @@ expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
+
+
+
+WechatBaaS.ContentGroup.get('123456')
+QqBaaS.ContentGroup.get('123456')
+AlipayBaaS.ContentGroup.get('123456')
+BaiduBaaS.ContentGroup.get('123456')
+WebBaaS.ContentGroup.get('123456')
+
+/**
+ * ContentGroup#get
+ */
+// wechat
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.get('1234'))
+
+// qq
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.get('1234'))
+
+// alipay
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.get('1234'))
+
+// baidu
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.get('1234'))
+
+// web
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.get('1234'))
+
+
+
+WechatBaaS.ContentGroup.find()
+QqBaaS.ContentGroup.find()
+AlipayBaaS.ContentGroup.find()
+BaiduBaaS.ContentGroup.find()
+WebBaaS.ContentGroup.find()
+
+/**
+ * ContentGroup#find
+ */
+// wechat
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find())
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find({}))
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// qq
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find())
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find({}))
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// alipay
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find())
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// baidu
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find())
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// web
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find())
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find({}))
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))

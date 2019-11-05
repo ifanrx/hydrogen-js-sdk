@@ -38,9 +38,9 @@ const API = {
 
   LAGECY_CONTENT_LIST: '/hserve/v1/content/detail/',
   CONTENT_LIST: '/hserve/v2.2/content/detail/',
-  CONTENT_GROUP_LIST: '/hserve/v2.0/content/group/',
+  CONTENT_GROUP_LIST: '/hserve/v2.2/content/group/',
   CONTENT_DETAIL: '/hserve/v2.0/content/detail/:richTextID/',
-  CONTENT_GROUP_DETAIL: '/hserve/v2.0/content/group/',
+  CONTENT_GROUP_DETAIL: '/hserve/v2.2/content/group/:contentGroupID/',
   CONTENT_CATEGORY_LIST: '/hserve/v2.2/content/category/',
   CONTENT_CATEGORY_DETAIL: '/hserve/v2.0/content/category/:categoryID/',
 
