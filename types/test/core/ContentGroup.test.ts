@@ -146,12 +146,6 @@ expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
 
 
 
-WechatBaaS.ContentGroup.get('123456')
-QqBaaS.ContentGroup.get('123456')
-AlipayBaaS.ContentGroup.get('123456')
-BaiduBaaS.ContentGroup.get('123456')
-WebBaaS.ContentGroup.get('123456')
-
 /**
  * ContentGroup#get
  */
@@ -171,12 +165,6 @@ expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.get('1234'))
 expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.get('1234'))
 
 
-
-WechatBaaS.ContentGroup.find()
-QqBaaS.ContentGroup.find()
-AlipayBaaS.ContentGroup.find()
-BaiduBaaS.ContentGroup.find()
-WebBaaS.ContentGroup.find()
 
 /**
  * ContentGroup#find
