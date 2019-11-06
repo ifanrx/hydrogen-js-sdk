@@ -31,7 +31,7 @@ class ContentGroup extends BaseQuery {
    * @param {object} [options] 内容库 ID
    * @return {Promise<BaaS.Response<any>>}
    */
-  static find({offset = 0, limit = 100, withCount = false} = {}) {
+  static find({offset = 0, limit = 20, withCount = false} = {}) {
     return BaaS.getContentGroupList({offset, limit, return_total_count: withCount ? 1 : 0})
   }
 
