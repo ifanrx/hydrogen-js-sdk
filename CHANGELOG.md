@@ -1,4 +1,5 @@
 ## Underway
+- [A] 添加内容库查询接口
 - [F] 修复微信网页登录 popup-iframe 模式 iframe 设置无效的 bug
 
 ## 3.0.0 (2019-10-31)
