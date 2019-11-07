@@ -98,7 +98,11 @@ module.exports = BaaS => {
         return getSensitiveData(payload)
       })
     }).then(res => {
-      BaaS._polyfill.handleLoginSuccess(res)
+      let userInfo = detail.userInfo
+      userInfo.id = res.data.user_id
+      userInfo.openid = res.data.openid
+      userInfo.unionid = res.data.unionid
+      BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
     })
   }
 
