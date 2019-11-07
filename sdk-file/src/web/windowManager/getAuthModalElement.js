@@ -7,18 +7,18 @@ const ELEMENT_ID = {
   CLOSE_BUTTON: 'auth-iframe__close-btn',
 }
 
-let closeBtnIcon = "" +
-"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACpUlEQVR4Xu2bbVEDMRCG3yoAB4ADH" +
-"IADcAAoAAmgAFAAOMAB4AAJOAAcMMu0zLWTy71J9iOlzZ/+aGaS58nmLrnZnWHD22zD+bEVsI2AcQPHAC4BHM67vAJ4AiC/Pbfh" +
-"vL8AvAO4AfCRmvTYFjgH8DBCeQHgsVMDtwCuSuadEiAGXyYAe5QgCyYLl2sHq5GQEvAM4IRY4Z4kMPCCdL8aISkBnwB2CQHSpQc" +
-"JLLzM9w2ARPhfSwmQB8cOKSBaQgk8LYDdAkNHEZFQCk9vAeYhmAoQTwk18DJn6iEoHXOvwdzu8JBQC5+cW+4o3KMEVXhZyam7QE" +
-"8S1OEZAb1sBxN4VkC0BDP4EgFREkzhSwV4SzCHrxHgJcEFvlaAtQQ3+BYBVhJc4VsFaEtwh9cQoCUhBF5LQKuEI+JLjtnla+ooX" +
-"PBZoPoCVTLGoq/apUtTQEsklEhQg9fcAkOA2gsUI0EV3kqAVSSow1sK0JZgAm8tQEuCGbyHgFYJpvBeAmoPOTK/tRfQAq/+zk+9" +
-"ZrTPAcMxNODNJVgJ0IQ3lWAhwALeTIK2AEt4EwmaAjzg1SVoCaiFl9ectLFslNz9QOUVqSGgBX6RalN7gWqW0CpAA36xyiESWgR" +
-"owodJqBVgAR8ioUaAJby7hFIBHvCuEkoEeMK7SWAFRMC7SGAERMKbS5gS0AO8qYScgJ7gzSSMCbibp8rnzuKp/5qPpsSAqifG2m" +
-"zxKPjWSKASJdclVbYmEqTgYymlvjVb3OXLbWZblEqgssWltGSP2IvR8DXbgRIgd/QzQoDHA4+Yxm8XNhKoggkmW7wneDYSvucFY" +
-"EvFU/+taGosEgT+NFXxljsI7QO4BiC/0qT8TM4HyfIzNlYd+kmZn1SOUfOeOgo7zDd2iK2AWP/xo298BPwAGl7JQYFN8oYAAAAA" +
-"SUVORK5CYII="
+let closeBtnIcon = '' +
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACpUlEQVR4Xu2bbVEDMRCG3yoAB4ADH' +
+'IADcAAoAAmgAFAAOMAB4AAJOAAcMMu0zLWTy71J9iOlzZ/+aGaS58nmLrnZnWHD22zD+bEVsI2AcQPHAC4BHM67vAJ4AiC/Pbfh' +
+'vL8AvAO4AfCRmvTYFjgH8DBCeQHgsVMDtwCuSuadEiAGXyYAe5QgCyYLl2sHq5GQEvAM4IRY4Z4kMPCCdL8aISkBnwB2CQHSpQc' +
+'JLLzM9w2ARPhfSwmQB8cOKSBaQgk8LYDdAkNHEZFQCk9vAeYhmAoQTwk18DJn6iEoHXOvwdzu8JBQC5+cW+4o3KMEVXhZyam7QE' +
+'8S1OEZAb1sBxN4VkC0BDP4EgFREkzhSwV4SzCHrxHgJcEFvlaAtQQ3+BYBVhJc4VsFaEtwh9cQoCUhBF5LQKuEI+JLjtnla+ooX' +
+'PBZoPoCVTLGoq/apUtTQEsklEhQg9fcAkOA2gsUI0EV3kqAVSSow1sK0JZgAm8tQEuCGbyHgFYJpvBeAmoPOTK/tRfQAq/+zk+9' +
+'ZrTPAcMxNODNJVgJ0IQ3lWAhwALeTIK2AEt4EwmaAjzg1SVoCaiFl9ectLFslNz9QOUVqSGgBX6RalN7gWqW0CpAA36xyiESWgR' +
+'owodJqBVgAR8ioUaAJby7hFIBHvCuEkoEeMK7SWAFRMC7SGAERMKbS5gS0AO8qYScgJ7gzSSMCbibp8rnzuKp/5qPpsSAqifG2m' +
+'zxKPjWSKASJdclVbYmEqTgYymlvjVb3OXLbWZblEqgssWltGSP2IvR8DXbgRIgd/QzQoDHA4+Yxm8XNhKoggkmW7wneDYSvucFY' +
+'EvFU/+taGosEgT+NFXxljsI7QO4BiC/0qT8TM4HyfIzNlYd+kmZn1SOUfOeOgo7zDd2iK2AWP/xo298BPwAGl7JQYFN8oYAAAAA' +
+'SUVORK5CYII='
 
 const createAuthModal = () => {
   container = document.createElement('div')
@@ -80,7 +80,7 @@ const getAuthModalElement = modalStyle => {
     setStyle(container, modalStyle.container)
   }
   if (modalStyle && modalStyle.iframe) {
-    setStyle(container, modalStyle.iframe)
+    setStyle(iframe, modalStyle.iframe)
   }
   if (modalStyle && modalStyle.closeButton) {
     setStyle(closeBtn, modalStyle.closeButton)

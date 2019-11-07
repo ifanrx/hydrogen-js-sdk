@@ -101,7 +101,6 @@ expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({}))
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList({withCount: true}))
 
-
 /**
  * BaaS.ContentGroup#count
  */
@@ -144,3 +143,53 @@ expectType<Promise<BaiduBaaS.Response<any>>>(MyContentGroupBaidu.getCategoryList
 
 // web
 expectType<Promise<WebBaaS.Response<any>>>(MyContentGroupWeb.getCategoryList())
+
+
+
+/**
+ * ContentGroup#get
+ */
+// wechat
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.get('1234'))
+
+// qq
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.get('1234'))
+
+// alipay
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.get('1234'))
+
+// baidu
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.get('1234'))
+
+// web
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.get('1234'))
+
+
+
+/**
+ * ContentGroup#find
+ */
+// wechat
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find())
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find({}))
+expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// qq
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find())
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find({}))
+expectType<Promise<QqBaaS.Response<any>>>(qq.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// alipay
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find())
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find({}))
+expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// baidu
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find())
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find({}))
+expectType<Promise<BaiduBaaS.Response<any>>>(swan.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))
+
+// web
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find())
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find({}))
+expectType<Promise<WebBaaS.Response<any>>>(window.BaaS.ContentGroup.find({offset: 0, limit: 20, withCount: true}))

@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -46,10 +46,6 @@
     "url": "https://github.com/ifanrx/repository/issues"
   },
   "homepage": "https://github.com/ifanrx/repository#readme",
-  "versions": {
-    "alipay": "3.0.0",
-    "web": "3.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-object-assign": "^7.2.0",

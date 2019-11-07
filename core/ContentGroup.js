@@ -18,11 +18,29 @@ class ContentGroup extends BaseQuery {
   }
 
   /**
+   * 获取内容库详情。
+   * @param {string} id 内容库 ID
+   * @return {Promise<BaaS.Response<any>>}
+   */
+  static get(id) {
+    return BaaS.getContentGroup({contentGroupID: id})
+  }
+
+  /**
+   * 获取内容库列表。
+   * @param {object} [options] 内容库 ID
+   * @return {Promise<BaaS.Response<any>>}
+   */
+  static find({offset = 0, limit = 20, withCount = false} = {}) {
+    return BaaS.getContentGroupList({offset, limit, return_total_count: withCount ? 1 : 0})
+  }
+
+  /**
    * 获取内容。
    * @method
    * @param {string} richTextID 内容 ID
    * @return {Promise<BaaS.Response<any>>}
-   */
+   */  
   getContent(richTextID) {
     let params = {richTextID}
     if (this._expand) {

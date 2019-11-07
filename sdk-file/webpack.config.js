@@ -15,8 +15,8 @@ let plugins = [
     __VERSION_WECHAT__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_QQ__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_BAIDU__: JSON.stringify(`v${(pkg.version)}`),
-    __VERSION_WEB__: JSON.stringify(`v${(pkg.versions.web)}`),
-    __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.versions.alipay)}`),
+    __VERSION_WEB__: JSON.stringify(`v${(pkg.version)}`),
+    __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.version)}`),
   }),
 
   ...copyFilesForDev.map(item => new CopyOutputFilePlugin({
@@ -34,7 +34,7 @@ let plugins = [
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
         let config = require('./webpack/genTyepsConfig')
         shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
-      });
+      })
     }
   },
 ]
@@ -52,7 +52,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: isDEV || isCI ? 'sdk-[name].dev.js' : function (entry) {
-      let version = pkg.versions[entry.chunk.name] || pkg.version
+      let version = pkg.version
       return `sdk-[name].${version}.js`
     },
     library: 'BaaS',
