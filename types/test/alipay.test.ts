@@ -7,8 +7,10 @@ my.BaaS.auth.loginWithAlipay()
 my.BaaS.auth.loginWithAlipay({forceLogin: true})
 my.BaaS.auth.loginWithAlipay({scopes: ['test']})
 my.BaaS.auth.loginWithAlipay({createUser: false})
-my.BaaS.auth.loginWithAlipay({syncUserProfile: false})
-my.BaaS.auth.loginWithAlipay({forceLogin: true, scopes: ['test'], createUser: false, syncUserProfile: false})
+my.BaaS.auth.loginWithAlipay({syncUserProfile: 'overwrite'})
+my.BaaS.auth.loginWithAlipay({syncUserProfile: 'setnx'})
+my.BaaS.auth.loginWithAlipay({syncUserProfile: 'false'})
+my.BaaS.auth.loginWithAlipay({forceLogin: true, scopes: ['test'], createUser: false, syncUserProfile: 'overwrite'})
 my.BaaS.auth.loginWithAlipay().then(user => expectType<AlipayBaaS.CurrentUser>(user))
 
 

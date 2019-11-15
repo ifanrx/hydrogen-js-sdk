@@ -72,36 +72,41 @@ expectType<Promise<WebBaaS.CurrentUser>>(window.BaaS.auth.register({phone: '1234
 // wechat
 wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456')
 wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true})
-wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
-wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
+wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'overwrite'})
+wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'setnx'})
+wx.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'false'})
   .then(res => expectType<WechatBaaS.CurrentUser>(res))
 
 // qq
 qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456')
 qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true})
-qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
-qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
+qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'overwrite'})
+qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'setnx'})
+qq.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'false'})
   .then(res => expectType<QqBaaS.CurrentUser>(res))
 
 // alipay
 my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456')
 my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true})
-my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
-my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
+my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'overwrite'})
+my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'setnx'})
+my.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'false'})
   .then(res => expectType<AlipayBaaS.CurrentUser>(res))
 
 // baidu
 swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456')
 swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true})
-swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
-swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
+swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'overwrite'})
+swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'setnx'})
+swan.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'false'})
   .then(res => expectType<BaiduBaaS.CurrentUser>(res))
 
 // web
 window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456')
 window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true})
-window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
-window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: false})
+window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'overwrite'})
+window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'setnx'})
+window.BaaS.auth.loginWithSmsVerificationCode('15000000000', '123456', {createUser: true, syncUserProfile: 'false'})
   .then(res => expectType<WebBaaS.CurrentUser>(res))
 
 /**
