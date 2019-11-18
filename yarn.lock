@@ -1923,7 +1923,7 @@ commander@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
-commander@^2.20.0:
+commander@^2.20.0, commander@^2.8.1:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
 
@@ -3043,6 +3043,15 @@ fs-extra@^3.0.0:
     jsonfile "^3.0.0"
     universalify "^0.1.0"
 
+fs-extra@^7.0.0:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
+  integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 fs-minipass@^1.2.5:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-1.2.7.tgz#ccff8570841e7fe4265693da88936c55aed7f7c7"
@@ -3950,6 +3959,15 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
+jsdoc-plantuml@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jsdoc-plantuml/-/jsdoc-plantuml-1.0.1.tgz#aecc7be808149303beeea657b82bd6e874cdb440"
+  integrity sha512-H8cejF66zQy/dTSr3W7AJRv8Vt8yTSojhlwoYxtzDDfOEPMt9McvfiGe5Uc4TklEB2QeelIxzmdqtHzBK5KcOw==
+  dependencies:
+    fs-extra "^7.0.0"
+  optionalDependencies:
+    node-plantuml "~0.8.1"
+
 jsdoc-typeof-plugin@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/jsdoc-typeof-plugin/-/jsdoc-typeof-plugin-1.0.0.tgz#d9b621d1c63b607116d53b20d73f87a2f917a51f"
@@ -4059,6 +4077,13 @@ json5@^2.1.0:
 jsonfile@^3.0.0:
   version "3.0.1"
   resolved "http://registry.npm.taobao.org/jsonfile/download/jsonfile-3.0.1.tgz#a5ecc6f65f53f662c4415c7675a0331d0992ec66"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
+jsonfile@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
+  integrity sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=
   optionalDependencies:
     graceful-fs "^4.1.6"
 
@@ -4772,6 +4797,30 @@ node-localstorage@^1.3.0:
   dependencies:
     write-file-atomic "^1.1.4"
 
+node-nailgun-client@^0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/node-nailgun-client/-/node-nailgun-client-0.1.2.tgz#c8ee2f8226664020192e4936cacaadf9aa13ae29"
+  integrity sha512-OC611lR0fsDUSptwnhBf8d3sj4DZ5fiRKfS2QaGPe0kR3Dt9YoZr1MY7utK0scFPTbXuQdSBBbeoKYVbME1q5g==
+  dependencies:
+    commander "^2.8.1"
+
+node-nailgun-server@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/node-nailgun-server/-/node-nailgun-server-0.1.4.tgz#80cbf1af37611030c60aa88be72d657994df50d4"
+  integrity sha512-e0Hbh6XPb/7GqATJ45BePaUEO5AwR7InRW/pGeMKHH1cqPMBFCeqdBNfvi+bkVLnsbYOOQE+pAek9nmNoD8sYw==
+  dependencies:
+    commander "^2.8.1"
+
+node-plantuml@~0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/node-plantuml/-/node-plantuml-0.8.1.tgz#966c2155a7349666dc309dfce51207af800dc6cb"
+  integrity sha512-sEI9j61MLunxkV0QTUyycanLhk9qP23iEkv4IBT+bcndR8qJ1hm9TCD21I0cK5XyBCXNQ3gywXKujHWDojwcQg==
+  dependencies:
+    commander "^2.8.1"
+    node-nailgun-client "^0.1.0"
+    node-nailgun-server "^0.1.4"
+    plantuml-encoder "^1.2.5"
+
 node-pre-gyp@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.12.0.tgz#39ba4bb1439da030295f899e3b520b7785766149"
@@ -5286,6 +5335,11 @@ pkg-dir@^4.2.0:
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz#f099133df7ede422e81d1d8448270eeb3e4261f3"
   dependencies:
     find-up "^4.0.0"
+
+plantuml-encoder@^1.2.5:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/plantuml-encoder/-/plantuml-encoder-1.4.0.tgz#7899302cf785de956bf1a167e15420feee5975f7"
+  integrity sha512-sxMwpDw/ySY1WB2CE3+IdMuEcWibJ72DDOsXLkSmEaSzwEUaYBT6DWgOfBiHGCux4q433X6+OEFWjlVqp7gL6g==
 
 plur@^2.1.2:
   version "2.1.2"

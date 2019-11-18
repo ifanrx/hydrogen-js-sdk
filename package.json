@@ -58,6 +58,7 @@
     "eslint": "4.19.1",
     "faker": "^4.1.0",
     "jsdoc": "^3.6.3",
+    "jsdoc-plantuml": "^1.0.1",
     "jsdoc-typeof-plugin": "^1.0.0",
     "jsdom": "^15.0.0",
     "json-format": "^1.0.1",
