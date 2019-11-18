@@ -29,6 +29,10 @@ function tryResendRequest(payload) {
 const baasRequest = function ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) {
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
 
+  if (BaaS._config.ENV) {
+    header[utils.ENV_HEADER_KEY] = BaaS._config.ENV
+  }
+
   return beforeRequestPromise.then(() => {
     return BaaS.request.apply(null, arguments)
   }).then(res => {

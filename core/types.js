@@ -5,6 +5,7 @@
  * @property {boolean} [autoLogin] - 是否自动登录
  * @property {string} [logLevel] - 日志输出等级
  * @property {string} [host] - 接口域名
+ * @property {string} [env] - 开发环境 ID
  */
 
 /**

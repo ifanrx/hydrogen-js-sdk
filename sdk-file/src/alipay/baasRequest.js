@@ -3,6 +3,11 @@ const utils = require('core-module/utils')
 
 const createBaasRequestFn = BaaS => (args) => {
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
+  if (BaaS._config.ENV) {
+    args.header = Object.assign({}, args.header, {
+      [utils.ENV_HEADER_KEY]: BaaS._config.ENV
+    })
+  }
   return beforeRequestPromise
     .then(() => BaaS.request(args))
     .then(utils.validateStatusCode)

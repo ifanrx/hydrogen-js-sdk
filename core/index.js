@@ -12,7 +12,12 @@ module.exports = function (BaaS) {
    * @param {string} clientID - 知晓云应用的 client id
    * @param {BaaS.InitOptions} [options] - 其他选项
    */
-  BaaS.init = (clientID, {autoLogin = false, logLevel = '', host = ''} = {}) => {
+  BaaS.init = (clientID, {
+    autoLogin = false,
+    logLevel = '',
+    host = '',
+    env
+  } = {}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
     }
@@ -20,6 +25,7 @@ module.exports = function (BaaS) {
       utils.setLogLevel(logLevel)
     }
     BaaS._config.AUTO_LOGIN = autoLogin
+    BaaS._config.ENV = env
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = host
     BaaS._polyfill.checkLatestVersion()

@@ -24,6 +24,10 @@ module.exports = function (BaaS) {
         return reject(new HError(602))
       }
 
+      if (BaaS._config.ENV) {
+        header[utils.ENV_HEADER_KEY] = BaaS._config.ENV
+      }
+
       if (!/https?:\/\//.test(url)) {
         const API_HOST = BaaS._polyfill.getAPIHost()
         url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
