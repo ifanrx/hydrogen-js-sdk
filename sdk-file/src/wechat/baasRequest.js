@@ -29,7 +29,7 @@ const baasRequest = function ({url, method = 'GET', data = {}, header = {}, data
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
 
   return beforeRequestPromise.then(() => {
-    return BaaS.request.apply(null, [{url, method, data, header, dataType}])
+    return BaaS.request.call(null, {url, method, data, header, dataType})
   }).then(res => {
     if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
       return tryResendRequest({header, method, url, data, dataType})

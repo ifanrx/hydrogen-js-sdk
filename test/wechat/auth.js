@@ -182,6 +182,8 @@ describe('auth', () => {
             expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
               url: config.API.WECHAT.USER_ASSOCIATE,
               method: 'POST',
+              dataType: 'json',
+              header: {},
               data: {
                 encryptedData: '',
                 iv: '',
@@ -204,6 +206,8 @@ describe('auth', () => {
           expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
             url: config.API.WECHAT.USER_ASSOCIATE,
             method: 'POST',
+            dataType: 'json',
+            header: {},
             data: {
               code: wechatMock.__get__('code'),
             }
