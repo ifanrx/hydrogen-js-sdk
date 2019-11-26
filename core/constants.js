@@ -124,6 +124,4 @@ module.exports = {
     QQ: 'qq_miniapp',
     BAIDU: 'baidu_miniapp',
   },
-
-  ENV_HEADER_KEY: 'HTTP_X_HYDROGEN_ENV_ID'
 }

@@ -28,12 +28,8 @@ function tryResendRequest(payload) {
 const baasRequest = function ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) {
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
 
-  if (BaaS._config.ENV) {
-    header[utils.ENV_HEADER_KEY] = BaaS._config.ENV
-  }
-
   return beforeRequestPromise.then(() => {
-    return BaaS.request.apply(null, arguments)
+    return BaaS.request.apply(null, [{url, method, data, header, dataType}])
   }).then(res => {
     if (res.statusCode === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
       return tryResendRequest({header, method, url, data, dataType})

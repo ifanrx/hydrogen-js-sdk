@@ -279,6 +279,10 @@ const mergeRequestHeader = header => {
     'X-Hydrogen-Client-SDK-Type': BaaS._polyfill.SDK_TYPE,
   }
 
+  if (BaaS._config.ENV) {
+    header['X-Hydrogen-Env-ID'] = BaaS._config.ENV
+  }
+
   let authToken = BaaS.getAuthToken()
   if (authToken) {
     extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
