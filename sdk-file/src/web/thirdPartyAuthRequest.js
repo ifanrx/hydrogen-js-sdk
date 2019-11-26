@@ -25,7 +25,7 @@ let thirdPartyAuthRequest = (options = {}) => {
         return resolve(event.data)
       }
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.FAIL) {
-        utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> fail, result: ${JSON.stringify(event.data)}`, )
+        utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> fail, result: ${JSON.stringify(event.data)}`)
         if (!options.debug) {
           window.removeEventListener('message', handleRecieveMessage, false)
           authWindow.close()
@@ -38,7 +38,7 @@ let thirdPartyAuthRequest = (options = {}) => {
       return reject(new HError(613))
     }
     window.addEventListener('message', handleRecieveMessage, false)
-    authWindow = windowManager.create(options.mode, {...options, onClose})
+    authWindow = windowManager.create(options.mode, Object.assign({}, options, { onClose }))
     authWindow.open()
   })
 }

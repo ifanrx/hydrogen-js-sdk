@@ -42,6 +42,7 @@ module.exports = BaaS => {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
+        tplMsgStatsReport.reportStats()
       }
     },
   })
