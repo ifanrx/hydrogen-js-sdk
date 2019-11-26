@@ -28,7 +28,7 @@ const createGetRedirectResultFn = BaaS => () => {
   ) {
     history.replaceState && history.replaceState(null, '', url.toString())
     return BaaS.auth.getCurrentUser().then(user => {
-      return Object.assign({}, authResult, user)
+      return Object.assign({}, authResult, {user})
     })
   } else {
     history.replaceState && history.replaceState(null, '', url.toString())
