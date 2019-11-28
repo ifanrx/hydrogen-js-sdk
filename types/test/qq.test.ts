@@ -6,12 +6,14 @@ import {expectType} from 'tsd'
 qq.BaaS.auth.loginWithQQ()
 qq.BaaS.auth.loginWithQQ(null)
 qq.BaaS.auth.loginWithQQ(null, {})
-qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: false})
-qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: false, createUser: true})
+qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: 'overwrite'})
+qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: 'setnx'})
+qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: 'false'})
+qq.BaaS.auth.loginWithQQ(null, {syncUserProfile: 'false', createUser: true})
 qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}})
 qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {})
-qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: false})
-qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: false, createUser: true})
+qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'false'})
+qq.BaaS.auth.loginWithQQ({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'false', createUser: true})
 qq.BaaS.auth.loginWithQQ().then(user => expectType<QqBaaS.CurrentUser>(user))
 
 

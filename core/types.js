@@ -53,7 +53,11 @@
  * @typedef {Object} LoginOptions
  * @memberof BaaS
  * @property {boolean} [createUser] 是否创建用户
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  */
 
 /**
@@ -62,14 +66,22 @@
  * @memberof BaaS
  * @property {BaaS.UserInfoDetail} options.detail 用户信息
  * @property {boolean} [createUser] 是否创建用户
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  */
 
 /**
  * 关联账号可选参数
  * @typedef {Object} LinkOptions
  * @memberof BaaS
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  */
 
 /**
@@ -275,9 +287,9 @@
  * 设置账号参数
  * @typedef SetAccountParmas
  * @memberof BaaS
- * @property {string} [username] 用户名
- * @property {string} [email] 邮箱
- * @property {string} [password] 密码
+ * @property {string|null} [username] 用户名
+ * @property {string|null} [email] 邮箱
+ * @property {string|null} [password] 密码
  */
 
 /**
@@ -314,13 +326,21 @@
  * @typedef LinkAlipayParams
  * @memberof BaaS
  * @property {boolean} [forceLogin] 是否强制登录
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  */
 
 /**
  * @typedef LinkThirdPartyParams
  * @memberof BaaS
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  * @property {boolean} [debug] 是否开启 debug 模式
  * @property {'popup-window'|'popup-iframe'|'redirect'} [mode] 授权窗口打开模式
  * @property {Object} [authModalStyle] popup-iframe 模式下，授权模态框的样式

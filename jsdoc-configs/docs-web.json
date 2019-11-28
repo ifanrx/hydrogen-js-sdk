@@ -1,5 +1,19 @@
 {
-  "plugins": ["plugins/overloadHelper"],
+  "plugins": [
+    "plugins/overloadHelper",
+    "jsdoc-plantuml"
+  ],
+  "plantuml": {
+    "puml": {
+      "create": true,
+      "destination": "docs/puml"
+    },
+    "images": {
+      "create": true,
+      "destination": "docs/images",
+      "defaultFormat": "png"
+    }
+  },
   "opts": {
     "encoding": "utf8",
     "destination": "./docs/web",

@@ -1,3 +1,4 @@
+const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
@@ -41,6 +42,7 @@ module.exports = BaaS => {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
+        tplMsgStatsReport.reportStats()
       }
     },
   })

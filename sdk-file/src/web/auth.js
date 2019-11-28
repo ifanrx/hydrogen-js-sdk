@@ -28,7 +28,7 @@ const createGetRedirectResultFn = BaaS => () => {
   ) {
     history.replaceState && history.replaceState(null, '', url.toString())
     return BaaS.auth.getCurrentUser().then(user => {
-      return {...authResult, user}
+      return Object.assign({}, authResult, {user})
     })
   } else {
     history.replaceState && history.replaceState(null, '', url.toString())
@@ -203,7 +203,48 @@ const createThirdPartyAuthFn = BaaS => () => {
 }
 
 /**
- * 第三方登录
+ * 第三方登录<br />
+ * <br />
+ * 弹窗模式时序图：<br />
+ * <img src="../images/login-with-third-party.png"><br />
+ * <br />
+ * 跳转模式时序图：<br />
+ * <img src="../images/login-with-third-party-redirect.png"><br />
+ *
+ * @startuml login-with-third-party-popup.png
+ *   用户 -> 发起登录的页面: 调用 loginWithThirdParty
+ *   发起登录的页面 -> 授权页面: 打开
+ *   授权页面 -> 授权页面: 调用 thirdPartyAuth
+ *   授权页面 -> 第三方授权页面: 页面跳转
+ *   第三方授权页面 -> 用户: 请求授权
+ *   用户 -> 第三方授权页面: 授权
+ *   第三方授权页面 -> 授权页面: 页面跳转（with token）
+ *   授权页面 -> 授权页面: 调用 thirdPartyAuth
+ *   授权页面 -> 后端: 请求 login 接口
+ *   后端 -> 授权页面: 返回登录结果
+ *   授权页面 -> 发起登录的页面: 返回登录结果
+ *   发起登录的页面 -> 用户: 返回登录结果
+ * @enduml
+ *
+ * @startuml login-with-third-party-redirect.png
+ *   用户 -> 发起登录的页面: 调用 getRedirectResult
+ *   发起登录的页面 -> 用户: 未找到登录结果
+ *   用户 -> 发起登录的页面: 调用 loginWithThirdParty
+ *   发起登录的页面 -> 授权页面: 跳转
+ *   授权页面 -> 授权页面: 调用 thirdPartyAuth
+ *   授权页面 -> 第三方授权页面: 页面跳转
+ *   第三方授权页面 -> 用户: 请求授权
+ *   用户 -> 第三方授权页面: 授权
+ *   第三方授权页面 -> 授权页面: 页面跳转（with token）
+ *   授权页面 -> 授权页面: 调用 thirdPartyAuth
+ *   授权页面 -> 后端: 请求 login 接口
+ *   后端 -> 授权页面: 返回登录结果
+ *   授权页面 -> 发起登录的页面: 跳转回登录页面
+ *   发起登录的页面 -> 用户: 返回登录结果
+ *   用户 -> 发起登录的页面: 调用 getRedirectResult
+ *   发起登录的页面 -> 用户: 返回登录结果
+ * @enduml
+ *
  * @function
  * @name loginWithThirdParty
  * @since v2.1.0
@@ -214,7 +255,11 @@ const createThirdPartyAuthFn = BaaS => () => {
  * @return {Promise<BaaS.CurrentUser>}
  */
 const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}) => {
-  return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN})
+  return thirdPartyAuthRequest(Object.assign({}, options, {
+    provider,
+    authPageUrl,
+    handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN,
+  }))
     .then(() => BaaS.auth.getCurrentUser())
 }
 

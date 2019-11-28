@@ -55,5 +55,9 @@
  * @property {boolean} [forceLogin] 是否强制登录
  * @property {string[]} [scopes] 需要用户授权的 scope 列表
  * @property {boolean} [createUser] 是否创建用户
- * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
  */
