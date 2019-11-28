@@ -28,7 +28,7 @@ const createGetRedirectResultFn = BaaS => () => {
   ) {
     history.replaceState && history.replaceState(null, '', url.toString())
     return BaaS.auth.getCurrentUser().then(user => {
-      return {...authResult, user}
+      return Object.assign({}, authResult, {user})
     })
   } else {
     history.replaceState && history.replaceState(null, '', url.toString())
@@ -255,7 +255,11 @@ const createThirdPartyAuthFn = BaaS => () => {
  * @return {Promise<BaaS.CurrentUser>}
  */
 const createLoginWithThirdPartyFn = BaaS => (provider, authPageUrl, options = {}) => {
-  return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN})
+  return thirdPartyAuthRequest(Object.assign({}, options, {
+    provider,
+    authPageUrl,
+    handler: constants.THIRD_PARTY_AUTH_HANDLER.LOGIN,
+  }))
     .then(() => BaaS.auth.getCurrentUser())
 }
 

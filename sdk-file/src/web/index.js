@@ -7,7 +7,7 @@ const BaaS = require('core-module/baas')
 
 // 兼容 ie
 if (window.location && !window.location.origin) {
-  window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+  window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port: '')
 }
 
 BaaS._config.VERSION = __VERSION_WEB__

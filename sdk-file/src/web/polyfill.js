@@ -1,5 +1,4 @@
 const constants = require('core-module/constants')
-const utils = require('core-module/utils')
 let thirdPartyAuthRequest = require('./thirdPartyAuthRequest')
 
 module.exports = function (BaaS) {
@@ -32,7 +31,11 @@ module.exports = function (BaaS) {
       }
     },
     linkThirdParty(provider, authPageUrl, options = {}) {
-      return thirdPartyAuthRequest({...options, provider, authPageUrl, handler: constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE})
+      return thirdPartyAuthRequest(Object.assign({}, options, {
+        provider,
+        authPageUrl,
+        handler: constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE,
+      }))
     },
   })
 }

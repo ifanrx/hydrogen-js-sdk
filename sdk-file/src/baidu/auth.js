@@ -13,7 +13,7 @@ module.exports = BaaS => {
         success: res => {
           resolve(res.code)
         },
-        fail: (err) => {
+        fail: () => {
           BaaS.request.swanRequestFail(reject)
         },
       })
