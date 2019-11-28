@@ -5,6 +5,7 @@ const API = BaaS._config.API
 /**
  * 获取异步操作执行结果
  * @function
+ * @name getAsyncJobResult
  * @memberof BaaS
  * @param {number} operationID 异步操作 ID
  * @return {Promise<BaaS.Response<any>>}

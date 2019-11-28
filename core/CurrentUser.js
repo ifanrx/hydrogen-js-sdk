@@ -30,6 +30,18 @@ class CurrentUser extends UserRecord {
   }
 
   /**
+   * 修改 account 信息（username、email、phone）后，后端返回的数据（{ username: '***', phone: '***', email: '***' }）
+   * 与 getCurrentUser 返回的数据（{ _username: '***', _phone: '***', _email: '***' }）在字段名上有差异，所以需要做一下处理。
+   *
+   * @private
+   */
+  _mergeAccountInfo(info) {
+    Object.keys(info).forEach(key => {
+      this._attribute[`_${key}`] = info[key]
+    })
+  }
+
+  /**
    * 以 JSON Object 的形式返回用户信息
    * @returns {Object} 用户信息
    */
@@ -149,7 +161,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 更新邮箱
-   * @param {string} email email 地址
+   * @param {string|null} email email 地址
    * @param {SetEmailOptions} [options] 可选参数
    * @returns {Promise<this>} UserRecord 实例
    */
@@ -165,14 +177,14 @@ class CurrentUser extends UserRecord {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
-      Object.assign(this._attribute, res.data)
+      this._mergeAccountInfo(res.data)
       return this
     })
   }
 
   /**
    * 更新用户名
-   * @param {string} username 用户名
+   * @param {string|null} username 用户名
    * @returns {Promise<this>} UserRecord 实例
    */
   setUsername(username) {
@@ -184,7 +196,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: {username},
     }).then(res => {
-      Object.assign(this._attribute, res.data)
+      this._mergeAccountInfo(res.data)
       return this
     })
   }
@@ -222,7 +234,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: accountInfo,
     }).then(res => {
-      Object.assign(this._attribute, res.data)
+      this._mergeAccountInfo(res.data)
       return this
     })
   }
@@ -230,7 +242,7 @@ class CurrentUser extends UserRecord {
 
   /**
    * 更改手机号
-   * @param {string} phone 手机号码
+   * @param {string|null} phone 手机号码
    * @returns {Promise<this>} UserRecord 实例
    */
   setMobilePhone(phone) {
@@ -242,7 +254,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: {phone},
     }).then(res => {
-      Object.assign(this._attribute, res.data)
+      this._mergeAccountInfo(res.data)
       return this
     })
   }

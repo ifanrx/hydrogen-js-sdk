@@ -16,6 +16,7 @@ const API = {
   PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   LOGOUT: '/hserve/v2.0/session/destroy/',
+  SERVER_TIME: '/hserve/v2.2/server/time/',
 
   UPLOAD: '/hserve/v2.1/upload/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
