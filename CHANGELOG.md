@@ -1,4 +1,4 @@
-## Underway
+## 3.2.0 (2019-11-28)
 - [A] 添加获取服务器时间接口
 - [M] 支持设置 account 信息为 null
 - [F] 修复 syncUserProfile 参数类型注释错误的 bug
