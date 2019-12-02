@@ -119,6 +119,7 @@ describe('withRetry', () => {
       .onCall(1).throws()
       .returns()
     withRetry(fn)('a', 'b', 'c', 1, 2, 3)
+    expect(fn.callCount).to.be.equal(3)
     expect(fn).always.calledWith('a', 'b', 'c', 1, 2, 3)
 
     // async
@@ -129,6 +130,7 @@ describe('withRetry', () => {
       .onCall(3).rejects()
       .resolves()
     return withRetry(fnAsync)(1, 2, 3, 'a', 'b', 'c').then(() => {
+      expect(fnAsync.callCount).to.be.equal(5)
       expect(fnAsync).always.calledWith(1, 2, 3, 'a', 'b', 'c')
     })
   })
