@@ -1,8 +1,5 @@
 {
-  "plugins": [
-    "plugins/overloadHelper",
-    "jsdoc-plantuml"
-  ],
+  "plugins": ["plugins/overloadHelper"],
   "plantuml": {
     "puml": {
       "create": true,
