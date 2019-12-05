@@ -1,4 +1,4 @@
-## Standby
+## 3.3.0 (2019-12-05)
 - [A] QQ SDK qq.setStorageSync、qq.getStorageSync 接口增加重试机制
 - [M] 升级 user/account 接口
 - [F] 修复自动登录并重发请求后，获取不到请求结果的 bug
