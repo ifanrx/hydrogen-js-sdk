@@ -12,7 +12,7 @@ const API = {
   LOGIN_SMS: '/hserve/v2.1/login/sms/',
   EMAIL_VERIFY: '/hserve/v2.0/user/email-verify/',
   VERIFY_MOBILE: '/hserve/v2.1/sms-phone-verification/',
-  ACCOUNT_INFO: '/hserve/v2.1/user/account/',
+  ACCOUNT_INFO: '/hserve/v2.2/user/account/',
   PASSWORD_RESET: '/hserve/v2.0/user/password/reset/',
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   LOGOUT: '/hserve/v2.0/session/destroy/',

@@ -1,5 +1,7 @@
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
+const utils = require('core-module/utils')
+
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     wxLogin(...args) {
@@ -13,20 +15,10 @@ module.exports = BaaS => {
     },
     CLIENT_PLATFORM: 'WECHAT',
     setStorageSync(k, v) {
-      // 增加重试
-      // https://developers.weixin.qq.com/community/develop/doc/a352fb32bfc76cb6a6438925e4edf9b1
-      try {
-        return wx.setStorageSync(k, v)
-      } catch (err) {
-        return wx.setStorageSync(k, v)
-      }
+      return utils.withRetry(wx.setStorageSync)(k, v)
     },
     getStorageSync(k) {
-      try {
-        return wx.getStorageSync(k)
-      } catch (e) {
-        return wx.getStorageSync(k)
-      }
+      return utils.withRetry(wx.getStorageSync)(k)
     },
     getSystemInfoSync() {
       return wx.getSystemInfoSync()
