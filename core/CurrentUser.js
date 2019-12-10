@@ -20,24 +20,16 @@ class CurrentUser extends UserRecord {
     if (!utils.isObject(attribute)) {
       return new HError(605)
     }
+    this.initAttribute(attribute)
+  }
+
+  initAttribute(attribute) {
     this._attribute = Object.assign({}, attribute)
     Object.keys(attribute).forEach(key => {
       // 以下划线开头或者是原有内置字段将直接添加在该对象上
       if (key[0] === '_' || USER_PROFILE_BUILD_IN_FIELDS.includes(key)) {
         this[key] = attribute[key]
       }
-    })
-  }
-
-  /**
-   * 修改 account 信息（username、email、phone）后，后端返回的数据（{ username: '***', phone: '***', email: '***' }）
-   * 与 getCurrentUser 返回的数据（{ _username: '***', _phone: '***', _email: '***' }）在字段名上有差异，所以需要做一下处理。
-   *
-   * @private
-   */
-  _mergeAccountInfo(info) {
-    Object.keys(info).forEach(key => {
-      this._attribute[`_${key}`] = info[key]
     })
   }
 
@@ -177,7 +169,7 @@ class CurrentUser extends UserRecord {
       if (sendVerificationEmail) {
         this.requestEmailVerification(email)
       }
-      this._mergeAccountInfo(res.data)
+      this.initAttribute(res.data)
       return this
     })
   }
@@ -196,7 +188,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: {username},
     }).then(res => {
-      this._mergeAccountInfo(res.data)
+      this.initAttribute(res.data)
       return this
     })
   }
@@ -234,7 +226,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: accountInfo,
     }).then(res => {
-      this._mergeAccountInfo(res.data)
+      this.initAttribute(res.data)
       return this
     })
   }
@@ -254,7 +246,7 @@ class CurrentUser extends UserRecord {
       method: 'PUT',
       data: {phone},
     }).then(res => {
-      this._mergeAccountInfo(res.data)
+      this.initAttribute(res.data)
       return this
     })
   }

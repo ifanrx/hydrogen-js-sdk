@@ -1,13 +1,15 @@
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
+const utils = require('core-module/utils')
+
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'QQ',
     setStorageSync(k, v) {
-      return qq.setStorageSync(k, v)
+      return utils.withRetry(qq.setStorageSync)(k, v)
     },
     getStorageSync(k) {
-      return qq.getStorageSync(k)
+      return utils.withRetry(qq.getStorageSync)(k)
     },
     getSystemInfoSync() {
       return qq.getSystemInfoSync()
