@@ -4,9 +4,9 @@ function getWeixinJSBridge(timeout = 10 * 1000) {
     let timerId = setTimeout(() => reject(), timeout)
     function onBridgeReady(){
       clearTimeout(timerId)
-      resolve(WeixinJSBridge)
+      resolve(WeixinJSBridge) // eslint-disable-line no-undef
     }
-    if (typeof WeixinJSBridge == "undefined"){
+    if (typeof WeixinJSBridge == 'undefined'){
       if(document.addEventListener){
         document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
       } else if (document.attachEvent){

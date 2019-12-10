@@ -17,7 +17,7 @@ function tryResendRequest(payload) {
     // 缓存被清空，silentLogin 一定会发起 session init 请求
     BaaS.clearSession()
   }
-  BaaS.auth.silentLogin().then(() => {
+  return BaaS.auth.silentLogin().then(() => {
     const resendPayload = utils.getResendPayload(BaaS, payload, prevUid)
     return BaaS.request(resendPayload).then(utils.validateStatusCode)
   })

@@ -5,7 +5,6 @@ const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
 module.exports = BaaS => {
-  const polyfill = BaaS._polyfill
   const API = BaaS._config.API
 
   const getLoginCode = () => {

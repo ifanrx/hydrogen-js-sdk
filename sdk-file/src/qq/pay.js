@@ -1,7 +1,4 @@
-const BaaS = require('core-module/baas')
 const HError = require('core-module/HError')
-
-const API = BaaS._config.API
 
 const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional

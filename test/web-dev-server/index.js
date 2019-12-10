@@ -253,6 +253,12 @@ function init() {
           notie.alert({type: 3, text: '请求失败'})
         })
       },
+
+      getServerDate() {
+        BaaS.getServerDate().then(function (res) {
+          notie.alert({type: 1, text: res.data.time})
+        })
+      },
     },
     computed: {},
     mounted: function () {

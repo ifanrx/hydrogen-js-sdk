@@ -21,6 +21,10 @@ wx.BaaS.clearSession()
 wx.BaaS.checkVersion({platform: 'wechat', onSuccess: () => {}, onError: () => {}})
 expectType<string>(wx.BaaS.getAuthToken())
 
+wx.BaaS.getServerDate().then(res => res.data.time)
+
+wx.BaaS.getAsyncJobResult(123)
+
 
 /**
  * qq
@@ -41,6 +45,10 @@ qq.BaaS.invoke('function', {a: 10, b: 20}, true)
 qq.BaaS.clearSession()
 qq.BaaS.checkVersion({platform: 'wechat', onSuccess: () => {}, onError: () => {}})
 expectType<string>(qq.BaaS.getAuthToken())
+
+qq.BaaS.getServerDate().then(res => res.data.time)
+
+qq.BaaS.getAsyncJobResult(123)
 
 
 /**
@@ -63,6 +71,9 @@ my.BaaS.clearSession()
 my.BaaS.checkVersion({platform: 'wechat', onSuccess: () => {}, onError: () => {}})
 expectType<string>(my.BaaS.getAuthToken())
 
+my.BaaS.getServerDate().then(res => res.data.time)
+
+my.BaaS.getAsyncJobResult(123)
 
 /**
  * baidu
@@ -84,6 +95,9 @@ swan.BaaS.clearSession()
 swan.BaaS.checkVersion({platform: 'wechat', onSuccess: () => {}, onError: () => {}})
 expectType<string>(swan.BaaS.getAuthToken())
 
+swan.BaaS.getServerDate().then(res => res.data.time)
+
+swan.BaaS.getAsyncJobResult(123)
 
 /**
  * web
@@ -104,3 +118,7 @@ window.BaaS.invoke('function', {a: 10, b: 20}, true)
 window.BaaS.clearSession()
 window.BaaS.checkVersion({platform: 'wechat', onSuccess: () => {}, onError: () => {}})
 expectType<string>(window.BaaS.getAuthToken())
+
+window.BaaS.getServerDate().then(res => res.data.time)
+
+window.BaaS.getAsyncJobResult(123)

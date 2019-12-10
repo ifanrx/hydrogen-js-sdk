@@ -18,7 +18,7 @@ function tryResendRequest(payload) {
     BaaS.clearSession()
   }
 
-  BaaS.auth.silentLogin().then(() => {
+  return BaaS.auth.silentLogin().then(() => {
     const resendPayload = utils.getResendPayload(BaaS, payload, prevUid)
     return BaaS.request(resendPayload).then(utils.validateStatusCode)
   })
