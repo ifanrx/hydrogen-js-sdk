@@ -1,4 +1,11 @@
-## Underway
+## 3.3.0 (2019-12-05)
+- [A] QQ SDK qq.setStorageSync、qq.getStorageSync 接口增加重试机制
+- [M] 升级 user/account 接口
+- [F] 修复自动登录并重发请求后，获取不到请求结果的 bug
+
+## 3.2.0 (2019-11-28)
+- [A] 添加获取服务器时间接口
+- [M] 支持设置 account 信息为 null
 - [F] 修复 syncUserProfile 参数类型注释错误的 bug
 
 ## 3.1.0 (2019-11-07)
