@@ -60,7 +60,7 @@ const createPayWithWechatFn = BaaS => options => {
   let requestPaymentConfig = pay(BaaS, options)
   // 非 JSAPI 支付
   if (options.gatewayType != WECHAT_GATEWAY_TYPE.JS_API) {
-    return pay(BaaS, options)
+    return requestPaymentConfig
   }
   // JSAPI 支付
   let tasks = [

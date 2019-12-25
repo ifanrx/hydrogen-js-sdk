@@ -1,3 +1,6 @@
+## 3.4.0 (2019-12-13)
+- [A] 支持环境切换
+
 ## 3.3.0 (2019-12-05)
 - [A] QQ SDK qq.setStorageSync、qq.getStorageSync 接口增加重试机制
 - [M] 升级 user/account 接口

@@ -7,7 +7,7 @@ const getUploadFileConfig = (fileName, metaData) => {
   metaData.filename = fileName
 
   return BaaS._baasRequest({
-    url: BaaS._polyfill.getAPIHost() + BaaS._config.API.UPLOAD,
+    url: BaaS._polyfill.getAPIHost().replace(/\/$/, '') + '/' + BaaS._config.API.UPLOAD.replace(/^\//, ''),
     method: 'POST',
     data: metaData
   })
