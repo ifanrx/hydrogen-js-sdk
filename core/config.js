@@ -74,11 +74,10 @@ const API = {
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
-    WXACODE: '/hserve/v1.4/miniappcode/',
+    WXACODE: '/hserve/v2.4/miniappcode/',
     CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
     CENSOR_ASYNC: '/hserve/v2.2/async-censor/',
-    CARD_CODE_DECRYPT: '/hserve/v2.4/wechat-card/decryption/',
   },
 
   QQ: {
