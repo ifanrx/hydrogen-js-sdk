@@ -3,7 +3,7 @@ const HError = require('core-module/HError')
 /**
  * 微信卡券解密
  * @function
- * @name decryptCardCode
+ * @name wxDecryptCardCode
  * @since v3.7.0
  * @memberof BaaS
  * @param {string} cardId 卡券 ID
@@ -30,5 +30,5 @@ const createDecryptCardCodeFn = BaaS => (cardId, code) => {
 }
 
 module.exports = function (BaaS) {
-  BaaS.decryptCardCode = createDecryptCardCodeFn(BaaS)
+  BaaS.wxDecryptCardCode = createDecryptCardCodeFn(BaaS)
 }

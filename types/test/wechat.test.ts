@@ -76,9 +76,9 @@ expectType<Promise<any>>(wx.BaaS.wxDecryptData('encryptedData', 'iv', 'type'))
 
 
 /**
- * decryptCardCode
+ * wxDecryptCardCode
  */
-expectType<Promise<any>>(wx.BaaS.decryptCardCode('aaggcc', '123456'))
+expectType<Promise<any>>(wx.BaaS.wxDecryptCardCode('aaggcc', '123456'))
 
 
 /**
