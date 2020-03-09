@@ -86,8 +86,12 @@ const getWXACode = (type, params, cdn, categoryName) => {
     method: 'POST',
     data: realParams,
   }).then(res => {
+    if (cdn) {
+      return Object.assign({
+        download_url: res.data.uploaded_file.path,
+      }, res.data)
+    }
     return res.data
   })
 }
-
 module.exports = getWXACode
