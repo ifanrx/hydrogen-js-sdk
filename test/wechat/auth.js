@@ -133,7 +133,7 @@ describe('auth', () => {
       })
       it('should be "true"', () => {
         return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
-          loginWithUnionid: true,
+          withUnionID: true,
         })
           .then(() => {
             expect(requestStub.getCall(0).args[0].data.login_with_unionid).to.be.equal(true)
@@ -260,7 +260,7 @@ describe('auth', () => {
         return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
           return user.linkWechat(null, {
             syncUserProfile: 'overwrite',
-            associateWithUnionid: true,
+            withUnionID: true,
           })
         }).then(res => {
           expect(requestStub.getCall(2).args[0]).to.be.deep.equal({

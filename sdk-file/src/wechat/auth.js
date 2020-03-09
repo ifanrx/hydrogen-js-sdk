@@ -23,23 +23,23 @@ module.exports = BaaS => {
   }
 
   // 获取登录凭证 code, 进而换取用户登录态信息
-  const auth = ({createUser = true, loginWithUnionid = false} = {}) => {
+  const auth = ({createUser = true, withUnionID = false} = {}) => {
     return new Promise((resolve, reject) => {
       getLoginCode().then(code => {
-        sessionInit({code, createUser, loginWithUnionid}, resolve, reject)
+        sessionInit({code, createUser, withUnionID}, resolve, reject)
       }, reject)
     })
   }
 
   // code 换取 session_key，生成并获取 3rd_session 即 token
-  const sessionInit = ({code, createUser, loginWithUnionid}, resolve, reject) => {
+  const sessionInit = ({code, createUser, withUnionID}, resolve, reject) => {
     return BaaS.request({
       url: API.WECHAT.SILENT_LOGIN,
       method: 'POST',
       data: {
         create_user: createUser,
         code: code,
-        login_with_unionid: loginWithUnionid,
+        login_with_unionid: withUnionID,
       }
     }).then(utils.validateStatusCode).then(res => {
       BaaS._polyfill.handleLoginSuccess(res)
@@ -83,7 +83,7 @@ module.exports = BaaS => {
     let detail = res.detail
     let createUser = !!res.createUser
     let syncUserProfile = res.syncUserProfile
-    let loginWithUnionid = res.loginWithUnionid
+    let withUnionID = res.withUnionID
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
@@ -103,7 +103,7 @@ module.exports = BaaS => {
           rawData: detail.rawData,
           signature: detail.signature,
           encryptedData: detail.encryptedData,
-          login_with_unionid: loginWithUnionid,
+          login_with_unionid: withUnionID,
           iv: detail.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
@@ -139,7 +139,7 @@ module.exports = BaaS => {
 
   const linkWechat = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
-    associateWithUnionid = false,
+    withUnionID = false,
   } = {}) => {
     let refreshUserInfo = false
     if (res && res.detail && res.detail.userInfo) {
@@ -159,11 +159,11 @@ module.exports = BaaS => {
           encryptedData: res.encryptedData,
           iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          associate_with_unionid: associateWithUnionid,
+          associate_with_unionid: withUnionID,
           code,
         } : {
           code,
-          associate_with_unionid: associateWithUnionid,
+          associate_with_unionid: withUnionID,
         }
 
         return BaaS._baasRequest({
@@ -187,16 +187,16 @@ module.exports = BaaS => {
    */
   const loginWithWechat = (authData, {
     createUser = true,
-    loginWithUnionid = false,
+    withUnionID = false,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
       // handleUserInfo 流程
-      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile, loginWithUnionid}))
+      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile, withUnionID}))
     } else {
       // 静默登录流程
-      loginPromise = silentLogin({createUser, loginWithUnionid})
+      loginPromise = silentLogin({createUser, withUnionID})
     }
 
     return loginPromise.then(() => commonAuth.getCurrentUser())
