@@ -3,9 +3,10 @@ import {expectType} from 'tsd'
 // wechat
 let currentUser_1 = new wx.BaaS.CurrentUser({name: 'name'})
 currentUser_1.linkWechat().then(user => expectType<WechatBaaS.CurrentUser>(user))
-currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'overwrite'})
-currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'setnx'})
-currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'false'})
+currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'overwrite', associateWithUnionid: true})
+currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'overwrite', associateWithUnionid: true})
+currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'setnx', associateWithUnionid: false})
+currentUser_1.linkWechat({detail: {userInfo: {}, encryptedData: '', iv: '', signature: '', rawData: ''}}, {syncUserProfile: 'false', associateWithUnionid: true})
   .then(user => expectType<WechatBaaS.CurrentUser>(user))
 currentUser_1.updatePassword({password: '123456', newPassword: '654321'})
   .then(user => expectType<WechatBaaS.CurrentUser>(user))

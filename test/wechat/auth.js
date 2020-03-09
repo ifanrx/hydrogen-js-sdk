@@ -118,9 +118,26 @@ describe('auth', () => {
             code: wechatMock.__get__('code'),
             create_user: false,
             update_userprofile: 'setnx',
+            login_with_unionid: false,
           }
         })
         nowStub.restore()
+      })
+    })
+    describe('# login_with_unionid', () => {
+      it('should be "false"', () => {
+        return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {})
+          .then(() => {
+            expect(requestStub.getCall(0).args[0].data.login_with_unionid).to.be.equal(false)
+          })
+      })
+      it('should be "true"', () => {
+        return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
+          loginWithUnionid: true,
+        })
+          .then(() => {
+            expect(requestStub.getCall(0).args[0].data.login_with_unionid).to.be.equal(true)
+          })
       })
     })
 
@@ -146,6 +163,7 @@ describe('auth', () => {
             data: {
               code: wechatMock.__get__('code'),
               create_user: true,
+              login_with_unionid: false,
             }
           })
         })
@@ -191,6 +209,7 @@ describe('auth', () => {
                 signature: '',
                 code: wechatMock.__get__('code'),
                 update_userprofile: item[1],
+                associate_with_unionid: false,
               }
             })
           })
@@ -210,6 +229,48 @@ describe('auth', () => {
             header: {},
             data: {
               code: wechatMock.__get__('code'),
+              associate_with_unionid: false,
+            }
+          })
+        })
+      })
+    })
+
+    describe('# associate_with_unionid', () => {
+      it('should be "false"', () => {
+        return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
+          return user.linkWechat(null, {
+            syncUserProfile: 'overwrite',
+          })
+        }).then(res => {
+          expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
+            url: config.API.WECHAT.USER_ASSOCIATE,
+            method: 'POST',
+            dataType: 'json',
+            header: {},
+            data: {
+              code: wechatMock.__get__('code'),
+              associate_with_unionid: false,
+            }
+          })
+        })
+      })
+
+      it('should be "true"', () => {
+        return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
+          return user.linkWechat(null, {
+            syncUserProfile: 'overwrite',
+            associateWithUnionid: true,
+          })
+        }).then(res => {
+          expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
+            url: config.API.WECHAT.USER_ASSOCIATE,
+            method: 'POST',
+            dataType: 'json',
+            header: {},
+            data: {
+              code: wechatMock.__get__('code'),
+              associate_with_unionid: true,
             }
           })
         })
