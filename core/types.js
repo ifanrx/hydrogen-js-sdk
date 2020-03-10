@@ -89,7 +89,7 @@
  * 关联微信账号可选参数
  * @typedef {Object} LinkWechatOptions
  * @memberof BaaS
- * @property {boolean} [associateWithUnionid] 是否使用 unionid 进行关联
+ * @property {boolean} [withUnionID] 是否使用 unionid 进行关联
  * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
  *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
  *     'overwrite' - 强制更新

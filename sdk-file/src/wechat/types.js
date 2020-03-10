@@ -3,7 +3,7 @@
  * @typedef {Object} WechatLoginOptions
  * @memberof BaaS
  * @property {boolean} [createUser] 是否创建用户
- * @property {boolean} [loginWithUnionid] 是否使用 unionid 登录
+ * @property {boolean} [withUnionID] 是否使用 unionid 登录
  * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
  *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
  *     'overwrite' - 强制更新
