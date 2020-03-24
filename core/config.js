@@ -68,9 +68,9 @@ const API = {
   },
 
   WECHAT: {
-    SILENT_LOGIN: '/hserve/v2.1/idp/wechat/silent-login/',
-    AUTHENTICATE: '/hserve/v2.1/idp/wechat/authenticate/',
-    USER_ASSOCIATE: '/hserve/v2.0/idp/wechat/user-associate/',
+    SILENT_LOGIN: '/hserve/v2.4/idp/wechat/silent-login/',
+    AUTHENTICATE: '/hserve/v2.4/idp/wechat/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.4/idp/wechat/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',

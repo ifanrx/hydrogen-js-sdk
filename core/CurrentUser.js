@@ -53,7 +53,7 @@ class CurrentUser extends UserRecord {
   /**
    * 将微信账号绑定到当前用户，匿名用户无法调用
    * @param {BaaS.AuthData|null} [authData] 用户信息
-   * @param {BaaS.LinkOptions} [params] 用户信息参数
+   * @param {BaaS.LinkWechatOptions} [params] 用户信息参数
    * @returns {Promise<this>} UserRecord 实例
    */
   linkWechat() {
