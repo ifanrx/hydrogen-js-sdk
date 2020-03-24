@@ -1,10 +1,11 @@
 {
   "name": "minapp-sdk",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
   "description": "爱范儿知晓云平台 JS SDK",
+  "license": "Apache-2.0",
   "files": [
     "/lib",
     "index.d.ts"
