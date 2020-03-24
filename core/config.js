@@ -105,6 +105,12 @@ const API = {
     MINIAPP_QR_CODE: '/hserve/v2.0/idp/alipay/miniapp-qr-code/',
   },
 
+  BYTEDANCE: {
+    SILENT_LOGIN: '/hserve/v2.1/idp/bytedance/silent-login/',
+    AUTHENTICATE: '/hserve/v2.1/idp/bytedance/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.1/idp/bytedance/user-association/',
+  },
+
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
   M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
   M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
