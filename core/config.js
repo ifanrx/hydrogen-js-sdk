@@ -106,9 +106,9 @@ const API = {
   },
 
   BYTEDANCE: {
-    SILENT_LOGIN: '/hserve/v2.1/idp/bytedance/silent-login/',
-    AUTHENTICATE: '/hserve/v2.1/idp/bytedance/authenticate/',
-    USER_ASSOCIATE: '/hserve/v2.1/idp/bytedance/user-association/',
+    SILENT_LOGIN: '/hserve/v2.4/idp/bytedance/silent-login/',
+    AUTHENTICATE: '/hserve/v2.4/idp/bytedance/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.4/idp/bytedance/user-association/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
