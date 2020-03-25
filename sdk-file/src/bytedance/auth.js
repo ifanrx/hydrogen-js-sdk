@@ -1,5 +1,4 @@
 const constants = require('core-module/constants')
-const HError = require('core-module/HError')
 const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
@@ -60,40 +59,26 @@ module.exports = BaaS => {
     }).then(utils.validateStatusCode)
   }
 
-  const getUserInfo = ({lang} = {}) => {
+  const getUserInfo = options => {
     return new Promise((resolve, reject) => {
-      tt.getUserInfo({
-        lang,
+      tt.getUserInfo(Object.assign(options, {
         success: resolve, fail: reject
-      })
+      }))
     })
   }
 
-  // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
-  const handleUserInfo = res => {
-    if (!res || !res.detail) {
-      throw new HError(603)
-    }
-
-    let detail = res.detail
-    let createUser = !!res.createUser
-    let syncUserProfile = res.syncUserProfile
-
-    // 用户拒绝授权，仅返回 uid, openid
-    if (!detail.userInfo) {
-      return Promise.reject(Object.assign(new HError(603), {
-        id: storage.get(constants.STORAGE_KEY.UID),
-        openid: storage.get(constants.STORAGE_KEY.OPENID),
-      }))
-    }
-
+  const forceLogin = ({createUser, syncUserProfile}) => {
+    let detail
     return getLoginCode().then(code => {
-      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
+      return getUserInfo({withCredentials: true}).then(res => {
+        detail = res
         let payload = {
           code,
           create_user: createUser,
-          data: detail.data,
-          iv: detail.iv,
+          rawData: res.rawData,
+          signature: res.signature,
+          encryptedData: res.encryptedData,
+          iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
         return getSensitiveData(payload)
@@ -107,18 +92,14 @@ module.exports = BaaS => {
   }
 
 
-  const linkTt = (res, {
+  const linkTt = ({
+    forceLogin: isForceLogin = false,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
-    let refreshUserInfo = false
-    if (res && res.detail && res.detail.userInfo) {
-      refreshUserInfo = true
-    }
-
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
+      let getUserInfoPromise = isForceLogin
+        ? getUserInfo({withCredentials: true})
         : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
@@ -145,18 +126,17 @@ module.exports = BaaS => {
    * @function
    * @since v2.5.0
    * @memberof BaaS.auth
-   * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
-   * @param {BaaS.LoginOptions} [options] 其他选项
+   * @param {BaaS.BytedanceLoginOptions} [options] 其他选项
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const loginWithTt = (authData, {
+  const loginWithTt = ({
+    forceLogin: isForceLogin = false,
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
-    if (authData && authData.detail) {
-      // handleUserInfo 流程
-      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile}))
+    if (isForceLogin) {
+      loginPromise = forceLogin({createUser, syncUserProfile})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser})

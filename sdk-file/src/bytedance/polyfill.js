@@ -1,10 +1,9 @@
 // const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
-const sysInfo = tt.getSystemInfoSync()
 
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
-    CLIENT_PLATFORM: `BYTEDANCE-${sysInfo.platform.toUpperCase()}`,
+    CLIENT_PLATFORM: 'BYTEDANCE',
     setStorageSync(k, v) {
       return tt.setStorageSync(k, v)
     },
