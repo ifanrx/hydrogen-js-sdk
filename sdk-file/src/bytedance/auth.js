@@ -3,6 +3,9 @@ const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
+const sysInfo = tt.getSystemInfoSync()
+const appName = sysInfo.appName.toLowerCase()
+
 module.exports = BaaS => {
   const API = BaaS._config.API
 
@@ -36,7 +39,7 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         create_user: createUser,
-        app_name: utils.getBytedanceAppName(),
+        app_name: appName,
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
@@ -75,7 +78,7 @@ module.exports = BaaS => {
         detail = res
         let payload = {
           code,
-          app_name: utils.getBytedanceAppName(),
+          app_name: appName,
           create_user: createUser,
           rawData: res.rawData,
           signature: res.signature,
@@ -111,11 +114,11 @@ module.exports = BaaS => {
           encryptedData: res.encryptedData,
           iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          app_name: utils.getBytedanceAppName(),
+          app_name: appName,
           code
         } : {
           code,
-          app_name: utils.getBytedanceAppName(),
+          app_name: appName,
         }
 
         return BaaS._baasRequest({
