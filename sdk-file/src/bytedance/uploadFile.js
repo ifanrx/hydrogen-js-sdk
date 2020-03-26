@@ -44,7 +44,7 @@ const ttUpload = (config, resolve, reject, type) => {
       }
     },
     fail: () => {
-      BaaS.request.wxRequestFail(reject)
+      BaaS.request.ttRequestFail(reject)
     }
   })
 }

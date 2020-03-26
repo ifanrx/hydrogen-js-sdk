@@ -36,6 +36,7 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         create_user: createUser,
+        app_name: utils.getBytedanceAppName(),
         code: code
       }
     }).then(utils.validateStatusCode).then(res => {
@@ -74,6 +75,7 @@ module.exports = BaaS => {
         detail = res
         let payload = {
           code,
+          app_name: utils.getBytedanceAppName(),
           create_user: createUser,
           rawData: res.rawData,
           signature: res.signature,
@@ -109,8 +111,12 @@ module.exports = BaaS => {
           encryptedData: res.encryptedData,
           iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+          app_name: utils.getBytedanceAppName(),
           code
-        } : {code}
+        } : {
+          code,
+          app_name: utils.getBytedanceAppName(),
+        }
 
         return BaaS._baasRequest({
           method: 'POST',

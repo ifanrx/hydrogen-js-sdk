@@ -15,7 +15,6 @@ const ttRequestFail = function (reject) {
   })
 }
 
-const sysInfo = tt.getSystemInfoSync()
 
 /**
  * 网络请求
@@ -31,15 +30,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       return reject(new HError(602))
     }
 
-    let headers = utils.mergeRequestHeader(Object.assign(header, {
-      /*
-       * 'bytedance_toutiao',
-       * 'bytedance_douyin',
-       * 'bytedance_news_article_lite', // 今日头条极速版
-       * 'bytedance_devtools', // 开发者工具
-       */
-      'X-Hydrogen-Bytedance-App': `bytedance_${sysInfo.appName.toLowerCase()}`,
-    }))
+    let headers = utils.mergeRequestHeader(header)
 
     if (!/https?:\/\//.test(url)) {
       const API_HOST = BaaS._polyfill.getAPIHost()
