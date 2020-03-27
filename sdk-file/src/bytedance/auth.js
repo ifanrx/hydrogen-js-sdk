@@ -71,7 +71,7 @@ module.exports = BaaS => {
     })
   }
 
-  const forceLogin = ({createUser, syncUserProfile}) => {
+  const forceLogin = ({createUser, syncUserProfile} = {}) => {
     let detail
     return getLoginCode().then(code => {
       return getUserInfo({withCredentials: true}).then(res => {
