@@ -31,7 +31,8 @@
     "gen-docs-qq": "jsdoc -c jsdoc-configs/docs-qq.json",
     "gen-docs-alipay": "jsdoc -c jsdoc-configs/docs-alipay.json",
     "gen-docs-baidu": "jsdoc -c jsdoc-configs/docs-baidu.json",
-    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web && npm run gen-docs-qq && npm run gen-docs-baidu && npm run gen-docs-alipay",
+    "gen-docs-bytedance": "jsdoc -c jsdoc-configs/docs-bytedance.json",
+    "gen-docs": "npm run gen-docs-wechat && npm run gen-docs-web && npm run gen-docs-qq && npm run gen-docs-baidu && npm run gen-docs-alipay && npm run gen-docs-bytedance",
     "tsd": "tsd"
   },
   "repository": {

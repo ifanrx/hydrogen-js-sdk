@@ -15,6 +15,7 @@ module.exports = {
   globals: {
     wx: true,
     describe: true,
+    tt: true,
     it: true,
     my: true,
     qq: true,
@@ -30,5 +31,6 @@ module.exports = {
     __VERSION_WECHAT__: true,
     __VERSION_QQ__: true,
     __VERSION_BAIDU__: true,
+    __VERSION__: true,
   }
 }

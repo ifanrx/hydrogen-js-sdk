@@ -4,3 +4,4 @@ sdk-plugin/plugin/api/vendor/
 test/web/sdk.dev.js
 test/web-dev-server/
 sdk-file/dist
+sdk-file/webpack.config.js

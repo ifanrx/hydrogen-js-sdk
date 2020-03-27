@@ -23,6 +23,7 @@ getBaaSNamespace() {
     baidu) echo BaiduBaaS;;
     alipay) echo AlipayBaaS;;
     web) echo WebBaaS;;
+    bytedance) echo TtBaaS;;
     *) exit 1;;
   esac
 }
@@ -35,6 +36,7 @@ getInterface() {
     baidu) echo Swan;;
     alipay) echo My;;
     web) echo Window;;
+    bytedance) echo TtBaaS;;
     *) exit 1;;
   esac
 }
@@ -47,6 +49,7 @@ getVarName() {
     baidu) echo swan;;
     alipay) echo my;;
     web) echo window;;
+    bytedance) echo tt;;
     *) exit 1;;
   esac
 }
@@ -98,7 +101,7 @@ declare var window: Window & typeof globalThis
 
 # build 出一份包含多个平台代码的 d.ts 文件
 buildTypesForCrossPlatform() {
-  platforms=(wechat qq baidu alipay web)
+  platforms=(wechat qq baidu alipay web bytedance)
 
   # 判断平台名称是否有效（是否有对应的配置）
   for platform in ${platforms[*]}; do

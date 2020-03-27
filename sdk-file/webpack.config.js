@@ -12,6 +12,7 @@ const exec = require('child_process').exec
 
 let plugins = [
   new webpack.DefinePlugin({
+    __VERSION__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_WECHAT__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_QQ__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_BAIDU__: JSON.stringify(`v${(pkg.version)}`),
@@ -48,6 +49,7 @@ module.exports = {
     web: './src/web/index.js',
     qq: './src/qq/index.js',
     baidu: './src/baidu/index.js',
+    bytedance: './src/bytedance/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
