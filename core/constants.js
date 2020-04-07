@@ -123,5 +123,6 @@ module.exports = {
     ALIPAY: 'alipay_miniapp',
     QQ: 'qq_miniapp',
     BAIDU: 'baidu_miniapp',
+    BYTEDANCE: 'bytedance_miniapp',
   },
 }
