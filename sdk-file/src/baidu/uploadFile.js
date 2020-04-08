@@ -1,3 +1,4 @@
+const BaaS = require('core-module/baas')
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
@@ -15,7 +16,8 @@ const swanUpload = (config, resolve, reject, type) => {
     header: getUploadHeaders(),
     success: (res) => {
       let result = {}
-      let data = JSON.parse(res.data)
+      // 开发者工具返回的 res.data 类型是 string，而真机返回 object
+      let data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
 
       result.status = 'ok'
       result.path = config.destLink
