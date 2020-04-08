@@ -1,3 +1,4 @@
+const BaaS = require('core-module/baas')
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
