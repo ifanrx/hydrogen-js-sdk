@@ -424,4 +424,5 @@ module.exports = {
   getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
   getResendPayload: require('./getResendPayload'),
   withRetry: require('./withRetry'),
+  getBytedanceAppName: require('./getBytedanceAppName'),
 }
