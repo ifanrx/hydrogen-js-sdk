@@ -72,7 +72,7 @@ const createGetOrderStatusFn = (BaaS, data, promise) => {
  * @param {string[]} [bannedChannels] 需要隐藏的支付方式
  * @return {Promise<any>}
  */
-const createPayFn = BaaS => ({service, debug, ...params}) => {
+const createPayFn = BaaS => ({service, ...params}) => {
   const API = BaaS._config.API
   let paramsObj = {}
 
@@ -94,7 +94,7 @@ const createPayFn = BaaS => ({service, debug, ...params}) => {
       const options = {
         orderInfo: data,
         service: serviceCode,
-        _debug: debug,
+        _debug: BaaS._config.LOG_LEVEL === constants.LOG_LEVEL.DEBUG ? 1 : 0,
         success: function (res) {
           if (res.code != 0) return reject(new HError(608))
           res.transaction_no = data.transaction_no
