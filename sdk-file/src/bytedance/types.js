@@ -25,7 +25,7 @@
  * @typedef PaymentParams
  * @memberof BaaS
  * @property {string} merchandiseDescription 微信支付凭证-商品详情的内容
- * @property {number} totalCost 支付总额，单位：分
+ * @property {number} totalCost 支付总额，单位：元
  * @property {number} [service] 支付方式，1 为收银台支付，3 为微信 API 支付，4 为 支付宝 API 支付，默认为 1
  * @property {string} [merchandiseSchemaID] 商品数据表 ID，可用于定位用户购买的物品
  * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品

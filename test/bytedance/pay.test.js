@@ -2,6 +2,14 @@ import test from 'ava'
 import sinon from 'sinon'
 const rewire = require('rewire')
 
+
+global.tt = {
+  getSystemInfoSync() {
+    return {
+      appName: 'toutiao',
+    }
+  },
+}
 const moduleAlias = require('module-alias')
 moduleAlias.addAlias('core-module', __dirname + '../../../core')
 const payModule = rewire('../../sdk-file/src/bytedance/pay')
@@ -25,7 +33,7 @@ test('createGetOrderStatusFn - success', t => {
   const resolve = sinon.spy()
   const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve, reject: () => {}})
   return getOrderStatus().then(res => {
-    t.is(res, 0)
+    t.deepEqual(res, {code: 0})
     t.is(getOrder.callCount, 1)
     t.is(resolve.callCount, 1)
     t.deepEqual(resolve.getCall(0).args, [data])
@@ -51,7 +59,7 @@ test('createGetOrderStatusFn - failed', t => {
   const reject = sinon.spy()
   const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve: () => {}, reject})
   return getOrderStatus().then(res => {
-    t.is(res, 2)
+    t.deepEqual(res, {code: 2})
     t.is(getOrder.callCount, 1)
     t.is(reject.callCount, 1)
     t.is(reject.getCall(0).args[0].code, 608)
@@ -88,7 +96,7 @@ test('createGetOrderStatusFn - pending', t => {
   }
   const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve: () => {}, reject: () => {}})
   return getOrderStatus().then(res => {
-    t.is(res, 0)
+    t.deepEqual(res, {code: 0})
     t.is(getOrder.callCount, 3)
   })
 })
@@ -112,8 +120,8 @@ test('createGetOrderStatusFn - retry exceeded limit', t => {
   }
   const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve: () => {}, reject: () => {}})
   return getOrderStatus().then(res => {
-    t.is(res, 9)
-    t.is(getOrder.callCount, 10)
+    t.deepEqual(res, {code: 2})
+    t.is(getOrder.callCount, 5)
   })
 })
 
@@ -136,6 +144,6 @@ test('createGetOrderStatusFn - unkown', t => {
   }
   const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve: () => {}, reject: () => {}})
   return getOrderStatus().then(res => {
-    t.is(res, 9)
+    t.deepEqual(res, {code: 9})
   })
 })
