@@ -26,17 +26,14 @@ test('createGetOrderStatusFn - success', t => {
       get: getOrder,
     }),
   }
-  const data = {
-    a: 1,
-    b: 2,
-  }
+  const transaction_no = 'abc123'
   const resolve = sinon.spy()
-  const getOrderStatus = createGetOrderStatusFn(BaaS, data, {resolve, reject: () => {}})
+  const getOrderStatus = createGetOrderStatusFn(BaaS, transaction_no, {resolve, reject: () => {}})
   return getOrderStatus().then(res => {
     t.deepEqual(res, {code: 0})
     t.is(getOrder.callCount, 1)
     t.is(resolve.callCount, 1)
-    t.deepEqual(resolve.getCall(0).args, [data])
+    t.deepEqual(resolve.getCall(0).args, [{transaction_no}])
   })
 })
 
