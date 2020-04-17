@@ -27,47 +27,6 @@ const ORDER_STATUS = {
   PENDING: 'pending',
 }
 
-const RETRY_TIMES = 5 // 订单状态查询重试次数
-const DELAY = 100 // 订单查询间隔时间
-
-const createGetOrderStatusFn = (BaaS, transaction_no, promise) => {
-  let times = RETRY_TIMES
-  /*
-   * 返回值详情请查看字节跳动文档 {@link @see https://microapp.bytedance.com/dev/cn/mini-app/develop/open-capacity/payment/tt.pay#getorderstatus}
-   */
-  const fn = (reset = true) => {
-    if (reset) times = RETRY_TIMES
-    return new BaaS.Order()
-      .get(transaction_no)
-      .then(res => {
-        if (res.data.status === ORDER_STATUS.SUCCESS) {
-          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}, count: ${times}`)
-          promise.resolve({transaction_no})
-          return {code: 0}
-        }
-        if (res.data.status === ORDER_STATUS.FAILED) {
-          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}, count: ${times}`)
-          promise.reject(new HError(608))
-          return {code: 2}
-        }
-        if (res.data.status === ORDER_STATUS.PENDING) {
-          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}, count: ${times}`)
-          times -= 1
-          if (times <= 0) {
-            promise.reject(new HError(608))
-            return {code: 2}
-          } else {
-            return new Promise(_resolve => setTimeout(_resolve, DELAY)).then(() => fn(false))
-          }
-        } else {
-          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}, count: ${times}`)
-          promise.reject(new HError(608))
-          return {code: 9}
-        }
-      })
-  }
-  return fn
-}
 
 /**
  * 字节跳动支付
@@ -92,6 +51,23 @@ const createPayFn = BaaS => ({service, ...params}) => {
 
   const serviceCode = SERVICE_MAP[service] || 1
 
+  const getOrderStatus = ({out_order_no}) => {
+    return new BaaS.Order()
+      .get(out_order_no)
+      .then(res => {
+        if (res.data.status === ORDER_STATUS.SUCCESS) {
+          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}`)
+          return {code: 0}
+        }
+        if (res.data.status === ORDER_STATUS.FAILED) {
+          utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}`)
+          return {code: 2}
+        }
+        utils.log(constants.LOG_LEVEL.DEBUG, `<payment>order status: ${res.data.status}`)
+        return {code: 9}
+      })
+  }
+
   return BaaS._baasRequest({
     url: API.PAY,
     method: 'POST',
@@ -99,21 +75,39 @@ const createPayFn = BaaS => ({service, ...params}) => {
   }).then(function (res) {
     let data = res.data || {}
     return new Promise((resolve, reject) => {
+      const makeResponse = code => {
+        if (code != 0) return reject(new HError(608))
+        return resolve({
+          transaction_no: data.out_order_no,
+        })
+      }
+
       const options = {
         orderInfo: data,
         service: serviceCode,
-        getOrderStatus: createGetOrderStatusFn(BaaS, data.out_order_no, {resolve, reject}),
+        getOrderStatus,
         _debug: BaaS._config.LOG_LEVEL === constants.LOG_LEVEL.DEBUG ? 1 : 0,
         success: function (res) {
-          utils.log(constants.LOG_LEVEL.DEBUG, '<payment> success', res)
-          if (res.code == 4) return reject(new HError(607))
-          if (res.code == 9 && serviceCode != 1) return options.getOrderStatus()
-          if (res.code != 0) return reject(new HError(608))
-          res.transaction_no = data.out_order_no
-          return resolve(res)
+          utils.log(constants.LOG_LEVEL.DEBUG, `<payment> success handler ${JSON.stringify(res)}`)
+          if (res.code == 4) {
+            // 由于收银台选择支付宝支付，取消支付并跳回来时，会直接进入这里，并且 code == 4，
+            // 收银台界面未关闭，用户可能会再次跳过去支付，此时不应该 resolve/reject 支付结果，所以直接 return
+            if (serviceCode == 1) return
+            return reject(new HError(607))
+          }
+          if (res.code == 9) {
+            // 收银台支付时（选择支付宝支付），返回 code == 9，收银台未关闭，用户可以再次发起支付，
+            // 此时不应该 resolve/reject 支付结果，所以直接 return
+            if (serviceCode == 1) return
+            // 微信支付（非收银台中选择的微信支付），从微信 app 中返回后，code 始终为 9，需要自己检查一下是否支付成功。
+            return options.getOrderStatus({out_order_no: data.out_order_no}).then(res => {
+              return makeResponse(res.code)
+            })
+          }
+          return makeResponse(res.code)
         },
         fail: function (err) {
-          utils.log(constants.LOG_LEVEL.DEBUG, '<payment> fail', err)
+          utils.log(constants.LOG_LEVEL.DEBUG, `<payment> fail handler ${JSON.stringify(err)}`)
           reject(new HError(608, err.errMsg))
         },
       }
