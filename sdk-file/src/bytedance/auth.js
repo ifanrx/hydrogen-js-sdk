@@ -3,8 +3,7 @@ const storage = require('core-module/storage')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
-const sysInfo = tt.getSystemInfoSync()
-const appName = sysInfo.appName.toLowerCase()
+const appName = utils.getBytedanceAppName()
 
 module.exports = BaaS => {
   const API = BaaS._config.API
