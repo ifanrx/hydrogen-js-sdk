@@ -28,6 +28,7 @@ module.exports = function (BaaS) {
     BaaS._config.ENV = env
     BaaS._config.CLIENT_ID = clientID
     BaaS._config.API_HOST = host
+    BaaS._config.LOG_LEVEL = logLevel
     BaaS._polyfill.checkLatestVersion()
   }
 
