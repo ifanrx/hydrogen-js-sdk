@@ -2,8 +2,7 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 
-const sysInfo = tt.getSystemInfoSync()
-const appName = sysInfo.appName.toLowerCase()
+const appName = utils.getBytedanceAppName()
 
 const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
