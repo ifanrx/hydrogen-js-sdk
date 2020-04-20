@@ -12,6 +12,13 @@ module.exports = {
     semi: ['error', 'never'],
     "no-var": ['error'],
   },
+  parserOptions: {
+    ecmaVersion: 2017,
+    sourceType: 'module',
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true
+    }
+  },
   globals: {
     wx: true,
     describe: true,
