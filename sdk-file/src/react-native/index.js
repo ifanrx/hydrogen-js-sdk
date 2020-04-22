@@ -8,17 +8,15 @@ const storage = require('./storage')
 
 BaaS._config.VERSION = __VERSION__
 
-const uploadFile = require('./uploadFile')
-const request = require('./request')
-const baasRequest = require('./baasRequest')
-// const auth = require('./auth')
+const uploadFile = require('../web/uploadFile')
+const request = require('../web/request')
+const baasRequest = require('../web/baasRequest')
 const polyfill = require('./polyfill')
 BaaS.use(core)
 BaaS.use(polyfill)
 BaaS.use(uploadFile)
 BaaS.use(request)
 BaaS.use(baasRequest)
-// BaaS.use(auth)
 
 BaaS._createRequestMethod()
 
