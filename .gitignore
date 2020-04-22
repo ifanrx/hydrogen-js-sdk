@@ -19,3 +19,4 @@ docs/*
 !docs/index.html
 types/*
 !types/test
+react-native-minapp-sdk/sdk.js

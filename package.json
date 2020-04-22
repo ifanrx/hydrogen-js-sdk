@@ -21,6 +21,7 @@
     "test-web": "./test/web/test.sh",
     "test-qq": "ava test/qq/*.test.js",
     "test-baidu": "ava test/baidu/*.test.js",
+    "test-react-native": "mocha test/react-native/*.test.js",
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
@@ -43,7 +44,6 @@
     "ifanrx"
   ],
   "author": "ifanrx",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ifanrx/repository/issues"
   },
