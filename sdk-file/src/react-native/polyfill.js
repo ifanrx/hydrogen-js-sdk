@@ -1,8 +1,5 @@
 const storage = require('./storage')
 const constants = require('core-module/constants')
-// const deviceInfo = require('react-native-device-info')
-
-// const deviceId = deviceInfo.getDeviceId()
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -30,6 +27,9 @@ module.exports = function (BaaS) {
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       }
+    },
+    linkAuthData(...args) {
+      return BaaS.auth.linkAuthData(...args)
     },
   })
 }
