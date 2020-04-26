@@ -5,6 +5,7 @@ const auth = require('./auth')
 const pay = require('./pay')
 const reportTicket = require('./reportTicket')
 const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
+const bytedanceQRCode = require('./bytedanceQRCode')
 
 BaaS._config.VERSION = __VERSION__
 
@@ -14,6 +15,7 @@ BaaS.use(auth)
 BaaS.use(pay)
 BaaS.use(reportTicket)
 BaaS.use(reportTemplateMsgAnalytics)
+BaaS.use(bytedanceQRCode)
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')
