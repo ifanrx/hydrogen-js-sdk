@@ -9,6 +9,6 @@ module.exports = [
   },
   {  // 复制 wechat sdk 文件至测试目录
     from: isDEV ? 'sdk-react-native.dev.js' : `sdk-react-native.${pkg.version}.js`,
-    to: path.resolve(process.env.HOME, './ifanr/hydrogen-js-sdk/react-native-minapp-sdk/sdk.js'),
+    to: path.resolve(__dirname, '../../react-native-minapp-sdk/sdk.js'),
   },
 ]
