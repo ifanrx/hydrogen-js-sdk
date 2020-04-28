@@ -27,9 +27,10 @@ module.exports = function (BaaS) {
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       }
+      BaaS.storage.set( constants.STORAGE_KEY.USERINFO, res.user_info)
     },
-    linkAuthData(...args) {
-      return BaaS.auth.linkAuthData(...args)
+    linkThirdPartyWithAuthData(...args) {
+      return BaaS.auth.linkThirdPartyWithAuthData(...args)
     },
   })
 }

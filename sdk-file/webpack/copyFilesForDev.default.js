@@ -1,3 +1,4 @@
+const path = require('path')
 const pkg = require('../../package')
 const isDEV = process.env.NODE_ENV === 'development'
 

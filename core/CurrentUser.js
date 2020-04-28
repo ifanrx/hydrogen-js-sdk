@@ -153,14 +153,14 @@ class CurrentUser extends UserRecord {
    * @param {BaaS.LinkAuthDataOptions} [options] 其他选项
    * @returns {Promise<this>} UserRecord 实例
    */
-  linkAuthData() {
+  linkThirdPartyWithAuthData() {
     if (this._anonymous) {
       return Promise.reject(new HError(612))
     }
-    if (!BaaS._polyfill.linkAuthData) {
-      return Promise.reject(new HError(605, 'linkAuthData 方法未定义'))
+    if (!BaaS._polyfill.linkThirdPartyWithAuthData) {
+      return Promise.reject(new HError(605, 'linkThirdPartyWithAuthData 方法未定义'))
     }
-    return BaaS._polyfill.linkAuthData.apply(null, arguments)
+    return BaaS._polyfill.linkThirdPartyWithAuthData.apply(null, arguments)
   }
 
   /**
