@@ -1,5 +1,6 @@
 const storage = require('./storage')
 const constants = require('core-module/constants')
+const HError = require('core-module/HError')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -8,13 +9,20 @@ module.exports = function (BaaS) {
         platform: 'REACT-NATIVE'
       }
     },
-    setStorageSync: function (k, v) {
-      storage.set(k, JSON.stringify({value: v}))
+    setStorageAsync: function (k, v) {
+      return storage.set(k, JSON.stringify({value: v}))
     },
-    getStorageSync: function (k) {
-      const data = storage.get(k)
-      if (typeof data === 'undefined') return null
-      return JSON.parse(data).value
+    getStorageAsync: function (k) {
+      return storage.get(k).then(data => {
+        if (typeof data === 'undefined') return null
+        return JSON.parse(data).value
+      })
+    },
+    setStorageSync: function () {
+      throw new HError(611)
+    },
+    getStorageSync: function () {
+      throw new HError(611)
     },
     CLIENT_PLATFORM: 'REACT-NATIVE',
     handleLoginSuccess(res, isAnonymous) {

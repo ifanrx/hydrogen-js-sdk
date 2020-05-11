@@ -1,6 +1,6 @@
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
-const storage = require('core-module/storage')
+const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
@@ -60,10 +60,13 @@ module.exports = BaaS => {
    * @memberof BaaS.auth
    */
   const silentLogin = utils.rateLimit(function (...args) {
-    if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
-      return Promise.resolve()
-    }
-    return auth(...args)
+    return Promise.all([
+      storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
+      utils.isSessionExpired(),
+    ]).then(([token, expired]) => {
+      if (token && !expired) return
+      return auth(...args)
+    })
   })
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
@@ -88,11 +91,13 @@ module.exports = BaaS => {
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
     if (!detail.userInfo) {
-      return Promise.reject(Object.assign(new HError(603), {
-        id: storage.get(constants.STORAGE_KEY.UID),
-        openid: storage.get(constants.STORAGE_KEY.OPENID),
-        unionid: storage.get(constants.STORAGE_KEY.UNIONID),
-      }))
+      return Promise.all(([
+        storageAsync.get(constants.STORAGE_KEY.UID),
+        storageAsync.get(constants.STORAGE_KEY.OPENID),
+        storageAsync.get(constants.STORAGE_KEY.UNIONID),
+      ])).then(([id, openid, unionid]) => {
+        return Promise.reject(Object.assign(new HError(603), {id, openid, unionid}))
+      })
     }
 
     return getLoginCode().then(code => {
@@ -224,12 +229,21 @@ module.exports = BaaS => {
    */
   BaaS.login = function (args) {
     if (args === false) {
-      return silentLogin().then(() => ({
-        id: storage.get(constants.STORAGE_KEY.UID),
-        openid: storage.get(constants.STORAGE_KEY.OPENID),
-        unionid: storage.get(constants.STORAGE_KEY.UNIONID),
-        [constants.STORAGE_KEY.EXPIRES_AT]: storage.get(constants.STORAGE_KEY.EXPIRES_AT),
-      }))
+      return silentLogin().then(() => {
+        return Promise.all([
+          storageAsync.get(constants.STORAGE_KEY.UID),
+          storageAsync.get(constants.STORAGE_KEY.OPENID),
+          storageAsync.get(constants.STORAGE_KEY.UNIONID),
+          storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT),
+        ]).then(([id, openid, unionid, expiredAt]) => {
+          return {
+            id,
+            openid,
+            unionid,
+            [constants.STORAGE_KEY.EXPIRES_AT]: expiredAt,
+          }
+        })
+      })
     } else {
       return Promise.reject(new HError(605))
     }

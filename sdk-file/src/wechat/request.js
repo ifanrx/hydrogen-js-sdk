@@ -23,32 +23,32 @@ const wxRequestFail = function (reject) {
  * @return {Promise<BaaS.Response<any>>}
  */
 const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'}) => {
-  return new Promise((resolve, reject) => {
+  return utils.mergeRequestHeader(header).then(headers => {
+    return new Promise((resolve, reject) => {
 
-    if (!BaaS._config.CLIENT_ID) {
-      return reject(new HError(602))
-    }
-
-    let headers = utils.mergeRequestHeader(header)
-
-    if (!/https?:\/\//.test(url)) {
-      const API_HOST = BaaS._polyfill.getAPIHost()
-      url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
-    }
-
-    wx.request({
-      method: method,
-      url: url,
-      data: data,
-      header: headers,
-      dataType: dataType,
-      success: resolve,
-      fail: () => {
-        wxRequestFail(reject)
+      if (!BaaS._config.CLIENT_ID) {
+        return reject(new HError(602))
       }
-    })
 
-    utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
+      if (!/https?:\/\//.test(url)) {
+        const API_HOST = BaaS._polyfill.getAPIHost()
+        url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
+      }
+
+      wx.request({
+        method: method,
+        url: url,
+        data: data,
+        header: headers,
+        dataType: dataType,
+        success: resolve,
+        fail: () => {
+          wxRequestFail(reject)
+        }
+      })
+
+      utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
+    })
   })
 }
 

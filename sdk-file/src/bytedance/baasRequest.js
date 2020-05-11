@@ -13,14 +13,17 @@ const storage = require('core-module/storage')
  */
 function tryResendRequest(payload) {
   let prevUid = storage.get(constants.STORAGE_KEY.UID)
+  let preAction = Promise.resolve()
   if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN)) {
     // 缓存被清空，silentLogin 一定会发起 session init 请求
-    BaaS.clearSession()
+    preAction = BaaS.clearSession()
   }
 
-  return BaaS.auth.silentLogin().then(() => {
-    const resendPayload = utils.getResendPayload(BaaS, payload, prevUid)
-    return BaaS.request(resendPayload).then(utils.validateStatusCode)
+  return preAction.then(() => {
+    return BaaS.auth.silentLogin()
+      .then(() => utils.getResendPayload(BaaS, payload, prevUid))
+      .then(resendPayload => BaaS.request(resendPayload))
+      .then(utils.validateStatusCode)
   })
 }
 

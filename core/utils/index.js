@@ -1,4 +1,4 @@
-const storage = require('../storage')
+const storageAsync = require('../storageAsync')
 const constants = require('../constants')
 const BaaS = require('../baas')
 const HError = require('../HError')
@@ -207,7 +207,9 @@ const cloneDeep = source => {
  * @return {boolean} expired
  */
 function isSessionExpired() {
-  return (Date.now() / 1000) >= (storage.get(constants.STORAGE_KEY.EXPIRES_AT) || 0)
+  return storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT).then(expired_at => {
+    return (Date.now() / 1000) >= (expired_at || 0)
+  })
 }
 
 /**
@@ -283,11 +285,12 @@ const mergeRequestHeader = header => {
     header['X-Hydrogen-Env-ID'] = BaaS._config.ENV
   }
 
-  let authToken = BaaS.getAuthToken()
-  if (authToken) {
-    extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
-  }
-  return Object.assign({}, header || {}, extendHeader)
+  return BaaS.getAuthToken().then(authToken => {
+    if (authToken) {
+      extendHeader['Authorization'] = BaaS._config.AUTH_PREFIX + ' ' + authToken
+    }
+    return Object.assign({}, header || {}, extendHeader)
+  })
 }
 
 /**

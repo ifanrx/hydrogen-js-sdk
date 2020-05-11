@@ -5,49 +5,51 @@ const utils = require('core-module/utils')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 
 const swanUpload = (config, resolve, reject, type) => {
-  return swan.uploadFile({
-    url: config.uploadUrl,
-    filePath: config.filePath,
-    name: constants.UPLOAD.UPLOAD_FILE_KEY,
-    formData: {
-      authorization: config.authorization,
-      policy: config.policy
-    },
-    header: getUploadHeaders(),
-    success: (res) => {
-      let result = {}
-      // 开发者工具返回的 res.data 类型是 string，而真机返回 object
-      let data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+  return getUploadHeaders().then(header => {
+    return swan.uploadFile({
+      url: config.uploadUrl,
+      filePath: config.filePath,
+      name: constants.UPLOAD.UPLOAD_FILE_KEY,
+      formData: {
+        authorization: config.authorization,
+        policy: config.policy
+      },
+      header,
+      success: (res) => {
+        let result = {}
+        // 开发者工具返回的 res.data 类型是 string，而真机返回 object
+        let data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
 
-      result.status = 'ok'
-      result.path = config.destLink
-      result.file = {
-        'id': config.id,
-        'path': config.destLink,
-        'name': config.fileName,
-        'created_at': data.time,
-        'mime_type': data.mimetype,
-        'cdn_path': data.url,
-        'size': data.file_size,
+        result.status = 'ok'
+        result.path = config.destLink
+        result.file = {
+          'id': config.id,
+          'path': config.destLink,
+          'name': config.fileName,
+          'created_at': data.time,
+          'mime_type': data.mimetype,
+          'cdn_path': data.url,
+          'size': data.file_size,
+        }
+
+        delete res.data
+
+        if (type && type === 'json') {
+          res.data = result
+        } else {
+          res.data = JSON.stringify(result)
+        }
+
+        try {
+          resolve(utils.validateStatusCode(res))
+        } catch (err) {
+          reject(err)
+        }
+      },
+      fail: () => {
+        BaaS.request.wxRequestFail(reject)
       }
-
-      delete res.data
-
-      if (type && type === 'json') {
-        res.data = result
-      } else {
-        res.data = JSON.stringify(result)
-      }
-
-      try {
-        resolve(utils.validateStatusCode(res))
-      } catch (err) {
-        reject(err)
-      }
-    },
-    fail: () => {
-      BaaS.request.wxRequestFail(reject)
-    }
+    })
   })
 }
 

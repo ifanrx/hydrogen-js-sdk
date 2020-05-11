@@ -8,6 +8,16 @@ module.exports = function (BaaS) {
         platform: 'WEB'
       }
     },
+    setStorageAsync: function (k, v) {
+      return Promise.resolve(window.localStorage.setItem(k, JSON.stringify({value: v})))
+    },
+    getStorageAsync: function (k) {
+      try {
+        return Promise.resolve(JSON.parse(window.localStorage.getItem(k)).value)
+      } catch (e) {
+        return Promise.resolve(null)
+      }
+    },
     setStorageSync: function (k, v) {
       window.localStorage.setItem(k, JSON.stringify({value: v}))
     },

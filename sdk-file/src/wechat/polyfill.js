@@ -20,6 +20,25 @@ module.exports = BaaS => {
     getStorageSync(k) {
       return utils.withRetry(wx.getStorageSync)(k)
     },
+    setStorageAsync(k, v) {
+      return new Promise((resolve, reject) => {
+        wx.setStorage({
+          key: k,
+          data: v,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    },
+    getStorageAsync(k) {
+      return new Promise((resolve) => {
+        wx.getStorage({
+          key: k,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
+        })
+      })
+    },
     getSystemInfoSync() {
       return wx.getSystemInfoSync()
     },

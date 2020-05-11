@@ -11,6 +11,25 @@ module.exports = BaaS => {
     getStorageSync(k) {
       return utils.withRetry(qq.getStorageSync)(k)
     },
+    setStorageAsync(k, v) {
+      return new Promise((resolve, reject) => {
+        qq.setStorage({
+          key: k,
+          data: v,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    },
+    getStorageAsync(k) {
+      return new Promise((resolve) => {
+        qq.getStorage({
+          key: k,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
+        })
+      })
+    },
     getSystemInfoSync() {
       return qq.getSystemInfoSync()
     },

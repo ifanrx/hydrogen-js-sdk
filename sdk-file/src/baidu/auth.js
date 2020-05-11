@@ -1,6 +1,6 @@
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
-const storage = require('core-module/storage')
+const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
@@ -45,10 +45,13 @@ module.exports = BaaS => {
   }
 
   const silentLogin = utils.rateLimit(function (...args) {
-    if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
-      return Promise.resolve()
-    }
-    return auth(...args)
+    return Promise.all([
+      storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
+      utils.isSessionExpired(),
+    ]).then(([token, expired]) => {
+      if (token && !expired) return
+      return auth(...args)
+    })
   })
 
   const getSensitiveData = (data) => {
@@ -80,10 +83,12 @@ module.exports = BaaS => {
 
     // 用户拒绝授权，仅返回 uid, openid
     if (!detail.userInfo) {
-      return Promise.reject(Object.assign(new HError(603), {
-        id: storage.get(constants.STORAGE_KEY.UID),
-        openid: storage.get(constants.STORAGE_KEY.OPENID),
-      }))
+      return Promise.all(([
+        storageAsync.get(constants.STORAGE_KEY.UID),
+        storageAsync.get(constants.STORAGE_KEY.OPENID),
+      ])).then(([id, openid]) => {
+        return Promise.reject(Object.assign(new HError(603), {id, openid}))
+      })
     }
 
     return getLoginCode().then(code => {
