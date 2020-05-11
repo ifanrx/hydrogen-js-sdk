@@ -5,7 +5,6 @@ require('core-js/web/url')
 const core = require('core-module/index')
 const auth = require('./auth')
 const BaaS = require('core-module/baas')
-const storage = require('./storage')
 
 BaaS._config.VERSION = __VERSION__
 
@@ -21,11 +20,5 @@ BaaS.use(request)
 BaaS.use(baasRequest)
 
 BaaS._createRequestMethod()
-
-const rawInit = BaaS.init
-BaaS.init = function(...args) {
-  rawInit(...args)
-  return storage.init()
-}
 
 module.exports = BaaS
