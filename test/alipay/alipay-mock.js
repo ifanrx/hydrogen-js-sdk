@@ -16,6 +16,17 @@ my.getStorageSync = (options) => {
   }
 }
 
+my.getStorage = ({key, success}) => {
+  return success({
+    data: JSON.parse(testStorage.getItem(key)),
+  })
+}
+
+my.setStorage = ({key, data, success}) => {
+  testStorage.setItem(key, JSON.stringify(data))
+  return success()
+}
+
 my.getAuthCode = ({success}) => {
   success({authCode: code})
 }
