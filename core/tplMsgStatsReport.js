@@ -26,6 +26,9 @@ function reportStatsFromHeadOfQueue() {
   case 'BAIDU':
     platform = constants.PLATFORM.BAIDU
     break
+  case 'BYTEDANCE':
+    platform = constants.PLATFORM.BYTEDANCE
+    break
   default:
     platform = constants.PLATFORM.WECHAT
   }
@@ -72,4 +75,7 @@ function reportStats() {
 module.exports = {
   pushStats,
   reportStats,
+  getQueue: function () {
+    return tpl_msg_stats_report_queue.concat()
+  },
 }

@@ -41,7 +41,7 @@ describe('tplMsgStatsReport', () => {
     test('should not report anything if queue in empty', () => {
       return tplMsgStatsReport.reportStats()
         .then(() => {
-          expect(BaaS._baasRequest.mock.calls.length).toEqual(0)
+          expect(BaaS._baasRequest).toHaveBeenCalledTimes(0)
         })
     })
 
@@ -52,7 +52,7 @@ describe('tplMsgStatsReport', () => {
       ]).then(() => {
         return tplMsgStatsReport.reportStats()
           .then(() => {
-            expect(BaaS._baasRequest.mock.calls.length).toEqual(0)
+            expect(BaaS._baasRequest).toHaveBeenCalledTimes(0)
           })
       })
     })
