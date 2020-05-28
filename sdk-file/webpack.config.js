@@ -50,6 +50,7 @@ module.exports = {
     qq: './src/qq/index.js',
     baidu: './src/baidu/index.js',
     bytedance: './src/bytedance/index.js',
+    'react-native': './src/react-native/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -79,5 +80,6 @@ module.exports = {
     }
   },
   devtool: isDEV ? 'inline-cheap-source-map' : 'source-map',
-  mode: process.env.NODE_ENV
+  externals: ['@react-native-community/async-storage'],
+  mode: process.env.NODE_ENV,
 }

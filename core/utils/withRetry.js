@@ -23,7 +23,7 @@ const shouldRetry = (err, matchMessage) => {
  * @params {string|RegExp} options.matchMessage 错误信息匹配规则
  * @return {*} 返回调用 fn 的返回值
  */
-const withRetry = (fn, { context, maxCount = 10, matchMessage } = {}) => (...args) => {
+const withRetry = (fn, { context = {}, maxCount = 10, matchMessage } = {}) => (...args) => {
   let remaindCount = maxCount
   let retry = () => {
     const handleError = err => {

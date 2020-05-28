@@ -12,6 +12,25 @@ module.exports = BaaS => {
     getSystemInfoSync() {
       return swan.getSystemInfoSync()
     },
+    setStorageAsync(k, v) {
+      return new Promise((resolve) => {
+        swan.setStorage({
+          key: k,
+          data: v,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
+        })
+      })
+    },
+    getStorageAsync(k) {
+      return new Promise((resolve, reject) => {
+        swan.getStorage({
+          key: k,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    },
     checkLatestVersion() {
       let info = swan.getSystemInfoSync()
       if (info.platform === 'devtools') {

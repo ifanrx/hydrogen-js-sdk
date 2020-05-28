@@ -19,37 +19,39 @@ class UploadError extends HError {
 }
 
 const myUpload = (config, resolve, reject) => {
-  return my.uploadFile({
-    url: config.uploadUrl,
-    filePath: config.filePath,
-    fileName: constants.UPLOAD.UPLOAD_FILE_KEY,
-    fileType: config.fileType,
-    formData: {
-      authorization: config.authorization,
-      policy: config.policy
-    },
-    header: getUploadHeaders(),
-    success: (res) => {
-      let result = {}
-      let data = JSON.parse(res.data)
-      result.status = 'ok'
-      result.path = config.destLink
-      result.file = {
-        'id': config.id,
-        'path': config.destLink,
-        'name': config.fileName,
-        'created_at': data.time,
-        'mime_type': data.mimetype,
-        'cdn_path': data.url,
-        'size': data.file_size,
+  return getUploadHeaders().then(header => {
+    return my.uploadFile({
+      url: config.uploadUrl,
+      filePath: config.filePath,
+      fileName: constants.UPLOAD.UPLOAD_FILE_KEY,
+      fileType: config.fileType,
+      formData: {
+        authorization: config.authorization,
+        policy: config.policy
+      },
+      header,
+      success: (res) => {
+        let result = {}
+        let data = JSON.parse(res.data)
+        result.status = 'ok'
+        result.path = config.destLink
+        result.file = {
+          'id': config.id,
+          'path': config.destLink,
+          'name': config.fileName,
+          'created_at': data.time,
+          'mime_type': data.mimetype,
+          'cdn_path': data.url,
+          'size': data.file_size,
+        }
+        delete res.data
+        res.data = result
+        resolve(res)
+      },
+      fail: res => {
+        reject(new UploadError(parseInt(res.error), res.errorMessage))
       }
-      delete res.data
-      res.data = result
-      resolve(res)
-    },
-    fail: res => {
-      reject(new UploadError(parseInt(res.error), res.errorMessage))
-    }
+    })
   })
 }
 

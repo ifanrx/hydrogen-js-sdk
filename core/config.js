@@ -17,6 +17,8 @@ const API = {
   ANONYMOUS_LOGIN: '/hserve/v2.0/login/anonymous/',
   LOGOUT: '/hserve/v2.0/session/destroy/',
   SERVER_TIME: '/hserve/v2.2/server/time/',
+  NATIVE_OAUTH_AUTH: '/hserve/v2.3/idp/oauth/:provider/authenticate/',
+  NATIVE_OAUTH_ASSOCIATION: '/hserve/v2.3/idp/oauth/:provider/user-association/',
 
   UPLOAD: '/hserve/v2.1/upload/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',

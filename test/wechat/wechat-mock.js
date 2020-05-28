@@ -48,6 +48,17 @@ wx.getStorageSync = (key) => {
   return JSON.parse(testStorage.getItem(key))
 }
 
+wx.getStorage = ({key, success}) => {
+  return success({
+    data: JSON.parse(testStorage.getItem(key)),
+  })
+}
+
+wx.setStorage = ({key, data, success}) => {
+  testStorage.setItem(key, JSON.stringify(data))
+  return success()
+}
+
 let code = 'mock wx.login code'
 
 // 模拟 wx.login 函数

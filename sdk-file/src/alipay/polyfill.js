@@ -21,6 +21,26 @@ module.exports = function (BaaS) {
       return my.getStorageSync({key}).data
     },
 
+    setStorageAsync(k, v) {
+      return new Promise((resolve, reject) => {
+        my.setStorage({
+          key: k,
+          data: v,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    },
+    getStorageAsync(k) {
+      return new Promise((resolve) => {
+        my.getStorage({
+          key: k,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
+        })
+      })
+    },
+
     linkAlipay: utils.rateLimit(function (opts) {
       const forceLogin = !!opts && !!opts.forceLogin
       const userId = BaaS.storage.get(constants.STORAGE_KEY.UID)

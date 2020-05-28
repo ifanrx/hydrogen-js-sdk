@@ -19,30 +19,28 @@ module.exports = function (BaaS) {
    * @return {Promise<BaaS.Response<any>>}
    */
   BaaS.request = ({url, method = 'GET', data = {}, header = {}, headers = {}}) => {
-    return new Promise((resolve, reject) => {
-      if (!BaaS._config.CLIENT_ID) {
-        return reject(new HError(602))
-      }
+    return utils.mergeRequestHeader(Object.assign({}, header, headers)).then(headers => {
+      return new Promise((resolve, reject) => {
+        if (!BaaS._config.CLIENT_ID) {
+          return reject(new HError(602))
+        }
 
-      if (!/https?:\/\//.test(url)) {
-        const API_HOST = BaaS._polyfill.getAPIHost()
-        url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
-      }
+        if (!/https?:\/\//.test(url)) {
+          const API_HOST = BaaS._polyfill.getAPIHost()
+          url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
+        }
 
-      let payload = {
-        method,
-        url,
-        headers: utils.mergeRequestHeader(Object.assign({}, header, headers)),
-      }
+        let payload = { method, url, headers }
 
-      if (method.toUpperCase() === 'GET') {
-        payload.params = data
-      } else {
-        payload.data = data
-      }
+        if (method.toUpperCase() === 'GET') {
+          payload.params = data
+        } else {
+          payload.data = data
+        }
 
-      axios(payload).then(resolve, reject)
-      utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
+        axios(payload).then(resolve, reject)
+        utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
+      })
     })
   }
 }
