@@ -124,5 +124,6 @@ module.exports = {
     QQ: 'qq_miniapp',
     BAIDU: 'baidu_miniapp',
     BYTEDANCE: 'bytedance_miniapp',
+    JONGDONG: 'jd_miniapp',
   },
 }
