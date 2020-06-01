@@ -10,6 +10,25 @@ module.exports = BaaS => {
     getStorageSync(k) {
       return tt.getStorageSync(k)
     },
+    setStorageAsync(k, v) {
+      return new Promise((resolve, reject) => {
+        tt.setStorage({
+          key: k,
+          data: v,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    },
+    getStorageAsync(k) {
+      return new Promise((resolve) => {
+        tt.getStorage({
+          key: k,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
+        })
+      })
+    },
     getSystemInfoSync() {
       return tt.getSystemInfoSync()
     },

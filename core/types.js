@@ -374,6 +374,25 @@
  */
 
 /**
+ * @typedef LinkAuthDataAuthData
+ * @memberof BaaS
+ * @property {string} token oauth 登录后返回的 token
+ * @property {string} [username] 用户名（Apple 登录时必填）
+ */
+
+/**
+ * @typedef LinkAuthDataOptions
+ * @memberof BaaS
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
+ * @property {string} provider 第三方平台
+ */
+
+
+/**
  * @typedef SetEmailOptions
  * @memberof BaaS
  * @property {boolean} sendVerificationEmail 是否发送验证邮件

@@ -1,5 +1,6 @@
 const constants = require('./constants')
 const storage = require('./storage')
+const storageAsync = require('./storageAsync')
 const HError = require('./HError')
 const utils = require('./utils')
 
@@ -39,7 +40,7 @@ module.exports = function (BaaS) {
    * @return {string}
    */
   BaaS.getAuthToken = () => {
-    return storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
+    return storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN)
   }
 
   /**
@@ -65,12 +66,13 @@ module.exports = function (BaaS) {
     }
 
     let now = Date.now()
-    let lastCheckMilliseconds = storage.get(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS)
-    if (lastCheckMilliseconds && lastCheckMilliseconds - now <= constants.VERSION_MIN_CHECK_INTERVAL) {
-      return
-    }
-    storage.set(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS, now)
-    BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(onSuccess, onError)
+    return storageAsync.get(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS).then(lastCheckMilliseconds => {
+      if (lastCheckMilliseconds && lastCheckMilliseconds - now <= constants.VERSION_MIN_CHECK_INTERVAL) {
+        return
+      }
+      storageAsync.set(constants.STORAGE_KEY.LATEST_VERSION_CHECK_MILLISECONDS, now)
+      return BaaS.request({url: BaaS._config.API.LATEST_VERSION}).then(onSuccess, onError)
+    })
   }
 
   /**
@@ -79,14 +81,16 @@ module.exports = function (BaaS) {
    * @memberof BaaS
    */
   BaaS.clearSession = () => {
-    // 清除客户端认证 Token
-    storage.set(constants.STORAGE_KEY.AUTH_TOKEN, '')
-    // 清除 BaaS 登录状态
-    storage.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, '')
-    storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, '')
-    // 清除用户信息
-    storage.set(constants.STORAGE_KEY.USERINFO, '')
-    storage.set(constants.STORAGE_KEY.UID, '')
+    return Promise.all([
+      // 清除客户端认证 Token
+      storageAsync.set(constants.STORAGE_KEY.AUTH_TOKEN, ''),
+      // 清除 BaaS 登录状态
+      storageAsync.set(constants.STORAGE_KEY.IS_LOGINED_BAAS, ''),
+      storageAsync.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, ''),
+      // 清除用户信息
+      storageAsync.set(constants.STORAGE_KEY.USERINFO, ''),
+      storageAsync.set(constants.STORAGE_KEY.UID, ''),
+    ])
   }
 
   // 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
@@ -107,7 +111,8 @@ module.exports = function (BaaS) {
   BaaS.invokeFunction = require('./invokeFunction')
   BaaS.invoke = require('./invokeFunction')
   BaaS.Query = require('./Query')
-  BaaS.storage = require('./storage')
+  BaaS.storage = storage
+  BaaS.storageAsync = storageAsync
   BaaS.TableObject = require('./TableObject')
   BaaS.User = require('./User')
   BaaS.Order = require('./Order')

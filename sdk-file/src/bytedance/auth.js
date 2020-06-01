@@ -1,5 +1,5 @@
 const constants = require('core-module/constants')
-const storage = require('core-module/storage')
+const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
@@ -48,10 +48,16 @@ module.exports = BaaS => {
   }
 
   const silentLogin = utils.rateLimit(function (...args) {
-    if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN) && !utils.isSessionExpired()) {
-      return Promise.resolve()
-    }
-    return auth(...args)
+    return Promise.all([
+      storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
+      utils.isSessionExpired(),
+    ]).then(res => {
+      const [token, isExpired] = res
+      if (token && !isExpired) {
+        return Promise.resolve()
+      }
+      return auth(...args)
+    })
   })
 
   const getSensitiveData = (data) => {

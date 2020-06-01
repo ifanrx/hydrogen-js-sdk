@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "3.12.0",
+  "version": "3.13.0-beta.2",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -15,12 +15,13 @@
   },
   "scripts": {
     "test": "npm run gen-types && npm run tsd && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
-    "test-core": "mocha test/core-test-new/*.test.js",
+    "test-core": "jest",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",
     "test-web": "./test/web/test.sh",
     "test-qq": "ava test/qq/*.test.js",
     "test-baidu": "ava test/baidu/*.test.js",
+    "test-react-native": "mocha test/react-native/*.test.js",
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
@@ -43,7 +44,6 @@
     "ifanrx"
   ],
   "author": "ifanrx",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ifanrx/repository/issues"
   },
@@ -66,6 +66,7 @@
     "eslint": "4.19.1",
     "faker": "^4.1.0",
     "husky": "^3.1.0",
+    "jest": "^26.0.1",
     "jsdoc": "^3.6.3",
     "jsdoc-typeof-plugin": "^1.0.0",
     "jsdom": "^15.0.0",

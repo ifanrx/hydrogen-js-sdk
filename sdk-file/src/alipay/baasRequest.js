@@ -24,14 +24,21 @@ const createBaasRequestFn = BaaS => (args) => {
  * @param {object} payload
  */
 function tryResendRequest(BaaS, payload) {
-  let prevUid = BaaS.storage.get(constants.STORAGE_KEY.UID)
-  if (BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)) {
-    // 缓存被清空，silentLogin 一定会发起 session init 请求
-    BaaS.clearSession()
-  }
-  return BaaS.auth.silentLogin().then(() => {
-    const resendPayload = utils.getResendPayload(BaaS, payload, prevUid)
-    return BaaS.request(resendPayload).then(utils.validateStatusCode)
+  return Promise.all([
+    BaaS.storageAsync.get(constants.STORAGE_KEY.UID),
+    BaaS.storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
+  ]).then(res => {
+    const [prevUid, token] = res
+    let preAction = Promise.reslove()
+    if (token) {
+      // 缓存被清空，silentLogin 一定会发起 session init 请求
+      preAction = BaaS.clearSession()
+    }
+    return preAction.then(() => {
+      return BaaS.auth.silentLogin()
+        .then(() => utils.getResendPayload(BaaS, payload, prevUid))
+        .then(resendPayload => BaaS.request(resendPayload).then(utils.validateStatusCode))
+    })
   })
 }
 

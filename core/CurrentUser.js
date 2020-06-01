@@ -147,6 +147,23 @@ class CurrentUser extends UserRecord {
   }
 
   /**
+   * 将第三方账号绑定到当前用户（使用 auth_data 绑定），匿名用户无法调用
+   * @since v3.13.0
+   * @param {BaaS.LinkAuthDataAuthData} authData 授权页面 URL
+   * @param {BaaS.LinkAuthDataOptions} [options] 其他选项
+   * @returns {Promise<this>} UserRecord 实例
+   */
+  linkThirdPartyWithAuthData() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    if (!BaaS._polyfill.linkThirdPartyWithAuthData) {
+      return Promise.reject(new HError(605, 'linkThirdPartyWithAuthData 方法未定义'))
+    }
+    return BaaS._polyfill.linkThirdPartyWithAuthData.apply(null, arguments)
+  }
+
+  /**
    * 更新密码
    *
    * @param {BaaS.UpdatePasswordParams} options

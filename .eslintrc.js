@@ -33,11 +33,20 @@ module.exports = {
     BaaS: true,
     sinon: true,
     rewire: true,
+    jest: true,
+    test: true,
     __VERSION_WEB__: true,
     __VERSION_ALIPAY__: true,
     __VERSION_WECHAT__: true,
     __VERSION_QQ__: true,
     __VERSION_BAIDU__: true,
     __VERSION__: true,
-  }
+  },
+  parserOptions: {
+    ecmaVersion: 2017,
+    sourceType: 'module',
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true
+    }
+  },
 }

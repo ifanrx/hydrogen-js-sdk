@@ -269,3 +269,10 @@ module.exports = function (BaaS) {
   BaaS.auth.loginWithThirdParty = utils.rateLimit(createLoginWithThirdPartyFn(BaaS))
   BaaS.auth.getRedirectResult = createGetRedirectResultFn(BaaS)
 }
+
+module.exports._getHandler = getHandler
+module.exports._getErrorMsg = getErrorMsg
+module.exports._loginWithThirdPartyRequest = loginWithThirdPartyRequest
+module.exports._linkThirdPartyRequest = linkThirdPartyRequest
+module.exports._setExtraUrlParams = setExtraUrlParams
+module.exports._sendMessage = sendMessage

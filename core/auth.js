@@ -1,7 +1,7 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
 const HError = require('./HError')
-const storage = require('./storage')
+const storageAsync = require('./storageAsync')
 const utils = require('./utils')
 const UserRecord = require('./UserRecord')
 const User = require('./User')
@@ -121,8 +121,7 @@ const logout = () => {
     url: API.LOGOUT,
     method: 'POST',
   }).then(utils.validateStatusCode).then(res => {
-    BaaS.clearSession()
-    return res
+    return BaaS.clearSession().then(() => res)
   })
 }
 
@@ -148,15 +147,18 @@ const requestPasswordReset = ({email} = {}) => {
  * @return {Promise<BaaS.CurrentUser>}
  */
 let getCurrentUser = () => {
-  let uid = storage.get(constants.STORAGE_KEY.UID)
-  let expiresAt = storage.get(constants.STORAGE_KEY.EXPIRES_AT)
-  if (!uid || !expiresAt || utils.isSessionExpired()) return Promise.reject(new HError(604))
-
-  return new User().get(uid).then(res => {
-    let user = UserRecord.initCurrentUser(res.data)
-    user.user_id = res.data.id
-    user.session_expires_at = expiresAt
-    return user
+  return Promise.all([
+    storageAsync.get(constants.STORAGE_KEY.UID),
+    storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT),
+    utils.isSessionExpired(),
+  ]).then(([uid, expiresAt, expired]) => {
+    if (!uid || !expiresAt || expired) return Promise.reject(new HError(604))
+    return new User().get(uid).then(res => {
+      let user = UserRecord.initCurrentUser(res.data)
+      user.user_id = res.data.id
+      user.session_expires_at = expiresAt
+      return user
+    })
   })
 }
 

@@ -26,6 +26,9 @@ function reportStatsFromHeadOfQueue() {
   case 'BAIDU':
     platform = constants.PLATFORM.BAIDU
     break
+  case 'BYTEDANCE':
+    platform = constants.PLATFORM.BYTEDANCE
+    break
   default:
     platform = constants.PLATFORM.WECHAT
   }
@@ -48,25 +51,31 @@ function reportStats() {
   // 如果已经在上报或队列中没有内容，则不执行上报
   if (isReporting || !tpl_msg_stats_report_queue.length) return Promise.resolve()
   // 如果用户未登录，则不执行上报
-  if (!BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN) || utils.isSessionExpired()) {
-    return Promise.resolve()
-  }
-  isReporting = true
+  return Promise.all([
+    BaaS.storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
+    utils.isSessionExpired(),
+  ]).then(([token, expired]) => {
+    if (!token || expired) return
+    isReporting = true
 
-  utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> begin')
-  return reportStatsFromHeadOfQueue()
-    .then(() => {
-      utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> finish')
-      isReporting = false
-    })
-    .catch(err => {
-      utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> fail', err, tpl_msg_stats_report_queue)
-      isReporting = false
-      throw err
-    })
+    utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> begin')
+    return reportStatsFromHeadOfQueue()
+      .then(() => {
+        utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> finish')
+        isReporting = false
+      })
+      .catch(err => {
+        utils.log(constants.LOG_LEVEL.DEBUG, '<report-stats> fail', err, tpl_msg_stats_report_queue)
+        isReporting = false
+        throw err
+      })
+  })
 }
 
 module.exports = {
   pushStats,
   reportStats,
+  getQueue: function () {
+    return tpl_msg_stats_report_queue.concat()
+  },
 }

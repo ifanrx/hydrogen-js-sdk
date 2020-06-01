@@ -14,13 +14,15 @@ const getUploadFileConfig = (fileName, metaData) => {
 }
 
 const getUploadHeaders = () => {
-  return {
-    'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + BaaS.getAuthToken(),
-    'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-    'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
-    'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
-    'User-Agent': constants.UPLOAD.UA,
-  }
+  return BaaS.getAuthToken().then(authToken => {
+    return {
+      'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
+      'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+      'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+      'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+      'User-Agent': constants.UPLOAD.UA,
+    }
+  })
 }
 
 module.exports = {
