@@ -6,7 +6,15 @@ module.exports = function (BaaS) {
    * @return {Promise<any>}
    */
   BaaS.getWechatJSSDKCredentials = function (url) {
-    return BaaS.request({
+    // if (!url) {
+    //   throw new HError(605, 'url 必填')
+    // }
+
+    // if (url.indexOf('#')) {
+    //   throw new HError(605, 'url 不能包含 #')
+    // }
+
+    return BaaS._baasRequest({
       url: BaaS._config.API.WECHAT.JSSDK_CREDENTIALS,
       method: 'GET',
       data: {url},
