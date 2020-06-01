@@ -67,6 +67,7 @@ const API = {
     THIRD_PARTY_AUTH: '/hserve/v2.0/idp/:provider/redirect/',
     THIRD_PARTY_LOGIN: '/hserve/v2.0/idp/:provider/authenticate/',
     THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/:provider/user-association/',
+    WECHAT_JSSDK_CREDENTIALS: '/hserve/v2.4/idp/wechat/jssdk-credentials/',
   },
 
   WECHAT: {

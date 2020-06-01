@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>获取jssdk登录凭证</title>
+  </head>
+  <body>
+    <h1>获取jssdk登录凭证</h1>
+    <button onclick="getWechatJSSDKCredentials()">获取jssdk登录凭证</button>
+    <script src="./sdk.dev.js"></script>
+    <script>
+      window.BaaS.init('db61ec326ffcfdaffb4a', {
+        logLevel: 'debug',
+      })
+    </script>
+    <script>
+      function getWechatJSSDKCredentials() {
+        window.BaaS.getWechatJSSDKCredentials(window.location.href)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    </script>
+  </body>
+</html>
