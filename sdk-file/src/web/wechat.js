@@ -7,9 +7,10 @@ module.exports = function (BaaS) {
    */
   BaaS.getWechatJSSDKCredentials = function (url) {
     return BaaS.request({
-      url: BaaS._config.API.WEB.WECHAT_JSSDK_CREDENTIALS,
+      url: BaaS._config.API.WECHAT.JSSDK_CREDENTIALS,
       method: 'GET',
       data: {url},
-    }).then(res => res.data)
+    })
+      .then(res => res.data)
   }
 }
