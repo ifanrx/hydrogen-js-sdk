@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>获取jssdk登录凭证</title>
+  </head>
+  <body>
+    <h1>获取jssdk登录凭证</h1>
+    <div>
+      调用成功结果：
+      <div id='success'></div>
+    </div>
+    <button onclick="getWechatJSSDKCredentialsOnSucess()">获取jssdk登录凭证（成功情况）</button>
+
+    <div>
+      调用失败结果：
+      <div id='failure'></div>
+    </div>
+    <button onclick="getWechatJSSDKCredentialsOnFailure()">获取jssdk登录凭证（失败情况）</button>
+
+
+    <script src="./sdk.dev.js"></script>
+    <script>
+      window.BaaS.init('db61ec326ffcfdaffb4a', {
+        logLevel: 'debug',
+      })
+    </script>
+    <script>
+      function getWechatJSSDKCredentialsOnSucess() {
+        window.BaaS.getWechatJSSDKCredentials(window.location.href.replace(/#.*/, ''))
+          .then(res => {
+            document.querySelector('#success').textContent = JSON.stringify(res, null, 4)
+          })
+          .catch(err => {
+            document.querySelector('#failure').textContent = JSON.stringify(err, null, 4)
+          })
+      }
+      function getWechatJSSDKCredentialsOnFailure() {
+        window.BaaS.getWechatJSSDKCredentials()
+          .then(res => {
+            document.querySelector('#success').textContent = JSON.stringify(res, null, 4)
+          })
+          .catch(err => {
+            console.log(err instanceof Error)
+            document.querySelector('#failure').textContent = JSON.stringify(err, null, 4)
+          })
+      }
+    </script>
+  </body>
+</html>
