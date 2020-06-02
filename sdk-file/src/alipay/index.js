@@ -9,6 +9,7 @@ const pay = require('./pay')
 const alipayQRCode = require('./alipayQRCode')
 const reportTicket = require('./reportTicket')
 const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
+const censor = require('./censor')
 
 BaaS._config.VERSION = __VERSION_ALIPAY__
 
@@ -22,6 +23,7 @@ BaaS.use(pay)
 BaaS.use(alipayQRCode)
 BaaS.use(reportTicket)
 BaaS.use(reportTemplateMsgAnalytics)
+BaaS.use(censor)
 BaaS._createRequestMethod()
 
 // 暴露 BaaS 到小程序环境

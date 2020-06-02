@@ -44,6 +44,11 @@ expectType<Promise<AlipayBaaS.Response<any>>>(my.BaaS.request({url: 'test', meth
 
 
 /**
- * wxReportTicket
+ * reportTicket
  */
 expectType<Promise<any>>(my.BaaS.reportTicket('formid'))
+
+/**
+ * censorText
+ */
+expectType<Promise<any>>(my.BaaS.censorText('text'))

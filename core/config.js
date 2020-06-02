@@ -106,6 +106,7 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     MINIAPP_QR_CODE: '/hserve/v2.0/idp/alipay/miniapp-qr-code/',
+    CENSOR_MSG: '/hserve/v2.4/alipay/censor-msg/',
   },
 
   BYTEDANCE: {
