@@ -129,6 +129,21 @@ class CurrentUser extends UserRecord {
   }
 
   /**
+   * 将京东账号绑定到当前用户，匿名用户无法调用
+   * @param {BaaS.LinkOptions} [options] 参数
+   * @returns {Promise<this>} UserRecord 实例
+   */
+  linkJd() {
+    if (this._anonymous) {
+      return Promise.reject(new HError(612))
+    }
+    if (!BaaS._polyfill.linkJd) {
+      return Promise.reject(new HError(605, 'linkJd 方法未定义'))
+    }
+    return BaaS._polyfill.linkJd.apply(null, arguments)
+  }
+
+  /**
    * 将第三方账号绑定到当前用户，匿名用户无法调用
    * @since v2.1.0
    * @param {string} providor 第三方平台

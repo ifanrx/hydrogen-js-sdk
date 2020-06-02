@@ -38,8 +38,8 @@ module.exports = BaaS => {
         BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
       }
     },
-    linkJingdong(...args) {
-      return BaaS.auth.linkJingdong(...args)
+    linkJd(...args) {
+      return BaaS.auth.linkJd(...args)
     },
     handleLoginSuccess(res, isAnonymous, userInfo) {
       // 登录成功的 hook （login、loginWithJingdong、register）调用成功后触发
