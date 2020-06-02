@@ -41,6 +41,6 @@ module.exports = function (BaaS) {
         axios(payload).then(resolve, reject)
         utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
       })
-    })
+    }).catch(utils.validateStatusCode)
   }
 }
