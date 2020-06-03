@@ -8,14 +8,16 @@ module.exports = function (BaaS) {
    * 上报订阅消息订阅关系
    * @function
    * @memberof BaaS
+   * @param {BaaS.SubscribeMessageOptions} options 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  BaaS.subscribeMessage = () => {
+  BaaS.subscribeMessage = (options) => {
     return BaaS._baasRequest({
       url: API.QQ.SUBSCRIBE_MESSAGE,
       method: 'POST',
       data: {
         platform: constants.PLATFORM.QQ,
+        ...options,
       },
     })
   }
