@@ -98,6 +98,7 @@ module.exports = BaaS => {
           create_user: createUser,
           data: detail.data,
           iv: detail.iv,
+          userInfo: detail.userInfo,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
         return getSensitiveData(payload)
@@ -106,7 +107,6 @@ module.exports = BaaS => {
       let userInfo = detail.userInfo
       userInfo.id = res.data.user_id
       userInfo.openid = res.data.openid
-      userInfo.unionid = res.data.unionid
       BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
     })
   }
