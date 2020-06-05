@@ -13,21 +13,21 @@ module.exports = BaaS => {
       return swan.getSystemInfoSync()
     },
     setStorageAsync(k, v) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         swan.setStorage({
           key: k,
           data: v,
-          success: res => resolve(res.data),
-          fail: () => resolve(undefined),
+          success: resolve,
+          fail: reject,
         })
       })
     },
     getStorageAsync(k) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         swan.getStorage({
           key: k,
-          success: resolve,
-          fail: reject,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
         })
       })
     },
