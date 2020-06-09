@@ -128,10 +128,12 @@ module.exports = BaaS => {
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
+          // 京东是没有这些参数
+          // rawData: res.rawData,
+          // signature: res.signature,
+          // encryptedData: res.encryptedData,
+          // iv: res.iv,
+          userInfo: res.userInfo,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
           code
         } : {code}
