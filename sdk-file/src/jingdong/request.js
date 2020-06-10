@@ -36,6 +36,11 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
       }
 
+      // 兼容 PUT 与 DELETE 请求，京东暂时只支持 GET 与 POST 两种请求
+      if (method.toUpperCase() === 'PUT' || method.toUpperCase() === 'DELETE') {
+        headers['X-Hydrogen-Request-Method'] = method
+        method = 'POST'
+      }
       jd.request({
         method: method,
         url: url,
