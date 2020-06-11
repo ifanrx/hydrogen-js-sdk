@@ -34,7 +34,9 @@ let plugins = [
     apply: (compiler) => {
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
         let config = require('./webpack/genTyepsConfig')
-        shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
+        if (config.dest) {
+          shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
+        }
       })
     }
   },
