@@ -63,8 +63,17 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser, syncUserProf
     data,
   }).then(res => {
     if (res.status == constants.STATUS_CODE.CREATED) {
-      BaaS._polyfill.handleLoginSuccess(res)
-      return res
+      let _res = {
+        ...res,
+        data: {
+          ...res.data.user_info,
+          ...res.data,
+          alipay_user_id: res.data.user_info._provider.alipay.user_id,
+          user_id: res.data.user_info.id,
+        }
+      }
+      BaaS._polyfill.handleLoginSuccess(_res)
+      return _res
     } else {
       throw new HError(res.status, require('./request').extractErrorMsg(res))
     }

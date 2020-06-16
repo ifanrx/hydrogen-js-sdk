@@ -25,9 +25,26 @@ describe('auth', () => {
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
         options.url === BaaS._config.API.ALIPAY.SILENT_LOGIN ||
-        options.url === BaaS._config.API.LOGIN_USERNAME ||
-        options.url === BaaS._config.API.ALIPAY.USER_ASSOCIATE ||
         options.url === BaaS._config.API.ALIPAY.AUTHENTICATE
+      ) {
+        return Promise.resolve({
+          status: 201,
+          data: {
+            token,
+            expires_in: expiresIn,
+            user_info: {
+              id: userId,
+              _provider: {
+                alipay: {
+                  user_id: alipayUserId,
+                }
+              }
+            }
+          }
+        })
+      } else if (
+        options.url === BaaS._config.API.LOGIN_USERNAME ||
+        options.url === BaaS._config.API.ALIPAY.USER_ASSOCIATE
       ) {
         let status = options.url === BaaS._config.API.ALIPAY.USER_ASSOCIATE
           ? 200 : 201

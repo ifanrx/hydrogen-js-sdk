@@ -146,14 +146,15 @@ const requestPasswordReset = ({email} = {}) => {
  * @memberof BaaS.auth
  * @return {Promise<BaaS.CurrentUser>}
  */
-let getCurrentUser = () => {
+let getCurrentUser = userData => {
   return Promise.all([
     storageAsync.get(constants.STORAGE_KEY.UID),
     storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT),
     utils.isSessionExpired(),
   ]).then(([uid, expiresAt, expired]) => {
     if (!uid || !expiresAt || expired) return Promise.reject(new HError(604))
-    return new User().get(uid).then(res => {
+    let getUserPromise = userData ? Promise.resolve({data: userData}) : new User().get(uid)
+    return getUserPromise.then(res => {
       let user = UserRecord.initCurrentUser(res.data)
       user.user_id = res.data.id
       user.session_expires_at = expiresAt

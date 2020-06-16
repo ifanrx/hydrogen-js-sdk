@@ -398,6 +398,17 @@ const getUpdateUserProfileParam = value => {
   return result
 }
 
+const flatAuthResponse = res => {
+  return {
+    ...res,
+    data: {
+      ...res.data.user_info,
+      ...res.data,
+      user_id: res.data.user_info.id,
+    }
+  }
+}
+
 module.exports = {
   mergeRequestHeader,
   log: log.log,
@@ -424,6 +435,7 @@ module.exports = {
   extend,
   getUpdateUserProfileParam,
   ticketReportThrottle,
+  flatAuthResponse,
   getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
   getResendPayload: require('./getResendPayload'),
   withRetry: require('./withRetry'),
