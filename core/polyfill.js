@@ -7,5 +7,9 @@ module.exports = {
   CLIENT_PLATFORM: 'UNKNOWN',
   checkLatestVersion() {
     return null
-  }
+  },
+
+  WebSocket: WebSocket,
+  // TODO
+  webSocketHost: 'ws://localhost:4000',
 }
