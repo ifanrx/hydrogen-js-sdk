@@ -1,6 +1,7 @@
 const AsyncStorage = require('@react-native-community/async-storage').default
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
+const utils = require('core-module/utils')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -30,7 +31,7 @@ module.exports = function (BaaS) {
       const jobs = [
         BaaS.storageAsync.set(constants.STORAGE_KEY.UID, res.data.user_id),
         BaaS.storageAsync.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token),
-        BaaS.storageAsync.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30),
+        BaaS.storageAsync.set(constants.STORAGE_KEY.EXPIRES_AT, utils.getExpiredAt(res.data.expires_in)),
         BaaS.storageAsync.set(constants.STORAGE_KEY.USERINFO, res.user_info),
       ]
       if (isAnonymous) {

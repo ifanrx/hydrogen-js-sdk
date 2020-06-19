@@ -398,6 +398,10 @@ const getUpdateUserProfileParam = value => {
   return result
 }
 
+const getExpiredAt = expiresIn => {
+  return Math.floor(Date.now() / 1000) + expiresIn - 30
+}
+
 const flatAuthResponse = res => {
   return {
     ...res,
@@ -405,7 +409,7 @@ const flatAuthResponse = res => {
       ...res.data.user_info,
       ...res.data,
       user_id: res.data.user_info.id,
-      expired_at: Math.floor(Date.now() / 1000) + res.data.expires_in - 30,
+      expired_at: getExpiredAt(res.data.expires_in),
     }
   }
 }
@@ -437,6 +441,7 @@ module.exports = {
   getUpdateUserProfileParam,
   ticketReportThrottle,
   flatAuthResponse,
+  getExpiredAt,
   getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
   getResendPayload: require('./getResendPayload'),
   withRetry: require('./withRetry'),
