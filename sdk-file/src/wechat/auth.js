@@ -209,7 +209,7 @@ module.exports = BaaS => {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
     }
-    return loginPromise.then((res) => commonAuth.getCurrentUser(res.data.user_info))
+    return loginPromise.then((res) => commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at))
   }
 
   Object.assign(BaaS.auth, {

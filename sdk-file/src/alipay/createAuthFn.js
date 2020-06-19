@@ -70,6 +70,7 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser, syncUserProf
           ...res.data,
           alipay_user_id: res.data.user_info._provider.alipay.user_id,
           user_id: res.data.user_info.id,
+          expired_at: Math.floor(Date.now() / 1000) + res.data.expires_in - 30,
         }
       }
       BaaS._polyfill.handleLoginSuccess(_res)

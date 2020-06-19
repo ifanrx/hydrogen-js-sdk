@@ -405,6 +405,7 @@ const flatAuthResponse = res => {
       ...res.data.user_info,
       ...res.data,
       user_id: res.data.user_info.id,
+      expired_at: Math.floor(Date.now() / 1000) + res.data.expires_in - 30,
     }
   }
 }

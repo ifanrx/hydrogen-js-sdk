@@ -140,25 +140,28 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
+const _initCurrentUser = (userInfo, session_expires_at) => {
+  let user = UserRecord.initCurrentUser(userInfo)
+  user.user_id = userInfo.id
+  user.session_expires_at = session_expires_at
+  return user
+}
+
 /**
  * 获取当前用户
  * @since v2.0.0
  * @memberof BaaS.auth
  * @return {Promise<BaaS.CurrentUser>}
  */
-let getCurrentUser = userData => {
+let getCurrentUser = () => {
   return Promise.all([
     storageAsync.get(constants.STORAGE_KEY.UID),
     storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT),
     utils.isSessionExpired(),
   ]).then(([uid, expiresAt, expired]) => {
     if (!uid || !expiresAt || expired) return Promise.reject(new HError(604))
-    let getUserPromise = userData ? Promise.resolve({data: userData}) : new User().get(uid)
-    return getUserPromise.then(res => {
-      let user = UserRecord.initCurrentUser(res.data)
-      user.user_id = res.data.id
-      user.session_expires_at = expiresAt
-      return user
+    return new User().get(uid).then(res => {
+      return _initCurrentUser(res.data, expiresAt)
     })
   })
 }
@@ -191,5 +194,6 @@ module.exports = {
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),
+  _initCurrentUser,
   getCurrentUser: utils.rateLimit(getCurrentUser),
 }
