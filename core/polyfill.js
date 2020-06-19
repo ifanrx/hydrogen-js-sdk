@@ -9,7 +9,7 @@ module.exports = {
     return null
   },
 
-  WebSocket: WebSocket,
+  WebSocket: null,
   // TODO
   webSocketHost: 'ws://localhost:4000',
 }
