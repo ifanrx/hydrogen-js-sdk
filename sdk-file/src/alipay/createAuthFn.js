@@ -63,8 +63,9 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser, syncUserProf
     data,
   }).then(res => {
     if (res.status == constants.STATUS_CODE.CREATED) {
-      BaaS._polyfill.handleLoginSuccess(res)
-      return res
+      let _res = utils.flatAuthResponse(res)
+      BaaS._polyfill.handleLoginSuccess(_res)
+      return _res
     } else {
       throw new HError(res.status, require('./request').extractErrorMsg(res))
     }

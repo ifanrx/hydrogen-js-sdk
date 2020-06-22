@@ -398,6 +398,24 @@ const getUpdateUserProfileParam = value => {
   return result
 }
 
+const getExpiredAt = expiresIn => {
+  return Math.floor(Date.now() / 1000) + expiresIn - 30
+}
+
+const flatAuthResponse = res => {
+  const userInfo = res.data.user_info
+  return {
+    ...res,
+    data: {
+      ...userInfo,
+      ...res.data,
+      user_id: userInfo.id,
+      expired_at: getExpiredAt(res.data.expires_in),
+      alipay_user_id: userInfo._provider && userInfo._provider.alipay && userInfo._provider.alipay.user_id,
+    }
+  }
+}
+
 module.exports = {
   mergeRequestHeader,
   log: log.log,
@@ -424,6 +442,8 @@ module.exports = {
   extend,
   getUpdateUserProfileParam,
   ticketReportThrottle,
+  flatAuthResponse,
+  getExpiredAt,
   getLimitationWithEnableTigger: require('./getLimitationWithEnableTigger'),
   getResendPayload: require('./getResendPayload'),
   withRetry: require('./withRetry'),
