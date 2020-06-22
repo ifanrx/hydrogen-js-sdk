@@ -63,16 +63,7 @@ const createLoginHandlerFn = BaaS => (code, forceLogin, createUser, syncUserProf
     data,
   }).then(res => {
     if (res.status == constants.STATUS_CODE.CREATED) {
-      let _res = {
-        ...res,
-        data: {
-          ...res.data.user_info,
-          ...res.data,
-          alipay_user_id: res.data.user_info._provider.alipay.user_id,
-          user_id: res.data.user_info.id,
-          expired_at: utils.getExpiredAt(res.data.expires_in),
-        }
-      }
+      let _res = utils.flatAuthResponse(res)
       BaaS._polyfill.handleLoginSuccess(_res)
       return _res
     } else {

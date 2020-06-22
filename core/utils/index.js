@@ -403,13 +403,15 @@ const getExpiredAt = expiresIn => {
 }
 
 const flatAuthResponse = res => {
+  const userInfo = res.data.user_info
   return {
     ...res,
     data: {
-      ...res.data.user_info,
+      ...userInfo,
       ...res.data,
-      user_id: res.data.user_info.id,
+      user_id: userInfo.id,
       expired_at: getExpiredAt(res.data.expires_in),
+      alipay_user_id: userInfo._provider && userInfo._provider.alipay && userInfo._provider.alipay.user_id,
     }
   }
 }
