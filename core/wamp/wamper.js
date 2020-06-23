@@ -14,12 +14,6 @@ const wamper = ({
   let connection
   const subscriptionMap = new Map()
 
-  const oninit = () => {
-    for (const data of subscriptionMap.values()) {
-      data.oninit()
-    }
-  }
-
   const _subscribe = (key) => {
     const found = subscriptionMap.get(key)
     if (!found) {
@@ -37,7 +31,7 @@ const wamper = ({
       .then(subscription => {
         found.subscription = subscription
         subscriptionMap.set(key, found)
-        oninit()
+        found.oninit()
       })
       .catch((e) => {
         found.onerror(resolveError(e))
@@ -60,8 +54,9 @@ const wamper = ({
     }
   }
 
-  const connect = asyncCache(() => {
+  const connect = asyncCache((key) => {
     if (connection) {
+      _subscribe(key)
       return Promise.resolve(connection)
     }
     return new Promise((resolve, reject) => {
@@ -137,7 +132,7 @@ const wamper = ({
         })
     }
 
-    connect().catch(err => {
+    connect(key).catch(err => {
       onclose(err.reason, err.details)
     })
 
