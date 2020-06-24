@@ -1,5 +1,6 @@
 // const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
+const WebSocket = require('./websocket')
 
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
@@ -63,5 +64,6 @@ module.exports = BaaS => {
         // tplMsgStatsReport.reportStats()
       }
     },
+    WebSocket: WebSocket,
   })
 }

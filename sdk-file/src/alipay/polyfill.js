@@ -3,6 +3,7 @@ const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 const createAuthFn = require('./createAuthFn')
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
+const WebSocket = require('./websocket')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -76,5 +77,6 @@ module.exports = function (BaaS) {
         tplMsgStatsReport.reportStats()
       }
     },
+    WebSocket: WebSocket,
   })
 }
