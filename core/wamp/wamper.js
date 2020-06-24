@@ -152,22 +152,23 @@ function asyncCache(fn) {
   let bufferList = []
 
   return (...args) => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       bufferList.push({resolve, reject})
       
       if (!inProgress) {
         inProgress = true
 
-        try {
-          const result = await fn(...args)
-          for (const {resolve: success} of bufferList) {
-            success(result)
-          }
-        } catch (e) {
-          for (const {reject: error} of bufferList) {
-            error(e)
-          }
-        }
+        fn(...args)
+          .then(result => {
+            for (const {resolve: success} of bufferList) {
+              success(result)
+            }
+          })
+          .catch(e => {
+            for (const {reject: error} of bufferList) {
+              error(e)
+            }
+          })
 
         inProgress = false
         bufferList = []
