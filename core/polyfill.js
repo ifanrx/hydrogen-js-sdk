@@ -1,3 +1,9 @@
+// 默认取 window.WebSocket
+let _WebSocket = null
+if (typeof window !== 'undefined' && window.WebSocket) {
+  _WebSocket = window.WebSocket
+}
+
 module.exports = {
   getAPIHost() {
     let BaaS = require('./baas')
@@ -8,5 +14,5 @@ module.exports = {
   checkLatestVersion() {
     return null
   },
-  WebSocket: null,
+  WebSocket: _WebSocket,
 }
