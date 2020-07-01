@@ -47,5 +47,6 @@ module.exports = function (BaaS) {
         handler: constants.THIRD_PARTY_AUTH_HANDLER.ASSOCIATE,
       }))
     },
+    WebSocket: WebSocket,
   })
 }

@@ -1,0 +1,145 @@
+<html>
+  <head>
+    <title>订阅</title>
+  </head>
+  <body>
+    <h1>订阅</h1>
+    <p>
+      <input id='username' placeholder="账号" />
+      <input id='password' placeholder="密码" />
+      <button id='login'>登录</button>
+      <button id='logout'>登出</button>
+      <button id='register'>注册</button>
+    </p>
+
+    <h2>表：auto_maintable</h2>
+    <p>
+      <button id="all">同时发起多个订阅</button>
+      <button id="unall">同时取消多个订阅</button>
+    </p>
+    <p>
+      <button id="create">订阅 create 事件</button>
+      <button id="uncreate">取消订阅 create 事件</button>
+    </p>
+    <p>
+      <button id="update">订阅 update 事件</button>
+      <button id="unupdate">取消订阅 update 事件</button>
+    </p>
+    <p>
+      <button id="delete">订阅 delete 事件</button>
+      <button id="undelete">取消订阅 delete 事件</button>
+    </p>
+    <script src="./sdk.dev.js"></script>
+    <script>
+
+      const $ = id => document.getElementById(id)
+      const _ = (id, handler) => {
+        const found = $(id)
+        if (!found) {
+          console.log('元素不存在', id)
+          return
+        }
+        found.addEventListener('click', handler)
+      }
+
+      /**
+       * BaaS 初始化/配置
+      */
+      BaaS.init('995140f59511a222c937', {
+        autoLogin: true,
+        host: 'http://127.0.0.1:8000/',
+        ws_host: 'ws://localhost:8001',
+        // env: '568d32dc52f0f1b9e3b9',
+      })
+
+      /**
+       * 登录注册
+      */
+      _('login', () => {
+        window.BaaS.auth.login({
+          username: $('username').value,
+          password: $('password').value,
+        }).then(function (res) {
+          console.log(res)
+          alert('登录成功')
+        })
+      })
+
+      _('logout', () => {
+        window.BaaS.auth.logout().then(function (res) {
+          console.log(res)
+          alert('登出成功')
+        })
+      })
+
+      _('register', () => {
+        window.BaaS.auth.register({
+          username: $('username').value,
+          password: $('password').value,
+        }).then(function (res) {
+          console.log(res)
+          alert('注册成功')
+        })
+      })
+
+      /**
+       * 订阅
+      */
+      const automaintable = new BaaS.TableObject('auto_maintable')
+      const subscriptionMap = {}
+
+      function subscribe(event_type) {
+        return automaintable.subscribe(event_type, {
+          oninit() {
+            console.log(`${event_type} 订阅成功==>`)
+          },
+          onevent(etv) {
+            console.log(`${event_type} 订阅推送==>`, etv)
+          },
+          onerror(err) {
+            console.log(`${event_type} 订阅失败==>`, err.message)
+          },
+        })
+      }
+
+      ;['create', 'update', 'delete'].forEach(event_type => {
+        _(event_type, () => {
+          subscriptionMap[event_type] = subscribe(event_type)
+        });
+
+        _('un' + event_type, () => {
+          const found = subscriptionMap[event_type]
+          if (!found) {
+            console.log('订阅关系不存在', event_type)
+            return
+          }
+          found.unsubscribe()
+            .then(() => {
+              console.log(`${event_type} 取消订阅成功`)
+            })
+            .catch(err => {
+              console.log(`${event_type} 取消订阅失败`, err)
+            })
+        });
+      });
+
+      _('all', () => {
+        ['create', 'update', 'delete'].forEach(event_type => {
+          subscriptionMap[event_type] = subscribe(event_type)
+        });
+      });
+
+      _('unall', () => {
+        const allPromises = ['create', 'update', 'delete'].filter(event_type => {
+          return !!subscriptionMap[event_type]
+        }).map(event_type => subscriptionMap[event_type].unsubscribe())
+
+        Promise.all(allPromises).then(() => {
+          console.log('取消订阅成功')
+        }).catch((err) => {
+          console.log('取消订阅失败', err)
+        })
+      });
+    </script>
+  </body>
+</html>

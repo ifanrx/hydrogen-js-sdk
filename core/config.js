@@ -276,5 +276,13 @@ module.exports = {
    * @type string
    * @memberof BaaS._config
    */
-  VERSION: VERSION  // package.json 中的 version 也需要同步修改。
+  VERSION: VERSION,  // package.json 中的 version 也需要同步修改。
+
+  /**
+   * websocket 相关配置
+   */
+  WS_HOST: 'ws://localhost:8001', //TODO
+  WS_PATH: '/ws/hydrogen/',
+  WS_REALM: 'com.ifanrcloud',
+  WS_BASE_TOPIC: 'com.ifanrcloud.schema_event',
 }

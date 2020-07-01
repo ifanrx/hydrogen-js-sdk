@@ -12,10 +12,20 @@ class Connection {
       typeof options.create_transport === 'function',
       'create_transport must be a function'
     )
+    util.assert(
+      options.getAuthTokenQuerystring !== undefined,
+      'getAuthTokenQuerystring missing'
+    )
+    util.assert(
+      typeof options.getAuthTokenQuerystring === 'function',
+      'getAuthTokenQuerystring must be a function'
+    )
 
     this._options = options
 
     this._create_transport = this._options.create_transport
+    this._getAuthTokenQuerystring = this._options.getAuthTokenQuerystring
+    this._shouldTryAgain = this._options.shouldTryAgain || (() => false)
 
     // Deferred factory
     //
@@ -134,10 +144,10 @@ class Connection {
     this._autoreconnect_reset()
     this._retry = true
 
-    const retry = () => {
+    const original_retry = (q) => {
       // create a WAMP transport
       try {
-        this._transport = this._create_transport({url: this._options.url})
+        this._transport = this._create_transport({url: this._options.url + '?' + q})
       } catch (e) {
         util.handle_error(this._options.on_internal_error, e)
       }
@@ -223,6 +233,7 @@ class Connection {
         this._transport = null
 
         let reason = null
+
         if (this._connect_successes === 0) {
           reason = 'unreachable'
           if (!this._retry_if_unreachable) {
@@ -232,6 +243,10 @@ class Connection {
           reason = 'lost'
         } else {
           reason = 'closed'
+        }
+
+        if (this._shouldTryAgain(this._session_close_reason)) {
+          this._retry = true
         }
 
         let next_retry = this._autoreconnect_advance()
@@ -289,6 +304,16 @@ class Connection {
           util.warn('auto-reconnect disabled!', this._retry, stop_retrying)
         }
       }
+    }
+
+    const retry = () => {
+      this._getAuthTokenQuerystring()
+        .then((q) => {
+          original_retry(q)
+        })
+        .catch(e => {
+          util.handle_error(this._options.on_internal_error, e)
+        })
     }
 
     retry()

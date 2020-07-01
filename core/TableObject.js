@@ -5,33 +5,7 @@ const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
-const {wamper} = require('./wamp')
-
-const path = '/ws/v1/schema-event/'
-const realm = 'com.ifanrcloud'
-const base_topic = 'com.ifanrcloud.schema_event'
-function resolveTopic({schema_name, event_type}) {
-  return `${base_topic}.${schema_name}.on_${event_type}`
-}
-
-function resolveEvent({kwargs}) {
-  // TODO
-  return kwargs
-}
-
-function resolveError({reason, details}) {
-  // TODO
-  return reason
-}
-
-function resolveOptions({where}) {
-  if (where) {
-    return {where}
-  }
-  return {}
-}
-
-let wamp
+const wamp = require('./wamp')
 
 /**
  * 数据表
@@ -197,17 +171,6 @@ class TableObject extends BaseQuery {
     oninit,
     onevent,
   }) {
-    if (!wamp) {
-      wamp = wamper({
-        WebSocket: BaaS._polyfill.WebSocket,
-        url: BaaS._polyfill.webSocketHost + path,
-        realm,
-        resolveError,
-        resolveEvent,
-        resolveOptions,
-        resolveTopic,
-      })
-    }
     return wamp.subscribe({
       schema_name: this._tableID,
       where: this._queryObject,

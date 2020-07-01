@@ -17,6 +17,7 @@ module.exports = function (BaaS) {
     autoLogin = false,
     logLevel = '',
     host = '',
+    ws_host,
     env
   } = {}) => {
     if (!utils.isString(clientID)) {
@@ -24,6 +25,9 @@ module.exports = function (BaaS) {
     }
     if (logLevel) {
       utils.setLogLevel(logLevel)
+    }
+    if (ws_host) {
+      BaaS._config.WS_HOST = ws_host
     }
     BaaS._config.AUTO_LOGIN = autoLogin
     BaaS._config.ENV = env

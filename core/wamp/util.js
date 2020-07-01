@@ -103,6 +103,42 @@ const is_object = (variable) => {
   )
 }
 
+function asyncCache(fn) {
+  let inProgress = false
+  let bufferList = []
+
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      bufferList.push({resolve, reject})
+      
+      if (!inProgress) {
+        inProgress = true
+
+        fn(...args)
+          .then(result => {
+            for (const {resolve: success} of bufferList) {
+              success(result)
+            }
+            inProgress = false
+            bufferList = []
+          })
+          .catch(e => {
+            for (const {reject: error} of bufferList) {
+              error(e)
+            }
+            inProgress = false
+            bufferList = []
+          })
+      }
+    })
+  }
+}
+
+function generateKey() {
+  return generateKey._key++
+}
+generateKey._key = 1
+
 module.exports = {
   assert,
   canUse,
@@ -116,4 +152,6 @@ module.exports = {
   rand_normal,
   setDebug,
   warn,
+  asyncCache,
+  generateKey,
 }

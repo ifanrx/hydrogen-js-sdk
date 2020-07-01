@@ -8,8 +8,5 @@ module.exports = {
   checkLatestVersion() {
     return null
   },
-
   WebSocket: null,
-  // TODO
-  webSocketHost: 'ws://localhost:4000',
 }

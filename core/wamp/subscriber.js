@@ -1,18 +1,35 @@
 const {Connection} = require('./connection')
 const {transporter} = require('./transporter')
+const util = require('./util')
 
-const wamper = ({
+const subscriber = ({
   WebSocket,
+  getAuthTokenQuerystring,
   realm,
-  resolveError,
-  resolveEvent,
   resolveOptions,
   resolveTopic,
   url,
+  shouldTryAgain,
 }) => {
   const create_transport = transporter(WebSocket)
-  let connection
+  let connection  = null
   const subscriptionMap = new Map()
+
+  const clearConnection = () => {
+    if (connection && connection.isOpen) {
+      connection.close()
+    }
+    connection = null
+    subscriptionMap.clear()
+  }
+
+  const tryCloseConnection = (details) => {
+    if (subscriptionMap.size === 0) {
+      clearConnection()
+    } else if (details && details.will_retry === false) {
+      clearConnection()
+    }
+  }
 
   const _subscribe = (key) => {
     const found = subscriptionMap.get(key)
@@ -21,11 +38,7 @@ const wamper = ({
     }
     connection.session.subscribe(
       found.topic,
-      (args, kwargs) => found.onevent(resolveEvent({
-        args,
-        kwargs,
-        event_type: found.event_type,
-      })),
+      (_, kwargs) => found.onevent(kwargs),
       found.options,
     )
       .then(subscription => {
@@ -34,7 +47,9 @@ const wamper = ({
         found.oninit()
       })
       .catch((e) => {
-        found.onerror(resolveError(e))
+        found.onerror(e)
+        subscriptionMap.delete(key)
+        tryCloseConnection()
       })
   }
 
@@ -50,34 +65,36 @@ const wamper = ({
 
   const onclose = (reason, details) => {
     for (const data of subscriptionMap.values()) {
-      data.onerror(resolveError({reason, details}))
+      data.onerror({reason, details})
     }
+    tryCloseConnection(details)
   }
 
-  const connect = asyncCache((key) => {
-    if (connection) {
-      _subscribe(key)
-      return Promise.resolve(connection)
+  const connect = util.asyncCache(() => {
+    if (connection && connection.isOpen) {
+      return Promise.resolve()
     }
+
     return new Promise((resolve, reject) => {
       connection = new Connection({
-        url,
+        url: url,
         realm,
         create_transport,
+        getAuthTokenQuerystring,
+        shouldTryAgain,
       })
       connection.onopen = () => {
-        onopen()
         resolve()
+
+        // 如果建立了连接，则监听事件
         connection.onopen = onopen
+        connection.onclose = onclose
       }
       connection.onclose = (reason, details) => {
         const err = new Error(reason)
         err.reason = reason
         err.details = details
         reject(err)
-        if (connection) {
-          connection.onclose = onclose
-        }
       }
       connection.open()
     })
@@ -94,11 +111,7 @@ const wamper = ({
     const topic = resolveTopic({schema_name, event_type})
     const options = resolveOptions({where}) || {}
 
-    onerror = onerror || (() => {})
-    oninit = oninit || (() => {})
-    onevent = onevent || (() => {})
-
-    const key = resolveSubscriptionKey()
+    const key = util.generateKey()
     subscriptionMap.set(key, {
       key,
       topic,
@@ -110,13 +123,17 @@ const wamper = ({
 
     const unsubscribe = () => {
       const found = subscriptionMap.get(key)
-
       if (!found) {
         return Promise.resolve()
       }
 
       if (!found.subscription) {
         subscriptionMap.delete(key)
+        tryCloseConnection()
+        return Promise.resolve()
+      }
+
+      if (!connection) {
         return Promise.resolve()
       }
 
@@ -124,59 +141,20 @@ const wamper = ({
         .unsubscribe(found.subscription)
         .then(() => {
           subscriptionMap.delete(key)
-
-          if (subscriptionMap.size === 0) {
-            connection.close()
-            connection = null
-          }
+          tryCloseConnection()
         })
     }
 
-    connect(key).catch(err => {
-      onclose(err.reason, err.details)
-    })
+    connect()
+      .then(() => {
+        _subscribe(key)
+      })
+      .catch(onerror)
 
     return {unsubscribe}
   }
 
-  return {subscribe}
+  return subscribe
 }
 
-let _key = 1
-function resolveSubscriptionKey() {
-  return _key++
-}
-
-function asyncCache(fn) {
-  let inProgress = false
-  let bufferList = []
-
-  return (...args) => {
-    return new Promise((resolve, reject) => {
-      bufferList.push({resolve, reject})
-      
-      if (!inProgress) {
-        inProgress = true
-
-        fn(...args)
-          .then(result => {
-            for (const {resolve: success} of bufferList) {
-              success(result)
-            }
-          })
-          .catch(e => {
-            for (const {reject: error} of bufferList) {
-              error(e)
-            }
-          })
-
-        inProgress = false
-        bufferList = []
-      }
-    })
-  }
-}
-
-module.exports = {
-  wamper,
-}
+module.exports = subscriber
