@@ -281,8 +281,8 @@ module.exports = {
   /**
    * websocket 相关配置
    */
-  WS_HOST: 'ws://localhost:8001', //TODO
-  WS_PATH: '/ws/hydrogen/',
+  WS_HOST: 'ws://localhost:8001/', //TODO
+  WS_PATH: 'ws/hydrogen/',
   WS_REALM: 'com.ifanrcloud',
   WS_BASE_TOPIC: 'com.ifanrcloud.schema_event',
 }
