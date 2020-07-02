@@ -181,7 +181,10 @@ class Connection {
 
       this._transport.onopen = () => {
         // reset auto-reconnect timer and tracking
-        this._autoreconnect_reset()
+
+        if (!this._options.state.retried) {
+          this._autoreconnect_reset()
+        }
 
         // util successful connections
         this._connect_successes += 1
@@ -218,7 +221,11 @@ class Connection {
       this._session.onleave = (reason, details) => {
         this._session_close_reason = reason
         this._session_close_message = details.message || ''
-        this._retry = false
+        if (!this._shouldTryAgain(reason)) {
+          this._retry = false
+        } else {
+          this._options.state.retried = true
+        }
         this._transport.close()
 
         if (this.onabort) {
@@ -243,10 +250,6 @@ class Connection {
           reason = 'lost'
         } else {
           reason = 'closed'
-        }
-
-        if (this._shouldTryAgain(this._session_close_reason)) {
-          this._retry = true
         }
 
         let next_retry = this._autoreconnect_advance()

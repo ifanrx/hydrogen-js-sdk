@@ -12,14 +12,16 @@ const subscriber = ({
   shouldTryAgain,
 }) => {
   const create_transport = transporter(WebSocket)
-  let connection  = null
+  let connection = null
   const subscriptionMap = new Map()
+  const state = {
+    retried: false
+  }
 
   const clearConnection = () => {
     if (connection && connection.isOpen) {
       connection.close()
     }
-    connection = null
     subscriptionMap.clear()
   }
 
@@ -60,6 +62,7 @@ const subscriber = ({
   }
 
   const onopen = () => {
+    state.retried = false
     recover()
   }
 
@@ -71,22 +74,26 @@ const subscriber = ({
   }
 
   const connect = util.asyncCache(() => {
-    if (connection && connection.isOpen) {
-      return Promise.resolve()
-    }
-
-    return new Promise((resolve, reject) => {
+    if (!connection) {
       connection = new Connection({
         url: url,
         realm,
         create_transport,
         getAuthTokenQuerystring,
         shouldTryAgain,
+        state,
       })
+    }
+
+    if (connection.isOpen) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve, reject) => {
       connection.onopen = () => {
+        state.retried = false
         resolve()
 
-        // 如果建立了连接，则监听事件
         connection.onopen = onopen
         connection.onclose = onclose
       }
@@ -95,6 +102,9 @@ const subscriber = ({
         err.reason = reason
         err.details = details
         reject(err)
+
+        connection.onopen = onopen
+        connection.onclose = onclose
       }
       connection.open()
     })
