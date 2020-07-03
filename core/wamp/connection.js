@@ -234,6 +234,7 @@ class Connection {
       }
 
       this._transport.onclose = (evt) => {
+        console.log('websocket==>', evt)
         // remove any pending reconnect timer
         this._autoreconnect_reset_timer()
 

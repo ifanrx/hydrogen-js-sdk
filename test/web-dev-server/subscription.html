@@ -14,6 +14,14 @@
 
     <h2>表：auto_maintable</h2>
     <p>
+      <label>str=</label>
+      <input id='str' value="" placeholder="" />
+    </p>
+    <p>
+      <label>num></label>
+      <input id='num' value="" placeholder="" />
+    </p>
+    <p>
       <button id="all">同时发起多个订阅</button>
       <button id="unall">同时取消多个订阅</button>
     </p>
@@ -88,10 +96,22 @@
       /**
        * 订阅
       */
-      const automaintable = new BaaS.TableObject('auto_maintable')
       const subscriptionMap = {}
+      const automaintable = new BaaS.TableObject('auto_maintable')
+      let query = new BaaS.Query()
 
       function subscribe(event_type) {
+        const str = $('str').value
+        const num = $('num').value
+
+        if (str && str.trim()) {
+          query.compare('str', '=', str)
+        }
+        if (num && num.trim()) {
+          query.compare('num', '>', Number(num))
+        }
+
+        automaintable.setQuery(query)
         return automaintable.subscribe(event_type, {
           oninit() {
             console.log(`${event_type} 订阅成功==>`)
