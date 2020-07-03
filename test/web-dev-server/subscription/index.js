@@ -74,6 +74,7 @@ var app = new Vue({
           query.compare(item.field, item.op, item.value)
         }
       })
+      automaintable.setQuery(query)
 
       this.events.forEach(event_type => {
         const id = subscriptionId()

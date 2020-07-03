@@ -97,7 +97,7 @@
                     <input class="form-control" placeholder="操作符" v-model.trim="item.op" />
                   </div>
                   <div class="col">
-                    <input class="form-control" placeholder="值" v-model="item.value" />
+                    <input class="form-control" placeholder="值" v-model.number="item.value" />
                   </div>
                   <div class="col">
                     <button class="btn btn-danger btn-sm" @click="removeWhere(item.id)">删除</button>
