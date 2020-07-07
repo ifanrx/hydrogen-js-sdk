@@ -56,7 +56,7 @@ var app = new Vue({
         return
       }
 
-      const automaintable = new BaaS.TableObject('auto_maintable')
+      const _tableobject = new BaaS.TableObject(this.tablename)
       const query = new BaaS.Query()
       let parsedWhere = {}
       if (this.where) {
@@ -67,20 +67,21 @@ var app = new Vue({
           return
         }
       }
-      automaintable.setQuery(query)
+      query.queryObject = parsedWhere
+      _tableobject.setQuery(query)
 
       this.events.forEach(event_type => {
         const id = subscriptionId()
         const item = {
           id,
           tablename: this.tablename,
-          where: parsedWhere,
+          where: this.where,
           event_type,
           unsubscribe: null,
           subscribe_status: '连接中..',
           unsubscribe_status: '',
         }
-        item.unsubscribe = automaintable.subscribe(event_type, {
+        item.unsubscribe = _tableobject.subscribe(event_type, {
           oninit() {
             item.subscribe_status = '订阅成功'
           },
