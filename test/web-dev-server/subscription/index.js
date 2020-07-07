@@ -19,7 +19,7 @@ var app = new Vue({
     // 表单
     tablename: 'auto_maintable',
     events: ['create', 'update', 'delete'],
-    where: [],
+    where: "",
     subscriptions: [],
   },
   methods: {
@@ -46,17 +46,6 @@ var app = new Vue({
         console.log(res)
       })
     },
-    addWhere() {
-      this.where.push({
-        id: whereId(),
-        field: '',
-        op: '=',
-        value: '',
-      })
-    },
-    removeWhere(id) {
-      this.where = this.where.filter(item => item.id != id)
-    },
     subscribe() {
       if (!this.tablename) {
         notie.alert({type: 'warning', text: '表名不能为空'})
@@ -69,11 +58,15 @@ var app = new Vue({
 
       const automaintable = new BaaS.TableObject('auto_maintable')
       const query = new BaaS.Query()
-      this.where.forEach(item => {
-        if (item.field) {
-          query.compare(item.field, item.op, item.value)
+      let parsedWhere = {}
+      if (this.where) {
+        try {
+          parsedWhere = JSON.parse(this.where)
+        } catch {
+          notie.alert({type: 'warning', text: '查询条件不是合法 JSON'})
+          return
         }
-      })
+      }
       automaintable.setQuery(query)
 
       this.events.forEach(event_type => {
@@ -81,7 +74,7 @@ var app = new Vue({
         const item = {
           id,
           tablename: this.tablename,
-          where: this.where.filter(item => !!item.field),
+          where: parsedWhere,
           event_type,
           unsubscribe: null,
           subscribe_status: '连接中..',

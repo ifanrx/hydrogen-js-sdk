@@ -64,47 +64,7 @@
           </div>
           <div class="form-group">
             <label>查询条件</label>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="form-row align-items-center">
-                  <div class="col">
-                     <button class="btn btn-primary btn-sm" @click="addWhere">新增</button>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="form-row align-items-center">
-                  <div class="col">
-                    字段
-                  </div>
-                  <div class="col">
-                    操作符
-                  </div>
-                  <div class="col">
-                    值
-                  </div>
-                  <div class="col">
-                    操作
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item" v-for="item in where" v-bind:key="item.id">
-                <div class="form-row align-items-center">
-                  <div class="col">
-                    <input class="form-control" placeholder="字段" v-model.trim="item.field" />
-                  </div>
-                  <div class="col">
-                    <input class="form-control" placeholder="操作符" v-model.trim="item.op" />
-                  </div>
-                  <div class="col">
-                    <input class="form-control" placeholder="值" v-model.number="item.value" />
-                  </div>
-                  <div class="col">
-                    <button class="btn btn-danger btn-sm" @click="removeWhere(item.id)">删除</button>
-                  </div>
-                </div>
-              </li>
-            </ul>
+            <textarea v-model="where" class="form-control"></textarea>
           </div>
           <button class="btn btn-primary" @click="subscribe">订阅</button>
         </div>
