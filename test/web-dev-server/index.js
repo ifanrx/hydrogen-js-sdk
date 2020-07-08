@@ -193,6 +193,16 @@ function init() {
           .then(function (res) {console.log(res)})
           .catch(function (err) {console.log('err: ', err)})
       },
+      thirdPartySilentLoginRedirect: function () {
+        BaaS.auth.loginWithThirdParty('oauth-wechat-mp', './auth.html', {
+          debug: true,
+          mode: 'redirect',
+          createUser: true,
+          silent: true,
+        })
+          .then(function (res) {console.log(res)})
+          .catch(function (err) {console.log('err: ', err)})
+      },
       thirdPartyLoginIframe: function () {
         BaaS.auth.loginWithThirdParty('oauth-wechat-web', '/auth.html', {
           mode: 'popup-iframe',

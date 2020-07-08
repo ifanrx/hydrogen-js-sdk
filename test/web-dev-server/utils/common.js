@@ -8,15 +8,22 @@
   }
 
   // 初始化
-  window.BaaS.init('a4d2d62965ddb57fa4d6', {
-    logLevel: 'debug',
-  })
+  // window.BaaS.init('a4d2d62965ddb57fa4d6', {
+  //   logLevel: 'debug',
+  // })
 
   // // DEBUG config
   // BaaS._config.DEBUG = true;
   // BaaS.init('995140f59511a222c937', {logLevel: 'debug'});
   // BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com';
   // BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/;
+
+  // QA
+  BaaS.init('995140f59511a222c937', {
+    // host: 'https://i-v5204.eng.szx.ifanrx.com/',
+    host: 'https://v5204.eng.szx.ifanrx.com/',
+    logLevel: 'debug',
+  })
 
   // hook request
   var r = window.BaaS.request;
