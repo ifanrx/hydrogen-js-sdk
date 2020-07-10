@@ -37,16 +37,26 @@ const createGetRedirectResultFn = BaaS => () => {
 }
 
 // “第三方登录”请求
-let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_userprofile} = {}) => {
+let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_userprofile, silent_login} = {}) => {
+  const _url = silent_login ? BaaS._config.API.WEB.THIRD_PARTY_SILENT_LOGIN : BaaS._config.API.WEB.THIRD_PARTY_LOGIN
+  const _data = {
+    auth_token: token,
+    create_user: !!create_user,
+  }
+  if (!silent_login) {
+    _data.update_userprofile = utils.getUpdateUserProfileParam(update_userprofile)
+  }
+
   return BaaS.request({
-    url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_LOGIN, {provider}),
+    url: utils.format(_url, {provider}),
     method: 'POST',
-    data: {
-      auth_token: token,
-      create_user: !!create_user,
-      update_userprofile: utils.getUpdateUserProfileParam(update_userprofile),
-    }
+    data: _data,
   }).then(utils.validateStatusCode).then(res => {
+    // hack: silent_login 返回的数据结构不一致
+    if (silent_login && res.data.user_info) {
+      res.data.user_id = res.data.user_info.id
+    }
+
     BaaS._polyfill.handleLoginSuccess(res)
   })
 }
@@ -142,6 +152,7 @@ const createThirdPartyAuthFn = BaaS => () => {
   const handler = getHandler(params.get(PARAM.HANDLER))
   const create_user = params.get(PARAM.CREATE_USER)
   const update_userprofile = params.get(PARAM.UPDATE_USER_PROFILE)
+  const silent_login = params.get(PARAM.SILENT_LOGIN)
   let wechatIframeContentStyle = {}
   try {
     wechatIframeContentStyle = JSON.parse(params.get(PARAM.WECHAT_IFRAME_CONTENT_STYLE))
@@ -153,7 +164,7 @@ const createThirdPartyAuthFn = BaaS => () => {
     : linkThirdPartyRequest
   if (accessToken) {
     // 授权成功
-    return request(BaaS, {provider, token: accessToken, create_user, update_userprofile})
+    return request(BaaS, {provider, token: accessToken, create_user, update_userprofile, silent_login})
       .then(() => {
         const authResult = {
           status: constants.THIRD_PARTY_AUTH_STATUS.SUCCESS,
@@ -173,13 +184,18 @@ const createThirdPartyAuthFn = BaaS => () => {
         }
       })
   } else {
+    const _data = {
+      callback_url: window.location.href,
+    }
+    if (silent_login) {
+      _data.silent_login = true
+    }
+
     // 跳转到第三方授权页面
     return BaaS.request({
       url: utils.format(BaaS._config.API.WEB.THIRD_PARTY_AUTH, {provider}),
       method: 'POST',
-      data: {
-        callback_url: window.location.href,
-      },
+      data: _data,
     }).then(res => {
       if (res.status === constants.STATUS_CODE.SUCCESS && res.data.status === 'ok') {
         const url = setExtraUrlParams(res.data.redirect_url, {provider, mode, wechatIframeContentStyle})

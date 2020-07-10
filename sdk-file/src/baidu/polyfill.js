@@ -1,6 +1,7 @@
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
 const WebSocket = require('./websocket')
+const utils = require('core-module/utils')
 
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
@@ -58,7 +59,7 @@ module.exports = BaaS => {
           })
         )
       }
-      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, utils.getExpiredAt(res.data.expires_in))
       if (isAnonymous) {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {

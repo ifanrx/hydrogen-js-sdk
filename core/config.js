@@ -64,14 +64,15 @@ const API = {
   TEMPLATE_MESSAGE_EVENT_REPORT: '/hserve/v2.0/template-message/event-report/',
 
   WEB: {
+    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/:provider/user-association/',
     THIRD_PARTY_AUTH: '/hserve/v2.0/idp/:provider/redirect/',
     THIRD_PARTY_LOGIN: '/hserve/v2.0/idp/:provider/authenticate/',
-    THIRD_PARTY_ASSOCIATE: '/hserve/v2.0/idp/:provider/user-association/',
+    THIRD_PARTY_SILENT_LOGIN: '/hserve/v2.5/idp/:provider/silent-login/',
   },
 
   WECHAT: {
-    SILENT_LOGIN: '/hserve/v2.4/idp/wechat/silent-login/',
-    AUTHENTICATE: '/hserve/v2.4/idp/wechat/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/wechat/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/wechat/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.4/idp/wechat/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
@@ -84,8 +85,8 @@ const API = {
   },
 
   QQ: {
-    SILENT_LOGIN: '/hserve/v2.0/idp/qq/silent-login/',
-    AUTHENTICATE: '/hserve/v2.0/idp/qq/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/qq/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/qq/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/qq/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     DECRYPT: '/hserve/v2.0/qq/decrypt/',
@@ -94,15 +95,15 @@ const API = {
   },
 
   BAIDU: {
-    SILENT_LOGIN: '/hserve/v2.1/idp/baidu/silent-login/',
-    AUTHENTICATE: '/hserve/v2.1/idp/baidu/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/baidu/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/baidu/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.1/idp/baidu/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
   },
 
   ALIPAY: {
-    SILENT_LOGIN: '/hserve/v2.1/idp/alipay/silent-login/',
-    AUTHENTICATE: '/hserve/v2.1/idp/alipay/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/alipay/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/alipay/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.0/idp/alipay/user-associate/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     MINIAPP_QR_CODE: '/hserve/v2.0/idp/alipay/miniapp-qr-code/',
@@ -110,16 +111,16 @@ const API = {
   },
 
   BYTEDANCE: {
-    SILENT_LOGIN: '/hserve/v2.4/idp/bytedance/silent-login/',
-    AUTHENTICATE: '/hserve/v2.4/idp/bytedance/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/bytedance/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/bytedance/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.4/idp/bytedance/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     MINIAPP_QR_CODE: '/hserve/v2.4/idp/bytedance/miniapp-qr-code/',
   },
 
   JINGDONG: {
-    SILENT_LOGIN: '/hserve/v2.4/idp/jd/silent-login/',
-    AUTHENTICATE: '/hserve/v2.4/idp/jd/authenticate/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/jd/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/jd/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.4/idp/jd/user-association/',
   },
 

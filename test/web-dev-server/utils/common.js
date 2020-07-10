@@ -29,6 +29,13 @@
   // BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com';
   // BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/;
 
+  // QA
+  // BaaS.init('995140f59511a222c937', {
+  //   // host: 'https://i-v5204.eng.szx.ifanrx.com/',
+  //   host: 'https://v5204.eng.szx.ifanrx.com/',
+  //   logLevel: 'debug',
+  // })
+
   // hook request
   var r = window.BaaS.request;
   window.BaaS.request = function () {

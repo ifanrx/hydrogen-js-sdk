@@ -116,6 +116,7 @@ module.exports = {
     HANDLER: 'handler',
     TOKEN: 'token',
     AUTH_RESULT: 'auth-result',
+    SILENT_LOGIN: 'silent_login',
   },
 
   PLATFORM: {
