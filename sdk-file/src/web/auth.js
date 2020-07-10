@@ -52,6 +52,11 @@ let loginWithThirdPartyRequest = (BaaS, {provider, token, create_user, update_us
     method: 'POST',
     data: _data,
   }).then(utils.validateStatusCode).then(res => {
+    // hack: silent_login 返回的数据结构不一致
+    if (silent_login && res.data.user_info) {
+      res.data.user_id = res.data.user_info.id
+    }
+
     BaaS._polyfill.handleLoginSuccess(res)
   })
 }
