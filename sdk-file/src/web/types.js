@@ -2,6 +2,7 @@
  * @typedef ThirdPartyLoginOptions
  * @memberof BaaS
  * @property {boolean} [createUser] 是否创建用户
+ * @property {boolean} [silent] 是否静默登录
  * @property {boolean} [syncUserProfile] 是否同步第一层级用户信息
  * @property {boolean} [debug] 是否开启 debug 模式
  * @property {string} [mode] 授权窗口打开模式
