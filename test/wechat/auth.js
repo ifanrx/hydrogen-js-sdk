@@ -26,9 +26,22 @@ describe('auth', () => {
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
         options.url === BaaS._config.API.WECHAT.SILENT_LOGIN ||
-        options.url === BaaS._config.API.LOGIN_USERNAME ||
-        options.url === BaaS._config.API.WECHAT.USER_ASSOCIATE ||
         options.url === BaaS._config.API.WECHAT.AUTHENTICATE
+      ) {
+        return Promise.resolve({
+          status: 201,
+          data: {
+            token,
+            expires_in: expiresIn,
+            user_info: {
+              id: userId,
+              openid: openId,
+            }
+          }
+        })
+      } else if (
+        options.url === BaaS._config.API.LOGIN_USERNAME ||
+        options.url === BaaS._config.API.WECHAT.USER_ASSOCIATE
       ) {
         let status = options.url === BaaS._config.API.WECHAT.USER_ASSOCIATE
           ? 200 : 201
@@ -181,9 +194,8 @@ describe('auth', () => {
       const job1 = BaaS.auth.silentLogin()
       const job2 = BaaS.auth.loginWithWechat()
       return Promise.all([job1, job2]).then(() => {
-        expect(requestStub).have.been.calledTwice
+        expect(requestStub).have.been.calledOnce
         expect(requestStub.getCall(0).args[0].url).to.be.equal(config.API.WECHAT.SILENT_LOGIN)
-        expect(requestStub.getCall(1).args[0].url).to.not.be.equal(config.API.WECHAT.SILENT_LOGIN)
       })
     })
   })

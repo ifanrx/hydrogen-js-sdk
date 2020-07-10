@@ -41,10 +41,13 @@ module.exports = BaaS => {
         app_name: appName,
         code: code
       }
-    }).then(utils.validateStatusCode).then(res => {
-      BaaS._polyfill.handleLoginSuccess(res)
-      resolve(res)
-    }, reject)
+    })
+      .then(utils.validateStatusCode)
+      .then(utils.flatAuthResponse)
+      .then(res => {
+        BaaS._polyfill.handleLoginSuccess(res)
+        resolve(res)
+      }, reject)
   }
 
   const silentLogin = utils.rateLimit(function (...args) {
@@ -65,7 +68,9 @@ module.exports = BaaS => {
       url: API.BYTEDANCE.AUTHENTICATE,
       method: 'POST',
       data,
-    }).then(utils.validateStatusCode)
+    })
+      .then(utils.validateStatusCode)
+      .then(utils.flatAuthResponse)
   }
 
   const getUserInfo = options => {
@@ -98,6 +103,7 @@ module.exports = BaaS => {
       userInfo.id = res.data.user_id
       userInfo.openid = res.data.openid
       BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
+      return res
     })
   }
 
@@ -156,7 +162,7 @@ module.exports = BaaS => {
       loginPromise = silentLogin({createUser})
     }
 
-    return loginPromise.then(() => commonAuth.getCurrentUser())
+    return loginPromise.then((res) => commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at))
   }
 
   Object.assign(BaaS.auth, {

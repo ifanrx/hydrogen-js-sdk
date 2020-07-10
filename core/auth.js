@@ -140,6 +140,13 @@ const requestPasswordReset = ({email} = {}) => {
   }).then(utils.validateStatusCode)
 }
 
+const _initCurrentUser = (userInfo, session_expires_at) => {
+  let user = UserRecord.initCurrentUser(userInfo)
+  user.user_id = userInfo.id
+  user.session_expires_at = session_expires_at
+  return user
+}
+
 /**
  * 获取当前用户
  * @since v2.0.0
@@ -154,10 +161,7 @@ let getCurrentUser = () => {
   ]).then(([uid, expiresAt, expired]) => {
     if (!uid || !expiresAt || expired) return Promise.reject(new HError(604))
     return new User().get(uid).then(res => {
-      let user = UserRecord.initCurrentUser(res.data)
-      user.user_id = res.data.id
-      user.session_expires_at = expiresAt
-      return user
+      return _initCurrentUser(res.data, expiresAt)
     })
   })
 }
@@ -190,5 +194,6 @@ module.exports = {
   anonymousLogin: utils.rateLimit(anonymousLogin),
   requestPasswordReset,
   register: utils.rateLimit(register),
+  _initCurrentUser,
   getCurrentUser: utils.rateLimit(getCurrentUser),
 }
