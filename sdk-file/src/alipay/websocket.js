@@ -1,7 +1,10 @@
 class WebSocket {
-  constructor(url) {
+  constructor(url, protocols) {
     my.connectSocket({
       url,
+      header: {
+        'sec-webSocket-protocol': protocols,
+      },
     })
     my.onSocketOpen(() => {
       this.onopen()
@@ -10,10 +13,12 @@ class WebSocket {
       this.onmessage({data: res.data})
     })
     my.onSocketClose((res) => {
-      this.onclose({
-        code: res.code,
-        reason: res.reason,
-      })
+      if (res) {
+        this.onclose({
+          code: res.code,
+          reason: res.reason,
+        })
+      }
     })
   }
   send(payload) {
