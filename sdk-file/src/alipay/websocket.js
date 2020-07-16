@@ -3,7 +3,7 @@ class WebSocket {
     my.connectSocket({
       url,
       header: {
-        'sec-webSocket-protocol': protocols,
+        'sec-webSocket-protocol': protocols[0],
       },
     })
     my.onSocketOpen(() => {
