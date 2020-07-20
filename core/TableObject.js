@@ -5,6 +5,7 @@ const Query = require('./Query')
 const TableRecord = require('./TableRecord')
 const utils = require('./utils')
 const BaseRecord = require('./BaseRecord')
+const wamp = require('./wamp')
 
 /**
  * 数据表
@@ -159,6 +160,24 @@ class TableObject extends BaseQuery {
     return this.limit(1).find({withCount: true}).then(res => {
       let {total_count} = res.data.meta
       return total_count
+    })
+  }
+
+  /**
+   * 订阅数据变化事件
+   */
+  subscribe(event_type, {
+    onerror,
+    oninit,
+    onevent,
+  }) {
+    return wamp.subscribe({
+      schema_name: this._tableID,
+      where: this._queryObject,
+      event_type,
+      onerror,
+      oninit,
+      onevent,
     })
   }
 }

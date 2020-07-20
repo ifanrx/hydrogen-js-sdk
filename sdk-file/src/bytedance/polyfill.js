@@ -1,5 +1,6 @@
 // const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
+const WebSocket = require('./websocket')
 const utils = require('core-module/utils')
 
 module.exports = BaaS => {
@@ -64,5 +65,6 @@ module.exports = BaaS => {
         // tplMsgStatsReport.reportStats()
       }
     },
+    WebSocket: WebSocket,
   })
 }
