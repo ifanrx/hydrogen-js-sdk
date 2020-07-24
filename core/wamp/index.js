@@ -79,9 +79,12 @@ const subscribe = ({
   onevent,
 }) => {
   if (!_subscribe) {
+    const host = BaaS._polyfill.getWSHost()
+    const url =  host.replace(/\/$/, '') + '/' + BaaS._config.WS_PATH
+
     _subscribe = subscriber({
       WebSocket: BaaS._polyfill.WebSocket,
-      url: BaaS._config.WS_HOST + BaaS._config.WS_PATH,
+      url,
       realm: BaaS._config.WS_REALM,
       resolveOptions,
       resolveTopic,

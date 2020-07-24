@@ -1,4 +1,5 @@
 const API_HOST = 'https://api.myminapp.com'
+const WS_HOST = 'wss://api.ws.myminapp.com'
 let VERSION = 'v2.0.1-a'
 let SDK_DOWNLOAD_PAGE = 'https://doc.minapp.com/js-sdk/download-sdk.html'
 
@@ -282,7 +283,7 @@ module.exports = {
   /**
    * websocket 相关配置
    */
-  WS_HOST: 'ws://localhost:8001/', //TODO
+  WS_HOST: WS_HOST,
   WS_PATH: 'ws/hydrogen/',
   WS_REALM: 'com.ifanrcloud',
   WS_BASE_TOPIC: 'com.ifanrcloud.schema_event',

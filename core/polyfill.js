@@ -9,6 +9,10 @@ module.exports = {
     let BaaS = require('./baas')
     return BaaS._config.API_HOST || `https://${BaaS._config.CLIENT_ID}.myminapp.com`
   },
+  getWSHost() {
+    let BaaS = require('./baas')
+    return BaaS._config.WS_HOST || `wss://${BaaS._config.CLIENT_ID}.ws.myminapp.com`
+  },
   SDK_TYPE: 'file',
   CLIENT_PLATFORM: 'UNKNOWN',
   checkLatestVersion() {

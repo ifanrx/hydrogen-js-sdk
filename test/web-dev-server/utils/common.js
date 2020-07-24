@@ -8,32 +8,16 @@
   }
 
   // 初始化
-  // window.BaaS.init('a4d2d62965ddb57fa4d6', {
-  //   logLevel: 'debug',
-  // })
-
-  // QA
-  BaaS.init('995140f59511a222c937', {
+  window.BaaS.init('a4d2d62965ddb57fa4d6', {
     autoLogin: true,
-    // host: 'http://127.0.0.1:8000/',
-    // ws_host: 'ws://localhost:8001/',
-    // env: '568d32dc52f0f1b9e3b9',
-
-    host: 'https://i-v5204.eng.szx.ifanrx.com/',
-    ws_host: 'wss://i-v5204.eng.szx.ifanrx.com/',
+    logLevel: 'debug',
   })
 
-  // // DEBUG config
-  // BaaS._config.DEBUG = true;
-  // BaaS.init('995140f59511a222c937', {logLevel: 'debug'});
-  // BaaS._config.API_HOST = 'https://viac2-p.eng-vm.can.corp.ifanr.com';
-  // BaaS._config.API_HOST_PATTERN = /^https:\/\/[\w-.]+\.ifanr\.com/;
-
   // QA
-  // BaaS.init('995140f59511a222c937', {
-  //   // host: 'https://i-v5204.eng.szx.ifanrx.com/',
-  //   host: 'https://v5204.eng.szx.ifanrx.com/',
-  //   logLevel: 'debug',
+  // window.BaaS.init('995140f59511a222c937', {
+  //   autoLogin: true,
+  //   host: 'https://i-v5204.eng.szx.ifanrx.com/',
+  //   ws_host: 'wss://i-v5204.eng.szx.ifanrx.com/',
   // })
 
   // hook request
