@@ -53,5 +53,8 @@ module.exports = function (BaaS) {
    * @param {BaaS.LoginWithAlipayParams} [options] 登录参数
    * @return {Promise<BaaS.CurrentUser>}
    */
-  BaaS.auth.loginWithAlipay = opts => login(opts).then(res => BaaS.auth._initCurrentUser(res.data.user_info, res.data.expired_at))
+  BaaS.auth.loginWithAlipay = opts => login(opts).then(res => {
+    if (!res) return BaaS.auth.getCurrentUser()
+    return BaaS.auth._initCurrentUser(res.data.user_info, res.data.expired_at)
+  })
 }
