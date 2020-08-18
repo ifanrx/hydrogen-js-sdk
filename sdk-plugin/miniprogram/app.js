@@ -19,7 +19,7 @@ App({
     wx.BaaS.reportTemplateMsgAnalytics(options)
   },
   onError: function (res) {
-    wx.BaaS.ErrorTracker.track(res)
+    // wx.BaaS.ErrorTracker.track(res)
   },
   config: {
     appName: 'sdk',

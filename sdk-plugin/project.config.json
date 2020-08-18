@@ -37,7 +37,7 @@
 	},
 	"appid": "wxc6b86e382a1e3294",
 	"projectname": "hydrogen-js-sdk-plugin",
-	"libVersion": "2.6.5",
+	"libVersion": "2.12.1",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"scripts": {
