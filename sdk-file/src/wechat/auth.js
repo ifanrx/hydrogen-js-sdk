@@ -41,10 +41,13 @@ module.exports = BaaS => {
         code: code,
         login_with_unionid: withUnionID,
       }
-    }).then(utils.validateStatusCode).then(res => {
-      BaaS._polyfill.handleLoginSuccess(res)
-      resolve(res)
-    }, reject)
+    })
+      .then(utils.validateStatusCode)
+      .then(utils.flatAuthResponse)
+      .then(res => {
+        BaaS._polyfill.handleLoginSuccess(res)
+        resolve(res)
+      }, reject)
   }
 
   /*
@@ -121,6 +124,7 @@ module.exports = BaaS => {
       userInfo.openid = res.data.openid
       userInfo.unionid = res.data.unionid
       BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
+      return res
     })
   }
 
@@ -130,7 +134,9 @@ module.exports = BaaS => {
       url: API.WECHAT.AUTHENTICATE,
       method: 'POST',
       data,
-    }).then(utils.validateStatusCode)
+    })
+      .then(utils.validateStatusCode)
+      .then(utils.flatAuthResponse)
   }
 
   const getUserInfo = ({lang} = {}) => {
@@ -203,8 +209,10 @@ module.exports = BaaS => {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
     }
-
-    return loginPromise.then(() => commonAuth.getCurrentUser())
+    return loginPromise.then((res) => {
+      if (!res) return commonAuth.getCurrentUser()
+      return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
+    })
   }
 
   Object.assign(BaaS.auth, {

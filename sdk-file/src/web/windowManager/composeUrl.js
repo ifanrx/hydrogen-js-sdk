@@ -18,6 +18,9 @@ module.exports = function (options) {
   if (options.wechatIframeContentStyle) {
     url.searchParams.set(PARAM.WECHAT_IFRAME_CONTENT_STYLE, JSON.stringify(options.wechatIframeContentStyle))
   }
+  if (options.silent) {
+    url.searchParams.set(PARAM.SILENT_LOGIN, true)
+  }
   url.searchParams.set(PARAM.HANDLER, options.handler)
   return url.toString()
 }

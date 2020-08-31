@@ -34,7 +34,9 @@ let plugins = [
     apply: (compiler) => {
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
         let config = require('./webpack/genTyepsConfig')
-        shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
+        if (config.dest) {
+          shell.exec(`scripts/gen-types.sh ${config.dest}`, {async:true})
+        }
       })
     }
   },
@@ -51,6 +53,7 @@ module.exports = {
     baidu: './src/baidu/index.js',
     bytedance: './src/bytedance/index.js',
     'react-native': './src/react-native/index.js',
+    jingdong: './src/jingdong/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),

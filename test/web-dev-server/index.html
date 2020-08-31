@@ -66,6 +66,7 @@
       </div>
       <hr />
       <button @click="thirdPartyLoginRedirect" type="button" class="btn btn-primary">第三方登录(redirect)</button>
+      <button @click="thirdPartySilentLoginRedirect" type="button" class="btn btn-primary">第三方静默登录(redirect)</button>
       <button @click="thirdPartyLoginIframe" type="button" class="btn btn-primary">第三方登录(iframe)</button>
       <button @click="thirdPartyLogin" type="button" class="btn btn-primary">第三方登录</button>
       <hr />
@@ -235,6 +236,14 @@
       <h5 class="card-title">微信相关的</h5>
       <hr />
       <a href="/wechat.html">获取微信 JSSDK 调用凭证</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">websocket 相关的</h5>
+      <hr />
+      <a href="/subscription">订阅</a>
     </div>
   </div>
 </div>

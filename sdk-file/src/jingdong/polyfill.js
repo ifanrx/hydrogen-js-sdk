@@ -1,29 +1,19 @@
-const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
+// const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
-const WebSocket = require('./websocket')
 
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
-    wxLogin(...args) {
-      return wx.login(...args)
-    },
-    wxGetUserInfo(...args) {
-      return wx.getUserInfo(...args)
-    },
-    wxPaymentRequest(...args) {
-      return wx.requestPayment(...args)
-    },
-    CLIENT_PLATFORM: 'WECHAT',
+    CLIENT_PLATFORM: 'JINGDONG',
     setStorageSync(k, v) {
-      return utils.withRetry(wx.setStorageSync)(k, v)
+      return jd.setStorageSync(k, v)
     },
     getStorageSync(k) {
-      return utils.withRetry(wx.getStorageSync)(k)
+      return jd.getStorageSync(k)
     },
     setStorageAsync(k, v) {
       return new Promise((resolve, reject) => {
-        wx.setStorage({
+        jd.setStorage({
           key: k,
           data: v,
           success: resolve,
@@ -33,7 +23,7 @@ module.exports = BaaS => {
     },
     getStorageAsync(k) {
       return new Promise((resolve) => {
-        wx.getStorage({
+        jd.getStorage({
           key: k,
           success: res => resolve(res.data),
           fail: () => resolve(undefined),
@@ -41,22 +31,21 @@ module.exports = BaaS => {
       })
     },
     getSystemInfoSync() {
-      return wx.getSystemInfoSync()
-    },
-    linkWechat(...args) {
-      return BaaS.auth.linkWechat(...args)
+      return jd.getSystemInfoSync()
     },
     checkLatestVersion() {
-      let info = wx.getSystemInfoSync()
+      let info = jd.getSystemInfoSync()
       if (info.platform === 'devtools') {
-        BaaS.checkVersion({platform: constants.PLATFORM.WECHAT})
+        BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
       }
     },
+    linkJd(...args) {
+      return BaaS.auth.linkJd(...args)
+    },
     handleLoginSuccess(res, isAnonymous, userInfo) {
-      // 登录成功的 hook （login、loginWithWechat、register）调用成功后触发
+      // 登录成功的 hook （login、loginWithJingdong、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
-      BaaS.storage.set(constants.STORAGE_KEY.UNIONID, res.data.unionid || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
       if (res.data.openid) {
         BaaS.storage.set(
@@ -64,7 +53,6 @@ module.exports = BaaS => {
           Object.assign({}, BaaS.storage.get(constants.STORAGE_KEY.USERINFO), userInfo || {
             id: res.data.user_id,
             openid: res.data.openid,
-            unionid: res.data.unionid,
           })
         )
       }
@@ -73,9 +61,8 @@ module.exports = BaaS => {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
-        tplMsgStatsReport.reportStats()
+        // tplMsgStatsReport.reportStats()
       }
     },
-    WebSocket: WebSocket,
   })
 }

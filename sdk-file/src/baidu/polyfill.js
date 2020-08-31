@@ -1,5 +1,8 @@
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
 const constants = require('core-module/constants')
+const WebSocket = require('./websocket')
+const utils = require('core-module/utils')
+
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'BAIDU',
@@ -13,21 +16,21 @@ module.exports = BaaS => {
       return swan.getSystemInfoSync()
     },
     setStorageAsync(k, v) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         swan.setStorage({
           key: k,
           data: v,
-          success: res => resolve(res.data),
-          fail: () => resolve(undefined),
+          success: resolve,
+          fail: reject,
         })
       })
     },
     getStorageAsync(k) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         swan.getStorage({
           key: k,
-          success: resolve,
-          fail: reject,
+          success: res => resolve(res.data),
+          fail: () => resolve(undefined),
         })
       })
     },
@@ -56,7 +59,7 @@ module.exports = BaaS => {
           })
         )
       }
-      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, utils.getExpiredAt(res.data.expires_in))
       if (isAnonymous) {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {
@@ -64,5 +67,6 @@ module.exports = BaaS => {
         tplMsgStatsReport.reportStats()
       }
     },
+    WebSocket: WebSocket,
   })
 }

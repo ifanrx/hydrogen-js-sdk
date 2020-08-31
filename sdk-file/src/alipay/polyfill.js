@@ -3,6 +3,7 @@ const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 const createAuthFn = require('./createAuthFn')
 const tplMsgStatsReport = require('core-module/tplMsgStatsReport')
+const WebSocket = require('./websocket')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
@@ -68,7 +69,7 @@ module.exports = function (BaaS) {
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
-      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, Math.floor(Date.now() / 1000) + res.data.expires_in - 30)
+      BaaS.storage.set(constants.STORAGE_KEY.EXPIRES_AT, utils.getExpiredAt(res.data.expires_in))
       if (isAnonymous) {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 1)
       } else {
@@ -76,5 +77,6 @@ module.exports = function (BaaS) {
         tplMsgStatsReport.reportStats()
       }
     },
+    WebSocket: WebSocket,
   })
 }

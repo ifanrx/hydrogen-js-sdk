@@ -1,22 +1,20 @@
 const constants = require('core-module/constants')
+const HError = require('core-module/HError')
 const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
-
-const appName = utils.getBytedanceAppName()
 
 module.exports = BaaS => {
   const API = BaaS._config.API
 
   const getLoginCode = () => {
     return new Promise((resolve, reject) => {
-      tt.login({
-        force: true,
+      jd.login({
         success: res => {
           resolve(res.code)
         },
         fail: () => {
-          BaaS.request.ttRequestFail(reject)
+          BaaS.request.jdRequestFail(reject)
         },
       })
     })
@@ -34,11 +32,10 @@ module.exports = BaaS => {
   // code 换取 session_key，生成并获取 3rd_session 即 token
   const sessionInit = ({code, createUser}, resolve, reject) => {
     return BaaS.request({
-      url: API.BYTEDANCE.SILENT_LOGIN,
+      url: API.JINGDONG.SILENT_LOGIN,
       method: 'POST',
       data: {
         create_user: createUser,
-        app_name: appName,
         code: code
       }
     })
@@ -54,18 +51,15 @@ module.exports = BaaS => {
     return Promise.all([
       storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),
       utils.isSessionExpired(),
-    ]).then(res => {
-      const [token, isExpired] = res
-      if (token && !isExpired) {
-        return Promise.resolve()
-      }
+    ]).then(([token, expired]) => {
+      if (token && !expired) return
       return auth(...args)
     })
   })
 
   const getSensitiveData = (data) => {
     return BaaS.request({
-      url: API.BYTEDANCE.AUTHENTICATE,
+      url: API.JINGDONG.AUTHENTICATE,
       method: 'POST',
       data,
     })
@@ -73,27 +67,43 @@ module.exports = BaaS => {
       .then(utils.flatAuthResponse)
   }
 
-  const getUserInfo = options => {
+  const getUserInfo = ({lang} = {}) => {
     return new Promise((resolve, reject) => {
-      tt.getUserInfo(Object.assign(options, {
+      jd.getUserInfo({
+        lang,
         success: resolve, fail: reject
-      }))
+      })
     })
   }
 
-  const forceLogin = ({createUser, syncUserProfile} = {}) => {
-    let detail
+  // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  const handleUserInfo = res => {
+    if (!res || !res.detail) {
+      throw new HError(603)
+    }
+
+    let detail = res.detail
+    let createUser = !!res.createUser
+    let syncUserProfile = res.syncUserProfile
+
+    // 用户拒绝授权，仅返回 uid, openid
+    if (!detail.userInfo) {
+      return Promise.all(([
+        storageAsync.get(constants.STORAGE_KEY.UID),
+        storageAsync.get(constants.STORAGE_KEY.OPENID),
+      ])).then(([id, openid]) => {
+        return Promise.reject(Object.assign(new HError(603), {id, openid}))
+      })
+    }
+
     return getLoginCode().then(code => {
-      return getUserInfo({withCredentials: true}).then(res => {
-        detail = res
+      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
         let payload = {
           code,
-          app_name: appName,
           create_user: createUser,
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
+          data: detail.data,
+          iv: detail.iv,
+          userInfo: detail.userInfo,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
         return getSensitiveData(payload)
@@ -108,33 +118,35 @@ module.exports = BaaS => {
   }
 
 
-  const linkTt = ({
-    forceLogin: isForceLogin = false,
+  const linkJd = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
+    let refreshUserInfo = false
+    if (res && res.detail && res.detail.userInfo) {
+      refreshUserInfo = true
+    }
+
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = isForceLogin
-        ? getUserInfo({withCredentials: true})
+      let getUserInfoPromise = refreshUserInfo
+        ? getUserInfo({lang: res.detail.userInfo.language})
         : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
+          // 京东是没有这些参数
+          // rawData: res.rawData,
+          // signature: res.signature,
+          // encryptedData: res.encryptedData,
+          // iv: res.iv,
+          userInfo: res.userInfo,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          app_name: appName,
           code
-        } : {
-          code,
-          app_name: appName,
-        }
+        } : {code}
 
         return BaaS._baasRequest({
           method: 'POST',
-          url: API.BYTEDANCE.USER_ASSOCIATE,
+          url: API.JINGDONG.USER_ASSOCIATE,
           data: payload,
         })
       })
@@ -142,21 +154,22 @@ module.exports = BaaS => {
   }
 
   /**
-   * 头条登录
+   * 京东登录
    * @function
    * @since v2.5.0
    * @memberof BaaS.auth
-   * @param {BaaS.BytedanceLoginOptions} [options] 其他选项
+   * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
+   * @param {BaaS.LoginOptions} [options] 其他选项
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const loginWithTt = ({
-    forceLogin: isForceLogin = false,
+  const loginWithJd = (authData, {
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
-    if (isForceLogin) {
-      loginPromise = forceLogin({createUser, syncUserProfile})
+    if (authData && authData.detail) {
+      // handleUserInfo 流程
+      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile}))
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser})
@@ -170,7 +183,7 @@ module.exports = BaaS => {
 
   Object.assign(BaaS.auth, {
     silentLogin,
-    loginWithTt: utils.rateLimit(loginWithTt),
-    linkTt: utils.rateLimit(linkTt),
+    loginWithJd: utils.rateLimit(loginWithJd),
+    linkJd: utils.rateLimit(linkJd),
   })
 }
