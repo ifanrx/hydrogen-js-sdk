@@ -17,3 +17,16 @@
  * @property {string} [merchandiseRecordID] 商品数据行 ID，可用于定位用户购买的物品
  * @property {object} [merchandiseSnapshot] 根据业务需求自定义的数据
  */
+
+/**
+ * @typedef Subscription
+ * @memberof BaaS
+ * @property {string} template_id 模版 ID
+ * @property {string} subscription_type 模版类型
+ */
+
+/**
+ * @typedef SubscribeMessageOptions
+ * @memberof BaaS
+ * @property {BaaS.Subscription[]} subscription 订阅关系
+ */
