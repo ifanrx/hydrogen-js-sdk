@@ -280,10 +280,6 @@ module.exports = {
    * @memberof BaaS._config
    */
   VERSION: VERSION,  // package.json 中的 version 也需要同步修改。
-
-  /**
-   * websocket 相关配置
-   */
   WS_HOST: WS_HOST,
   WS_PATH: 'ws/hydrogen/',
   WS_REALM: 'com.ifanrcloud',
