@@ -11,33 +11,10 @@
 		"nodeModules": false,
 		"checkInvalidKey": true
 	},
-	"packOptions": {
-		"ignore": [
-			{
-				"type": "file",
-				"value": "plugin/utils/wxParser/app.js"
-			},
-			{
-				"type": "file",
-				"value": "plugin/utils/wxParser/app.wxss"
-			},
-			{
-				"type": "file",
-				"value": "plugin/utils/wxParser/app.json"
-			},
-			{
-				"type": "folder",
-				"value": "plugin/utils/wxParser/pages"
-			},
-			{
-				"type": "folder",
-				"value": "plugin/utils/wxParser/utils"
-			}
-		]
-	},
+	"packOptions": {},
 	"appid": "wxc6b86e382a1e3294",
 	"projectname": "hydrogen-js-sdk-plugin",
-	"libVersion": "2.6.5",
+	"libVersion": "2.12.1",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"scripts": {

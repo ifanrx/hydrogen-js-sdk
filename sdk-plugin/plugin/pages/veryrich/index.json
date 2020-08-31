@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "web-page": "../../components/WebPage/index",
-    "rich-text": "../../components/RichText/index"
-  }
-}
