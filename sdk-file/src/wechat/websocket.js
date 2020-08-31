@@ -1,16 +1,17 @@
+let socketTask
 class WebSocket {
   constructor(url, protocols) {
-    wx.connectSocket({
+    socketTask = wx.connectSocket({
       url,
       protocols,
     })
-    wx.onSocketOpen(() => {
+    socketTask.onOpen(() => {
       this.onopen()
     })
-    wx.onSocketMessage((res) => {
+    socketTask.onMessage((res) => {
       this.onmessage({data: res.data})
     })
-    wx.onSocketClose((res) => {
+    socketTask.onClose((res) => {
       this.onclose({
         code: res.code,
         reason: res.reason,
@@ -18,10 +19,10 @@ class WebSocket {
     })
   }
   send(payload) {
-    wx.sendSocketMessage({data: payload})
+    socketTask.send({data: payload})
   }
   close(code, reason) {
-    wx.closeSocket({code, reason})
+    socketTask.close({code, reason})
   }
   onopen() {}
   onclose() {}

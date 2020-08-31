@@ -12,6 +12,7 @@
     "pages-test/wechat/media/index",
     "pages-test/wechat/pay/index",
     "pages/ticket-report/index",
+    "pages-test/wechat/trigger/index",
     "pages-test/wechat/content/index",
     "pages-test/wechat/content-legacy/index",
     "pages-test/wechat/user/index",
@@ -22,11 +23,15 @@
     "pages-test/wechat/wxparser-file/index",
     "pages-test/wechat/wxparser-plugin/index",
     "pages-test/wechat/aggregation/index",
-    "pages-test/wechat/censor/index",
     "pages-test/wechat/sms/index",
     "pages-test/wechat/handle-401/index",
+    "pages-test/wechat/censor/index",
     "pages-test/wechat/kefu-message/index",
-    "pages-test/wechat/account/index"
+    "pages-test/wechat/account/index",
+    "pages-test/wechat/async-task/index",
+    "pages-test/wechat/server-date/index",
+    "pages-test/wechat/subscribe-message/index",
+    "pages-test/wechat/subscription/index"
   ],
   "plugins": {
     "wxparserPlugin": {

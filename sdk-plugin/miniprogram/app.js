@@ -6,7 +6,7 @@ App({
     wx.BaaS.wxExtend(wx.login, wx.getUserInfo, wx.requestPayment)
     wx.BaaS.init('733b59d1b10ff4a37390', {logLevel: 'debug', autoLogin: true})
 
-    wx.BaaS.ErrorTracker.enable({usePlugins: true})
+    // wx.BaaS.ErrorTracker.enable({usePlugins: true})
 
     // DEBUG config
     // wx.BaaS._config.DEBUG = true
@@ -19,7 +19,7 @@ App({
     wx.BaaS.reportTemplateMsgAnalytics(options)
   },
   onError: function (res) {
-    wx.BaaS.ErrorTracker.track(res)
+    // wx.BaaS.ErrorTracker.track(res)
   },
   config: {
     appName: 'sdk',

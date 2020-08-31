@@ -1,7 +1,6 @@
 {
   "main": "index.js",
   "pages": {
-    "veryrich": "pages/veryrich/index"
   },
   "publicComponents": {
     "ticket-report-wrapper": "components/TicketReportWrapper/index"
