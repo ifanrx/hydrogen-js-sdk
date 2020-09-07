@@ -2,10 +2,63 @@ const BaaS = require('core-module/baas')
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
+const contentType = require('core-module/utils/contentTypeMap')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 
 const wxUpload = (config, resolve, reject, type) => {
+
+  let uploadSuccess = (res) => {
+    let result = {}
+    let data = JSON.parse(res.data)
+
+    result.status = 'ok'
+    result.path = config.destLink
+    result.file = {
+      'id': config.id,
+      'path': config.destLink,
+      'name': config.fileName,
+      'created_at': data.time,
+      'mime_type': data.mimetype,
+      'cdn_path': data.url,
+      'size': data.file_size,
+    }
+
+    delete res.data
+
+    if (type && type === 'json') {
+      res.data = result
+    } else {
+      res.data = JSON.stringify(result)
+    }
+
+    try {
+      resolve(utils.validateStatusCode(res))
+    } catch (err) {
+      reject(err)
+    }
+  }
+
   return getUploadHeaders().then(header => {
+    let extension = config.filePath.substring(config.filePath.lastIndexOf('.') + 1)
+    if (config.filebucketBackend === constants.FILEBUCKET_BACKEND) {
+      return wx.getFileSystemManager().readFile({
+        filePath: config.filePath,
+        success: (data) => {
+          wx.request({
+            url: config.uploadUrl,
+            method: 'PUT',
+            header: {
+              'content-type': contentType[extension],
+            },
+            data: data.data,
+            success: uploadSuccess,
+            fail: () => {
+              BaaS.request.wxRequestFail(reject)
+            }
+          })
+        }
+      })
+    }
     return wx.uploadFile({
       url: config.uploadUrl,
       filePath: config.filePath,
@@ -15,36 +68,7 @@ const wxUpload = (config, resolve, reject, type) => {
         policy: config.policy
       },
       header,
-      success: (res) => {
-        let result = {}
-        let data = JSON.parse(res.data)
-
-        result.status = 'ok'
-        result.path = config.destLink
-        result.file = {
-          'id': config.id,
-          'path': config.destLink,
-          'name': config.fileName,
-          'created_at': data.time,
-          'mime_type': data.mimetype,
-          'cdn_path': data.url,
-          'size': data.file_size,
-        }
-
-        delete res.data
-
-        if (type && type === 'json') {
-          res.data = result
-        } else {
-          res.data = JSON.stringify(result)
-        }
-
-        try {
-          resolve(utils.validateStatusCode(res))
-        } catch (err) {
-          reject(err)
-        }
-      },
+      success: uploadSuccess,
       fail: () => {
         BaaS.request.wxRequestFail(reject)
       }
@@ -125,7 +149,8 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.path
+      destLink: res.data.path,
+      filebucketBackend: res.data.filebucket_backend,
     }
     uploadTask = wxUpload(config, e => {
       if (isAborted) return rj(new Error('aborted'))
