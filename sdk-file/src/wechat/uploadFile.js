@@ -9,7 +9,11 @@ const wxUpload = (config, resolve, reject, type) => {
 
   let uploadSuccess = (res) => {
     let result = {}
-    let data = JSON.parse(res.data)
+    let data = res.data || {}
+
+    if (res.data) {
+      data = JSON.parse(res.data)
+    }
 
     result.status = 'ok'
     result.path = config.destLink
@@ -17,8 +21,8 @@ const wxUpload = (config, resolve, reject, type) => {
       'id': config.id,
       'path': config.destLink,
       'name': config.fileName,
-      'created_at': data.time,
-      'mime_type': data.mimetype,
+      'created_at': data.time || config.created_at,
+      'mime_type': data.mimetyp,
       'cdn_path': data.url,
       'size': data.file_size,
     }
