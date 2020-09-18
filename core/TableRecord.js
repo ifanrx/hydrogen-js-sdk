@@ -40,7 +40,12 @@ class TableRecord extends BaseRecord {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     if (this._recordID) {
-      return BaaS.updateRecord({tableID: this._tableID, recordID: this._recordID, data: record})
+      return BaaS.updateRecord({
+        tableID: this._tableID,
+        recordID: this._recordID,
+        data: record,
+        enable_trigger: enableTrigger ? 1 : 0,
+      })
     } else {
       const params = {
         tableID: this._tableID,
