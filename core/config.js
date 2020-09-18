@@ -35,7 +35,7 @@ const API = {
   CREATE_RECORD_LIST: '/hserve/v2.4/table/:tableID/record/?enable_trigger=:enable_trigger',
   RECORD_DETAIL: '/hserve/v2.4/table/:tableID/record/:recordID/',
   CREATE_RECORD: '/hserve/v2.4/table/:tableID/record/',
-  UPDATE_RECORD: '/hserve/v2.4/table/:tableID/record/:recordID/',
+  UPDATE_RECORD: '/hserve/v2.4/table/:tableID/record/:recordID/?enable_trigger=:enable_trigger',
   UPDATE_RECORD_LIST: '/hserve/v2.4/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger&return_total_count=:return_total_count',
   DELETE_RECORD: '/hserve/v2.4/table/:tableID/record/:recordID/',
   DELETE_RECORD_LIST: '/hserve/v2.4/table/:tableID/record/?limit=:limit&offset=:offset&where=:where&enable_trigger=:enable_trigger&return_total_count=:return_total_count',
@@ -280,10 +280,6 @@ module.exports = {
    * @memberof BaaS._config
    */
   VERSION: VERSION,  // package.json 中的 version 也需要同步修改。
-
-  /**
-   * websocket 相关配置
-   */
   WS_HOST: WS_HOST,
   WS_PATH: 'ws/hydrogen/',
   WS_REALM: 'com.ifanrcloud',
