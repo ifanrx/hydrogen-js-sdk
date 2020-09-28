@@ -22,7 +22,7 @@ const wxUpload = (config, resolve, reject, type) => {
       'path': config.destLink,
       'name': config.fileName,
       'created_at': data.time || config.created_at,
-      'mime_type': data.mimetyp,
+      'mime_type': data.mimetype,
       'cdn_path': data.url,
       'size': data.file_size,
     }
