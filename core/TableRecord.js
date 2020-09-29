@@ -30,7 +30,7 @@ class TableRecord extends BaseRecord {
     return BaaS.createRecord({
       tableID: this._tableID,
       data: record.$set,
-      expand: expand instanceof Array ? expand.join(',') : expand,
+      expand: Array.isArray(expand) ? expand.join(',') : expand,
     })
   }
 
@@ -49,7 +49,7 @@ class TableRecord extends BaseRecord {
         recordID: this._recordID,
         data: record,
         enable_trigger: enableTrigger ? 1 : 0,
-        expand: expand instanceof Array ? expand.join(',') : expand,
+        expand: Array.isArray(expand) ? expand.join(',') : expand,
       })
     } else {
       const params = {
