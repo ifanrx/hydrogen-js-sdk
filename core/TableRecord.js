@@ -24,10 +24,14 @@ class TableRecord extends BaseRecord {
    * 保存数据记录。
    * @return {Promise<BaaS.Response<any>>}
    */
-  save() {
+  save({expand = ''} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
-    return BaaS.createRecord({tableID: this._tableID, data: record.$set})
+    return BaaS.createRecord({
+      tableID: this._tableID,
+      data: record.$set,
+      expand: expand instanceof Array ? expand.join(',') : expand,
+    })
   }
 
   /**
@@ -36,7 +40,7 @@ class TableRecord extends BaseRecord {
    * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  update({enableTrigger = true, withCount = false} = {}) {
+  update({enableTrigger = true, withCount = false, expand = ''} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
     if (this._recordID) {
@@ -45,6 +49,7 @@ class TableRecord extends BaseRecord {
         recordID: this._recordID,
         data: record,
         enable_trigger: enableTrigger ? 1 : 0,
+        expand: expand instanceof Array ? expand.join(',') : expand,
       })
     } else {
       const params = {
