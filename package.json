@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "3.14.4",
+  "version": "3.14.5",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
