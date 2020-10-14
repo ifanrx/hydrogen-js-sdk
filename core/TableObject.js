@@ -95,7 +95,7 @@ class TableObject extends BaseQuery {
    * @return {TableRecord}
    */
   getWithoutData(args) {
-    if (utils.isString(args) || Number.isInteger(args)) {
+    if ((utils.isString(args) && args !== '') || Number.isInteger(args)) {
       return new TableRecord(this._tableID, args)
     } else if (args instanceof Query) {
       let queryObject = {}

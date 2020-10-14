@@ -43,7 +43,7 @@ class TableRecord extends BaseRecord {
   update({enableTrigger = true, withCount = false, expand = ''} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
-    if (this._recordID) {
+    if (this._recordID != null) {
       return BaaS.updateRecord({
         tableID: this._tableID,
         recordID: this._recordID,
