@@ -24,10 +24,14 @@ class TableRecord extends BaseRecord {
    * 保存数据记录。
    * @return {Promise<BaaS.Response<any>>}
    */
-  save() {
+  save({expand = ''} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
-    return BaaS.createRecord({tableID: this._tableID, data: record.$set})
+    return BaaS.createRecord({
+      tableID: this._tableID,
+      data: record.$set,
+      expand: Array.isArray(expand) ? expand.join(',') : expand,
+    })
   }
 
   /**
@@ -36,15 +40,16 @@ class TableRecord extends BaseRecord {
    * @param {BaaS.BatchUpdateParams} [options] 批量更新参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  update({enableTrigger = true, withCount = false} = {}) {
+  update({enableTrigger = true, withCount = false, expand = ''} = {}) {
     let record = utils.cloneDeep(this._record)
     this._recordValueInit()
-    if (this._recordID) {
+    if (this._recordID != null) {
       return BaaS.updateRecord({
         tableID: this._tableID,
         recordID: this._recordID,
         data: record,
         enable_trigger: enableTrigger ? 1 : 0,
+        expand: Array.isArray(expand) ? expand.join(',') : expand,
       })
     } else {
       const params = {
