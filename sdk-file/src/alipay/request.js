@@ -44,7 +44,7 @@ const extractErrorMsg = (res) => {
 const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, headers = {}, dataType = 'json'}) => {
   const config = BaaS._config
   return utils.mergeRequestHeader(Object.assign({
-    'Content-Type': 'application/json',
+    'content-type': 'application/json',
   }, header, headers)).then(headers => {
     return new Promise((resolve, reject) => {
       if (!config.CLIENT_ID) {
