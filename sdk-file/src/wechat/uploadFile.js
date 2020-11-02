@@ -134,6 +134,8 @@ const uploadFile = (fileParams, metaData, type) => {
       if (uploadCallback) {
         upload.onProgressUpdate(uploadCallback)
       }
+
+      return upload
     })
   }, rj)
 
