@@ -203,7 +203,7 @@ class BaseRecord {
    * @return {this}
    */
   pop(key) {
-    if (!key) {
+    if (typeof key !== 'string') {
       throw new HError(605)
     }
 
@@ -218,7 +218,7 @@ class BaseRecord {
    * @return {this}
    */
   shift(key) {
-    if (!key) {
+    if (typeof key !== 'string') {
       throw new HError(605)
     }
 
