@@ -4,51 +4,49 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const {getUploadFileConfig, getUploadHeaders} = require('core-module/upload')
 
-const wxUpload = (config, resolve, reject, type) => {
-  return getUploadHeaders().then(header => {
-    return wx.uploadFile({
-      url: config.uploadUrl,
-      filePath: config.filePath,
-      name: constants.UPLOAD.UPLOAD_FILE_KEY,
-      formData: {
-        authorization: config.authorization,
-        policy: config.policy
-      },
-      header,
-      success: (res) => {
-        let result = {}
-        let data = JSON.parse(res.data)
+const wxUpload = (header, config, resolve, reject, type) => {
+  return wx.uploadFile({
+    url: config.uploadUrl,
+    filePath: config.filePath,
+    name: constants.UPLOAD.UPLOAD_FILE_KEY,
+    formData: {
+      authorization: config.authorization,
+      policy: config.policy
+    },
+    header,
+    success: (res) => {
+      let result = {}
+      let data = JSON.parse(res.data)
 
-        result.status = 'ok'
-        result.path = config.destLink
-        result.file = {
-          'id': config.id,
-          'path': config.destLink,
-          'name': config.fileName,
-          'created_at': data.time,
-          'mime_type': data.mimetype,
-          'cdn_path': data.url,
-          'size': data.file_size,
-        }
-
-        delete res.data
-
-        if (type && type === 'json') {
-          res.data = result
-        } else {
-          res.data = JSON.stringify(result)
-        }
-
-        try {
-          resolve(utils.validateStatusCode(res))
-        } catch (err) {
-          reject(err)
-        }
-      },
-      fail: () => {
-        BaaS.request.wxRequestFail(reject)
+      result.status = 'ok'
+      result.path = config.destLink
+      result.file = {
+        'id': config.id,
+        'path': config.destLink,
+        'name': config.fileName,
+        'created_at': data.time,
+        'mime_type': data.mimetype,
+        'cdn_path': data.url,
+        'size': data.file_size,
       }
-    })
+
+      delete res.data
+
+      if (type && type === 'json') {
+        res.data = result
+      } else {
+        res.data = JSON.stringify(result)
+      }
+
+      try {
+        resolve(utils.validateStatusCode(res))
+      } catch (err) {
+        reject(err)
+      }
+    },
+    fail: () => {
+      BaaS.request.wxRequestFail(reject)
+    }
   })
 }
 
@@ -127,13 +125,18 @@ const uploadFile = (fileParams, metaData, type) => {
       filePath: fileParams.filePath,
       destLink: res.data.path
     }
-    uploadTask = wxUpload(config, e => {
-      if (isAborted) return rj(new Error('aborted'))
-      rs(e)
-    }, rj, type)
-    if (uploadCallback) {
-      uploadTask.onProgressUpdate(uploadCallback)
-    }
+    uploadTask = getUploadHeaders().then(header => {
+      const upload =  wxUpload(header, config, e => {
+        if (isAborted) return rj(new Error('aborted'))
+        rs(e)
+      }, rj, type)
+
+      if (uploadCallback) {
+        upload.onProgressUpdate(uploadCallback)
+      }
+
+      return upload
+    })
   }, rj)
 
   return p
