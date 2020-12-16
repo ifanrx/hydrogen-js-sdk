@@ -26,7 +26,7 @@ const API = {
 
   USER_DETAIL: '/hserve/v2.5/user/info/:userID/',
   USER_LIST: '/hserve/v2.2/user/info/',
-  UPDATE_USER: '/hserve/v2.4/user/info/',
+  UPDATE_USER: '/hserve/v2.5/user/info/',
 
   TABLE_LIST: '/hserve/v2.0/table/',
   TABLE_DETAIL: '/hserve/v2.0/table/:tableID/',
