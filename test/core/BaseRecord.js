@@ -193,6 +193,26 @@ describe('BaseRecord', () => {
     })
   })
 
+  it('#pop', () => {
+    product.pop('arr')
+    expect(product._record).to.deep.equal({
+      $set: {
+        arr: {$pop: 1}
+      },
+      $unset: {}
+    })
+  })
+
+  it('#shift', () => {
+    product.shift('arr')
+    expect(product._record).to.deep.equal({
+      $set: {
+        arr: {$pop: -1}
+      },
+      $unset: {}
+    })
+  })
+
   it('#patchObject',() => {
     product.patchObject('obj1', {a:randomArray, b:randomNumber})
     expect(product._record).to.deep.equal({

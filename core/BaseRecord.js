@@ -195,6 +195,36 @@ class BaseRecord {
     this._record.$set[key] = {$update: value}
     return this
   }
+
+  /**
+   * Array 类型字段修改，移除数组末位元素。
+   * @method
+   * @param {string} key 字段名称
+   * @return {this}
+   */
+  pop(key) {
+    if (typeof key !== 'string' || key.length === 0) {
+      throw new HError(605)
+    }
+
+    this._record.$set[key] = {$pop: 1}
+    return this
+  }
+
+  /**
+   * Array 类型字段修改，移除数组首位元素。
+   * @method
+   * @param {string} key 字段名称
+   * @return {this}
+   */
+  shift(key) {
+    if (typeof key !== 'string' || key.length === 0) {
+      throw new HError(605)
+    }
+
+    this._record.$set[key] = {$pop: -1}
+    return this
+  }
 }
 
 BaseRecord._serializeValueFuncFactory = _serializeValueFuncFactory
