@@ -15,11 +15,7 @@ function resolveOptions({where}) {
 }
 
 // 自定义触发自动重连
-// 如果是因为 token 过期，则主动调用一下获取当前用户的接口，刷新 token
-function shouldTryAgain(reason) {
-  if (reason === 'wamp.error.not_authorized') {
-    return true
-  }
+function shouldTryAgain() {
   return false
 }
 
