@@ -74,14 +74,13 @@ module.exports = BaaS => {
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   /**
-   * 获取用户信息
-   * @deprecated
+   * 获取用户信息、手机号
    * @function
    * @memberof BaaS.auth
    * @param {BaaS.handleUserInfoOptions} options 参数
    * @return {Promise<any>}
    */
-  const handleUserInfo = res => {
+  const handleUserInfo = (res) => {
     if (!res || !res.detail) {
       throw new HError(603)
     }
@@ -90,10 +89,11 @@ module.exports = BaaS => {
     let createUser = !!res.createUser
     let syncUserProfile = res.syncUserProfile
     let withUnionID = res.withUnionID
+    let loginCode = res.code
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
-    if (!detail.userInfo) {
+    if (!detail.userInfo && !detail.encryptedData) {
       return Promise.all(([
         storageAsync.get(constants.STORAGE_KEY.UID),
         storageAsync.get(constants.STORAGE_KEY.OPENID),
@@ -103,23 +103,36 @@ module.exports = BaaS => {
       })
     }
 
-    return getLoginCode().then(code => {
-      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
-        let payload = {
-          code,
-          create_user: createUser,
-          rawData: detail.rawData,
-          signature: detail.signature,
-          encryptedData: detail.encryptedData,
-          login_with_unionid: withUnionID,
-          iv: detail.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-        }
-
-        return getSensitiveData(payload)
+    let SensitiveData
+    let payload = {
+      encryptedData: detail.encryptedData || '',
+      iv: detail.iv || '',
+      create_user: createUser,
+    }
+    if (detail.userInfo) {
+      SensitiveData = getLoginCode().then(code => {
+        // 用户信息
+        return getUserInfo({lang: detail.userInfo.language}).then(detail => {
+          return getSensitiveData({
+            ...payload,
+            code: code,
+            rawData: detail.rawData,
+            signature: detail.signature,
+            login_with_unionid: withUnionID,
+            update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+          },detail.userInfo)
+        })
       })
-    }).then(res => {
-      let userInfo = detail.userInfo
+    } else {
+      // 手机号
+      SensitiveData = getSensitiveData({
+        ...payload,
+        code: loginCode
+      })
+    }
+
+    return SensitiveData.then(res => {
+      let userInfo = detail.userInfo ? detail.userInfo : res.data.user_info
       userInfo.id = res.data.user_id
       userInfo.openid = res.data.openid
       userInfo.unionid = res.data.unionid
@@ -129,9 +142,9 @@ module.exports = BaaS => {
   }
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data) => {
+  const getSensitiveData = (data,userInfo) => {
     return BaaS.request({
-      url: API.WECHAT.AUTHENTICATE,
+      url: userInfo ? API.WECHAT.AUTHENTICATE : API.WECHAT.PHONE_LOGIN,
       method: 'POST',
       data,
     })
@@ -197,14 +210,15 @@ module.exports = BaaS => {
    * @return {Promise<BaaS.CurrentUser>}
    */
   const loginWithWechat = (authData, {
+    code = '',
     createUser = true,
     withUnionID = false,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
-      // handleUserInfo 流程
-      loginPromise = handleUserInfo(Object.assign(authData, {createUser, syncUserProfile, withUnionID}))
+      // 授权用户信息/手机号登录流程
+      loginPromise = handleUserInfo({...authData, code, createUser, syncUserProfile, withUnionID})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
