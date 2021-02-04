@@ -225,13 +225,14 @@ module.exports = BaaS => {
    * @param {Baas.overwrite} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const updateWeChatPhone = (authData, {
+  const updatePhoneNumber = (authData, {
     overwrite = true,
   } = {}) => {
     let data = {
       ...authData,
       overwrite
     }
+
     if (!data || !data.detail) {
       throw new HError(603)
     }
@@ -247,7 +248,7 @@ module.exports = BaaS => {
         return Promise.reject(Object.assign(new HError(603), {id, openid, unionid}))
       })
     }
-   
+
     let payload = {
       encryptedData: authData.detail.encryptedData,
       iv: authData.detail.iv,
@@ -277,7 +278,7 @@ module.exports = BaaS => {
     silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
-    updateWeChatPhone: utils.rateLimit(updateWeChatPhone),
+    updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
 
