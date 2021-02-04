@@ -80,7 +80,7 @@ module.exports = BaaS => {
    * @param {BaaS.handleUserInfoOptions} options 参数
    * @return {Promise<any>}
    */
-  const handleUserInfo = (res) => {
+  const handleUserInfo = res => {
     if (!res || !res.detail) {
       throw new HError(603)
     }
@@ -115,7 +115,7 @@ module.exports = BaaS => {
         return getUserInfo({lang: detail.userInfo.language}).then(detail => {
           return getSensitiveData({
             ...payload,
-            code: code,
+            code,
             rawData: detail.rawData,
             signature: detail.signature,
             login_with_unionid: withUnionID,
@@ -142,7 +142,7 @@ module.exports = BaaS => {
   }
 
   // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data,userInfo) => {
+  const getSensitiveData = (data, userInfo) => {
     return BaaS.request({
       url: userInfo ? API.WECHAT.AUTHENTICATE : API.WECHAT.PHONE_LOGIN,
       method: 'POST',
