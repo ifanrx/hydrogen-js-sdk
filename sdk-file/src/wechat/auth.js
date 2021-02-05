@@ -229,10 +229,70 @@ module.exports = BaaS => {
     })
   }
 
+
+  /**
+   * 更新用户手机号
+   * @function
+   * @since v2.0.0
+   * @member BasS.auth
+   * @param {BaaS.authData} [authData] 用户加密手机号信息
+   * @param {Baas.overwrite} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
+   * @return {Promise<BaaS.CurrentUser>}
+   */
+  const updatePhoneNumber = (authData, {
+    overwrite = true,
+  } = {}) => {
+    let data = {
+      ...authData,
+      overwrite
+    }
+
+    if (!data || !data.detail) {
+      throw new HError(603)
+    }
+
+    // 用户拒绝授权，仅返回 uid, openid 和 unionid
+    // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
+    if (!authData.detail.encryptedData) {
+      return Promise.all(([
+        storageAsync.get(constants.STORAGE_KEY.UID),
+        storageAsync.get(constants.STORAGE_KEY.OPENID),
+        storageAsync.get(constants.STORAGE_KEY.UNIONID),
+      ])).then(([id, openid, unionid]) => {
+        return Promise.reject(Object.assign(new HError(603), {id, openid, unionid}))
+      })
+    }
+
+    let payload = {
+      encryptedData: authData.detail.encryptedData,
+      iv: authData.detail.iv,
+      overwrite
+    }
+    return BaaS.request({
+      url: API.WECHAT.UPDATE_PHONE,
+      method: 'PUT',
+      data: payload,
+    })
+      .then((res) => {
+        if (!res) return commonAuth.getCurrentUser()
+
+        if (res.statusCode === 200) {
+          return commonAuth._initCurrentUser(res.data)
+        } else if (res.statusCode === 401) {
+          // 用户未登录
+          return Promise.reject(new HError(604))
+        } else {
+          // 其他错误
+          return Promise.reject(new HError(res.statusCode))
+        }
+      })
+  }
+
   Object.assign(BaaS.auth, {
     silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
+    updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
 
