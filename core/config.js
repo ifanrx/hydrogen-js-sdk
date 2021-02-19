@@ -83,6 +83,7 @@ const API = {
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
     CENSOR_ASYNC: '/hserve/v2.2/async-censor/',
     JSSDK_CREDENTIALS: '/hserve/v2.4/idp/wechat/jssdk-credentials/',
+    USER_RISK_RANK: '/hserve/v2.5/user-riskrank/'
   },
 
   QQ: {
