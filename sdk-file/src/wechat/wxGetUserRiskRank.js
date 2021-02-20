@@ -7,7 +7,7 @@ const API = BaaS._config.API
  * 微信安全风控等级查询
  * @function
  * @memberof BaaS
- * @param {Baas.GetUserRiskRankOptions} options 参数对象
+ * @param {BaaS.GetUserRiskRankOptions} options 参数对象
  * @return {Promise<any>}
  */
 const wxGetUserRiskRank = (options) => {
