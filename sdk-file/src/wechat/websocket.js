@@ -1,6 +1,6 @@
 let socketTask
 class WebSocket {
-  constructor(url, protocols) {
+  constructor (url, protocols) {
     socketTask = wx.connectSocket({
       url,
       protocols,
@@ -18,15 +18,15 @@ class WebSocket {
       })
     })
   }
-  send(payload) {
+  send (payload) {
     socketTask.send({data: payload})
   }
-  close(code, reason) {
+  close (code, reason) {
     socketTask.close({code, reason})
   }
-  onopen() {}
-  onclose() {}
-  onmessage() {}
+  onopen () {}
+  onclose () {}
+  onmessage () {}
 }
 
 module.exports = WebSocket

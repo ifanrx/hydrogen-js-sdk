@@ -9,7 +9,7 @@ const log = require('./log')
 // copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
 if (!Array.prototype.includes) {
   Object.defineProperty(Array.prototype, 'includes', {
-    value: function (searchElement, fromIndex) {
+    value (searchElement, fromIndex) {
 
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -37,7 +37,7 @@ if (!Array.prototype.includes) {
       //  b. If k < 0, let k be 0.
       let k = Math.max(n >= 0 ? n : len - Math.abs(n), 0)
 
-      function sameValueZero(x, y) {
+      function sameValueZero (x, y) {
         return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y))
       }
 
@@ -54,7 +54,7 @@ if (!Array.prototype.includes) {
 
       // 8. Return false
       return false
-    }
+    },
   })
 }
 
@@ -206,7 +206,7 @@ const cloneDeep = source => {
  * @private
  * @return {boolean} expired
  */
-function isSessionExpired() {
+function isSessionExpired () {
   return storageAsync.get(constants.STORAGE_KEY.EXPIRES_AT).then(expired_at => {
     return (Date.now() / 1000) >= (expired_at || 0)
   })
@@ -307,7 +307,6 @@ const validateStatusCode = res => {
     throw new HError(status, extractErrorMsg(res))
   }
 }
-
 
 /**
  * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
@@ -412,7 +411,7 @@ const flatAuthResponse = res => {
       user_id: userInfo.id,
       expired_at: getExpiredAt(res.data.expires_in),
       alipay_user_id: userInfo._provider && userInfo._provider.alipay && userInfo._provider.alipay.user_id,
-    }
+    },
   }
 }
 

@@ -26,7 +26,6 @@ const ORDER_STATUS = {
   PENDING: 'pending',
 }
 
-
 /**
  * 字节跳动支付
  * @function
@@ -86,7 +85,7 @@ const createPayFn = BaaS => ({service, ...params}) => {
         service: serviceCode,
         getOrderStatus,
         _debug: BaaS._config.LOG_LEVEL === constants.LOG_LEVEL.DEBUG ? 1 : 0,
-        success: function (res) {
+        success (res) {
           utils.log(constants.LOG_LEVEL.DEBUG, `<payment> success handler ${JSON.stringify(res)}`)
           if (res.code == 4) {
             // 由于收银台选择支付宝支付，取消支付并跳回来时，会直接进入这里，并且 code == 4，
@@ -105,7 +104,7 @@ const createPayFn = BaaS => ({service, ...params}) => {
           }
           return makeResponse(res.code)
         },
-        fail: function (err) {
+        fail (err) {
           utils.log(constants.LOG_LEVEL.DEBUG, `<payment> fail handler ${JSON.stringify(err)}`)
           reject(new HError(608, err.errMsg))
         },

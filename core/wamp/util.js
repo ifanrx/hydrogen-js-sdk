@@ -10,7 +10,7 @@ const canUse = (prop) => {
   return false
 }
 
-function isDebug() {
+function isDebug () {
   if (typeof global !== 'undefined' && GLOBAL_DEBUG in global) return true
   if (typeof window !== 'undefined' && GLOBAL_DEBUG in window) return true
   return false
@@ -103,14 +103,14 @@ const is_object = (variable) => {
   )
 }
 
-function asyncCache(fn) {
+function asyncCache (fn) {
   let inProgress = false
   let bufferList = []
 
   return (...args) => {
     return new Promise((resolve, reject) => {
       bufferList.push({resolve, reject})
-      
+
       if (!inProgress) {
         inProgress = true
 
@@ -134,7 +134,7 @@ function asyncCache(fn) {
   }
 }
 
-function generateKey() {
+function generateKey () {
   return generateKey._key++
 }
 generateKey._key = 1

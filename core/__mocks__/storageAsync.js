@@ -21,8 +21,8 @@ module.exports = {
     }
     return Promise.resolve(cache[key])
   }),
-  set: function(key, value) {
+  set (key, value) {
     cache[key] = value
     return Promise.resolve()
-  }
+  },
 }

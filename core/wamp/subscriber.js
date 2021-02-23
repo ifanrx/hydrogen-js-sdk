@@ -15,7 +15,7 @@ const subscriber = ({
   let connection = null
   const subscriptionMap = new Map()
   const state = {
-    retried: false
+    retried: false,
   }
 
   const clearConnection = () => {
@@ -76,7 +76,7 @@ const subscriber = ({
   const connect = util.asyncCache(() => {
     if (!connection) {
       connection = new Connection({
-        url: url,
+        url,
         realm,
         create_transport,
         getAuthTokenQuerystring,

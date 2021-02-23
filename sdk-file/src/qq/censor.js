@@ -15,7 +15,7 @@ module.exports = BaaS => {
       return new Promise((resolve, reject) => {
         qq.uploadFile({
           url: BaaS._polyfill.getAPIHost() + BaaS._config.API.QQ.CENSOR_IMAGE,
-          filePath: filePath,
+          filePath,
           name: constants.UPLOAD.UPLOAD_FILE_KEY,
           header: {
             'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
@@ -34,7 +34,7 @@ module.exports = BaaS => {
           },
           fail: () => {
             BaaS.request.qqRequestFail(reject)
-          }
+          },
         })
       })
     })
@@ -55,8 +55,8 @@ module.exports = BaaS => {
       url: BaaS._config.API.QQ.CENSOR_MSG,
       method: 'POST',
       data: {
-        content: text
-      }
+        content: text,
+      },
     })
   }
 

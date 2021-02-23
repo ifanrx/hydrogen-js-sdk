@@ -1,6 +1,6 @@
 let SocketTask
 class WebSocket {
-  constructor(url, protocols) {
+  constructor (url, protocols) {
     SocketTask = swan.connectSocket({
       url,
       protocols,
@@ -18,15 +18,15 @@ class WebSocket {
       })
     })
   }
-  send(payload) {
+  send (payload) {
     SocketTask.send({data: payload})
   }
-  close(code, reason) {
+  close (code, reason) {
     SocketTask.close({code, reason})
   }
-  onopen() {}
-  onclose() {}
-  onmessage() {}
+  onopen () {}
+  onclose () {}
+  onmessage () {}
 }
 
 module.exports = WebSocket

@@ -36,12 +36,12 @@ const createPayFn = BaaS => params => {
     return new Promise((resolve, reject) => {
       qq.requestPayment({
         package: data.package,
-        success: function (res) {
+        success (res) {
           res.transaction_no = data.transaction_no
           res.trade_no = data.trade_no
           return resolve(res)
         },
-        fail: function (err) {
+        fail (err) {
           if (err.errMsg == 'requestPayment:fail 用户取消') {
             reject(new HError(607))
           } else {

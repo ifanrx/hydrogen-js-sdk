@@ -15,7 +15,7 @@ const RESULT_CODE = {
 }
 
 class PayError extends HError {
-  mapErrorMessage(code) {
+  mapErrorMessage (code) {
     code = code.toString()
     switch (code) {
     case RESULT_CODE.FAIL:
@@ -72,7 +72,7 @@ const createPayFn = BaaS => params => {
         },
         fail: () => {
           return reject(new PayError(RESULT_CODE.FAIL))
-        }
+        },
       })
     })
   })

@@ -36,8 +36,8 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         create_user: createUser,
-        code: code
-      }
+        code,
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -71,7 +71,7 @@ module.exports = BaaS => {
     return new Promise((resolve, reject) => {
       swan.getUserInfo({
         lang,
-        success: resolve, fail: reject
+        success: resolve, fail: reject,
       })
     })
   }
@@ -117,7 +117,6 @@ module.exports = BaaS => {
     })
   }
 
-
   const linkBaidu = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -139,7 +138,7 @@ module.exports = BaaS => {
           encryptedData: res.encryptedData,
           iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          code
+          code,
         } : {code}
 
         return BaaS._baasRequest({

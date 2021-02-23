@@ -5,7 +5,7 @@ const constants = require('../constants')
  * @param {boolean} enableTrigger
  * @returns {number}
  */
-module.exports = function getLimitationWithEnableTigger(limit, enableTrigger) {
+module.exports = function getLimitationWithEnableTigger (limit, enableTrigger) {
   // 设置了 limit，直接返回
   if (limit !== null && typeof limit !== 'undefined') {
     return limit

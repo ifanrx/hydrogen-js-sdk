@@ -83,7 +83,7 @@ const createPayWithWechatFn = BaaS => options => {
     }
     return new Promise((resolve, reject) => {
       WeixinJSBridge.invoke( 'getBrandWCPayRequest', config, res => {
-        if(res.err_msg == 'get_brand_wcpay_request:ok' ){
+        if(res.err_msg == 'get_brand_wcpay_request:ok' ) {
           res.transaction_no = config.transaction_no
           res.trade_no = config.trade_no
           resolve(res)

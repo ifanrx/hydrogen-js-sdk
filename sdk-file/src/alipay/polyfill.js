@@ -7,22 +7,22 @@ const WebSocket = require('./websocket')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
-    getSystemInfoSync: function () {
+    getSystemInfoSync () {
       return my.getSystemInfoSync()
     },
 
-    setStorageSync: function (key, value) {
+    setStorageSync (key, value) {
       return my.setStorageSync({
         key,
         data: value,
       })
     },
 
-    getStorageSync: function (key) {
+    getStorageSync (key) {
       return my.getStorageSync({key}).data
     },
 
-    setStorageAsync(k, v) {
+    setStorageAsync (k, v) {
       return new Promise((resolve, reject) => {
         my.setStorage({
           key: k,
@@ -32,7 +32,7 @@ module.exports = function (BaaS) {
         })
       })
     },
-    getStorageAsync(k) {
+    getStorageAsync (k) {
       return new Promise((resolve) => {
         my.getStorage({
           key: k,
@@ -51,20 +51,20 @@ module.exports = function (BaaS) {
       return createAuthFn(BaaS)(Object.assign({}, opts, {forceLogin}), userId)
     }),
 
-    checkLatestVersion() {
+    checkLatestVersion () {
       // 支付宝小程序不能直接判断是否在开发者工具中，
       // 只能判断当前小程序当前运行的版本，
       // 在开发者工具中，取得的值为 develop
       my.getRunScene({
-        success(result) {
+        success (result) {
           if (result.envVersion === 'develop') {
             BaaS.checkVersion({platform: constants.PLATFORM.ALIPAY})
           }
-        }
+        },
       })
     },
     CLIENT_PLATFORM: 'ALIPAY',
-    handleLoginSuccess(res, isAnonymous) {
+    handleLoginSuccess (res, isAnonymous) {
       // 登录成功的 hook （login、loginWithAlipay、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.ALIPAY_USER_ID, res.data.alipay_user_id || '')
@@ -77,6 +77,6 @@ module.exports = function (BaaS) {
         tplMsgStatsReport.reportStats()
       }
     },
-    WebSocket: WebSocket,
+    WebSocket,
   })
 }

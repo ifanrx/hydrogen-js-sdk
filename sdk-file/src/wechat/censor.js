@@ -20,13 +20,13 @@ module.exports = BaaS => {
           'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
           'User-Agent': constants.UPLOAD.UA,
         }
-      
+
         if (BaaS._config.ENV) {
           header['X-Hydrogen-Env-ID'] = BaaS._config.ENV
         }
         wx.uploadFile({
           url: BaaS._polyfill.getAPIHost() + BaaS._config.API.WECHAT.CENSOR_IMAGE,
-          filePath: filePath,
+          filePath,
           name: constants.UPLOAD.UPLOAD_FILE_KEY,
           header,
           success: res => {
@@ -39,7 +39,7 @@ module.exports = BaaS => {
           },
           fail: () => {
             BaaS.request.wxRequestFail(reject)
-          }
+          },
         })
       })
     })
@@ -60,8 +60,8 @@ module.exports = BaaS => {
       url: BaaS._config.API.WECHAT.CENSOR_MSG,
       method: 'POST',
       data: {
-        content: text
-      }
+        content: text,
+      },
     })
   }
 
@@ -79,7 +79,7 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         file_id: fileId,
-      }
+      },
     })
   }
 

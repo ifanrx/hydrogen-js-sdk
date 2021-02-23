@@ -11,7 +11,7 @@ const jdUpload = (header, config, resolve, reject, type) => {
     name: constants.UPLOAD.UPLOAD_FILE_KEY,
     formData: {
       authorization: config.authorization,
-      policy: config.policy
+      policy: config.policy,
     },
     header,
     success: (res) => {
@@ -46,7 +46,7 @@ const jdUpload = (header, config, resolve, reject, type) => {
     },
     fail: () => {
       BaaS.request.jdRequestFail(reject)
-    }
+    },
   })
 }
 
@@ -93,20 +93,20 @@ const uploadFile = (fileParams, metaData, type) => {
     return this
   }
 
-  function mix(obj) {
+  function mix (obj) {
     return Object.assign(obj, {
-      catch(...args) {
+      catch (...args) {
         let newPromise = Promise.prototype.catch.call(this, ...args)
         mix(newPromise)
         return newPromise
       },
-      then(...args) {
+      then (...args) {
         let newPromise = Promise.prototype.then.call(this, ...args)
         mix(newPromise)
         return newPromise
       },
-      abort: abort,
-      onProgressUpdate: onProgressUpdate
+      abort,
+      onProgressUpdate,
     })
   }
 
@@ -118,12 +118,12 @@ const uploadFile = (fileParams, metaData, type) => {
 
     let config = {
       id: res.data.id,
-      fileName: fileName,
+      fileName,
       policy: res.data.policy,
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     uploadTask = getUploadHeaders().then(header => {
       const upload = jdUpload(header, config, e => {

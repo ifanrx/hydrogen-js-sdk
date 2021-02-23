@@ -11,6 +11,13 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     "no-var": ['error'],
+    "object-shorthand": ['error', 'always'],
+    "comma-dangle": ['error', 'always-multiline'],
+    "no-multiple-empty-lines":  ['error', { max: 1 }],
+    "space-before-blocks": ['error', 'always'],
+    "space-before-function-paren": ['error', 'always'],
+    "no-multi-spaces": 'error',
+    "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
   },
   parserOptions: {
     ecmaVersion: 2017,
@@ -42,12 +49,5 @@ module.exports = {
     __VERSION_QQ__: true,
     __VERSION_BAIDU__: true,
     __VERSION__: true,
-  },
-  parserOptions: {
-    ecmaVersion: 2017,
-    sourceType: 'module',
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true
-    }
   },
 }

@@ -38,7 +38,7 @@ const createPayFn = BaaS => (params, bannedChannels) => {
       swan.requestPolymerPayment({
         orderInfo: data,
         bannedChannels: bannedChannels || [],
-        success: function (res) {
+        success (res) {
           // 百度 iOS 客户端 bug: res 为 string 类型，导致支付成功后，用户无法获取到 transaction_no
           if (typeof res === 'string') {
             res = {
@@ -48,7 +48,7 @@ const createPayFn = BaaS => (params, bannedChannels) => {
           res.transaction_no = data.tpOrderId
           return resolve(res)
         },
-        fail: function (err) {
+        fail (err) {
           reject(new HError(608, err.errMsg))
         },
       })

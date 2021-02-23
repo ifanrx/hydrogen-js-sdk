@@ -1,5 +1,5 @@
 class WebSocket {
-  constructor(url, protocols) {
+  constructor (url, protocols) {
     qq.connectSocket({
       url,
       protocols,
@@ -17,15 +17,15 @@ class WebSocket {
       })
     })
   }
-  send(payload) {
+  send (payload) {
     qq.sendSocketMessage({data: payload})
   }
-  close(code, reason) {
+  close (code, reason) {
     qq.closeSocket({code, reason})
   }
-  onopen() {}
-  onclose() {}
-  onmessage() {}
+  onopen () {}
+  onclose () {}
+  onmessage () {}
 }
 
 module.exports = WebSocket

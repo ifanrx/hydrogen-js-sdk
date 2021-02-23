@@ -5,16 +5,15 @@ const constants = require('core-module/constants')
 
 const ttRequestFail = function (reject) {
   tt.getNetworkType({
-    success: function (res) {
+    success (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
       } else {
         reject(new HError(601)) // 网络超时
       }
-    }
+    },
   })
 }
-
 
 /**
  * 网络请求
@@ -37,15 +36,15 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       }
 
       tt.request({
-        method: method,
-        url: url,
-        data: data,
+        method,
+        url,
+        data,
         header: headers,
-        dataType: dataType,
+        dataType,
         success: resolve,
         fail: () => {
           ttRequestFail(reject)
-        }
+        },
       })
 
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)

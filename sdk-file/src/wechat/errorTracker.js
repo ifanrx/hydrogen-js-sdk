@@ -6,7 +6,7 @@ const bugOut = require('./vendor/bugOut.min')
 
 let initialized = false
 
-function enable({usePlugins = false} = {}) {
+function enable ({usePlugins = false} = {}) {
   if (!BaaS._config || !BaaS._config.CLIENT_ID) {
     throw new HError(602)
   }
@@ -16,14 +16,14 @@ function enable({usePlugins = false} = {}) {
   return bugOut.init(true, {clientId: BaaS._config.CLIENT_ID}, config.VERSION)
 }
 
-function track(...args) {
+function track (...args) {
   if (!initialized) {
     throw new HError(610)
   }
   return bugOut.track(...args)
 }
 
-function metaData(...args) {
+function metaData (...args) {
   if (!initialized) {
     throw new HError(610)
   }
@@ -31,7 +31,6 @@ function metaData(...args) {
   return bugOut.metaData(...args)
 }
 
-
 module.exports = {
-  enable, track, metaData
+  enable, track, metaData,
 }

@@ -5,28 +5,28 @@ const utils = require('core-module/utils')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
-    getSystemInfoSync: function () {
+    getSystemInfoSync () {
       return {
-        platform: 'REACT-NATIVE'
+        platform: 'REACT-NATIVE',
       }
     },
-    setStorageAsync: function (k, v) {
+    setStorageAsync (k, v) {
       return AsyncStorage.setItem(k, JSON.stringify({value: v}))
     },
-    getStorageAsync: function (k) {
+    getStorageAsync (k) {
       return AsyncStorage.getItem(k).then(data => {
         if (!data) return undefined
         return JSON.parse(data).value
       })
     },
-    setStorageSync: function () {
+    setStorageSync () {
       throw new HError(611)
     },
-    getStorageSync: function () {
+    getStorageSync () {
       throw new HError(611)
     },
     CLIENT_PLATFORM: 'REACT-NATIVE',
-    handleLoginSuccess(res, isAnonymous) {
+    handleLoginSuccess (res, isAnonymous) {
       // 登录成功的 hook （login、register）调用成功后触发
       const jobs = [
         BaaS.storageAsync.set(constants.STORAGE_KEY.UID, res.data.user_id),
@@ -41,7 +41,7 @@ module.exports = function (BaaS) {
       }
       return Promise.all(jobs)
     },
-    linkThirdPartyWithAuthData(...args) {
+    linkThirdPartyWithAuthData (...args) {
       return BaaS.auth.linkThirdPartyWithAuthData(...args)
     },
   })

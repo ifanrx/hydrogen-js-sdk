@@ -2,7 +2,7 @@ const {Session} = require('./session')
 const util = require('./util')
 
 class Connection {
-  constructor(options) {
+  constructor (options) {
     util.assert(options.url !== undefined, 'options.url missing')
     util.assert(
       options.create_transport !== undefined,
@@ -84,19 +84,19 @@ class Connection {
     this._retry_timer = null
   }
 
-  _autoreconnect_reset_timer() {
+  _autoreconnect_reset_timer () {
     clearTimeout(this._retry_timer)
     this._retry_timer = null
   }
 
-  _autoreconnect_reset() {
+  _autoreconnect_reset () {
     this._autoreconnect_reset_timer()
     this._retry_count = 0
     this._retry_delay = this._initial_retry_delay
     this._is_retrying = false
   }
 
-  _autoreconnect_advance() {
+  _autoreconnect_advance () {
     if (this._retry_delay_jitter) {
       this._retry_delay_jitter = util.rand_normal(
         this._retry_delay,
@@ -136,7 +136,7 @@ class Connection {
     return res
   }
 
-  open() {
+  open () {
     if (this._transport) {
       throw new Error('connection already open (or opening)')
     }
@@ -323,7 +323,7 @@ class Connection {
     retry()
   }
 
-  close(reason, message) {
+  close (reason, message) {
     if (!this._transport && !this._is_retrying) {
       throw new Error('connection already closed')
     }
@@ -336,32 +336,32 @@ class Connection {
     }
   }
 
-  get defer() {
+  get defer () {
     return this._defer
   }
 
-  get session() {
+  get session () {
     return this._session
   }
 
-  get isOpen() {
+  get isOpen () {
     if (this._session && this._session.isOpen) return true
     return false
   }
 
-  get isConnected() {
+  get isConnected () {
     if (this._transport) return true
     return false
   }
 
-  get transport() {
+  get transport () {
     if (this._transport) {
       return this._transport
     }
     return {info: {type: 'none', url: null, protocal: null}}
   }
 
-  get isRetrying() {
+  get isRetrying () {
     return this._is_retrying
   }
 }

@@ -4,7 +4,6 @@ const polyfill = BaaS._polyfill
 
 const API = BaaS._config.API
 
-
 const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
   merchandiseRecordID: 'merchandise_record_id', // optional
@@ -44,18 +43,18 @@ const pay = (params) => {
         package: data.package,
         signType: 'MD5',
         paySign: data.paySign,
-        success: function (res) {
+        success (res) {
           res.transaction_no = data.transaction_no
           res.trade_no = data.trade_no
           return resolve(res)
         },
-        complete: function (res) {
+        complete (res) {
           // 兼容：微信 6.5.2 及之前版本中，用户取消支付不会触发 fail 回调，只会触发 complete 回调，回调 errMsg 为 'requestPayment:cancel'
           if (res.errMsg == 'requestPayment:fail cancel') {
             reject(new HError(607))
           }
         },
-        fail: function (err) {
+        fail (err) {
           // 微信不使用状态码来区分支付取消和支付失败，这里返回自定义状态码和微信的错误信息，便于用户判断和排错
           if (err.errMsg == 'requestPayment:fail cancel') {
             reject(new HError(607))

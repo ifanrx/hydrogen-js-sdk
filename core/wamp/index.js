@@ -3,11 +3,11 @@ const HError = require('../HError')
 
 const subscriber = require('./subscriber')
 
-function resolveTopic({schema_name, event_type}) {
+function resolveTopic ({schema_name, event_type}) {
   return `${BaaS._config.WS_BASE_TOPIC}.${schema_name}.on_${event_type}`
 }
 
-function resolveOptions({where}) {
+function resolveOptions ({where}) {
   if (where) {
     return {where}
   }
@@ -15,11 +15,11 @@ function resolveOptions({where}) {
 }
 
 // 自定义触发自动重连
-function shouldTryAgain() {
+function shouldTryAgain () {
   return false
 }
 
-function errorify(onerror) {
+function errorify (onerror) {
   const lookup = {
     'unreachable': 601,
     'wamp.error.not_authorized': 603,
@@ -50,7 +50,7 @@ function errorify(onerror) {
   }
 }
 
-function getAuthTokenQuerystring() {
+function getAuthTokenQuerystring () {
   const qs = []
   qs.push(`x-hydrogen-client-id=${BaaS._config.CLIENT_ID}`)
   if (BaaS._config.ENV) {
@@ -76,7 +76,7 @@ const subscribe = ({
 }) => {
   if (!_subscribe) {
     const host = BaaS._polyfill.getWSHost()
-    const url =  host.replace(/\/$/, '') + '/' + BaaS._config.WS_PATH
+    const url = host.replace(/\/$/, '') + '/' + BaaS._config.WS_PATH
 
     _subscribe = subscriber({
       WebSocket: BaaS._polyfill.WebSocket,

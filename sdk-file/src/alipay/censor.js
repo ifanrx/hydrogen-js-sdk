@@ -16,8 +16,8 @@ module.exports = BaaS => {
       url: BaaS._config.API.ALIPAY.CENSOR_MSG,
       method: 'POST',
       data: {
-        content: text
-      }
+        content: text,
+      },
     })
   }
 

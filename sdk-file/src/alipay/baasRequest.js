@@ -23,7 +23,7 @@ const createBaasRequestFn = BaaS => (args) => {
  *
  * @param {object} payload
  */
-function tryResendRequest(BaaS, payload) {
+function tryResendRequest (BaaS, payload) {
   return Promise.all([
     BaaS.storageAsync.get(constants.STORAGE_KEY.UID),
     BaaS.storageAsync.get(constants.STORAGE_KEY.AUTH_TOKEN),

@@ -10,7 +10,7 @@ const AUTH_ERROR = 11
  *
  * 当有 userId 时，执行 linkAlipay 的操作
  */
-const createAuthFn = BaaS => function auth({
+const createAuthFn = BaaS => function auth ({
   forceLogin,
   scopes = [],
   createUser = true,

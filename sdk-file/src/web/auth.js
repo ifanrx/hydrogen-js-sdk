@@ -69,7 +69,7 @@ let linkThirdPartyRequest = (BaaS, {provider, token, update_userprofile} = {}) =
     data: {
       auth_token: token,
       update_userprofile: utils.getUpdateUserProfileParam(update_userprofile),
-    }
+    },
   })
 }
 
@@ -106,7 +106,8 @@ const getErrorMsg = err => {
     error = err.data.error_msg || err.data.message || err.data.error_message
   } else if (typeof err.data !== 'undefined') {
     error = err.data || err.statusText
-  } else if (err.message) {   // error object
+  } else if (err.message) {
+    // error object
     error = err.message
   }
   return error

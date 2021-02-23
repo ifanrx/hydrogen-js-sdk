@@ -33,5 +33,4 @@ BaaS.wxExtend = (...args) => {
   }
 }
 
-
 module.exports = BaaS

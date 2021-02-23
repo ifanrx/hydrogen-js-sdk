@@ -4,25 +4,25 @@ const utils = require('core-module/utils')
 
 module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
-    getSystemInfoSync: function () {
+    getSystemInfoSync () {
       return {
-        platform: 'WEB'
+        platform: 'WEB',
       }
     },
-    setStorageAsync: function (k, v) {
+    setStorageAsync (k, v) {
       return Promise.resolve(window.localStorage.setItem(k, JSON.stringify({value: v})))
     },
-    getStorageAsync: function (k) {
+    getStorageAsync (k) {
       try {
         return Promise.resolve(JSON.parse(window.localStorage.getItem(k)).value)
       } catch (e) {
         return Promise.resolve(null)
       }
     },
-    setStorageSync: function (k, v) {
+    setStorageSync (k, v) {
       window.localStorage.setItem(k, JSON.stringify({value: v}))
     },
-    getStorageSync: function (k) {
+    getStorageSync (k) {
       try {
         return JSON.parse(window.localStorage.getItem(k)).value
       } catch (e) {
@@ -30,7 +30,7 @@ module.exports = function (BaaS) {
       }
     },
     CLIENT_PLATFORM: 'WEB',
-    handleLoginSuccess(res, isAnonymous) {
+    handleLoginSuccess (res, isAnonymous) {
       // 登录成功的 hook （login、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
@@ -41,7 +41,7 @@ module.exports = function (BaaS) {
         BaaS.storage.set(constants.STORAGE_KEY.IS_ANONYMOUS_USER, 0)
       }
     },
-    linkThirdParty(provider, authPageUrl, options = {}) {
+    linkThirdParty (provider, authPageUrl, options = {}) {
       return thirdPartyAuthRequest(Object.assign({}, options, {
         provider,
         authPageUrl,

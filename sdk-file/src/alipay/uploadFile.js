@@ -4,7 +4,7 @@ const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 
 class UploadError extends HError {
-  mapErrorMessage(code) {
+  mapErrorMessage (code) {
     switch (code) {
     case 11:
       return '文件不存在'
@@ -27,7 +27,7 @@ const myUpload = (config, resolve, reject) => {
       fileType: config.fileType,
       formData: {
         authorization: config.authorization,
-        policy: config.policy
+        policy: config.policy,
       },
       header,
       success: (res) => {
@@ -50,7 +50,7 @@ const myUpload = (config, resolve, reject) => {
       },
       fail: res => {
         reject(new UploadError(parseInt(res.error), res.errorMessage))
-      }
+      },
     })
   })
 }
@@ -86,13 +86,13 @@ const createUploadFileFn = () => (fileParams, metaData) => {
   getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
     let config = {
       id: res.data.id,
-      fileName: fileName,
+      fileName,
       policy: res.data.policy,
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
       fileType: fileParams.fileType,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     myUpload(config, e => {
       rs(e)

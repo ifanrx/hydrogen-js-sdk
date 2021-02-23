@@ -6,16 +6,16 @@ const utils = require('core-module/utils')
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'BAIDU',
-    setStorageSync(k, v) {
+    setStorageSync (k, v) {
       return swan.setStorageSync(k, v)
     },
-    getStorageSync(k) {
+    getStorageSync (k) {
       return swan.getStorageSync(k)
     },
-    getSystemInfoSync() {
+    getSystemInfoSync () {
       return swan.getSystemInfoSync()
     },
-    setStorageAsync(k, v) {
+    setStorageAsync (k, v) {
       return new Promise((resolve, reject) => {
         swan.setStorage({
           key: k,
@@ -25,7 +25,7 @@ module.exports = BaaS => {
         })
       })
     },
-    getStorageAsync(k) {
+    getStorageAsync (k) {
       return new Promise((resolve) => {
         swan.getStorage({
           key: k,
@@ -34,16 +34,16 @@ module.exports = BaaS => {
         })
       })
     },
-    checkLatestVersion() {
+    checkLatestVersion () {
       let info = swan.getSystemInfoSync()
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: constants.PLATFORM.BAIDU})
       }
     },
-    linkBaidu(...args) {
+    linkBaidu (...args) {
       return BaaS.auth.linkBaidu(...args)
     },
-    handleLoginSuccess(res, isAnonymous, userInfo) {
+    handleLoginSuccess (res, isAnonymous, userInfo) {
       // 登录成功的 hook （login、loginWithWechat、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
@@ -67,6 +67,6 @@ module.exports = BaaS => {
         tplMsgStatsReport.reportStats()
       }
     },
-    WebSocket: WebSocket,
+    WebSocket,
   })
 }

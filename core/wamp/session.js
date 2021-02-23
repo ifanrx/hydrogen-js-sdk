@@ -1016,55 +1016,55 @@ let Session = function (
 }
 
 Object.defineProperty(Session.prototype, 'defer', {
-  get: function () {
+  get () {
     return this._defer
   },
 })
 
 Object.defineProperty(Session.prototype, 'id', {
-  get: function () {
+  get () {
     return this._id
   },
 })
 
 Object.defineProperty(Session.prototype, 'realm', {
-  get: function () {
+  get () {
     return this._realm
   },
 })
 
 Object.defineProperty(Session.prototype, 'isOpen', {
-  get: function () {
+  get () {
     return this.id !== null
   },
 })
 
 Object.defineProperty(Session.prototype, 'features', {
-  get: function () {
+  get () {
     return this._features
   },
 })
 
 Object.defineProperty(Session.prototype, 'caller_disclose_me', {
-  get: function () {
+  get () {
     return this._caller_disclose_me
   },
-  set: function (newValue) {
+  set (newValue) {
     this._caller_disclose_me = newValue
   },
 })
 
 Object.defineProperty(Session.prototype, 'publisher_disclose_me', {
-  get: function () {
+  get () {
     return this._publisher_disclose_me
   },
-  set: function (newValue) {
+  set (newValue) {
     this._publisher_disclose_me = newValue
   },
 })
 
 Object.defineProperty(Session.prototype, 'subscriptions', {
-  get: function () {
+  get () {
     let keys = Object.keys(this._subscriptions)
     let vals = []
     for (let i = 0; i < keys.length; ++i) {
@@ -1075,7 +1075,7 @@ Object.defineProperty(Session.prototype, 'subscriptions', {
 })
 
 Object.defineProperty(Session.prototype, 'registrations', {
-  get: function () {
+  get () {
     let keys = Object.keys(this._registrations)
     let vals = []
     for (let i = 0; i < keys.length; ++i) {

@@ -5,13 +5,13 @@ const utils = require('core-module/utils')
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'JINGDONG',
-    setStorageSync(k, v) {
+    setStorageSync (k, v) {
       return jd.setStorageSync(k, v)
     },
-    getStorageSync(k) {
+    getStorageSync (k) {
       return jd.getStorageSync(k)
     },
-    setStorageAsync(k, v) {
+    setStorageAsync (k, v) {
       return new Promise((resolve, reject) => {
         jd.setStorage({
           key: k,
@@ -21,7 +21,7 @@ module.exports = BaaS => {
         })
       })
     },
-    getStorageAsync(k) {
+    getStorageAsync (k) {
       return new Promise((resolve) => {
         jd.getStorage({
           key: k,
@@ -30,19 +30,19 @@ module.exports = BaaS => {
         })
       })
     },
-    getSystemInfoSync() {
+    getSystemInfoSync () {
       return jd.getSystemInfoSync()
     },
-    checkLatestVersion() {
+    checkLatestVersion () {
       let info = jd.getSystemInfoSync()
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
       }
     },
-    linkJd(...args) {
+    linkJd (...args) {
       return BaaS.auth.linkJd(...args)
     },
-    handleLoginSuccess(res, isAnonymous, userInfo) {
+    handleLoginSuccess (res, isAnonymous, userInfo) {
       // 登录成功的 hook （login、loginWithJingdong、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')

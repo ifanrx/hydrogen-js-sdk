@@ -15,8 +15,9 @@ let thirdPartyAuthRequest = (options = {}) => {
        * 所以添加了 test 参数。在测试时，会将 test 设为 ture，以跳过下一行代码。
        */
       if (event.origin !== window.location.origin && !test) {
+        // 只处理同源页面传来的 message
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> origin not matched, event origin: ${event.origin}, window origin: ${window.location.origin}`)
-        return  // 只处理同源页面传来的 message
+        return
       }
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> success, result: ${JSON.stringify(event.data)}`)

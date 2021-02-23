@@ -6,13 +6,13 @@ const WebSocket = require('./websocket')
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'QQ',
-    setStorageSync(k, v) {
+    setStorageSync (k, v) {
       return utils.withRetry(qq.setStorageSync)(k, v)
     },
-    getStorageSync(k) {
+    getStorageSync (k) {
       return utils.withRetry(qq.getStorageSync)(k)
     },
-    setStorageAsync(k, v) {
+    setStorageAsync (k, v) {
       return new Promise((resolve, reject) => {
         qq.setStorage({
           key: k,
@@ -22,7 +22,7 @@ module.exports = BaaS => {
         })
       })
     },
-    getStorageAsync(k) {
+    getStorageAsync (k) {
       return new Promise((resolve) => {
         qq.getStorage({
           key: k,
@@ -31,19 +31,19 @@ module.exports = BaaS => {
         })
       })
     },
-    getSystemInfoSync() {
+    getSystemInfoSync () {
       return qq.getSystemInfoSync()
     },
-    checkLatestVersion() {
+    checkLatestVersion () {
       let info = qq.getSystemInfoSync()
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: constants.PLATFORM.QQ})
       }
     },
-    linkQQ(...args) {
+    linkQQ (...args) {
       return BaaS.auth.linkQQ(...args)
     },
-    handleLoginSuccess(res, isAnonymous, userInfo) {
+    handleLoginSuccess (res, isAnonymous, userInfo) {
       // 登录成功的 hook （login、loginWithWechat、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
@@ -67,6 +67,6 @@ module.exports = BaaS => {
         tplMsgStatsReport.reportStats()
       }
     },
-    WebSocket: WebSocket,
+    WebSocket,
   })
 }

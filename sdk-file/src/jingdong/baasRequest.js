@@ -11,7 +11,7 @@ const storage = require('core-module/storage')
  *
  * @param {object} payload
  */
-function tryResendRequest(payload) {
+function tryResendRequest (payload) {
   let prevUid = storage.get(constants.STORAGE_KEY.UID)
   let preAction = Promise.resolve()
   if (storage.get(constants.STORAGE_KEY.AUTH_TOKEN)) {

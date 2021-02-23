@@ -5,13 +5,13 @@ const constants = require('core-module/constants')
 
 const wxRequestFail = function (reject) {
   wx.getNetworkType({
-    success: function (res) {
+    success (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
       } else {
         reject(new HError(601)) // 网络超时
       }
-    }
+    },
   })
 }
 
@@ -36,15 +36,15 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
       }
 
       wx.request({
-        method: method,
-        url: url,
-        data: data,
+        method,
+        url,
+        data,
         header: headers,
-        dataType: dataType,
+        dataType,
         success: resolve,
         fail: () => {
           wxRequestFail(reject)
-        }
+        },
       })
 
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)

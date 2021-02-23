@@ -6,13 +6,13 @@ const utils = require('core-module/utils')
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'BYTEDANCE',
-    setStorageSync(k, v) {
+    setStorageSync (k, v) {
       return tt.setStorageSync(k, v)
     },
-    getStorageSync(k) {
+    getStorageSync (k) {
       return tt.getStorageSync(k)
     },
-    setStorageAsync(k, v) {
+    setStorageAsync (k, v) {
       return new Promise((resolve, reject) => {
         tt.setStorage({
           key: k,
@@ -22,7 +22,7 @@ module.exports = BaaS => {
         })
       })
     },
-    getStorageAsync(k) {
+    getStorageAsync (k) {
       return new Promise((resolve) => {
         tt.getStorage({
           key: k,
@@ -31,19 +31,19 @@ module.exports = BaaS => {
         })
       })
     },
-    getSystemInfoSync() {
+    getSystemInfoSync () {
       return tt.getSystemInfoSync()
     },
-    checkLatestVersion() {
+    checkLatestVersion () {
       let info = tt.getSystemInfoSync()
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: constants.PLATFORM.BYTEDANCE})
       }
     },
-    linkTt(...args) {
+    linkTt (...args) {
       return BaaS.auth.linkTt(...args)
     },
-    handleLoginSuccess(res, isAnonymous, userInfo) {
+    handleLoginSuccess (res, isAnonymous, userInfo) {
       // 登录成功的 hook （login、loginWithTt、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
@@ -65,6 +65,6 @@ module.exports = BaaS => {
         // tplMsgStatsReport.reportStats()
       }
     },
-    WebSocket: WebSocket,
+    WebSocket,
   })
 }

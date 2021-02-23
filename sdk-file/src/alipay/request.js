@@ -3,7 +3,7 @@ const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 
 class RequestError extends HError {
-  mapErrorMessage(code) {
+  mapErrorMessage (code) {
     switch (code) {
     case 11:
       return '无权跨域'
@@ -61,9 +61,9 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
       }
       let requestFn = my.canIUse('request') ? my.request : my.httpRequest
       requestFn({
-        method: method,
-        url: url,
-        data: data,
+        method,
+        url,
+        data,
         headers,
         dataType,
         success: res => {
@@ -80,7 +80,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
             return reject(new HError(res.status, extractErrorMsg(res)))
           }
           reject(new RequestError(parseInt(res.error), res.errorMessage))
-        }
+        },
       })
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
     })

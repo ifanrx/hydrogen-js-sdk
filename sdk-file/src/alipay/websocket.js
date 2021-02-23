@@ -1,5 +1,5 @@
 class WebSocket {
-  constructor(url, protocols) {
+  constructor (url, protocols) {
     my.connectSocket({
       url,
       header: {
@@ -21,15 +21,15 @@ class WebSocket {
       }
     })
   }
-  send(payload) {
+  send (payload) {
     my.sendSocketMessage({data: payload})
   }
-  close() {
+  close () {
     my.closeSocket()
   }
-  onopen() {}
-  onclose() {}
-  onmessage() {}
+  onopen () {}
+  onclose () {}
+  onmessage () {}
 }
 
 module.exports = WebSocket

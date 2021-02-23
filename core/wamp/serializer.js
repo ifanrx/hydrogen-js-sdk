@@ -1,13 +1,13 @@
 const util = require('./util')
 
 class JSONSerializer {
-  constructor(replacer, reviver) {
+  constructor (replacer, reviver) {
     this.replacer = replacer
     this.reviver = reviver
     this.SERIALIZER_ID = 'json'
     this.BINARY = false
   }
-  serialize(obj) {
+  serialize (obj) {
     try {
       let payload = JSON.stringify(obj, this.replacer)
       return payload
@@ -16,7 +16,7 @@ class JSONSerializer {
       throw e
     }
   }
-  unserialize(payload) {
+  unserialize (payload) {
     try {
       let obj = JSON.parse(payload, this.reviver)
       return obj
