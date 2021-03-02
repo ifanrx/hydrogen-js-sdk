@@ -17,25 +17,31 @@ module.exports = function (BaaS) {
       throw new HError(605)
     }
 
+    if(fileParams.fileName !== undefined && typeof fileParams.fileName !== 'string'){
+      throw new HError(605)
+    }
+  
     if (!metaData) {
       metaData = {}
     } else if (typeof metaData !== 'object') {
       throw new HError(605)
     }
+
     let config = {}
-    return getUploadFileConfig(fileObj.name, utils.replaceQueryParams(metaData)).then(res => {
+    let fileName = fileParams.fileName || fileObj.name
+    return getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
       config = {
         id: res.data.id,
-        fileName: fileObj.name,
+        fileName: fileName,
         policy: res.data.policy,
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
-        filePath: fileObj.name,
+        filePath: fileName,
         destLink: res.data.path
       }
 
       let fd = new FormData()
-      fd.append(constants.UPLOAD.UPLOAD_FILE_KEY, fileObj, fileObj.name)
+      fd.append(constants.UPLOAD.UPLOAD_FILE_KEY, fileObj, fileName)
       fd.append('policy', config.policy)
       fd.append('authorization', config.authorization)
 

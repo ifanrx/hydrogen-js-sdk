@@ -63,6 +63,10 @@ const uploadFile = (fileParams, metaData, type) => {
     throw new HError(605)
   }
 
+  if(fileParams.fileName !== undefined && typeof fileParams.fileName !== 'string'){
+    throw new HError(605)
+  }
+
   if (!metaData) {
     metaData = {}
   } else if (typeof metaData !== 'object') {
@@ -112,7 +116,7 @@ const uploadFile = (fileParams, metaData, type) => {
 
   mix(p)
 
-  let fileName = utils.getFileNameFromPath(fileParams.filePath)
+  let fileName = fileParams.fileName || utils.getFileNameFromPath(fileParams.filePath)
   getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
     if (isAborted) return rj(new Error('aborted'))
 
