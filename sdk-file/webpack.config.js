@@ -54,6 +54,7 @@ module.exports = {
     bytedance: './src/bytedance/index.js',
     'react-native': './src/react-native/index.js',
     jingdong: './src/jingdong/index.js',
+    kuaishou: './src/kuaishou/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
