@@ -19,8 +19,8 @@ BaaS._baasRequest = require('./baasRequest')
 // BaaS.uploadFile = require('./uploadFile')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境
-if (typeof swan !== 'undefined') {
-  swan.BaaS = BaaS
+if (typeof ks !== 'undefined') {
+  ks.BaaS = BaaS
 }
 
 module.exports = BaaS

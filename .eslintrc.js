@@ -28,6 +28,7 @@ module.exports = {
     qq: true,
     swan: true,
     jd: true,
+    ks: true,
     expect: true,
     beforeEach: true,
     before: true,

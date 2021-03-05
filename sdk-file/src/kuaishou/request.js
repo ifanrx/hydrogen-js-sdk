@@ -3,8 +3,8 @@ const HError = require('core-module/HError')
 const utils = require('core-module/utils')
 const constants = require('core-module/constants')
 
-const jdRequestFail = function (reject) {
-  jd.getNetworkType({
+const ksRequestFail = function (reject) {
+  ks.getNetworkType({
     success: function (res) {
       if (res.networkType === 'none') {
         reject(new HError(600)) // 断网
@@ -36,12 +36,12 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         url = API_HOST.replace(/\/$/, '') + '/' + url.replace(/^\//, '')
       }
 
-      // 兼容 PUT 与 DELETE 请求，京东暂时只支持 GET 与 POST 两种请求
+      // 兼容 PUT 与 DELETE 请求，快手暂时只支持 GET 与 POST 两种请求
       if (method.toUpperCase() === 'PUT' || method.toUpperCase() === 'DELETE') {
         headers['X-Hydrogen-Request-Method'] = method
         method = 'POST'
       }
-      jd.request({
+      ks.request({
         method: method,
         url: url,
         data: data,
@@ -54,7 +54,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
             reject(herror)
             return
           }
-          jdRequestFail(reject)
+          ksRequestFail(reject)
         }
       })
 
@@ -64,4 +64,4 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
 }
 
 module.exports = request
-module.exports.jdRequestFail = jdRequestFail
+module.exports.ksRequestFail = ksRequestFail

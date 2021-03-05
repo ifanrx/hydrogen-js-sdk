@@ -128,6 +128,12 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.4/idp/jd/user-association/',
   },
 
+  KUAISHOU: {
+    SILENT_LOGIN: '/hserve/v2.5/idp/ks/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/ks/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.4/idp/ks/user-association/',
+  },
+
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
   M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
   M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',

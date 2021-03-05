@@ -9,12 +9,12 @@ module.exports = BaaS => {
 
   const getLoginCode = () => {
     return new Promise((resolve, reject) => {
-      jd.login({
+      ks.login({
         success: res => {
           resolve(res.code)
         },
         fail: () => {
-          BaaS.request.jdRequestFail(reject)
+          BaaS.request.ksRequestFail(reject)
         },
       })
     })
@@ -32,7 +32,7 @@ module.exports = BaaS => {
   // code 换取 session_key，生成并获取 3rd_session 即 token
   const sessionInit = ({code, createUser}, resolve, reject) => {
     return BaaS.request({
-      url: API.JINGDONG.SILENT_LOGIN,
+      url: API.KUAISHOU.SILENT_LOGIN,
       method: 'POST',
       data: {
         create_user: createUser,
@@ -59,7 +59,7 @@ module.exports = BaaS => {
 
   const getSensitiveData = (data) => {
     return BaaS.request({
-      url: API.JINGDONG.AUTHENTICATE,
+      url: API.KUAISHOU.AUTHENTICATE,
       method: 'POST',
       data,
     })
@@ -69,7 +69,7 @@ module.exports = BaaS => {
 
   const getUserInfo = ({lang} = {}) => {
     return new Promise((resolve, reject) => {
-      jd.getUserInfo({
+      ks.getUserInfo({
         lang,
         success: resolve, fail: reject
       })
@@ -134,7 +134,7 @@ module.exports = BaaS => {
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
-          // 京东是没有这些参数
+          // 快手是没有这些参数
           // rawData: res.rawData,
           // signature: res.signature,
           // encryptedData: res.encryptedData,
@@ -146,7 +146,7 @@ module.exports = BaaS => {
 
         return BaaS._baasRequest({
           method: 'POST',
-          url: API.JINGDONG.USER_ASSOCIATE,
+          url: API.KUAISHOU.USER_ASSOCIATE,
           data: payload,
         })
       })
@@ -154,7 +154,7 @@ module.exports = BaaS => {
   }
 
   /**
-   * 京东登录
+   * 快手登录
    * @function
    * @since v2.5.0
    * @memberof BaaS.auth
@@ -162,7 +162,7 @@ module.exports = BaaS => {
    * @param {BaaS.LoginOptions} [options] 其他选项
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const loginWithJd = (authData, {
+  const loginWithKs = (authData, {
     createUser = true,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -183,7 +183,7 @@ module.exports = BaaS => {
 
   Object.assign(BaaS.auth, {
     silentLogin,
-    loginWithJd: utils.rateLimit(loginWithJd),
+    loginWithKs: utils.rateLimit(loginWithKs),
     linkJd: utils.rateLimit(linkJd),
   })
 }

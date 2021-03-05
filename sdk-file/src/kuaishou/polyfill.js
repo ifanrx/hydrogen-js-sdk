@@ -6,14 +6,14 @@ module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
     CLIENT_PLATFORM: 'JINGDONG',
     setStorageSync(k, v) {
-      return jd.setStorageSync(k, v)
+      return ks.setStorageSync(k, v)
     },
     getStorageSync(k) {
-      return jd.getStorageSync(k)
+      return ks.getStorageSync(k)
     },
     setStorageAsync(k, v) {
       return new Promise((resolve, reject) => {
-        jd.setStorage({
+        ks.setStorage({
           key: k,
           data: v,
           success: resolve,
@@ -23,7 +23,7 @@ module.exports = BaaS => {
     },
     getStorageAsync(k) {
       return new Promise((resolve) => {
-        jd.getStorage({
+        ks.getStorage({
           key: k,
           success: res => resolve(res.data),
           fail: () => resolve(undefined),
@@ -31,10 +31,10 @@ module.exports = BaaS => {
       })
     },
     getSystemInfoSync() {
-      return jd.getSystemInfoSync()
+      return ks.getSystemInfoSync()
     },
     checkLatestVersion() {
-      let info = jd.getSystemInfoSync()
+      let info = ks.getSystemInfoSync()
       if (info.platform === 'devtools') {
         BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
       }
