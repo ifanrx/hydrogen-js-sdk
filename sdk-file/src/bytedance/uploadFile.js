@@ -11,7 +11,7 @@ const ttUpload = (header, config, resolve, reject, type) => {
     name: constants.UPLOAD.UPLOAD_FILE_KEY,
     formData: {
       authorization: config.authorization,
-      policy: config.policy
+      policy: config.policy,
     },
     header,
     success: (res) => {
@@ -46,7 +46,7 @@ const ttUpload = (header, config, resolve, reject, type) => {
     },
     fail: () => {
       BaaS.request.ttRequestFail(reject)
-    }
+    },
   })
 }
 
@@ -106,7 +106,7 @@ const uploadFile = (fileParams, metaData, type) => {
         return newPromise
       },
       abort: abort,
-      onProgressUpdate: onProgressUpdate
+      onProgressUpdate: onProgressUpdate,
     })
   }
 
@@ -123,7 +123,7 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     uploadTask = getUploadHeaders().then(header => {
       const upload = ttUpload(header, config, e => {

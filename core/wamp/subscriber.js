@@ -15,7 +15,7 @@ const subscriber = ({
   let connection = null
   const subscriptionMap = new Map()
   const state = {
-    retried: false
+    retried: false,
   }
 
   const clearConnection = () => {

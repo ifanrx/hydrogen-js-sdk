@@ -11,6 +11,9 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     "no-var": ['error'],
+    'comma-dangle': [2, 'always-multiline'],
+    "no-multiple-empty-lines": [2, { max: 1 }],
+    "no-multi-spaces": 2
   },
   parserOptions: {
     ecmaVersion: 2017,

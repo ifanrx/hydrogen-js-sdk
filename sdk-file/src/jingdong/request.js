@@ -11,10 +11,9 @@ const jdRequestFail = function (reject) {
       } else {
         reject(new HError(601)) // 网络超时
       }
-    }
+    },
   })
 }
-
 
 /**
  * 网络请求
@@ -55,7 +54,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
             return
           }
           jdRequestFail(reject)
-        }
+        },
       })
 
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)

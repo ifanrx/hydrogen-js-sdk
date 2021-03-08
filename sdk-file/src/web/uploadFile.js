@@ -31,7 +31,7 @@ module.exports = function (BaaS) {
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
         filePath: fileObj.name,
-        destLink: res.data.path
+        destLink: res.data.path,
       }
 
       let fd = new FormData()

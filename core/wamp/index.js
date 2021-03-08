@@ -76,7 +76,7 @@ const subscribe = ({
 }) => {
   if (!_subscribe) {
     const host = BaaS._polyfill.getWSHost()
-    const url =  host.replace(/\/$/, '') + '/' + BaaS._config.WS_PATH
+    const url = host.replace(/\/$/, '') + '/' + BaaS._config.WS_PATH
 
     _subscribe = subscriber({
       WebSocket: BaaS._polyfill.WebSocket,

@@ -39,8 +39,8 @@ module.exports = BaaS => {
       data: {
         create_user: createUser,
         app_name: appName,
-        code: code
-      }
+        code: code,
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -76,7 +76,7 @@ module.exports = BaaS => {
   const getUserInfo = options => {
     return new Promise((resolve, reject) => {
       tt.getUserInfo(Object.assign(options, {
-        success: resolve, fail: reject
+        success: resolve, fail: reject,
       }))
     })
   }
@@ -107,7 +107,6 @@ module.exports = BaaS => {
     })
   }
 
-
   const linkTt = ({
     forceLogin: isForceLogin = false,
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
@@ -126,7 +125,7 @@ module.exports = BaaS => {
           iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
           app_name: appName,
-          code
+          code,
         } : {
           code,
           app_name: appName,

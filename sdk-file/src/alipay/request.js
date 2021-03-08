@@ -80,7 +80,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
             return reject(new HError(res.status, extractErrorMsg(res)))
           }
           reject(new RequestError(parseInt(res.error), res.errorMessage))
-        }
+        },
       })
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
     })

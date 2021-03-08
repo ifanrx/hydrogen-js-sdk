@@ -54,7 +54,7 @@ if (!Array.prototype.includes) {
 
       // 8. Return false
       return false
-    }
+    },
   })
 }
 
@@ -308,7 +308,6 @@ const validateStatusCode = res => {
   }
 }
 
-
 /**
  * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
  * @private
@@ -412,7 +411,7 @@ const flatAuthResponse = res => {
       user_id: userInfo.id,
       expired_at: getExpiredAt(res.data.expires_in),
       alipay_user_id: userInfo._provider && userInfo._provider.alipay && userInfo._provider.alipay.user_id,
-    }
+    },
   }
 }
 

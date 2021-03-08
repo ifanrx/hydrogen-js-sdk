@@ -4,7 +4,6 @@ const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
-
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -40,7 +39,7 @@ module.exports = BaaS => {
         create_user: createUser,
         code: code,
         login_with_unionid: withUnionID,
-      }
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -127,7 +126,7 @@ module.exports = BaaS => {
       // 手机号
       SensitiveData = getSensitiveData({
         ...payload,
-        code: loginCode
+        code: loginCode,
       })
     }
 
@@ -156,7 +155,7 @@ module.exports = BaaS => {
     return new Promise((resolve, reject) => {
       BaaS._polyfill.wxGetUserInfo({
         lang,
-        success: resolve, fail: reject
+        success: resolve, fail: reject,
       })
     })
   }
@@ -193,12 +192,11 @@ module.exports = BaaS => {
         return BaaS._baasRequest({
           method: 'POST',
           url: API.WECHAT.USER_ASSOCIATE,
-          data: payload
+          data: payload,
         })
       })
     })
   }
-
 
   /**
    * 微信登录
@@ -229,7 +227,6 @@ module.exports = BaaS => {
     })
   }
 
-
   /**
    * 更新用户手机号
    * @function
@@ -244,7 +241,7 @@ module.exports = BaaS => {
   } = {}) => {
     let data = {
       ...authData,
-      overwrite
+      overwrite,
     }
 
     if (!data || !data.detail) {
@@ -266,7 +263,7 @@ module.exports = BaaS => {
     let payload = {
       encryptedData: authData.detail.encryptedData,
       iv: authData.detail.iv,
-      overwrite
+      overwrite,
     }
     return BaaS.request({
       url: API.WECHAT.UPDATE_PHONE,
@@ -295,7 +292,6 @@ module.exports = BaaS => {
     updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
-
 
   /*
    * 兼容原有的 API

@@ -60,7 +60,7 @@ module.exports = function (BaaS) {
           if (result.envVersion === 'develop') {
             BaaS.checkVersion({platform: constants.PLATFORM.ALIPAY})
           }
-        }
+        },
       })
     },
     CLIENT_PLATFORM: 'ALIPAY',
