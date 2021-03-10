@@ -67,10 +67,10 @@ module.exports = BaaS => {
       .then(utils.flatAuthResponse)
   }
 
-  const getUserInfo = ({lang} = {}) => {
+  const getUserInfo = () => {
     return new Promise((resolve, reject) => {
       ks.getUserInfo({
-        lang,
+        withCredentials: true,
         success: resolve, fail: reject,
       })
     })
@@ -97,13 +97,14 @@ module.exports = BaaS => {
     }
 
     return getLoginCode().then(code => {
-      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
+      return getUserInfo().then(detail => {
         let payload = {
           code,
           create_user: createUser,
-          data: detail.data,
+          rawData: detail.rawData,
           iv: detail.iv,
-          userInfo: detail.userInfo,
+          encryptedData: detail.encryptedData,
+          signature: detail.signature,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
         }
         return getSensitiveData(payload)
@@ -117,7 +118,7 @@ module.exports = BaaS => {
     })
   }
 
-  const linkJd = (res, {
+  const linkKs = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let refreshUserInfo = false
@@ -128,7 +129,7 @@ module.exports = BaaS => {
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
       let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
+        ? getUserInfo()
         : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
@@ -155,7 +156,7 @@ module.exports = BaaS => {
   /**
    * 快手登录
    * @function
-   * @since v2.5.0
+   * @since v3.16.0
    * @memberof BaaS.auth
    * @param {BaaS.AuthData|null} [authData] 用户信息，值为 null 时是静默登录
    * @param {BaaS.LoginOptions} [options] 其他选项
@@ -183,6 +184,6 @@ module.exports = BaaS => {
   Object.assign(BaaS.auth, {
     silentLogin,
     loginWithKs: utils.rateLimit(loginWithKs),
-    linkJd: utils.rateLimit(linkJd),
+    linkKs: utils.rateLimit(linkKs),
   })
 }

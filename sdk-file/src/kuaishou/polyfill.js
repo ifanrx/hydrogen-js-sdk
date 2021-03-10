@@ -4,7 +4,7 @@ const utils = require('core-module/utils')
 
 module.exports = BaaS => {
   Object.assign(BaaS._polyfill, {
-    CLIENT_PLATFORM: 'JINGDONG',
+    CLIENT_PLATFORM: 'KUAISHOU',
     setStorageSync(k, v) {
       return ks.setStorageSync(k, v)
     },
@@ -39,11 +39,11 @@ module.exports = BaaS => {
         BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
       }
     },
-    linkJd(...args) {
-      return BaaS.auth.linkJd(...args)
+    linkKs(...args) {
+      return BaaS.auth.linkKs(...args)
     },
     handleLoginSuccess(res, isAnonymous, userInfo) {
-      // 登录成功的 hook （login、loginWithJingdong、register）调用成功后触发
+      // 登录成功的 hook （login、loginWithKs、register）调用成功后触发
       BaaS.storage.set(constants.STORAGE_KEY.UID, res.data.user_id)
       BaaS.storage.set(constants.STORAGE_KEY.OPENID, res.data.openid || '')
       BaaS.storage.set(constants.STORAGE_KEY.AUTH_TOKEN, res.data.token)
