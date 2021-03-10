@@ -134,12 +134,10 @@ module.exports = BaaS => {
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
-          // 快手是没有这些参数
-          // rawData: res.rawData,
-          // signature: res.signature,
-          // encryptedData: res.encryptedData,
-          // iv: res.iv,
-          userInfo: res.userInfo,
+          rawData: res.rawData,
+          signature: res.signature,
+          encryptedData: res.encryptedData,
+          iv: res.iv,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
           code,
         } : {code}
