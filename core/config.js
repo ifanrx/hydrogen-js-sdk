@@ -129,9 +129,9 @@ const API = {
   },
 
   KUAISHOU: {
-    SILENT_LOGIN: '/hserve/v2.5/idp/ks/silent-login/',
-    AUTHENTICATE: '/hserve/v2.5/idp/ks/authenticate/',
-    USER_ASSOCIATE: '/hserve/v2.4/idp/ks/user-association/',
+    SILENT_LOGIN: '/hserve/v2.5/idp/kuaishou/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/kuaishou/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.5/idp/kuaishou/user-association/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
