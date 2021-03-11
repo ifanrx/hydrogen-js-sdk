@@ -16,7 +16,7 @@ BaaS.use(auth)
 // BaaS.use(reportTemplateMsgAnalytics)
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
-// BaaS.uploadFile = require('./uploadFile')
+BaaS.uploadFile = require('./uploadFile')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境
 if (typeof ks !== 'undefined') {
