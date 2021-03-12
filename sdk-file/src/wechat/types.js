@@ -50,3 +50,12 @@
  * @memberof BaaS
  * @property {BaaS.Subscription[]} subscription 订阅关系
  */
+
+/**
+ * @typedef GetUserRiskRankOptions
+ * @memberof BaaS
+ * @property {number} scene 场景值，0:注册，1:营销作弊
+ * @property {string} mobileNo 用户手机号
+ * @property {string} emailAddress 用户邮箱地址
+ * @property {string} extendedInfo 额外补充信息
+ */
