@@ -10,13 +10,13 @@ const API = BaaS._config.API
  * @param {BaaS.GetUserRiskRankOptions} options 参数对象
  * @return {Promise<any>}
  */
-const wxGetUserRiskRank = (options) => {
+const wxGetUserRiskRank = options => {
   if (!validateOptions(options)) {
     throw new HError(605)
   }
   const { scene, mobileNo, emailAddress, extendedInfo } = options
 
-  let paramsObj = {
+  const paramsObj = {
     scene,
     mobile_no: mobileNo,
     email_address: emailAddress,
@@ -30,13 +30,13 @@ const wxGetUserRiskRank = (options) => {
   })
 }
 
-const validateOptions = (options) => {
+const validateOptions = options => {
   if (typeof options !== 'object') return false
   if (options.scene === undefined) return false
 
   const validateScene = [0, 1]
 
-  return validateScene.indexOf(parseInt(options.scene)) !== -1
+  return validateScene.includes(parseInt(options.scene))
 }
 
 module.exports = wxGetUserRiskRank
