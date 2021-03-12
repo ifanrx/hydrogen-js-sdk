@@ -35,7 +35,7 @@ const wxDecryptData = (...params) => {
   })
 }
 
-const validateParams = (params) => {
+const validateParams = params => {
   if (!(params instanceof Array) || params.length < 3) return false
 
   const requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number']

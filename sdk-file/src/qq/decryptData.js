@@ -36,7 +36,7 @@ const createDecryptDataFn = BaaS => (...params) => {
   })
 }
 
-const validateParams = (params) => {
+const validateParams = params => {
   if (!(params instanceof Array) || params.length < 3) return false
   const requiredDataKeys = ['open-gid']
   return requiredDataKeys.indexOf(params[2]) !== -1

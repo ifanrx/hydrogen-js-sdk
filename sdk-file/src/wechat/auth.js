@@ -221,7 +221,7 @@ module.exports = BaaS => {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
     }
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })
@@ -270,7 +270,7 @@ module.exports = BaaS => {
       method: 'PUT',
       data: payload,
     })
-      .then((res) => {
+      .then(res => {
         if (!res) return commonAuth.getCurrentUser()
 
         if (res.statusCode === 200) {

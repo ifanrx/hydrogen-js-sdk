@@ -61,7 +61,7 @@ module.exports = BaaS => {
     })
   })
 
-  const getSensitiveData = (data) => {
+  const getSensitiveData = data => {
     return BaaS.request({
       url: API.QQ.AUTHENTICATE,
       method: 'POST',
@@ -176,7 +176,7 @@ module.exports = BaaS => {
       loginPromise = silentLogin({createUser})
     }
 
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })

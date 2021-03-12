@@ -30,7 +30,7 @@ const myUpload = (config, resolve, reject) => {
         policy: config.policy,
       },
       header,
-      success: (res) => {
+      success: res => {
         let result = {}
         let data = JSON.parse(res.data)
         result.status = 'ok'

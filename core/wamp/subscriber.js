@@ -25,7 +25,7 @@ const subscriber = ({
     subscriptionMap.clear()
   }
 
-  const tryCloseConnection = (details) => {
+  const tryCloseConnection = details => {
     if (subscriptionMap.size === 0) {
       clearConnection()
     } else if (details && details.will_retry === false) {
@@ -33,7 +33,7 @@ const subscriber = ({
     }
   }
 
-  const _subscribe = (key) => {
+  const _subscribe = key => {
     const found = subscriptionMap.get(key)
     if (!found) {
       return
@@ -48,7 +48,7 @@ const subscriber = ({
         subscriptionMap.set(key, found)
         found.oninit()
       })
-      .catch((e) => {
+      .catch(e => {
         found.onerror(e)
         subscriptionMap.delete(key)
         tryCloseConnection()

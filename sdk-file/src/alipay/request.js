@@ -21,7 +21,7 @@ class RequestError extends HError {
   }
 }
 
-const extractErrorMsg = (res) => {
+const extractErrorMsg = res => {
   switch(res.status) {
   case constants.STATUS_CODE.NOT_FOUND:
     return 'not found'

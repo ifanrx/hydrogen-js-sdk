@@ -53,7 +53,7 @@ class BaseRecord {
       if (typeof args[0] === 'object') {
         let objectArg = args[0]
         let recordToSet = {}
-        Object.keys(args[0]).forEach((key) => {
+        Object.keys(args[0]).forEach(key => {
           if (this._record.$unset.hasOwnProperty(key)) {
             throw new HError(605)
           }
@@ -99,7 +99,7 @@ class BaseRecord {
   unset(...args) {
     if (typeof args[0] === 'object') {
       let recordToUnset = {}
-      Object.keys(args[0]).forEach((key) => {
+      Object.keys(args[0]).forEach(key => {
         if (this._record.$set.hasOwnProperty(key)) {
           throw new HError(605)
         }

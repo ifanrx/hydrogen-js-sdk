@@ -20,7 +20,7 @@ const keysMap = {
  * @param {BaaS.PaymentParams} params 参数
  * @return {Promise<any>}
  */
-const pay = (params) => {
+const pay = params => {
   let paramsObj = {}
 
   for (let key in params) {

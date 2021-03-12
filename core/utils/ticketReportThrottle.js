@@ -6,7 +6,7 @@ const initReportTicketInvokeRecord = () => ({
   invokeTimes: 1,
   timestamp: Date.now(),
 })
-const isInvalidInvokeRecord = (invokeRecord) => {
+const isInvalidInvokeRecord = invokeRecord => {
   return isNaN(invokeRecord.invokeTimes) || isNaN(invokeRecord.timestamp)
 }
 let lastInvokeTime
