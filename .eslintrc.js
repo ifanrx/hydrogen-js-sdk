@@ -13,7 +13,8 @@ module.exports = {
     "no-var": ['error'],
     'comma-dangle': [2, 'always-multiline'],
     "no-multiple-empty-lines": [2, { max: 1 }],
-    "no-multi-spaces": 2
+    "no-multi-spaces": 2,
+    "arrow-parens": ['error', 'as-needed']
   },
   parserOptions: {
     ecmaVersion: 2017,

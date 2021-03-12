@@ -4,7 +4,7 @@ const {JSONSerializer} = require('./serializer')
 const protocol = 'wamp.2.json'
 const serializer = new JSONSerializer()
 
-const transporter = (WebSocket) => ({url}) => {
+const transporter = WebSocket => ({url}) => {
   const transport = {}
   transport.protocol = protocol
   transport.serializer = serializer

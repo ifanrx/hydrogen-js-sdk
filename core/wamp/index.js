@@ -25,7 +25,7 @@ function errorify(onerror) {
     'wamp.error.not_authorized': 603,
   }
 
-  return (err) => {
+  return err => {
     let message = err.message
     let reason = err.reason
     let details = err.details

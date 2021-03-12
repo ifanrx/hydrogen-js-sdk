@@ -47,7 +47,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         header: headers,
         dataType: dataType,
         success: resolve,
-        fail: (e) => {
+        fail: e => {
           if (e && e.statusCode) {
             const herror = new HError(e.statusCode, e.errMsg)
             reject(herror)

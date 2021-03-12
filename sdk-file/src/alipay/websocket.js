@@ -9,10 +9,10 @@ class WebSocket {
     my.onSocketOpen(() => {
       this.onopen()
     })
-    my.onSocketMessage((res) => {
+    my.onSocketMessage(res => {
       this.onmessage({data: res.data})
     })
-    my.onSocketClose((res) => {
+    my.onSocketClose(res => {
       if (res) {
         this.onclose({
           code: res.code,

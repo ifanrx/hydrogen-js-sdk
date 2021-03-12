@@ -293,7 +293,6 @@ class CurrentUser extends UserRecord {
     })
   }
 
-
   /**
    * 更改手机号
    * @param {string|null} phone 手机号码

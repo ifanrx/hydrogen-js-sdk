@@ -14,7 +14,7 @@ const jdUpload = (header, config, resolve, reject, type) => {
       policy: config.policy,
     },
     header,
-    success: (res) => {
+    success: res => {
       let result = {}
       let data = JSON.parse(res.data)
 

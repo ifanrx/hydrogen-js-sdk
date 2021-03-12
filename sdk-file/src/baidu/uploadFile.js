@@ -14,7 +14,7 @@ const swanUpload = (header, config, resolve, reject, type) => {
       policy: config.policy,
     },
     header,
-    success: (res) => {
+    success: res => {
       let result = {}
       // 开发者工具返回的 res.data 类型是 string，而真机返回 object
       let data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data

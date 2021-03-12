@@ -40,7 +40,7 @@ module.exports = function (BaaS) {
       fd.append('authorization', config.authorization)
 
       return axios.post(config.uploadUrl, fd)
-    }).then((res) => {
+    }).then(res => {
       let result = {}
       let data = res.data
       result.status = 'ok'

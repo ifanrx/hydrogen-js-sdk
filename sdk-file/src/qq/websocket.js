@@ -7,10 +7,10 @@ class WebSocket {
     qq.onSocketOpen(() => {
       this.onopen()
     })
-    qq.onSocketMessage((res) => {
+    qq.onSocketMessage(res => {
       this.onmessage({data: res.data})
     })
-    qq.onSocketClose((res) => {
+    qq.onSocketClose(res => {
       this.onclose({
         code: res.code,
         reason: res.reason,

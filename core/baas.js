@@ -20,5 +20,4 @@ BaaS._polyfill = require('./polyfill')
  */
 BaaS.use = fn => fn(BaaS)
 
-
 module.exports = BaaS

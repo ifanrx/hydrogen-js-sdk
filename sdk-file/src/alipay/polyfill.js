@@ -33,7 +33,7 @@ module.exports = function (BaaS) {
       })
     },
     getStorageAsync(k) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         my.getStorage({
           key: k,
           success: res => resolve(res.data),

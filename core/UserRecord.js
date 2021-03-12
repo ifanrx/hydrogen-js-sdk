@@ -28,7 +28,6 @@ class UserRecord extends BaseRecord {
   }
 }
 
-
 /**
  * 创建一个 currentUser 对象
  * @private
