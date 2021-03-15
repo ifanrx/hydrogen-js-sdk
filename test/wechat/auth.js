@@ -26,7 +26,7 @@ describe('auth', () => {
     requestStub = sinon.stub(BaaS, 'request').callsFake(options => {
       if (
         options.url === BaaS._config.API.WECHAT.SILENT_LOGIN ||
-        options.url === BaaS._config.API.WECHAT.AUTHENTICATE
+        options.url === BaaS._config.API.WECHAT.PHONE_LOGIN
       ) {
         return Promise.resolve({
           status: 201,
@@ -97,75 +97,22 @@ describe('auth', () => {
   })
 
   describe('# loginWithWechat', () => {
-    [null, {detail: {userInfo: {}}}].forEach(param => {
-      it(`should set storage(${param === null ? 'silent' : 'force'} login)`, () => {
+    [null, {detail: {encryptedData: 'fake_example'}}].forEach(param => {
+      it(`should set storage(${param === null ? 'silent' : 'phone number'} login)`, () => {
         const now = Date.now()
         const nowStub = sinon.stub(Date, 'now').returns(now)
-        return BaaS.auth.loginWithWechat(param).then((res) => {
+        return BaaS.auth.loginWithWechat(param).then(() => {
           expect(BaaS.storage.get(constants.STORAGE_KEY.UID)).to.be.equal(userId)
           expect(BaaS.storage.get(constants.STORAGE_KEY.AUTH_TOKEN)).to.be.equal(token)
           expect(BaaS.storage.get(constants.STORAGE_KEY.IS_ANONYMOUS_USER)).to.be.equal(0)
           expect(BaaS.storage.get(constants.STORAGE_KEY.OPENID)).to.be.equal(openId)
           expect(parseInt(BaaS.storage.get(constants.STORAGE_KEY.EXPIRES_AT))).to.be.equal(Math.floor(now / 1000) + expiresIn - 30)
-          if (param !== null) {
-            // force login
-            expect(requestStub.getCall(0).args[0].url).to.be.equal(config.API.WECHAT.AUTHENTICATE)
-          }
           nowStub.restore()
         })
       })
     })
 
-    it('should call authenticate api with "code" and "create_user" param when force login', () => {
-      const now = Date.now()
-      const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {createUser: false}).then((res) => {
-        expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
-          url: config.API.WECHAT.AUTHENTICATE,
-          method: 'POST',
-          data: {
-            encryptedData: '',
-            iv: '',
-            rawData: '',
-            signature: '',
-            code: wechatMock.__get__('code'),
-            create_user: false,
-            update_userprofile: 'setnx',
-            login_with_unionid: false,
-          }
-        })
-        nowStub.restore()
-      })
-    })
-    describe('# login_with_unionid', () => {
-      it('should be "false"', () => {
-        return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {})
-          .then(() => {
-            expect(requestStub.getCall(0).args[0].data.login_with_unionid).to.be.equal(false)
-          })
-      })
-      it('should be "true"', () => {
-        return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
-          withUnionID: true,
-        })
-          .then(() => {
-            expect(requestStub.getCall(0).args[0].data.login_with_unionid).to.be.equal(true)
-          })
-      })
-    })
-
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
-        it(`should be "${item[1]}"`, () => {
-          return BaaS.auth.loginWithWechat({detail: {userInfo: {}}}, {
-            syncUserProfile: item[1],
-          })
-            .then(() => {
-              expect(requestStub.getCall(0).args[0].data.update_userprofile).to.be.equal(item[1])
-            })
-        })
-      })
-
       it('should not be included', () => {
         return BaaS.auth.loginWithWechat(null, {
           syncUserProfile: 'overwrite',
@@ -287,45 +234,6 @@ describe('auth', () => {
           })
         })
       })
-    })
-  })
-
-  describe('# getUserInfo', () => {
-    it('should recieve "lang" param (loginWithWechat)', () => {
-      const language = 'fake-language-1'
-      return BaaS.auth.loginWithWechat({detail: {userInfo: {language}}})
-        .then(res => {
-          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
-            lang: language,
-          })
-        })
-    })
-    it('should recieve "lang" param (BaaS.auth.handleUserInfo)', () => {
-      const language = 'fake-language-2'
-      return BaaS.auth.handleUserInfo({detail: {userInfo: {language}}})
-        .then(res => {
-          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
-            lang: language,
-          })
-        })
-    })
-    it('should recieve "lang" param (BaaS.handleUserInfo)', () => {
-      const language = 'fake-language-3'
-      return BaaS.handleUserInfo({detail: {userInfo: {language}}})
-        .then(res => {
-          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
-            lang: language,
-          })
-        })
-    })
-    it('should recieve "lang" param (linkWechat)', () => {
-      const language = 'fake-language-4'
-      return BaaS._polyfill.linkWechat({detail: {userInfo: {language}}})
-        .then(res => {
-          expect(wxGetUserInfoStub).to.have.been.calledWithMatch({
-            lang: language,
-          })
-        })
     })
   })
 
