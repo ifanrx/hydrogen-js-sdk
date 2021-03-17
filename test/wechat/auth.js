@@ -162,12 +162,7 @@ describe('auth', () => {
               dataType: 'json',
               header: {},
               data: {
-                encryptedData: '',
-                iv: '',
-                rawData: '',
-                signature: '',
                 code: wechatMock.__get__('code'),
-                update_userprofile: item[1],
                 associate_with_unionid: false,
               }
             })

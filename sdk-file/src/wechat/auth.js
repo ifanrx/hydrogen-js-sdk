@@ -147,7 +147,6 @@ module.exports = BaaS => {
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
-          rawData: res.rawData,
           associate_with_unionid: withUnionID,
           code,
         } : {
