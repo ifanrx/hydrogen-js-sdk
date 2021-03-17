@@ -105,13 +105,8 @@ module.exports = BaaS => {
       create_user: !!createUser,
       code,
     }).then(res => {
-      // const {user_info: userInfo, user_id: id, openid, unionid} = res.data
-      // BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
-      let userInfo = res.data.user_info
-      userInfo.id = res.data.user_id
-      userInfo.openid = res.data.openid
-      userInfo.unionid = res.data.unionid
-      BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
+      const {user_info: userInfo, user_id: id, openid, unionid} = res.data
+      BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
       return res
     })
   }
@@ -137,27 +132,22 @@ module.exports = BaaS => {
   }
 
   const linkWechat = (res, {
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
     withUnionID = false,
   } = {}) => {
     let refreshUserInfo = false
-    if (res && res.detail && res.detail.userInfo) {
+    if (res && res.userInfo) {
       refreshUserInfo = true
     }
 
     return getLoginCode().then(code => {
       // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
       let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
+        ? getUserInfo({lang: res.userInfo.language})
         : Promise.resolve(null)
 
       return getUserInfoPromise.then(res => {
         let payload = res ? {
           rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
           associate_with_unionid: withUnionID,
           code,
         } : {
@@ -203,6 +193,43 @@ module.exports = BaaS => {
     })
   }
 
+  /**
+   * 更新用户信息
+   * @function
+   * @since v3.17.0
+   * @memberof BasS.auth
+   * @param {BaaS.authData} authData 用户信息
+   * @return {Promise<BaaS.CurrentUser>}
+   */
+  const updateUserInfo = authData => {
+    if (!authData || !authData.userInfo) {
+      throw new HError(603)
+    }
+
+    const payload = {
+      encryptedData: authData.detail.encryptedData,
+      iv: authData.detail.iv,
+    }
+    
+    return BaaS.request({
+      url: API.WECHAT.UPDATE_USER_INFO,
+      method: 'PUT',
+      data: payload,
+    })
+      .then((res) => {
+        if (!res) return commonAuth.getCurrentUser()
+        switch (res.statusCode) {
+        case 200:
+          return commonAuth._initCurrentUser(res.data)
+        case 401:
+          // 用户未登录
+          return Promise.reject(new HError(604))
+        default:
+          // 其他错误
+          return Promise.reject(new HError(res.statusCode))
+        }
+      })
+  }
 
   /**
    * 更新用户手机号
@@ -266,6 +293,7 @@ module.exports = BaaS => {
     silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
+    updateUserInfo: utils.rateLimit(updateUserInfo),
     updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
