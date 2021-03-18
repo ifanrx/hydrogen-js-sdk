@@ -18,6 +18,7 @@ let plugins = [
     __VERSION_BAIDU__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_WEB__: JSON.stringify(`v${(pkg.version)}`),
     __VERSION_ALIPAY__: JSON.stringify(`v${(pkg.version)}`),
+    __VERSION_KUAISHOU__: JSON.stringify(`v${(pkg.version)}`),
   }),
 
   ...copyFilesForDev.map(item => new CopyOutputFilePlugin({

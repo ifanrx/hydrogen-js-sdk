@@ -7,7 +7,7 @@ const auth = require('./auth')
 // const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
 const subscribeMessage = require('./subscribeMessage')
 
-BaaS._config.VERSION = __VERSION_BAIDU__
+BaaS._config.VERSION = __VERSION_KUAISHOU__
 
 BaaS.use(core)
 BaaS.use(polyfill)
