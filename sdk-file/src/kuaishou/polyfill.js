@@ -37,7 +37,7 @@ module.exports = BaaS => {
     checkLatestVersion() {
       let info = ks.getSystemInfoSync()
       if (info.platform === 'devtools') {
-        BaaS.checkVersion({platform: constants.PLATFORM.JONGDONG})
+        BaaS.checkVersion({platform: constants.PLATFORM.KUAISHOU})
       }
     },
     linkKs(...args) {

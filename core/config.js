@@ -132,6 +132,8 @@ const API = {
     SILENT_LOGIN: '/hserve/v2.5/idp/kuaishou/silent-login/',
     AUTHENTICATE: '/hserve/v2.5/idp/kuaishou/authenticate/',
     USER_ASSOCIATE: '/hserve/v2.5/idp/kuaishou/user-association/',
+    PHONE_LOGIN: '/hserve/v2.5/idp/kuaishou/phone-login/',
+    UPDATE_PHONE: '/hserve/v2.5/idp/kuaishou/phone-verification/',
   },
 
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',

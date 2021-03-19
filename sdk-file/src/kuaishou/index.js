@@ -6,8 +6,6 @@ const auth = require('./auth')
 // const reportTicket = require('./reportTicket')
 // const reportTemplateMsgAnalytics = require('./reportTemplateMsgAnalytics')
 
-BaaS._config.VERSION = __VERSION_BAIDU__
-
 BaaS.use(core)
 BaaS.use(polyfill)
 BaaS.use(auth)
