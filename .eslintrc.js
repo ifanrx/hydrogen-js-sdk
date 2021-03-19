@@ -46,6 +46,7 @@ module.exports = {
     __VERSION_WECHAT__: true,
     __VERSION_QQ__: true,
     __VERSION_BAIDU__: true,
+    __VERSION_KUAISHOU__: true,
     __VERSION__: true,
   },
   parserOptions: {

@@ -126,5 +126,6 @@ module.exports = {
     BAIDU: 'baidu_miniapp',
     BYTEDANCE: 'bytedance_miniapp',
     JONGDONG: 'jd_miniapp',
+    KUAISHOU: 'kuaishou_miniapp',
   },
 }
