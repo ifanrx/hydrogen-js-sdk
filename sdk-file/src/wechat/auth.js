@@ -145,11 +145,8 @@ module.exports = BaaS => {
         ? getUserInfo({lang: res.userInfo.language})
         : Promise.resolve(null)
 
-      return getUserInfoPromise.then(res => {
-        let payload = res ? {
-          associate_with_unionid: withUnionID,
-          code,
-        } : {
+      return getUserInfoPromise.then(() => {
+        let payload = {
           code,
           associate_with_unionid: withUnionID,
         }
@@ -200,20 +197,20 @@ module.exports = BaaS => {
    * @param {BaaS.authData} authData 用户信息
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const updateUserInfo = authData => {
+  const updateUserInfo = (authData, {
+    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
+  }) => {
     if (!authData || !authData.userInfo) {
       throw new HError(603)
     }
 
-    const payload = {
-      encryptedData: authData.detail.encryptedData,
-      iv: authData.detail.iv,
-    }
-    
     return BaaS.request({
       url: API.WECHAT.UPDATE_USER_INFO,
       method: 'PUT',
-      data: payload,
+      data: {
+        ...authData,
+        update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+      },
     })
       .then((res) => {
         if (!res) return commonAuth.getCurrentUser()
@@ -223,6 +220,9 @@ module.exports = BaaS => {
         case 401:
           // 用户未登录
           return Promise.reject(new HError(604))
+        case 403:
+          // 未开启 JSSDK 修改平台用户信息开关
+          return Promise.reject(new HError(616))
         default:
           // 其他错误
           return Promise.reject(new HError(res.statusCode))
