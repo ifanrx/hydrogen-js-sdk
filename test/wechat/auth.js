@@ -149,30 +149,9 @@ describe('auth', () => {
 
   describe('# linkWechat', () => {
     describe('# update_userprofile', () => {
-      [[null, 'setnx'], ['bar', 'setnx'], ['setnx', 'setnx'], ['false', 'false'], ['overwrite', 'overwrite']].map(item => {
-        it(`should be "${item[1]}"`, () => {
-          return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-            return user.linkWechat({detail: {userInfo: {}}}, {
-              syncUserProfile: item[1],
-            })
-          }).then(res => {
-            expect(requestStub.getCall(2).args[0]).to.be.deep.equal({
-              url: config.API.WECHAT.USER_ASSOCIATE,
-              method: 'POST',
-              dataType: 'json',
-              header: {},
-              data: {
-                code: wechatMock.__get__('code'),
-                associate_with_unionid: false,
-              }
-            })
-          })
-        })
-      })
-
       it('should not be included', () => {
         return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-          return user.linkWechat(null, {
+          return user.linkWechat({
             syncUserProfile: 'overwrite',
           })
         }).then(res => {
@@ -193,7 +172,7 @@ describe('auth', () => {
     describe('# associate_with_unionid', () => {
       it('should be "false"', () => {
         return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-          return user.linkWechat(null, {
+          return user.linkWechat({
             syncUserProfile: 'overwrite',
           })
         }).then(res => {
@@ -212,7 +191,7 @@ describe('auth', () => {
 
       it('should be "true"', () => {
         return BaaS.auth.login({username: 'foo', password: 'bar'}).then(user => {
-          return user.linkWechat(null, {
+          return user.linkWechat({
             syncUserProfile: 'overwrite',
             withUnionID: true,
           })
