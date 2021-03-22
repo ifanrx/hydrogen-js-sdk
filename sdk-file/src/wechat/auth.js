@@ -122,44 +122,18 @@ module.exports = BaaS => {
       .then(utils.flatAuthResponse)
   }
 
-  const getUserInfo = ({lang} = {}) => {
-    return new Promise((resolve, reject) => {
-      BaaS._polyfill.wxGetUserInfo({
-        lang,
-        success: resolve, fail: reject
-      })
-    })
-  }
-
-  const linkWechat = (res, {
-    withUnionID = false,
-  } = {}) => {
-    let refreshUserInfo = false
-    if (res && res.userInfo) {
-      refreshUserInfo = true
-    }
-
+  const linkWechat = ({withUnionID = false} = {}) => {
     return getLoginCode().then(code => {
-      // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.userInfo.language})
-        : Promise.resolve(null)
-
-      return getUserInfoPromise.then(() => {
-        let payload = {
+      return BaaS._baasRequest({
+        method: 'POST',
+        url: API.WECHAT.USER_ASSOCIATE,
+        data: {
           code,
           associate_with_unionid: withUnionID,
         }
-
-        return BaaS._baasRequest({
-          method: 'POST',
-          url: API.WECHAT.USER_ASSOCIATE,
-          data: payload
-        })
       })
     })
   }
-
 
   /**
    * 微信登录
@@ -199,16 +173,16 @@ module.exports = BaaS => {
    */
   const updateUserInfo = (authData, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
-  }) => {
+  } = {}) => {
     if (!authData || !authData.userInfo) {
-      throw new HError(603)
+      return Promise.reject(new HError(603))
     }
 
     return BaaS.request({
       url: API.WECHAT.UPDATE_USER_INFO,
       method: 'PUT',
       data: {
-        ...authData,
+        ...authData.userInfo,
         update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
       },
     })
