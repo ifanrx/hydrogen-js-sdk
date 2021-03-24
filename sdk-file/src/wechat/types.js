@@ -59,3 +59,9 @@
  * @property {string} emailAddress 用户邮箱地址
  * @property {string} extendedInfo 额外补充信息
  */
+
+/**
+ * @typedef CreateActivityIDOptions
+ * @memberof BaaS
+ * @property {string} unionid 分享者的unionid
+ */
