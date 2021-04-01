@@ -14,10 +14,10 @@ const wxCreateActivityID = options => {
   if (!validateOptions(options)) {
     throw new HError(605)
   }
-  const { unionid } = options
+  const { unionid, openid } = options
 
   const paramsObj = {
-    unionid
+    unionid, openid
   }
 
   return BaaS._baasRequest({
@@ -30,10 +30,14 @@ const wxCreateActivityID = options => {
 const validateOptions = options => {
   if (typeof options !== 'object') return false
   if (
-    options.scene !== undefined
+    options.unionid !== undefined
     && typeof options.unionid !== 'string'
   ) return false
-
+  if (
+    options.openid !== undefined
+    && typeof options.openid !== 'string'
+  ) return false
+  
   return true
 }
 

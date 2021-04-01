@@ -64,4 +64,5 @@
  * @typedef CreateActivityIDOptions
  * @memberof BaaS
  * @property {string} unionid 分享者的unionid
+ * @property {string} openid 分享者的openid
  */
