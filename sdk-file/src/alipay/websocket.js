@@ -19,6 +19,9 @@ class WebSocket {
           reason: res.reason,
         })
       }
+      my.offSocketOpen()
+      my.offSocketMessage()
+      my.offSocketClose()
     })
   }
   send(payload) {
