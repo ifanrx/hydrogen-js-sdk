@@ -71,7 +71,7 @@ module.exports = BaaS => {
     })
   })
 
-  // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  // 提供给开发者在 button (open-type="getPhoneNumber") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   /**
    * 获取用户信息、手机号
    * @function
@@ -84,15 +84,11 @@ module.exports = BaaS => {
       throw new HError(603)
     }
 
-    let detail = res.detail
-    let createUser = !!res.createUser
-    let syncUserProfile = res.syncUserProfile
-    let withUnionID = res.withUnionID
-    let loginCode = res.code
+    const {detail: {encryptedData, iv}, code, createUser} = res
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
-    if (!detail.userInfo && !detail.encryptedData) {
+    if (!encryptedData) {
       return Promise.all(([
         storageAsync.get(constants.STORAGE_KEY.UID),
         storageAsync.get(constants.STORAGE_KEY.OPENID),
@@ -102,48 +98,22 @@ module.exports = BaaS => {
       })
     }
 
-    let SensitiveData
-    let payload = {
-      encryptedData: detail.encryptedData || '',
-      iv: detail.iv || '',
-      create_user: createUser,
-    }
-    if (detail.userInfo) {
-      SensitiveData = getLoginCode().then(code => {
-        // 用户信息
-        return getUserInfo({lang: detail.userInfo.language}).then(detail => {
-          return getSensitiveData({
-            ...payload,
-            code,
-            rawData: detail.rawData,
-            signature: detail.signature,
-            login_with_unionid: withUnionID,
-            update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          },detail.userInfo)
-        })
-      })
-    } else {
-      // 手机号
-      SensitiveData = getSensitiveData({
-        ...payload,
-        code: loginCode,
-      })
-    }
-
-    return SensitiveData.then(res => {
-      let userInfo = detail.userInfo ? detail.userInfo : res.data.user_info
-      userInfo.id = res.data.user_id
-      userInfo.openid = res.data.openid
-      userInfo.unionid = res.data.unionid
-      BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
+    return getSensitiveData({
+      encryptedData,
+      iv,
+      create_user: !!createUser,
+      code,
+    }).then(res => {
+      const {user_info: userInfo, user_id: id, openid, unionid} = res.data
+      BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
       return res
     })
   }
 
-  // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data, userInfo) => {
+  // 上传 iv 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
+  const getSensitiveData = data => {
     return BaaS.request({
-      url: userInfo ? API.WECHAT.AUTHENTICATE : API.WECHAT.PHONE_LOGIN,
+      url: API.WECHAT.PHONE_LOGIN,
       method: 'POST',
       data,
     })
@@ -151,49 +121,15 @@ module.exports = BaaS => {
       .then(utils.flatAuthResponse)
   }
 
-  const getUserInfo = ({lang} = {}) => {
-    return new Promise((resolve, reject) => {
-      BaaS._polyfill.wxGetUserInfo({
-        lang,
-        success: resolve, fail: reject,
-      })
-    })
-  }
-
-  const linkWechat = (res, {
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
-    withUnionID = false,
-  } = {}) => {
-    let refreshUserInfo = false
-    if (res && res.detail && res.detail.userInfo) {
-      refreshUserInfo = true
-    }
-
+  const linkWechat = ({withUnionID = false} = {}) => {
     return getLoginCode().then(code => {
-      // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
-        : Promise.resolve(null)
-
-      return getUserInfoPromise.then(res => {
-        let payload = res ? {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          associate_with_unionid: withUnionID,
-          code,
-        } : {
+      return BaaS._baasRequest({
+        method: 'POST',
+        url: API.WECHAT.USER_ASSOCIATE,
+        data: {
           code,
           associate_with_unionid: withUnionID,
-        }
-
-        return BaaS._baasRequest({
-          method: 'POST',
-          url: API.WECHAT.USER_ASSOCIATE,
-          data: payload,
-        })
+        },
       })
     })
   }
@@ -211,12 +147,11 @@ module.exports = BaaS => {
     code = '',
     createUser = true,
     withUnionID = false,
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
-      // 授权用户信息/手机号登录流程
-      loginPromise = handleUserInfo({...authData, code, createUser, syncUserProfile, withUnionID})
+      // 手机号登录流程
+      loginPromise = handleUserInfo({...authData, code, createUser})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
@@ -225,6 +160,47 @@ module.exports = BaaS => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })
+  }
+
+  /**
+   * 更新用户信息
+   * @function
+   * @since v3.17.0
+   * @memberof BasS.auth
+   * @param {BaaS.authData} authData 用户信息
+   * @return {Promise<BaaS.CurrentUser>}
+   */
+  const updateUserInfo = (authData, {
+    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
+  } = {}) => {
+    if (!authData || !authData.userInfo) {
+      return Promise.reject(new HError(603))
+    }
+
+    return BaaS.request({
+      url: API.WECHAT.UPDATE_USER_INFO,
+      method: 'PUT',
+      data: {
+        ...authData.userInfo,
+        update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+      },
+    })
+      .then(res => {
+        if (!res) return commonAuth.getCurrentUser()
+        switch (res.statusCode) {
+        case 200:
+          return commonAuth._initCurrentUser(res.data)
+        case 401:
+          // 用户未登录
+          return Promise.reject(new HError(604))
+        case 403:
+          // 未开启 JSSDK 修改平台用户信息开关
+          return Promise.reject(new HError(616))
+        default:
+          // 其他错误
+          return Promise.reject(new HError(res.statusCode))
+        }
+      })
   }
 
   /**
@@ -289,6 +265,7 @@ module.exports = BaaS => {
     silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
+    updateUserInfo: utils.rateLimit(updateUserInfo),
     updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })

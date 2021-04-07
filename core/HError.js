@@ -49,6 +49,8 @@ class HError {
       return 'third party auth failed'
     case 615:
       return 'gateway type "weixin_tenpay_js" works in WeChat builtin browser only'
+    case 616:
+      return 'please enable sdk update platform user info first' // 未开启 JSSDK 修改平台用户信息开关 
     default:
       return 'unknown error'
     }

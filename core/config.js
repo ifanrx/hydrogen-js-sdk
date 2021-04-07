@@ -85,7 +85,8 @@ const API = {
     JSSDK_CREDENTIALS: '/hserve/v2.4/idp/wechat/jssdk-credentials/',
     PHONE_LOGIN: '/hserve/v2.5/idp/wechat/phone-login/',
     UPDATE_PHONE: '/hserve/v2.5/idp/wechat/phone-verification/',
-    USER_RISK_RANK: '/hserve/v2.5/user-riskrank/'
+    UPDATE_USER_INFO: '/hserve/v2.5/idp/wechat/user/info/',
+    USER_RISK_RANK: '/hserve/v2.5/user-riskrank/',
   },
 
   QQ: {
