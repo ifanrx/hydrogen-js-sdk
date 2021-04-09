@@ -71,22 +71,22 @@ describe('tplMsgStatsReport', () => {
               data: {
                 stats_id: 'foo',
                 platform: 'wechat_miniapp',
-              }
+              },
             }], [{
               url: uuid,
               method: 'POST',
               data: {
                 stats_id: 'bar',
                 platform: 'wechat_miniapp',
-              }
+              },
             }], [{
               url: uuid,
               method: 'POST',
               data: {
                 stats_id: 'baz',
                 platform: 'wechat_miniapp',
-              }
-            }]
+              },
+            }],
           ])
         })
     })

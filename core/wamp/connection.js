@@ -144,7 +144,7 @@ class Connection {
     this._autoreconnect_reset()
     this._retry = true
 
-    const original_retry = (q) => {
+    const original_retry = q => {
       // create a WAMP transport
       try {
         this._transport = this._create_transport({url: this._options.url + '?' + q})
@@ -198,7 +198,7 @@ class Connection {
         )
       }
 
-      this._session.onjoin = (details) => {
+      this._session.onjoin = details => {
         if (this.onopen) {
           try {
             // forward transport info ..
@@ -233,7 +233,7 @@ class Connection {
         }
       }
 
-      this._transport.onclose = (evt) => {
+      this._transport.onclose = evt => {
         // console.log('websocket==>', evt)
         // remove any pending reconnect timer
         this._autoreconnect_reset_timer()
@@ -312,7 +312,7 @@ class Connection {
 
     const retry = () => {
       this._getAuthTokenQuerystring()
-        .then((q) => {
+        .then(q => {
           original_retry(q)
         })
         .catch(e => {

@@ -48,7 +48,7 @@ class TableObject extends BaseQuery {
           })
           return record
         }),
-        enable_trigger: enableTrigger ? 1 : 0
+        enable_trigger: enableTrigger ? 1 : 0,
       }
       return BaaS.createRecordList(params)
     } else {

@@ -8,10 +8,10 @@ class WebSocket {
     socketTask.onOpen(() => {
       this.onopen()
     })
-    socketTask.onMessage((res) => {
+    socketTask.onMessage(res => {
       this.onmessage({data: res.data})
     })
-    socketTask.onClose((res) => {
+    socketTask.onClose(res => {
       this.onclose({
         code: res.code,
         reason: res.reason,

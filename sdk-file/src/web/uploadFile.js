@@ -31,7 +31,7 @@ module.exports = function (BaaS) {
         authorization: res.data.authorization,
         uploadUrl: res.data.upload_url,
         filePath: fileObj.name,
-        destLink: res.data.path
+        destLink: res.data.path,
       }
 
       let fd = new FormData()
@@ -40,7 +40,7 @@ module.exports = function (BaaS) {
       fd.append('authorization', config.authorization)
 
       return axios.post(config.uploadUrl, fd)
-    }).then((res) => {
+    }).then(res => {
       let result = {}
       let data = res.data
       result.status = 'ok'

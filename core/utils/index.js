@@ -54,7 +54,7 @@ if (!Array.prototype.includes) {
 
       // 8. Return false
       return false
-    }
+    },
   })
 }
 
@@ -104,7 +104,7 @@ const format = (url, params) => {
   })
 }
 
-const getFileNameFromPath = (path) => {
+const getFileNameFromPath = path => {
   let index = path.lastIndexOf('/')
   return path.slice(index + 1)
 }
@@ -115,7 +115,7 @@ const getFileNameFromPath = (path) => {
  * @param  {RegExp} regExp
  * @return {Array} 包含正则字符串和 flags
  */
-const parseRegExp = (regExp) => {
+const parseRegExp = regExp => {
   let result = []
   let regExpString = regExp.toString()
   let lastIndex = regExpString.lastIndexOf('/')
@@ -150,7 +150,7 @@ const replaceQueryParams = (params = {}) => {
   return copiedParams
 }
 
-const extractErrorMsg = (res) => {
+const extractErrorMsg = res => {
   let errorMsg = ''
   if (res.statusCode === 404) {
     errorMsg = 'not found'
@@ -231,12 +231,12 @@ const excludeParams = (URL, params) => {
  * @private
  * @param  {Object} methodMap 按照指定格式配置好的方法配置映射表
  */
-const doCreateRequestMethod = (methodMap) => {
+const doCreateRequestMethod = methodMap => {
   for (let k in methodMap) {
     if (methodMap.hasOwnProperty(k)) {
-      BaaS[k] = ((k) => {
+      BaaS[k] = (k => {
         let methodItem = methodMap[k]
-        return (objects) => {
+        return objects => {
           let newObjects = cloneDeep(objects)
           let method = methodItem.method || 'GET'
 
@@ -308,14 +308,13 @@ const validateStatusCode = res => {
   }
 }
 
-
 /**
  * 对于一个返回 promise 的函数，rateLimit 可以合并同一时间多次调用为单次调用
  * @private
  * @param fn
  * @return {function(): *}
  */
-const rateLimit = (fn) => {
+const rateLimit = fn => {
   let promise = null
   return function () {
     if (!promise) {
@@ -412,7 +411,7 @@ const flatAuthResponse = res => {
       user_id: userInfo.id,
       expired_at: getExpiredAt(res.data.expires_in),
       alipay_user_id: userInfo._provider && userInfo._provider.alipay && userInfo._provider.alipay.user_id,
-    }
+    },
   }
 }
 

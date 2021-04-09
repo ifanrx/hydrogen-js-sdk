@@ -34,7 +34,7 @@ module.exports = BaaS => {
           },
           fail: () => {
             BaaS.request.qqRequestFail(reject)
-          }
+          },
         })
       })
     })
@@ -55,8 +55,8 @@ module.exports = BaaS => {
       url: BaaS._config.API.QQ.CENSOR_MSG,
       method: 'POST',
       data: {
-        content: text
-      }
+        content: text,
+      },
     })
   }
 

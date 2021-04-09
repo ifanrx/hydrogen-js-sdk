@@ -21,7 +21,7 @@ class RequestError extends HError {
   }
 }
 
-const extractErrorMsg = (res) => {
+const extractErrorMsg = res => {
   switch(res.status) {
   case constants.STATUS_CODE.NOT_FOUND:
     return 'not found'
@@ -80,7 +80,7 @@ const createRequestFn = BaaS => ({url, method = 'GET', data = {}, header = {}, h
             return reject(new HError(res.status, extractErrorMsg(res)))
           }
           reject(new RequestError(parseInt(res.error), res.errorMessage))
-        }
+        },
       })
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)
     })

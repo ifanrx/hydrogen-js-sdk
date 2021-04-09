@@ -36,8 +36,8 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         create_user: createUser,
-        code: code
-      }
+        code: code,
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -57,7 +57,7 @@ module.exports = BaaS => {
     })
   })
 
-  const getSensitiveData = (data) => {
+  const getSensitiveData = data => {
     return BaaS.request({
       url: API.JINGDONG.AUTHENTICATE,
       method: 'POST',
@@ -71,7 +71,7 @@ module.exports = BaaS => {
     return new Promise((resolve, reject) => {
       jd.getUserInfo({
         lang,
-        success: resolve, fail: reject
+        success: resolve, fail: reject,
       })
     })
   }
@@ -117,7 +117,6 @@ module.exports = BaaS => {
     })
   }
 
-
   const linkJd = (res, {
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
@@ -141,7 +140,7 @@ module.exports = BaaS => {
           // iv: res.iv,
           userInfo: res.userInfo,
           update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          code
+          code,
         } : {code}
 
         return BaaS._baasRequest({
@@ -175,7 +174,7 @@ module.exports = BaaS => {
       loginPromise = silentLogin({createUser})
     }
 
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })

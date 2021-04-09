@@ -20,7 +20,7 @@ const wxGetUserRiskRank = options => {
     scene,
     mobile_no: mobileNo,
     email_address: emailAddress,
-    extended_info: extendedInfo
+    extended_info: extendedInfo,
   }
 
   return BaaS._baasRequest({

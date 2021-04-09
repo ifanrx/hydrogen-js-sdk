@@ -11,6 +11,10 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     "no-var": ['error'],
+    'comma-dangle': [2, 'always-multiline'],
+    "no-multiple-empty-lines": [2, { max: 1 }],
+    "no-multi-spaces": 2,
+    "arrow-parens": ['error', 'as-needed']
   },
   parserOptions: {
     ecmaVersion: 2017,
@@ -28,6 +32,7 @@ module.exports = {
     qq: true,
     swan: true,
     jd: true,
+    ks: true,
     expect: true,
     beforeEach: true,
     before: true,
@@ -41,6 +46,7 @@ module.exports = {
     __VERSION_WECHAT__: true,
     __VERSION_QQ__: true,
     __VERSION_BAIDU__: true,
+    __VERSION_KUAISHOU__: true,
     __VERSION__: true,
   },
   parserOptions: {
