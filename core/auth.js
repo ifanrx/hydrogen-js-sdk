@@ -109,7 +109,6 @@ const register = params => {
   })
 }
 
-
 /**
  * 退出登录状态
  * @since v2.0.0

@@ -186,7 +186,7 @@ class Query {
    */
   isNull(key) {
     if (key && key instanceof Array) {
-      key.forEach((k) => {
+      key.forEach(k => {
         this._addQueryObject(k, {isnull: true})
       })
     } else {
@@ -204,7 +204,7 @@ class Query {
    */
   isNotNull(key) {
     if (key && key instanceof Array) {
-      key.forEach((k) => {
+      key.forEach(k => {
         this._addQueryObject(k, {isnull: false})
       })
     } else {
@@ -222,7 +222,7 @@ class Query {
    */
   exists(key) {
     if (key && key instanceof Array) {
-      key.forEach((k) => {
+      key.forEach(k => {
         this._addQueryObject(k, {exists: true})
       })
     } else {
@@ -240,7 +240,7 @@ class Query {
    */
   notExists(key) {
     if (key && key instanceof Array) {
-      key.forEach((k) => {
+      key.forEach(k => {
         this._addQueryObject(k, {exists: false})
       })
     } else {
@@ -296,7 +296,7 @@ class Query {
     if (point && point instanceof GeoPoint) {
       let data = {
         radius: radius,
-        coordinates: [point.longitude, point.latitude]
+        coordinates: [point.longitude, point.latitude],
       }
       this._addQueryObject(key, {center: data})
       return this
@@ -319,7 +319,7 @@ class Query {
     if (point && point instanceof GeoPoint) {
       let data = {
         geometry: point.toGeoJSON(),
-        min_distance: minDistance
+        min_distance: minDistance,
       }
       if (maxDistance) {
         data.max_distance = maxDistance
@@ -359,7 +359,7 @@ class Query {
 
     let query = {[key]: {}}
 
-    Object.keys(obj).forEach((k) => {
+    Object.keys(obj).forEach(k => {
       query[key][`$${k}`] = obj[k]
     })
 

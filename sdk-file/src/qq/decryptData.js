@@ -20,7 +20,7 @@ const createDecryptDataFn = BaaS => (...params) => {
 
   let paramsObj = {
     encryptedData: params[0],
-    iv: params[1]
+    iv: params[1],
   }
 
   return BaaS._baasRequest({
@@ -36,7 +36,7 @@ const createDecryptDataFn = BaaS => (...params) => {
   })
 }
 
-const validateParams = (params) => {
+const validateParams = params => {
   if (!(params instanceof Array) || params.length < 3) return false
   const requiredDataKeys = ['open-gid']
   return requiredDataKeys.indexOf(params[2]) !== -1

@@ -26,7 +26,6 @@ const ORDER_STATUS = {
   PENDING: 'pending',
 }
 
-
 /**
  * 字节跳动支付
  * @function

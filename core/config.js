@@ -131,6 +131,15 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.4/idp/jd/user-association/',
   },
 
+  KUAISHOU: {
+    SILENT_LOGIN: '/hserve/v2.5/idp/kuaishou/silent-login/',
+    AUTHENTICATE: '/hserve/v2.5/idp/kuaishou/authenticate/',
+    USER_ASSOCIATE: '/hserve/v2.5/idp/kuaishou/user-association/',
+    SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
+    PHONE_LOGIN: '/hserve/v2.5/idp/kuaishou/phone-login/',
+    UPDATE_PHONE: '/hserve/v2.5/idp/kuaishou/phone-verification/',
+  },
+
   VIDEO_SNAPSHOT: '/hserve/v1/media/video-snapshot/',
   M3U8_CONCAT: '/hserve/v1/media/m3u8-concat/',
   M3U8_CLIP: '/hserve/v1/media/m3u8-clip/',
@@ -146,7 +155,7 @@ const methodMapList = [{
     url: API.USER_DETAIL,
     defaultParams: {
       userID: '',
-    }
+    },
   },
   getUserDetail: {
     url: API.USER_DETAIL,
@@ -156,99 +165,99 @@ const methodMapList = [{
   },
   updateUser: {
     url: API.UPDATE_USER,
-    method: 'PUT'
+    method: 'PUT',
   },
 }, {
   getTableList: {
-    url: API.TABLE_LIST
+    url: API.TABLE_LIST,
   },
   getTable: {
-    url: API.TABLE_DETAIL
+    url: API.TABLE_DETAIL,
   },
   getRecordList: {
-    url: API.RECORD_LIST
+    url: API.RECORD_LIST,
   },
   queryRecordList: {
-    url: API.QUERY_RECORD_LIST
+    url: API.QUERY_RECORD_LIST,
   },
   getRecord: {
-    url: API.RECORD_DETAIL
+    url: API.RECORD_DETAIL,
   },
   createRecord: {
     url: API.CREATE_RECORD,
-    method: 'POST'
+    method: 'POST',
   },
   createRecordList: {
     url: API.CREATE_RECORD_LIST,
-    method: 'POST'
+    method: 'POST',
   },
   updateRecord: {
     url: API.UPDATE_RECORD,
-    method: 'PUT'
+    method: 'PUT',
   },
   updateRecordList: {
     url: API.UPDATE_RECORD_LIST,
-    method: 'PUT'
+    method: 'PUT',
   },
   deleteRecord: {
     url: API.DELETE_RECORD,
-    method: 'DELETE'
+    method: 'DELETE',
   },
   deleteRecordList: {
     url: API.DELETE_RECORD_LIST,
-    method: 'DELETE'
-  }
+    method: 'DELETE',
+  },
 }, {
   getContentList: {
-    url: API.LAGECY_CONTENT_LIST
+    url: API.LAGECY_CONTENT_LIST,
   },
   getContentListV2: {
-    url: API.CONTENT_LIST
+    url: API.CONTENT_LIST,
   },
   getContent: {
-    url: API.CONTENT_DETAIL
+    url: API.CONTENT_DETAIL,
   },
   getContentGroupList: {
-    url: API.CONTENT_GROUP_LIST
+    url: API.CONTENT_GROUP_LIST,
   },
   getContentGroup: {
-    url: API.CONTENT_GROUP_DETAIL
+    url: API.CONTENT_GROUP_DETAIL,
   },
   getContentCategoryList: {
-    url: API.CONTENT_CATEGORY_LIST
+    url: API.CONTENT_CATEGORY_LIST,
   },
   getContentCategory: {
-    url: API.CONTENT_CATEGORY_DETAIL
+    url: API.CONTENT_CATEGORY_DETAIL,
   },
 }, {
   getFileDetail: {
-    url: API.FILE_DETAIL
+    url: API.FILE_DETAIL,
   },
   getFileList: {
-    url: API.FILE_LIST
+    url: API.FILE_LIST,
   },
   deleteFile: {
     url: API.DELETE_FILE,
-    method: 'DELETE'
+    method: 'DELETE',
   },
   deleteFiles: {
     url: API.DELETE_FILES,
-    method: 'DELETE'
+    method: 'DELETE',
   },
   getFileCategoryDetail: {
-    url: API.FILE_CATEGORY_DETAIL
+    url: API.FILE_CATEGORY_DETAIL,
   },
   getFileCategoryList: {
-    url: API.FILE_CATEGORY_LIST
+    url: API.FILE_CATEGORY_LIST,
   },
   sendSmsCode: {
     url: API.SEND_SMS_CODE,
-    method: 'POST'
+    method: 'POST',
   },
   verifySmsCode: {
     url: API.VERIFY_SMS_CODE,
-    method: 'POST'
-  }
+    method: 'POST',
+  },
 }, {
   getOrderList: {
     url: API.PAY,
@@ -256,7 +265,7 @@ const methodMapList = [{
 }]
 
 const RANDOM_OPTION = {
-  max: 100
+  max: 100,
 }
 
 const requestParamsMap = {
@@ -284,7 +293,7 @@ module.exports = {
    * @type string
    * @memberof BaaS._config
    */
-  VERSION: VERSION,  // package.json 中的 version 也需要同步修改。
+  VERSION: VERSION, // package.json 中的 version 也需要同步修改。
   WS_HOST: WS_HOST,
   WS_PATH: 'ws/hydrogen/',
   WS_REALM: 'com.ifanrcloud',

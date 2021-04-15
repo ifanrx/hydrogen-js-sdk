@@ -1,7 +1,7 @@
 const constants = require('core-module/constants')
 const utils = require('core-module/utils')
 
-const createBaasRequestFn = BaaS => (args) => {
+const createBaasRequestFn = BaaS => args => {
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
   return beforeRequestPromise
     .then(() => BaaS.request(args))

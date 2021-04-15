@@ -19,7 +19,7 @@ const wxDecryptData = (...params) => {
 
   let paramsObj = {
     encryptedData: params[0],
-    iv: params[1]
+    iv: params[1],
   }
 
   return BaaS._baasRequest({

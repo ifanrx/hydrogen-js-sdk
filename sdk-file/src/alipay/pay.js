@@ -72,7 +72,7 @@ const createPayFn = BaaS => params => {
         },
         fail: () => {
           return reject(new PayError(RESULT_CODE.FAIL))
-        }
+        },
       })
     })
   })

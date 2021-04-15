@@ -4,7 +4,6 @@ const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
-
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -40,7 +39,7 @@ module.exports = BaaS => {
         create_user: createUser,
         code: code,
         login_with_unionid: withUnionID,
-      }
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -112,7 +111,7 @@ module.exports = BaaS => {
   }
 
   // 上传 iv 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data) => {
+  const getSensitiveData = data => {
     return BaaS.request({
       url: API.WECHAT.PHONE_LOGIN,
       method: 'POST',
@@ -130,7 +129,7 @@ module.exports = BaaS => {
         data: {
           code,
           associate_with_unionid: withUnionID,
-        }
+        },
       })
     })
   }
@@ -157,7 +156,7 @@ module.exports = BaaS => {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
     }
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })
@@ -186,7 +185,7 @@ module.exports = BaaS => {
         update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
       },
     })
-      .then((res) => {
+      .then(res => {
         if (!res) return commonAuth.getCurrentUser()
         switch (res.statusCode) {
         case 200:
@@ -218,7 +217,7 @@ module.exports = BaaS => {
   } = {}) => {
     let data = {
       ...authData,
-      overwrite
+      overwrite,
     }
 
     if (!data || !data.detail) {
@@ -240,14 +239,14 @@ module.exports = BaaS => {
     let payload = {
       encryptedData: authData.detail.encryptedData,
       iv: authData.detail.iv,
-      overwrite
+      overwrite,
     }
     return BaaS.request({
       url: API.WECHAT.UPDATE_PHONE,
       method: 'PUT',
       data: payload,
     })
-      .then((res) => {
+      .then(res => {
         if (!res) return commonAuth.getCurrentUser()
 
         if (res.statusCode === 200) {
@@ -270,7 +269,6 @@ module.exports = BaaS => {
     updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
-
 
   /*
    * 兼容原有的 API
