@@ -48,6 +48,11 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         dataType: dataType,
         success: resolve,
         fail: e => {
+          // 由于快手没有对 request fail 的情况输出 statusCode，因此需要手动兼容一下
+          if (e && e.errMsg && e.errMsg.includes(constants.STATUS_CODE.UNAUTHORIZED.toString())) {
+            e.statusCode = constants.STATUS_CODE.UNAUTHORIZED
+          }
+
           if (e && e.statusCode) {
             const herror = new HError(e.statusCode, e.errMsg)
             reject(herror)

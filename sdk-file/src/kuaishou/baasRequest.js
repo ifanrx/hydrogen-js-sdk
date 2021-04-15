@@ -31,15 +31,21 @@ function tryResendRequest(payload) {
 // eslint-disable-next-line no-unused-vars
 const baasRequest = function (args) {
   let beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
+
+  // 由于快手没有对 request fail 的情况输出 statusCode，因此需要手动兼容一下
+  const retryOnFailed = res => {
+    if (parseInt(res.code) === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
+      return tryResendRequest(args)
+    } else {
+      throw res
+    }
+  }
+
   return beforeRequestPromise
-    .then(() => BaaS.request(args))
-    .catch(res => {
-      if (parseInt(res.code) === constants.STATUS_CODE.UNAUTHORIZED && BaaS._config.AUTO_LOGIN) {
-        return tryResendRequest(args)
-      } else {
-        throw res
-      }
+    .then(() => {
+      return BaaS.request(args).catch(retryOnFailed)
     })
+    .catch(retryOnFailed)
 }
 
 module.exports = baasRequest
