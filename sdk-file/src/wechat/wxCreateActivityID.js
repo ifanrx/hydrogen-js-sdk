@@ -17,7 +17,7 @@ const wxCreateActivityID = options => {
   const { unionid, openid } = options
 
   const paramsObj = {
-    unionid, openid
+    unionid, openid,
   }
 
   return BaaS._baasRequest({
