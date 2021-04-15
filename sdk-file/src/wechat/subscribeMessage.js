@@ -10,7 +10,7 @@ module.exports = function (BaaS) {
    * @param {BaaS.SubscribeMessageOptions} options 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  BaaS.subscribeMessage = (subscription) => {
+  BaaS.subscribeMessage = subscription => {
     return BaaS._baasRequest({
       url: API.WECHAT.SUBSCRIBE_MESSAGE,
       method: 'POST',

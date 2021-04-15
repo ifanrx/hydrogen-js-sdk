@@ -8,10 +8,10 @@ class WebSocket {
     swan.onSocketOpen(() => {
       this.onopen()
     })
-    swan.onSocketMessage((res) => {
+    swan.onSocketMessage(res => {
       this.onmessage({data: res.data})
     })
-    swan.onSocketClose((res) => {
+    swan.onSocketClose(res => {
       this.onclose({
         code: res.code,
         reason: res.reason,

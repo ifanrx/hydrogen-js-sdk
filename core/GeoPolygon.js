@@ -19,7 +19,7 @@ class GeoPolygon {
         this.points = args
         this.geoJSON = {
           type: 'Polygon',
-          coordinates: []
+          coordinates: [],
         }
       }
     } else {
@@ -33,7 +33,7 @@ class GeoPolygon {
    */
   toGeoJSON() {
     let face = []
-    this.points.forEach((point) => {
+    this.points.forEach(point => {
       if (point instanceof GeoPoint) {
         face.push([point.longitude, point.latitude])
       } else if (point instanceof Array && point.length === 2) {

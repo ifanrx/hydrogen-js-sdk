@@ -11,7 +11,7 @@ module.exports = function (BaaS) {
    * @param {BaaS.SubscribeMessageOptions} options 参数
    * @return {Promise<BaaS.Response<any>>}
    */
-  BaaS.subscribeMessage = (options) => {
+  BaaS.subscribeMessage = options => {
     return BaaS._baasRequest({
       url: API.QQ.SUBSCRIBE_MESSAGE,
       method: 'POST',

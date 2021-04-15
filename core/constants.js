@@ -80,7 +80,7 @@ module.exports = {
     TIMES_LIMIT: {
       MAX_TIMES_PER_CYCLE: 20,
       CYCLE: 24 * 60 * 60 * 1000,
-    }
+    },
   },
 
   THIRD_PARTY_AUTH_MODE: {
@@ -126,5 +126,6 @@ module.exports = {
     BAIDU: 'baidu_miniapp',
     BYTEDANCE: 'bytedance_miniapp',
     JONGDONG: 'jd_miniapp',
+    KUAISHOU: 'kuaishou_miniapp',
   },
 }

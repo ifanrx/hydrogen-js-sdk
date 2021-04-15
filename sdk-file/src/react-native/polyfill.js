@@ -7,7 +7,7 @@ module.exports = function (BaaS) {
   Object.assign(BaaS._polyfill, {
     getSystemInfoSync: function () {
       return {
-        platform: 'REACT-NATIVE'
+        platform: 'REACT-NATIVE',
       }
     },
     setStorageAsync: function (k, v) {

@@ -18,7 +18,7 @@ module.exports = function (BaaS) {
     logLevel = '',
     host = '',
     ws_host = '',
-    env
+    env,
   } = {}) => {
     if (!utils.isString(clientID)) {
       throw new HError(605)
@@ -98,7 +98,7 @@ module.exports = function (BaaS) {
   // 遍历 METHOD_MAP_LIST，对每个 methodMap 调用 doCreateRequestMethod(methodMap)
   BaaS._createRequestMethod = () => {
     let methodMapList = BaaS._config.METHOD_MAP_LIST
-    methodMapList.map((v) => {
+    methodMapList.map(v => {
       utils.doCreateRequestMethod(v)
     })
   }

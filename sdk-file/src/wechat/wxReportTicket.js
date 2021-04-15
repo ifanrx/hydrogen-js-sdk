@@ -10,7 +10,7 @@ const API = BaaS._config.API
  * @param {string} formID formID
  * @return {Promise<BaaS.Response<any>>}
  */
-const wxReportTicket = (formID) => {
+const wxReportTicket = formID => {
   let paramsObj = utils.makeReportTicketParam(formID)
 
   return BaaS._baasRequest({

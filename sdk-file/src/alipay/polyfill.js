@@ -33,7 +33,7 @@ module.exports = function (BaaS) {
       })
     },
     getStorageAsync(k) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         my.getStorage({
           key: k,
           success: res => resolve(res.data),
@@ -60,7 +60,7 @@ module.exports = function (BaaS) {
           if (result.envVersion === 'develop') {
             BaaS.checkVersion({platform: constants.PLATFORM.ALIPAY})
           }
-        }
+        },
       })
     },
     CLIENT_PLATFORM: 'ALIPAY',

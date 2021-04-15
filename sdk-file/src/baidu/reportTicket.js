@@ -10,7 +10,7 @@ const constants = require('core-module/constants')
  * @param {string} formID formID
  * @return {Promise<any>}
  */
-const createReportTicket = BaaS => (formID) => {
+const createReportTicket = BaaS => formID => {
   const API = BaaS._config.API
   let paramsObj = utils.makeReportTicketParam(formID)
   paramsObj.platform = constants.PLATFORM.BAIDU

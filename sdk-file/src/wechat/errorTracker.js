@@ -31,7 +31,6 @@ function metaData(...args) {
   return bugOut.metaData(...args)
 }
 
-
 module.exports = {
-  enable, track, metaData
+  enable, track, metaData,
 }

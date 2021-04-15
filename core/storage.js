@@ -23,7 +23,7 @@ module.exports = {
    * @param {string} key 键
    * @return {any}
    */
-  get: (key) => {
+  get: key => {
     return BaaS._polyfill.getStorageSync(storageKeyPrefix + key)
-  }
+  },
 }
