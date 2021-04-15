@@ -87,6 +87,7 @@ const API = {
     UPDATE_PHONE: '/hserve/v2.5/idp/wechat/phone-verification/',
     UPDATE_USER_INFO: '/hserve/v2.5/idp/wechat/user/info/',
     USER_RISK_RANK: '/hserve/v2.5/user-riskrank/',
+    PRIVATE_MESSAGE: '/hserve/v2.5/private-message/',
   },
 
   QQ: {
