@@ -45,3 +45,9 @@
  * @property {string} [category_name] 二维码存储的分类名称
  * @property {number} [category_id] 二维码存储的分类 ID, 当名称、ID 同时存在时，ID 优先
  */
+
+/**
+ * @typedef SubscribeMessageOptions
+ * @memberof BaaS
+ * @property {BaaS.Subscription[]} subscription 订阅关系
+ */
