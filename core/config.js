@@ -123,6 +123,7 @@ const API = {
     USER_ASSOCIATE: '/hserve/v2.4/idp/bytedance/user-association/',
     TEMPLATE_MESSAGE: '/hserve/v2.0/template-message-ticket/',
     MINIAPP_QR_CODE: '/hserve/v2.4/idp/bytedance/miniapp-qr-code/',
+    SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
   },
 
   JINGDONG: {
