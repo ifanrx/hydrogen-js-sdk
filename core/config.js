@@ -85,7 +85,8 @@ const API = {
     JSSDK_CREDENTIALS: '/hserve/v2.4/idp/wechat/jssdk-credentials/',
     PHONE_LOGIN: '/hserve/v2.5/idp/wechat/phone-login/',
     UPDATE_PHONE: '/hserve/v2.5/idp/wechat/phone-verification/',
-    UPDATE_USER_INFO: '/hserve/v2.5/idp/wechat/user/info/',
+    UPDATE_USER_INFO: '/hserve/v2.5/idp/wechat/user/info/', // 适用于基础库小于 2.16.0，大于 2.10.4
+    UPDATE_USER_INFO_UPGRADED: '/hserve/v2.6/idp/wechat/user/info/', // 适用于基础库 2.16.0 及以上
     USER_RISK_RANK: '/hserve/v2.5/user-riskrank/',
   },
 

@@ -171,19 +171,36 @@ module.exports = BaaS => {
    * @return {Promise<BaaS.CurrentUser>}
    */
   const updateUserInfo = (authData, {
+    code = '',
     syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     if (!authData || !authData.userInfo) {
       return Promise.reject(new HError(603))
     }
 
+    /**
+     * 由于微信在基础库 2.16.0 及以上将 rawData/signature/encryptedData/iv 移回了 wx.getUserProfile 的返回中，
+     * 因此接口需要升级，但还需保留旧接口，因为要兼容基础库（2.10.4 <= 基础库 < 2.16.0）版本
+     */
+    const version = wx.getSystemInfoSync().SDKVersion
+    const isBaseLibraryNewer = utils.compareBaseLibraryVersion(version, '2.16.0') >= 0
+
+    const data = isBaseLibraryNewer ? {
+      rawData: authData.rawData,
+      encryptedData: authData.encryptedData,
+      signature: authData.signature,
+      iv: authData.iv,
+      _wechat_login_code: code,
+      update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+    } : {
+      ...authData.userInfo,
+      update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+    }
+
     return BaaS.request({
-      url: API.WECHAT.UPDATE_USER_INFO,
+      url: isBaseLibraryNewer ? API.WECHAT.UPDATE_USER_INFO_UPGRADED : API.WECHAT.UPDATE_USER_INFO,
       method: 'PUT',
-      data: {
-        ...authData.userInfo,
-        update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-      },
+      data,
     })
       .then(res => {
         if (!res) return commonAuth.getCurrentUser()
