@@ -194,7 +194,7 @@ module.exports = BaaS => {
       encryptedData: authData.encryptedData,
       signature: authData.signature,
       iv: authData.iv,
-      _wechat_login_code: code,
+      code,
       update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
     } : {
       ...authData.userInfo,
