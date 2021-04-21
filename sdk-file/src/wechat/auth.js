@@ -3,11 +3,11 @@ const HError = require('core-module/HError')
 const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
-const version = wx.getSystemInfoSync().SDKVersion
 
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
+  const version = polyfill.getSystemInfoSync().SDKVersion
 
   const getLoginCode = () => {
     return new Promise((resolve, reject) => {
