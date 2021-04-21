@@ -3,6 +3,7 @@ const HError = require('core-module/HError')
 const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
+const version = wx.getSystemInfoSync().SDKVersion
 
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
@@ -182,8 +183,11 @@ module.exports = BaaS => {
      * 由于微信在基础库 2.16.0 及以上将 rawData/signature/encryptedData/iv 移回了 wx.getUserProfile 的返回中，
      * 因此接口需要升级，但还需保留旧接口，因为要兼容基础库（2.10.4 <= 基础库 < 2.16.0）版本
      */
-    const version = wx.getSystemInfoSync().SDKVersion
     const isBaseLibraryNewer = utils.compareBaseLibraryVersion(version, '2.16.0') >= 0
+
+    if (isBaseLibraryNewer && !code) {
+      return Promise.reject(new HError(605))
+    }
 
     const data = isBaseLibraryNewer ? {
       rawData: authData.rawData,
