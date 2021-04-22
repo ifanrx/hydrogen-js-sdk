@@ -419,7 +419,6 @@ const flatAuthResponse = res => {
  * 微信基础库版本比较
  * @param {*} v1 版本1
  * @param {*} v2 版本2
- * @returns 
  */
 function compareBaseLibraryVersion(v1, v2) {
   v1 = v1.split('.')
