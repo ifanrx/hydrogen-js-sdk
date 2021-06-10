@@ -88,7 +88,7 @@
   },
   "dependencies": {
     "ava": "^2.3.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "console-log-level": "^1.4.1",
     "core-js": "^3.0.1"
   }
