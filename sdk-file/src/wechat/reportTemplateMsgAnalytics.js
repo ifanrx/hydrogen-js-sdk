@@ -14,6 +14,6 @@ module.exports = BaaS => {
         tplMsgStatsReport.pushStats(options.query._H_utm_campaign)
       }
       tplMsgStatsReport.reportStats()
-    }
+    },
   })
 }

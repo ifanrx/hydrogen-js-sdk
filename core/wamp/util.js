@@ -1,6 +1,6 @@
 const GLOBAL_DEBUG = '__wamp_debug__'
 
-const canUse = (prop) => {
+const canUse = prop => {
   if (typeof global !== 'undefined') {
     return prop in global
   }
@@ -27,7 +27,7 @@ const setDebug = (value = true) => {
   }
 }
 
-const logger = (level) => (...args) => {
+const logger = level => (...args) => {
   console.log(`[${new Date().toISOString()}] [${level.toUpperCase()}]`, ...args) // eslint-disable-line
 }
 
@@ -74,7 +74,7 @@ const deferred_factory = () => () => {
   return deferred
 }
 
-const promisify = (fn) => (...args) => {
+const promisify = fn => (...args) => {
   return new Promise((resolve, reject) => {
     fn(...args, (error, result) => {
       if (error) {
@@ -96,7 +96,7 @@ const assert = (cond, text) => {
   throw new Error(text || 'Assertion failed!')
 }
 
-const is_object = (variable) => {
+const is_object = variable => {
   return (
     !Array.isArray(variable) &&
     (variable instanceof Object || typeof variable === 'object')

@@ -19,7 +19,7 @@ const wxDecryptData = (...params) => {
 
   let paramsObj = {
     encryptedData: params[0],
-    iv: params[1]
+    iv: params[1],
   }
 
   return BaaS._baasRequest({
@@ -35,12 +35,12 @@ const wxDecryptData = (...params) => {
   })
 }
 
-const validateParams = (params) => {
+const validateParams = params => {
   if (!(params instanceof Array) || params.length < 3) return false
 
   const requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number']
 
-  return requiredDataKeys.indexOf(params[2]) !== -1
+  return requiredDataKeys.includes(params[2])
 }
 
 module.exports = wxDecryptData

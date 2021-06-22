@@ -23,6 +23,8 @@ BaaS.getWXACode = require('./getWXACode')
 BaaS.wxDecryptData = require('./wxDecryptData')
 BaaS.wxReportTicket = require('./wxReportTicket')
 BaaS.ErrorTracker = require('./errorTracker')
+BaaS.wxGetUserRiskRank = require('./wxGetUserRiskRank')
+BaaS.wxCreateActivityID = require('./wxCreateActivityID')
 BaaS._createRequestMethod()
 // 暴露 BaaS 到小程序环境
 if (typeof wx !== 'undefined') {

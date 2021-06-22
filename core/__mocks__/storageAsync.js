@@ -24,5 +24,5 @@ module.exports = {
   set: function(key, value) {
     cache[key] = value
     return Promise.resolve()
-  }
+  },
 }

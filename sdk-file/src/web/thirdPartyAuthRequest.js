@@ -16,7 +16,7 @@ let thirdPartyAuthRequest = (options = {}) => {
        */
       if (event.origin !== window.location.origin && !test) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> origin not matched, event origin: ${event.origin}, window origin: ${window.location.origin}`)
-        return  // 只处理同源页面传来的 message
+        return // 只处理同源页面传来的 message
       }
       if (event.data && event.data.status === constants.THIRD_PARTY_AUTH_STATUS.SUCCESS) {
         utils.log(constants.LOG_LEVEL.DEBUG, `<third-party-auth> success, result: ${JSON.stringify(event.data)}`)

@@ -4,7 +4,6 @@ const polyfill = BaaS._polyfill
 
 const API = BaaS._config.API
 
-
 const keysMap = {
   merchandiseSchemaID: 'merchandise_schema_id', // optional
   merchandiseRecordID: 'merchandise_record_id', // optional
@@ -21,7 +20,7 @@ const keysMap = {
  * @param {BaaS.PaymentParams} params 参数
  * @return {Promise<any>}
  */
-const pay = (params) => {
+const pay = params => {
   let paramsObj = {}
 
   for (let key in params) {

@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "3.18.0",
+  "version": "3.20.1",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -21,11 +21,12 @@
     "test-web": "./test/web/test.sh",
     "test-qq": "ava test/qq/*.test.js",
     "test-baidu": "ava test/baidu/*.test.js",
+    "test-kuaishou": "mocha test/kuaishou/index.js",
     "test-react-native": "mocha test/react-native/*.test.js",
     "web-dev-server": "anywhere -p 40034 -h localhost -d test/web-dev-server",
     "dev": "export NODE_ENV=development && webpack --config sdk-file/webpack.config.js --mode=development -w",
     "build": "export NODE_ENV=production && webpack --mode=production --config sdk-file/webpack.config.js",
-    "lint": "eslint core/**/*.js sdk-file/src/**/*.js",
+    "lint": "eslint core/**/*.js core/*.js sdk-file/src/**/*.js --fix",
     "gen-types": "scripts/gen-types.sh",
     "gen-docs-wechat": "jsdoc -c jsdoc-configs/docs-wechat.json",
     "gen-docs-web": "jsdoc -c jsdoc-configs/docs-web.json",
@@ -87,7 +88,7 @@
   },
   "dependencies": {
     "ava": "^2.3.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "console-log-level": "^1.4.1",
     "core-js": "^3.0.1"
   }

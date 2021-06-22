@@ -26,7 +26,7 @@ class HError {
     case 602:
       return 'uninitialized' // 未调用 BaaS.init()
     case 603:
-      return 'unauthorized'  // 用户尚未授权
+      return 'unauthorized' // 用户尚未授权
     case 604:
       return 'session missing' // 用户尚未登录
     case 605:
@@ -34,7 +34,7 @@ class HError {
     case 607:
       return 'payment cancelled'
     case 608:
-      return 'payment failed'   // error message 会被重写为微信返回的错误信息
+      return 'payment failed' // error message 会被重写为微信返回的错误信息
     case 609:
       return 'wxExtend function should be executed to allow plugin use wx.login, wx.getUserInfo, wx.requestPayment'
     case 610:
@@ -49,6 +49,8 @@ class HError {
       return 'third party auth failed'
     case 615:
       return 'gateway type "weixin_tenpay_js" works in WeChat builtin browser only'
+    case 616:
+      return 'please enable sdk update platform user info first' // 未开启 JSSDK 修改平台用户信息开关 
     default:
       return 'unknown error'
     }

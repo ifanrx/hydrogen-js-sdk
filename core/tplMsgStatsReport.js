@@ -37,8 +37,8 @@ function reportStatsFromHeadOfQueue() {
     method: 'POST',
     data: {
       stats_id: statsIdToReport,
-      platform: platform
-    }
+      platform: platform,
+    },
   }).then(() => {
     utils.log(constants.LOG_LEVEL.DEBUG, `<report-stats> [${statsIdToReport}]: finish`)
     tpl_msg_stats_report_queue.shift()

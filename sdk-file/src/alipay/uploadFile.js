@@ -27,10 +27,10 @@ const myUpload = (config, resolve, reject) => {
       fileType: config.fileType,
       formData: {
         authorization: config.authorization,
-        policy: config.policy
+        policy: config.policy,
       },
       header,
-      success: (res) => {
+      success: res => {
         let result = {}
         let data = JSON.parse(res.data)
         result.status = 'ok'
@@ -50,7 +50,7 @@ const myUpload = (config, resolve, reject) => {
       },
       fail: res => {
         reject(new UploadError(parseInt(res.error), res.errorMessage))
-      }
+      },
     })
   })
 }
@@ -96,7 +96,7 @@ const createUploadFileFn = () => (fileParams, metaData) => {
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
       fileType: fileParams.fileType,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     myUpload(config, e => {
       rs(e)

@@ -190,7 +190,6 @@
  * @property {boolean} [index] include 或者 exclude 中的值是否为 ts 分片序号，默认为 false
  */
 
-
 /**
  * M3U8 时长和分片信息参数
  * @typedef VideoMetaParams
@@ -393,7 +392,6 @@
  *     'false' - 不更新
  * @property {string} provider 第三方平台
  */
-
 
 /**
  * @typedef SetEmailOptions

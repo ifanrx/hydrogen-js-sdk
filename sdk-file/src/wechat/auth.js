@@ -4,7 +4,6 @@ const storageAsync = require('core-module/storageAsync')
 const utils = require('core-module/utils')
 const commonAuth = require('core-module/auth')
 
-
 module.exports = BaaS => {
   const polyfill = BaaS._polyfill
   const API = BaaS._config.API
@@ -40,7 +39,7 @@ module.exports = BaaS => {
         create_user: createUser,
         code: code,
         login_with_unionid: withUnionID,
-      }
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -72,7 +71,7 @@ module.exports = BaaS => {
     })
   })
 
-  // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
+  // 提供给开发者在 button (open-type="getPhoneNumber") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
   /**
    * 获取用户信息、手机号
    * @function
@@ -85,15 +84,11 @@ module.exports = BaaS => {
       throw new HError(603)
     }
 
-    let detail = res.detail
-    let createUser = !!res.createUser
-    let syncUserProfile = res.syncUserProfile
-    let withUnionID = res.withUnionID
-    let loginCode = res.code
+    const {detail: {encryptedData, iv}, code, createUser} = res
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
-    if (!detail.userInfo && !detail.encryptedData) {
+    if (!encryptedData) {
       return Promise.all(([
         storageAsync.get(constants.STORAGE_KEY.UID),
         storageAsync.get(constants.STORAGE_KEY.OPENID),
@@ -103,48 +98,22 @@ module.exports = BaaS => {
       })
     }
 
-    let SensitiveData
-    let payload = {
-      encryptedData: detail.encryptedData || '',
-      iv: detail.iv || '',
-      create_user: createUser,
-    }
-    if (detail.userInfo) {
-      SensitiveData = getLoginCode().then(code => {
-        // 用户信息
-        return getUserInfo({lang: detail.userInfo.language}).then(detail => {
-          return getSensitiveData({
-            ...payload,
-            code,
-            rawData: detail.rawData,
-            signature: detail.signature,
-            login_with_unionid: withUnionID,
-            update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          },detail.userInfo)
-        })
-      })
-    } else {
-      // 手机号
-      SensitiveData = getSensitiveData({
-        ...payload,
-        code: loginCode
-      })
-    }
-
-    return SensitiveData.then(res => {
-      let userInfo = detail.userInfo ? detail.userInfo : res.data.user_info
-      userInfo.id = res.data.user_id
-      userInfo.openid = res.data.openid
-      userInfo.unionid = res.data.unionid
-      BaaS._polyfill.handleLoginSuccess(res, false, userInfo)
+    return getSensitiveData({
+      encryptedData,
+      iv,
+      create_user: !!createUser,
+      code,
+    }).then(res => {
+      const {user_info: userInfo, user_id: id, openid, unionid} = res.data
+      BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
       return res
     })
   }
 
-  // 上传 signature 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
-  const getSensitiveData = (data, userInfo) => {
+  // 上传 iv 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
+  const getSensitiveData = data => {
     return BaaS.request({
-      url: userInfo ? API.WECHAT.AUTHENTICATE : API.WECHAT.PHONE_LOGIN,
+      url: API.WECHAT.PHONE_LOGIN,
       method: 'POST',
       data,
     })
@@ -152,53 +121,18 @@ module.exports = BaaS => {
       .then(utils.flatAuthResponse)
   }
 
-  const getUserInfo = ({lang} = {}) => {
-    return new Promise((resolve, reject) => {
-      BaaS._polyfill.wxGetUserInfo({
-        lang,
-        success: resolve, fail: reject
-      })
-    })
-  }
-
-  const linkWechat = (res, {
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
-    withUnionID = false,
-  } = {}) => {
-    let refreshUserInfo = false
-    if (res && res.detail && res.detail.userInfo) {
-      refreshUserInfo = true
-    }
-
+  const linkWechat = ({withUnionID = false} = {}) => {
     return getLoginCode().then(code => {
-      // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
-        : Promise.resolve(null)
-
-      return getUserInfoPromise.then(res => {
-        let payload = res ? {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          associate_with_unionid: withUnionID,
-          code,
-        } : {
+      return BaaS._baasRequest({
+        method: 'POST',
+        url: API.WECHAT.USER_ASSOCIATE,
+        data: {
           code,
           associate_with_unionid: withUnionID,
-        }
-
-        return BaaS._baasRequest({
-          method: 'POST',
-          url: API.WECHAT.USER_ASSOCIATE,
-          data: payload
-        })
+        },
       })
     })
   }
-
 
   /**
    * 微信登录
@@ -213,22 +147,82 @@ module.exports = BaaS => {
     code = '',
     createUser = true,
     withUnionID = false,
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
-      // 授权用户信息/手机号登录流程
-      loginPromise = handleUserInfo({...authData, code, createUser, syncUserProfile, withUnionID})
+      // 手机号登录流程
+      loginPromise = handleUserInfo({...authData, code, createUser})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
     }
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })
   }
 
+  /**
+   * 更新用户信息
+   * @function
+   * @since v3.17.0
+   * @memberof BasS.auth
+   * @param {BaaS.authData} authData 用户信息
+   * @return {Promise<BaaS.CurrentUser>}
+   */
+  const updateUserInfo = (authData, {
+    code = '',
+    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
+  } = {}) => {
+    if (!authData || !authData.userInfo) {
+      return Promise.reject(new HError(603))
+    }
+
+    /**
+     * 由于微信在基础库 2.16.0 及以上将 rawData/signature/encryptedData/iv 移回了 wx.getUserProfile 的返回中，
+     * 因此接口需要升级，但还需保留旧接口，因为要兼容基础库（2.10.4 <= 基础库 < 2.16.0）版本
+     */
+    const version = polyfill.getSystemInfoSync().SDKVersion
+    const isBaseLibraryNewer = utils.compareBaseLibraryVersion(version, '2.16.0') >= 0
+
+    if (isBaseLibraryNewer && !code) {
+      return Promise.reject(new HError(605))
+    }
+
+    const data = isBaseLibraryNewer ? {
+      rawData: authData.rawData,
+      encryptedData: authData.encryptedData,
+      signature: authData.signature,
+      iv: authData.iv,
+      code,
+      update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+    } : {
+      ...authData.userInfo,
+      update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+    }
+
+    return BaaS.request({
+      url: isBaseLibraryNewer ? API.WECHAT.UPDATE_USER_INFO_UPGRADED : API.WECHAT.UPDATE_USER_INFO,
+      method: 'PUT',
+      data,
+    })
+      .then(res => {
+        if (!res) return commonAuth.getCurrentUser()
+        switch (res.statusCode) {
+        case 200:
+          return commonAuth._initCurrentUser(res.data)
+        case 401:
+          // 用户未登录
+          return Promise.reject(new HError(604))
+        case 403:
+          // 未开启 JSSDK 修改平台用户信息开关
+          return Promise.reject(new HError(616))
+        default:
+          // 其他错误
+          return Promise.reject(new HError(res.statusCode))
+        }
+      })
+  }
 
   /**
    * 更新用户手机号
@@ -244,7 +238,7 @@ module.exports = BaaS => {
   } = {}) => {
     let data = {
       ...authData,
-      overwrite
+      overwrite,
     }
 
     if (!data || !data.detail) {
@@ -266,14 +260,14 @@ module.exports = BaaS => {
     let payload = {
       encryptedData: authData.detail.encryptedData,
       iv: authData.detail.iv,
-      overwrite
+      overwrite,
     }
     return BaaS.request({
       url: API.WECHAT.UPDATE_PHONE,
       method: 'PUT',
       data: payload,
     })
-      .then((res) => {
+      .then(res => {
         if (!res) return commonAuth.getCurrentUser()
 
         if (res.statusCode === 200) {
@@ -292,10 +286,10 @@ module.exports = BaaS => {
     silentLogin,
     loginWithWechat: utils.rateLimit(loginWithWechat),
     handleUserInfo: utils.rateLimit(handleUserInfo),
+    updateUserInfo: utils.rateLimit(updateUserInfo),
     updatePhoneNumber: utils.rateLimit(updatePhoneNumber),
     linkWechat: utils.rateLimit(linkWechat),
   })
-
 
   /*
    * 兼容原有的 API

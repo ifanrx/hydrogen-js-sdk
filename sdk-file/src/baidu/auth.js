@@ -36,8 +36,8 @@ module.exports = BaaS => {
       method: 'POST',
       data: {
         create_user: createUser,
-        code: code
-      }
+        code: code,
+      },
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
@@ -57,7 +57,7 @@ module.exports = BaaS => {
     })
   })
 
-  const getSensitiveData = (data) => {
+  const getSensitiveData = data => {
     return BaaS.request({
       url: API.BAIDU.AUTHENTICATE,
       method: 'POST',
@@ -65,15 +65,6 @@ module.exports = BaaS => {
     })
       .then(utils.validateStatusCode)
       .then(utils.flatAuthResponse)
-  }
-
-  const getUserInfo = ({lang} = {}) => {
-    return new Promise((resolve, reject) => {
-      swan.getUserInfo({
-        lang,
-        success: resolve, fail: reject
-      })
-    })
   }
 
   // 提供给开发者在 button (open-type="getUserInfo") 的回调中调用，对加密数据进行解密，同时将 userinfo 存入 storage 中
@@ -97,16 +88,14 @@ module.exports = BaaS => {
     }
 
     return getLoginCode().then(code => {
-      return getUserInfo({lang: detail.userInfo.language}).then(detail => {
-        let payload = {
-          code,
-          create_user: createUser,
-          data: detail.data,
-          iv: detail.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-        }
-        return getSensitiveData(payload)
-      })
+      let payload = {
+        code,
+        create_user: createUser,
+        data: detail.encryptedData,
+        iv: detail.iv,
+        update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
+      }
+      return getSensitiveData(payload)
     }).then(res => {
       let userInfo = detail.userInfo
       userInfo.id = res.data.user_id
@@ -117,36 +106,14 @@ module.exports = BaaS => {
     })
   }
 
-
-  const linkBaidu = (res, {
-    syncUserProfile = constants.UPDATE_USERPROFILE_VALUE.SETNX,
-  } = {}) => {
-    let refreshUserInfo = false
-    if (res && res.detail && res.detail.userInfo) {
-      refreshUserInfo = true
-    }
-
+  const linkBaidu = () => {
     return getLoginCode().then(code => {
-      // 如果用户传递了授权信息，则重新获取一次 userInfo, 避免因为重新获取 code 导致 session 失效而解密失败
-      let getUserInfoPromise = refreshUserInfo
-        ? getUserInfo({lang: res.detail.userInfo.language})
-        : Promise.resolve(null)
+      let payload = {code}
 
-      return getUserInfoPromise.then(res => {
-        let payload = res ? {
-          rawData: res.rawData,
-          signature: res.signature,
-          encryptedData: res.encryptedData,
-          iv: res.iv,
-          update_userprofile: utils.getUpdateUserProfileParam(syncUserProfile),
-          code
-        } : {code}
-
-        return BaaS._baasRequest({
-          method: 'POST',
-          url: API.BAIDU.USER_ASSOCIATE,
-          data: payload,
-        })
+      return BaaS._baasRequest({
+        method: 'POST',
+        url: API.BAIDU.USER_ASSOCIATE,
+        data: payload,
       })
     })
   }
@@ -173,7 +140,7 @@ module.exports = BaaS => {
       loginPromise = silentLogin({createUser})
     }
 
-    return loginPromise.then((res) => {
+    return loginPromise.then(res => {
       if (!res) return commonAuth.getCurrentUser()
       return commonAuth._initCurrentUser(res.data.user_info, res.data.expired_at)
     })

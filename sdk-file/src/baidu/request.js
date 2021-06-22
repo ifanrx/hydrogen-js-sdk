@@ -11,7 +11,7 @@ const swanRequestFail = function (reject) {
       } else {
         reject(new HError(601)) // 网络超时
       }
-    }
+    },
   })
 }
 
@@ -44,7 +44,7 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         success: resolve,
         fail: () => {
           swanRequestFail(reject)
-        }
+        },
       })
 
       utils.log(constants.LOG_LEVEL.INFO, 'Request => ' + url)

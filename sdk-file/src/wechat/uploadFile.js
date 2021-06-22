@@ -11,10 +11,10 @@ const wxUpload = (header, config, resolve, reject, type) => {
     name: constants.UPLOAD.UPLOAD_FILE_KEY,
     formData: {
       authorization: config.authorization,
-      policy: config.policy
+      policy: config.policy,
     },
     header,
-    success: (res) => {
+    success: res => {
       let result = {}
       let data = JSON.parse(res.data)
 
@@ -46,7 +46,7 @@ const wxUpload = (header, config, resolve, reject, type) => {
     },
     fail: () => {
       BaaS.request.wxRequestFail(reject)
-    }
+    },
   })
 }
 
@@ -110,7 +110,7 @@ const uploadFile = (fileParams, metaData, type) => {
         return newPromise
       },
       abort: abort,
-      onProgressUpdate: onProgressUpdate
+      onProgressUpdate: onProgressUpdate,
     })
   }
 
@@ -127,10 +127,10 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     uploadTask = getUploadHeaders().then(header => {
-      const upload =  wxUpload(header, config, e => {
+      const upload = wxUpload(header, config, e => {
         if (isAborted) return rj(new Error('aborted'))
         rs(e)
       }, rj, type)

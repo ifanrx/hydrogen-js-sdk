@@ -11,10 +11,10 @@ const swanUpload = (header, config, resolve, reject, type) => {
     name: constants.UPLOAD.UPLOAD_FILE_KEY,
     formData: {
       authorization: config.authorization,
-      policy: config.policy
+      policy: config.policy,
     },
     header,
-    success: (res) => {
+    success: res => {
       let result = {}
       // 开发者工具返回的 res.data 类型是 string，而真机返回 object
       let data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
@@ -47,7 +47,7 @@ const swanUpload = (header, config, resolve, reject, type) => {
     },
     fail: () => {
       BaaS.request.wxRequestFail(reject)
-    }
+    },
   })
 }
 
@@ -111,7 +111,7 @@ const uploadFile = (fileParams, metaData, type) => {
         return newPromise
       },
       abort: abort,
-      onProgressUpdate: onProgressUpdate
+      onProgressUpdate: onProgressUpdate,
     })
   }
 
@@ -128,7 +128,7 @@ const uploadFile = (fileParams, metaData, type) => {
       authorization: res.data.authorization,
       uploadUrl: res.data.upload_url,
       filePath: fileParams.filePath,
-      destLink: res.data.path
+      destLink: res.data.path,
     }
     uploadTask = getUploadHeaders().then(header => {
       const upload = swanUpload(header, config, e => {

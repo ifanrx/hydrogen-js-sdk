@@ -15,7 +15,7 @@ class GeoPoint {
     this.latitude = latitude
     this.geoJSON = {
       'type': 'Point',
-      'coordinates': [this.longitude, this.latitude]
+      'coordinates': [this.longitude, this.latitude],
     }
   }
 
