@@ -142,6 +142,7 @@
  * @property {string} [filePath] 本地资源路径（非 Web）
  * @property {object} [fileObj] 本地资源路径（Web）
  * @property {'image'|'video'|'audio'} [fileType] 本地资源路径（Alipay）
+ * @property {string} [fileName] 指定文件名
  */
 
 /**
@@ -150,6 +151,7 @@
  * @memberof BaaS
  * @property {string} [categoryID] 文件分类 ID
  * @property {string} [categoryName] 要上传的文件分类名
+ * @property {boolean} [randomFileLink] 是否使用随机字符串作为文件的下载地址，不随机可能会覆盖之前的文件，默认为 true
  */
 
 /**

@@ -277,6 +277,7 @@ const requestParamsMap = {
   submissionValue: 'submission_value',
   categoryName: 'category_name',
   signatureID: 'signature_id',
+  randomFileLink: 'random_file_link',
 }
 
 module.exports = {

@@ -69,6 +69,10 @@ const createUploadFileFn = () => (fileParams, metaData) => {
     throw new HError(605)
   }
 
+  if(fileParams.fileName !== undefined && typeof fileParams.fileName !== 'string'){
+    throw new HError(605)
+  }
+
   if (!metaData) {
     metaData = {}
   } else if (typeof metaData !== 'object') {
@@ -82,7 +86,7 @@ const createUploadFileFn = () => (fileParams, metaData) => {
     rj = reject
   })
 
-  let fileName = utils.getFileNameFromPath(fileParams.filePath)
+  let fileName = fileParams.fileName || utils.getFileNameFromPath(fileParams.filePath)
   getUploadFileConfig(fileName, utils.replaceQueryParams(metaData)).then(res => {
     let config = {
       id: res.data.id,
