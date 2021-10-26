@@ -59,3 +59,13 @@
  * @property {string} emailAddress 用户邮箱地址
  * @property {string} extendedInfo 额外补充信息
  */
+
+/**
+ * 让插件帮助完成登录、支付等功能
+ * @function
+ * @memberof BaaS
+ * @name wxExtend
+ * @param {function} [login] 微信登录 wx.login
+ * @param {function} [getUserInfo] 获取用户信息 wx.getUserInfo
+ * @param {function} [requestPayment] 请求支付 wx.requestPayment
+ */
