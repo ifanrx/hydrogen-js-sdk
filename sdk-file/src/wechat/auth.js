@@ -168,6 +168,7 @@ module.exports = BaaS => {
    * @since v3.17.0
    * @memberof BaaS.auth
    * @param {BaaS.AuthData} authData 用户信息
+   * @param {BaaS.UpdateUserInfoOptions} [options] 其他选项
    * @return {Promise<BaaS.CurrentUser>}
    */
   const updateUserInfo = (authData, {
@@ -230,7 +231,7 @@ module.exports = BaaS => {
    * @since v2.0.0
    * @memberof BaaS.auth
    * @param {BaaS.AuthData} [authData] 用户加密手机号信息
-   * @param {BaaS.overwrite} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
+   * @param {BaaS.UpdatePhoneNumberOptions} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
    * @return {Promise<BaaS.CurrentUser>}
    */
   const updatePhoneNumber = (authData, {
