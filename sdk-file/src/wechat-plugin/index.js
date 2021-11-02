@@ -2,8 +2,8 @@ const BaaS = require('../wechat/index')
 const utils = require('core-module/utils')
 const HError = require('core-module/HError')
 
-BaaS._polyfill.getAPIHost = () => 'https://api.myminapp.com'
-BaaS._polyfill.getWSHost = () => 'wss://api.ws.myminapp.com'
+BaaS._polyfill.getAPIHost = () => BaaS._config.API_HOST || 'https://api.myminapp.com'
+BaaS._polyfill.getWSHost = () => BaaS._config.WS_HOST || 'wss://api.ws.myminapp.com'
 BaaS._polyfill.checkLatestVersion = () => null
 BaaS._polyfill.SDK_TYPE = 'plugin'
 BaaS._polyfill.wxGetUserInfo = () => new HError(609)

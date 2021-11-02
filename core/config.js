@@ -79,7 +79,7 @@ const API = {
     SUBSCRIBE_MESSAGE: '/hserve/v2.2/subscription-message/relationship-report/',
     DECRYPT: '/hserve/v1/wechat/decrypt/',
     WXACODE: '/hserve/v2.4/miniappcode/',
-    CENSOR_IMAGE: '/hserve/v1.7/censor-image/',
+    CENSOR_IMAGE: '/hserve/v2.6/censor-image/',
     CENSOR_MSG: '/hserve/v1.7/censor-msg/',
     CENSOR_ASYNC: '/hserve/v2.2/async-censor/',
     JSSDK_CREDENTIALS: '/hserve/v2.4/idp/wechat/jssdk-credentials/',
