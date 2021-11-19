@@ -1,3 +1,6 @@
+## 3.21.4 (2021-11-18)
+- [F] 修复 百度 SDK 静默登录失败错误
+
 ## 3.21.3 (2021-11-03)
 - [F] 修复 ts wxExtend、updateUserInfo、updatePhoneNumber 方法没对应类型检测问题
 
