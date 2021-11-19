@@ -59,3 +59,30 @@
  * @property {string} emailAddress 用户邮箱地址
  * @property {string} extendedInfo 额外补充信息
  */
+
+/**
+ * @typedef UpdatePhoneNumberOptions
+ * @memberof BaaS
+ * @property {boolean} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
+ */
+
+/**
+ * @typedef UpdateUserInfoOptions
+ * @memberof BaaS
+ * @property {string} [code]
+ * @property {'overwrite'|'setnx'|'false'} [syncUserProfile]
+ *   是否同步第一层级用户信息，默认为 'setnx'。值说明：
+ *     'overwrite' - 强制更新
+ *     'setnx' - 仅当字段从未被赋值时才更新
+ *     'false' - 不更新
+ */
+
+/**
+ * 让插件帮助完成登录、支付等功能
+ * @function
+ * @memberof BaaS
+ * @name wxExtend
+ * @param {function} [login] 微信登录 wx.login
+ * @param {function} [getUserInfo] 获取用户信息 wx.getUserInfo
+ * @param {function} [requestPayment] 请求支付 wx.requestPayment
+ */
