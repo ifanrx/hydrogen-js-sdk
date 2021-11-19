@@ -9,7 +9,7 @@ module.exports = BaaS => {
 
   const getLoginCode = () => {
     return new Promise((resolve, reject) => {
-      swan.login({
+      swan.getLoginCode({
         success: res => {
           resolve(res.code)
         },
