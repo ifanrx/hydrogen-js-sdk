@@ -18,9 +18,10 @@ const keysMap = {
  * @function
  * @memberof BaaS
  * @param {BaaS.PaymentParams} params 参数
+ * @param {function} [fn] 提前获取订单信息的函数
  * @return {Promise<any>}
  */
-const pay = params => {
+const pay = (params, fn) => {
   let paramsObj = {}
 
   for (let key in params) {
@@ -35,6 +36,12 @@ const pay = params => {
     data: paramsObj,
   }).then(function (res) {
     let data = res.data || {}
+
+    if (fn && typeof fn === 'function') {
+      const {transaction_no, trade_no} = res.data
+      fn({transaction_no, trade_no})
+    }
+
     return new Promise((resolve, reject) => {
       polyfill.wxPaymentRequest({
         appId: data.appId,
