@@ -240,7 +240,7 @@ module.exports = BaaS => {
       overwrite,
     }
 
-    if (!data || !data.detail) {
+    if (!data) {
       throw new HError(603)
     }
 

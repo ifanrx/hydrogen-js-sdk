@@ -216,15 +216,14 @@ describe('auth', () => {
     it('default to true without passing overwrite', () => {
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.updatePhoneNumber({detail: {encryptedData: 'xxx', iv: 'xxx'}}).catch(() => {
+      return BaaS.auth.updatePhoneNumber('xxx').catch(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
           url: config.API.WECHAT.UPDATE_PHONE,
           method: 'PUT',
           data: {
-            encryptedData: 'xxx',
-            iv: 'xxx',
-            overwrite: true
-          }
+            code: 'xxx',
+            overwrite: true,
+          },
         })
         nowStub.restore()
       })
