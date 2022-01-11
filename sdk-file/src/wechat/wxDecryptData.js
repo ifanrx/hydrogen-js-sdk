@@ -17,13 +17,20 @@ const wxDecryptData = (...params) => {
     throw new HError(605)
   }
 
-  let paramsObj = {
-    encryptedData: params[0],
-    iv: params[1],
-  }
+  const isPhoneNumber = params[1] === 'phone-number'
+
+  const paramsObj = isPhoneNumber
+    ? {code: params[0]}
+    : {
+      encryptedData: params[0],
+      iv: params[1],
+    }
+
+  const subUrl = isPhoneNumber ? params[1] : params[2]
+  const url = API.WECHAT.DECRYPT + subUrl + '/'
 
   return BaaS._baasRequest({
-    url: API.WECHAT.DECRYPT + params[2] + '/',
+    url,
     method: 'POST',
     data: paramsObj,
   }).then(res => {

@@ -84,7 +84,7 @@ module.exports = BaaS => {
       throw new HError(603)
     }
 
-    const {detail: {encryptedData, iv}, code, createUser} = res
+    const {detail: {encryptedData, iv}, createUser} = res
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
@@ -102,7 +102,6 @@ module.exports = BaaS => {
       encryptedData,
       iv,
       create_user: !!createUser,
-      code,
     }).then(res => {
       const {user_info: userInfo, user_id: id, openid, unionid} = res.data
       BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
@@ -144,14 +143,13 @@ module.exports = BaaS => {
    * @return {Promise<BaaS.CurrentUser>}
    */
   const loginWithWechat = (authData, {
-    code = '',
     createUser = true,
     withUnionID = false,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
       // 手机号登录流程
-      loginPromise = handleUserInfo({...authData, code, createUser})
+      loginPromise = handleUserInfo({...authData, createUser})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
@@ -230,15 +228,15 @@ module.exports = BaaS => {
    * @function
    * @since v2.0.0
    * @memberof BaaS.auth
-   * @param {BaaS.AuthData} [authData] 用户加密手机号信息
+   * @param {string} code 微信返回的动态令牌
    * @param {BaaS.UpdatePhoneNumberOptions} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const updatePhoneNumber = (authData, {
+  const updatePhoneNumber = (code, {
     overwrite = true,
   } = {}) => {
     let data = {
-      ...authData,
+      code,
       overwrite,
     }
 
@@ -248,7 +246,7 @@ module.exports = BaaS => {
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
-    if (!authData.detail.encryptedData) {
+    if (!code) {
       return Promise.all(([
         storageAsync.get(constants.STORAGE_KEY.UID),
         storageAsync.get(constants.STORAGE_KEY.OPENID),
@@ -258,15 +256,10 @@ module.exports = BaaS => {
       })
     }
 
-    let payload = {
-      encryptedData: authData.detail.encryptedData,
-      iv: authData.detail.iv,
-      overwrite,
-    }
     return BaaS.request({
       url: API.WECHAT.UPDATE_PHONE,
       method: 'PUT',
-      data: payload,
+      data,
     })
       .then(res => {
         if (!res) return commonAuth.getCurrentUser()
