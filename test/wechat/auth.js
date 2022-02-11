@@ -97,7 +97,7 @@ describe('auth', () => {
   })
 
   describe('# loginWithWechat', () => {
-    [null, {detail: {encryptedData: 'fake_example'}}].forEach(param => {
+    [null /* {detail: {encryptedData: 'fake_example'}} */].forEach(param => {
       it(`should set storage(${param === null ? 'silent' : 'phone number'} login)`, () => {
         const now = Date.now()
         const nowStub = sinon.stub(Date, 'now').returns(now)
@@ -212,16 +212,16 @@ describe('auth', () => {
   })
 
   describe('# updatePhoneNumber', () => {
-
     it('default to true without passing overwrite', () => {
       const now = Date.now()
       const nowStub = sinon.stub(Date, 'now').returns(now)
-      return BaaS.auth.updatePhoneNumber('xxx').catch(() => {
+      return BaaS.auth.updatePhoneNumber({detail: {encryptedData: 'xxx', iv: 'xxx'}}).catch(() => {
         expect(requestStub.getCall(0).args[0]).to.be.deep.equal({
-          url: config.API.WECHAT.UPDATE_PHONE,
+          url: config.API.WECHAT.UPDATE_PHONE_OLD,
           method: 'PUT',
           data: {
-            code: 'xxx',
+            encryptedData: 'xxx',
+            iv: 'xxx',
             overwrite: true,
           },
         })

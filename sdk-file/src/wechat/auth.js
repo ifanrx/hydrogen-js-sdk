@@ -84,7 +84,7 @@ module.exports = BaaS => {
       throw new HError(603)
     }
 
-    const {detail: {encryptedData, iv}, createUser} = res
+    const {detail: {encryptedData, iv, code: phone_code}, code, createUser} = res
 
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
@@ -98,10 +98,22 @@ module.exports = BaaS => {
       })
     }
 
+    /**
+     * 由于微信从基础库 2.21.2 开始，对获取手机号的接口进行了安全升级
+     * 因此接口需要升级，但还需保留旧接口，因为要兼容基础库 2.21.2 以下的版本
+     */
+    const isSDKVersionNewer = compareSDKVersion('2.21.2')
+
+    if (isSDKVersionNewer && !phone_code) {
+      return Promise.reject(new HError(605))
+    }
+
     return getSensitiveData({
       encryptedData,
       iv,
       create_user: !!createUser,
+      code,
+      ...(isSDKVersionNewer ? {phone_code} : {}),
     }).then(res => {
       const {user_info: userInfo, user_id: id, openid, unionid} = res.data
       BaaS._polyfill.handleLoginSuccess(res, false, {...userInfo, id, openid, unionid})
@@ -109,10 +121,18 @@ module.exports = BaaS => {
     })
   }
 
+  // 比较 SDK 版本
+  const compareSDKVersion = targetVersion => {
+    const version = polyfill.getSystemInfoSync().SDKVersion
+    const isSDKVersionNewer = utils.compareBaseLibraryVersion(version, targetVersion) >= 0
+    return isSDKVersionNewer
+  }
+
   // 上传 iv 和 encryptedData 等信息，用于校验数据的完整性及解密数据，获取 unionid 等敏感数据
   const getSensitiveData = data => {
+    const isSDKVersionNewer = compareSDKVersion('2.21.2')
     return BaaS.request({
-      url: API.WECHAT.PHONE_LOGIN,
+      url: isSDKVersionNewer ? API.WECHAT.PHONE_LOGIN : API.WECHAT.PHONE_LOGIN_OLD,
       method: 'POST',
       data,
     })
@@ -143,13 +163,14 @@ module.exports = BaaS => {
    * @return {Promise<BaaS.CurrentUser>}
    */
   const loginWithWechat = (authData, {
+    code = '',
     createUser = true,
     withUnionID = false,
   } = {}) => {
     let loginPromise = null
     if (authData && authData.detail) {
       // 手机号登录流程
-      loginPromise = handleUserInfo({...authData, createUser})
+      loginPromise = handleUserInfo({...authData, code, createUser})
     } else {
       // 静默登录流程
       loginPromise = silentLogin({createUser, withUnionID})
@@ -181,14 +202,13 @@ module.exports = BaaS => {
      * 由于微信在基础库 2.16.0 及以上将 rawData/signature/encryptedData/iv 移回了 wx.getUserProfile 的返回中，
      * 因此接口需要升级，但还需保留旧接口，因为要兼容基础库（2.10.4 <= 基础库 < 2.16.0）版本
      */
-    const version = polyfill.getSystemInfoSync().SDKVersion
-    const isBaseLibraryNewer = utils.compareBaseLibraryVersion(version, '2.16.0') >= 0
+    const isSDKVersionNewer = compareSDKVersion('2.16.0')
 
-    if (isBaseLibraryNewer && !code) {
+    if (isSDKVersionNewer && !code) {
       return Promise.reject(new HError(605))
     }
 
-    const data = isBaseLibraryNewer ? {
+    const data = isSDKVersionNewer ? {
       rawData: authData.rawData,
       encryptedData: authData.encryptedData,
       signature: authData.signature,
@@ -201,7 +221,7 @@ module.exports = BaaS => {
     }
 
     return BaaS.request({
-      url: isBaseLibraryNewer ? API.WECHAT.UPDATE_USER_INFO_UPGRADED : API.WECHAT.UPDATE_USER_INFO,
+      url: isSDKVersionNewer ? API.WECHAT.UPDATE_USER_INFO_UPGRADED : API.WECHAT.UPDATE_USER_INFO,
       method: 'PUT',
       data,
     })
@@ -228,25 +248,24 @@ module.exports = BaaS => {
    * @function
    * @since v2.0.0
    * @memberof BaaS.auth
-   * @param {string} code 微信返回的动态令牌
+   * @param {BaaS.AuthData} authData 用户加密手机号信息
    * @param {BaaS.UpdatePhoneNumberOptions} [overwrite] 默认为 true，如果设置为 false，原本有手机号就会报 400 错误
    * @return {Promise<BaaS.CurrentUser>}
    */
-  const updatePhoneNumber = (code, {
+  const updatePhoneNumber = (authData, {
     overwrite = true,
   } = {}) => {
-    let data = {
-      code,
-      overwrite,
-    }
+    const isSDKVersionNewer = compareSDKVersion('2.21.2')
 
-    if (!data) {
+    if (!authData || !authData.detail) {
       throw new HError(603)
     }
 
+    const {detail: {encryptedData, iv, code: phone_code}} = authData
+
     // 用户拒绝授权，仅返回 uid, openid 和 unionid
     // 2019-1-21： 将其封装为 HError 对象，同时输出原有字段
-    if (!code) {
+    if (!encryptedData) {
       return Promise.all(([
         storageAsync.get(constants.STORAGE_KEY.UID),
         storageAsync.get(constants.STORAGE_KEY.OPENID),
@@ -256,10 +275,12 @@ module.exports = BaaS => {
       })
     }
 
+    const payload = {encryptedData, iv, overwrite, ...(isSDKVersionNewer ? {phone_code} : {})}
+
     return BaaS.request({
-      url: API.WECHAT.UPDATE_PHONE,
+      url: isSDKVersionNewer ? API.WECHAT.UPDATE_PHONE : API.WECHAT.UPDATE_PHONE_OLD,
       method: 'PUT',
-      data,
+      data: payload,
     })
       .then(res => {
         if (!res) return commonAuth.getCurrentUser()

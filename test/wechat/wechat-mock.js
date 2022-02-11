@@ -59,6 +59,8 @@ wx.setStorage = ({key, data, success}) => {
   return success()
 }
 
+wx.getSystemInfoSync = () => ({SDKVersion: '2.19.0'})
+
 let code = 'mock wx.login code'
 
 // 模拟 wx.login 函数
