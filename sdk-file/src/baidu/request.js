@@ -42,7 +42,8 @@ const request = ({url, method = 'GET', data = {}, header = {}, dataType = 'json'
         header: headers,
         dataType: dataType,
         success: resolve,
-        fail: () => {
+        fail: err => {
+          utils.log(constants.LOG_LEVEL.ERROR, err)
           swanRequestFail(reject)
         },
       })
