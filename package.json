@@ -70,7 +70,7 @@
     "jest": "^26.0.1",
     "jsdoc": "^3.6.3",
     "jsdoc-typeof-plugin": "^1.0.0",
-    "jsdom": "^15.0.0",
+    "jsdom": "^16.5.0",
     "json-format": "^1.0.1",
     "mocha": "^4.0.0",
     "mochawesome": "^2.2.0",
