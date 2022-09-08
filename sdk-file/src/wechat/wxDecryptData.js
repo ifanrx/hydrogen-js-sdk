@@ -1,7 +1,14 @@
 const BaaS = require('core-module/baas')
 const HError = require('core-module/HError')
+const utils = require('core-module/utils')
 
 const API = BaaS._config.API
+
+const compareSDKVersion = targetVersion => {
+  const version = BaaS._polyfill.getSystemInfoSync().SDKVersion
+  const isSDKVersionNewer = utils.compareBaseLibraryVersion(version, targetVersion) >= 0
+  return isSDKVersionNewer
+}
 
 /**
  * 微信加密数据解密
@@ -10,6 +17,7 @@ const API = BaaS._config.API
  * @param {string} encryptedData 加密的数据
  * @param {string} iv 加密算法的初始向量
  * @param {string} type 数据类型
+ * @param {string} [code] 通过 bindgetphonenumber 事件回调获取到动态令牌 code（基础库 2.21.2 后新增）
  * @return {Promise<any>}
  */
 const wxDecryptData = (...params) => {
@@ -17,13 +25,20 @@ const wxDecryptData = (...params) => {
     throw new HError(605)
   }
 
-  let paramsObj = {
-    encryptedData: params[0],
-    iv: params[1],
+  const [encryptedData, iv, type, phone_code] = params
+
+  const isSDKVersionNewer = compareSDKVersion('2.21.2')
+
+  const paramsObj = {
+    encryptedData,
+    iv,
+    ...(isSDKVersionNewer ? {phone_code} : {}),
   }
 
+  const url = isSDKVersionNewer ? API.WECHAT.DECRYPT : API.WECHAT.DECRYPT_OLD
+
   return BaaS._baasRequest({
-    url: API.WECHAT.DECRYPT + params[2] + '/',
+    url: url + type + '/',
     method: 'POST',
     data: paramsObj,
   }).then(res => {
@@ -36,7 +51,12 @@ const wxDecryptData = (...params) => {
 }
 
 const validateParams = params => {
-  if (!(params instanceof Array) || params.length < 3) return false
+  const isSDKVersionNewer = compareSDKVersion('2.21.2')
+  if (
+    !(params instanceof Array)
+    || params.length < 3
+    || (isSDKVersionNewer && params[2] === 'phone-number' && params.length < 4)
+  ) return false
 
   const requiredDataKeys = ['we-run-data', 'open-gid', 'phone-number']
 
