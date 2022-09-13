@@ -49,18 +49,28 @@ expectType<WebBaaS.Query>(wx.BaaS.Query.or(queryWeb, queryWeb))
  */
 // wechat
 expectType<WechatBaaS.Query>(queryWechat.compare('key', '=', 'test'))
+expectType<WechatBaaS.Query>(queryWechat.compare('key', '=', true))
+expectType<WechatBaaS.Query>(queryWechat.compare('key', '=', 1))
 
 // qq
 expectType<QqBaaS.Query>(queryQq.compare('key', '=', 'test'))
+expectType<QqBaaS.Query>(queryQq.compare('key', '=', true))
+expectType<QqBaaS.Query>(queryQq.compare('key', '=', 1))
 
 // alipay
 expectType<AlipayBaaS.Query>(queryAlipay.compare('key', '=', 'test'))
+expectType<AlipayBaaS.Query>(queryAlipay.compare('key', '=', true))
+expectType<AlipayBaaS.Query>(queryAlipay.compare('key', '=', 1))
 
 // baidu
 expectType<BaiduBaaS.Query>(queryBaidu.compare('key', '=', 'test'))
+expectType<BaiduBaaS.Query>(queryBaidu.compare('key', '=', true))
+expectType<BaiduBaaS.Query>(queryBaidu.compare('key', '=', 1))
 
 // web
 expectType<WebBaaS.Query>(queryWeb.compare('key', '=', 'test'))
+expectType<WebBaaS.Query>(queryWeb.compare('key', '=', true))
+expectType<WebBaaS.Query>(queryWeb.compare('key', '=', 1))
 
 
 
