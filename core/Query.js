@@ -58,7 +58,7 @@ class Query {
    *
    * @param {string} key - 用于查询判断的字段
    * @param {string} operator - 判断操作符
-   * @param {string} value - 用于判断的值
+   * @param {any} value - 用于判断的值
    * @returns {this} Query 实例
    */
   compare(key, operator, value) {
