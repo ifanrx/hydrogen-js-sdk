@@ -86,3 +86,11 @@
  * @param {function} [getUserInfo] 获取用户信息 wx.getUserInfo
  * @param {function} [requestPayment] 请求支付 wx.requestPayment
  */
+
+/**
+ * @typedef GetWXACodeResponse
+ * @memberof BaaS
+ * @property {string} image 二维码的 base64 编码
+ * @property {string} [download_url] 请求参数 cdn=true 时返回，二维码的下载链接
+ * @property {object} [uploaded_file] 请求参数 cdn=true 时返回，图片文件对象。SDK >= 3.7.0 返回该参数
+ */

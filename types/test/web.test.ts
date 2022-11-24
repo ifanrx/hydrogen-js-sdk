@@ -41,9 +41,9 @@ expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.getCensorResult(1))
 /**
  * getWXACode
  */
-expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.getWXACode('type', {}))
-expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.getWXACode('type', {}, true))
-expectType<Promise<WechatBaaS.Response<any>>>(wx.BaaS.getWXACode('type', {}, true, 'category'))
+expectType<Promise<WechatBaaS.GetWXACodeResponse>>(wx.BaaS.getWXACode('type', {}))
+expectType<Promise<WechatBaaS.GetWXACodeResponse>>(wx.BaaS.getWXACode('type', {}, true))
+expectType<Promise<WechatBaaS.GetWXACodeResponse>>(wx.BaaS.getWXACode('type', {}, true, 'category'))
 
 /**
  * pay
