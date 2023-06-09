@@ -22,6 +22,7 @@ const API = {
   NATIVE_OAUTH_ASSOCIATION: '/hserve/v2.3/idp/oauth/:provider/user-association/',
 
   UPLOAD: '/hserve/v2.1/upload/',
+  MULTIPART_UPLOAD: '/hserve/v2.7/resumable-upload/',
   CLOUD_FUNCTION: '/hserve/v1/cloud-function/job/',
 
   USER_DETAIL: '/hserve/v2.5/user/info/:userID/',

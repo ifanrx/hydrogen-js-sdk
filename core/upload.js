@@ -25,7 +25,16 @@ const getUploadHeaders = () => {
   })
 }
 
+const getMultipartUploadConfig = (method = 'POST', params) => {
+  return BaaS._baasRequest({
+    url: BaaS._polyfill.getAPIHost().replace(/\/$/, '') + '/' + BaaS._config.API.MULTIPART_UPLOAD.replace(/^\//, ''),
+    method,
+    data: params,
+  })
+}
+
 module.exports = {
   getUploadFileConfig,
   getUploadHeaders,
+  getMultipartUploadConfig,
 }

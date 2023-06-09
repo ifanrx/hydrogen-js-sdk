@@ -25,6 +25,16 @@ class File extends BaseQuery {
   }
 
   /**
+   * 大文件上传（断点续传）。
+   * @param {BaaS.FileParams} fileParams 文件参数
+   * @param {BaaS.FileMeta} [metaData] 文件元信息
+   * @return {Promise<BaaS.Response<any>>}
+   */
+  multipartUpload(fileParams, metaData) {
+    return BaaS.multipartUploadFile(fileParams, metaData, 'json')
+  }
+
+  /**
    * 删除文件。
    * @method
    * @param {string} id 文件 ID
