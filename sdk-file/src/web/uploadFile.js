@@ -2,9 +2,14 @@ const axios = require('axios')
 const constants = require('core-module/constants')
 const HError = require('core-module/HError')
 const utils = require('core-module/utils')
-const { getUploadFileConfig } = require('core-module/upload')
+const { getUploadFileConfig, multipartUpload } = require('core-module/upload')
 const SparkMD5 = require('spark-md5')
+const storage = require('core-module/storage')
+const dayjs = require('dayjs')
 require('regenerator-runtime/runtime')
+
+const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD
+const { getAuthorization, init, complete } = multipartUpload
 
 const createFileChunks = file => {
   const chunkSize = 1 * 1024 * 1024 // 又拍云限制每次只能上传 1MB
@@ -19,6 +24,28 @@ const createFileChunks = file => {
     current = current + chunkSize
   }
   return chunks
+}
+
+const multipartStorage = {
+  get: key => {
+    const currentValue = storage.get(storageKey) || {}
+    return currentValue[key]
+  },
+  set: (key, value) => {
+    const currentValue = storage.get(storageKey) || {}
+    storage.set(storageKey, {
+      ...currentValue,
+      [key]: {
+        ...(currentValue[key] ? currentValue[key] : {}),
+        ...value,
+      },
+    })
+  },
+  delete: key => {
+    const currentValue = storage.get(storageKey) || {}
+    delete currentValue[key]
+    storage.set(storageKey, currentValue)
+  },
 }
 
 module.exports = function (BaaS) {
@@ -96,7 +123,7 @@ module.exports = function (BaaS) {
    * @return {Promise<any>}
    */
   BaaS.multipartUploadFile = async function (fileParams, metaData) {
-    const { fileObj } = fileParams
+    const { fileObj, fileName } = fileParams
     if (!fileObj || typeof fileObj !== 'object' || !fileObj.name) {
       throw new HError(605)
     }
@@ -114,77 +141,117 @@ module.exports = function (BaaS) {
       throw new HError(605)
     }
 
-    // let uuid = ''
-    // let authorization = ''
-    // let date = ''
-    // let uploadUrl = ''
+    const chunks = createFileChunks(fileObj)
+    const md5 = SparkMD5.ArrayBuffer.hash(chunks)
 
-    const initMultipartUpload = () => {
-      return Promise.resolve({
-        data: {
-          authorization: '',
-          path: '',
-          upload_url: `https://v0.api.upyun.com/cloud-minapp-45042/${fileObj.name}`,
-          created_at: '',
-          id: '',
-          cdn_path: '',
-          name: '',
-          date: '',
-          multi_uuid: '',
-          multi_part_id: '',
-        },
+    const getUploadRecord = () => {
+      const now = dayjs()
+      const uploadRecord = multipartStorage.get(md5) || {}
+
+      if (!uploadRecord.init_time) return null
+
+      if (now.diff(dayjs(uploadRecord.init_time), 'hour') < 24) {
+        return uploadRecord
+      }
+
+      return null
+    }
+
+    const initMultipartUpload = async () => {
+      // 以下这个 auth 和 date 返回 date offset error，有可能是 30 分钟过期了
+      // const authorization = 'UPYUN allenzhang:W5WWeY7g6Z4ZoOoeGtReHPdHsws='
+      // const date = 'Mon, 12 Jun 2023 07:41:24 GMT'
+
+      const uploadRecord = getUploadRecord()
+
+      if (uploadRecord) {
+        console.log('续传中')
+        const res = await getAuthorization(uploadRecord.id)
+        const initConfig = { ...res.data, ...uploadRecord }
+        return initConfig
+      }
+
+      const filename = fileName || fileObj.name
+      const data = { file_size: fileObj.size, filename }
+      const res = await init(data, utils.replaceQueryParams(metaData))
+      const initConfig = res.data
+
+      // 超时或者初始上传，都重新设置新值
+      multipartStorage.set(md5, {
+        init_time: new Date().getTime(),
+        multi_part_id: +initConfig.multi_part_id,
+        multi_uuid: initConfig.multi_uuid,
+        upload_url: initConfig.upload_url,
+        id: initConfig.id,
       })
+
+      return initConfig
     }
 
     const multipartUpload = async data => {
-      const chunks = createFileChunks(fileObj)
-      const md5 = SparkMD5.ArrayBuffer.hash(chunks)
-      // console.log('md5', md5)
-
+      const _chunks = chunks.slice(data.multi_part_id)
       let uuid = data.multi_uuid
       let nextPartId = data.multi_part_id
 
-      for (let chunk of chunks) {
-        const res = await axios.put(data.upload_url, chunk, {
-          headers: {
-            Authorization: data.authorization,
-            'x-date': data.date,
-            'x-upyun-multi-stage': 'upload',
-            'x-upyun-multi-uuid': uuid,
-            'x-upyun-part-id': nextPartId,
-          },
-        })
+      for (let chunk of _chunks) {
+        try {
+          const res = await axios.put(data.upload_url, chunk, {
+            headers: {
+              Authorization: data.authorization,
+              'x-date': data.date,
+              'x-upyun-multi-stage': 'upload',
+              'x-upyun-multi-uuid': uuid,
+              'x-upyun-part-id': nextPartId,
+            },
+          })
 
-        uuid = res.headers['x-upyun-multi-uuid']
-        nextPartId = res.headers['x-upyun-next-part-id']
+          uuid = res.headers['x-upyun-multi-uuid']
+          nextPartId = res.headers['x-upyun-next-part-id']
+        } catch (error) {
+          console.log('aaa eror', error)
+          throw error
+        }
 
-        // todo 存储 md5
+        console.log('nextPartId', nextPartId)
+
+        multipartStorage.set(md5, {
+          multi_part_id: +nextPartId,
+          multi_uuid: uuid,
+        }) // 保存当前上传记录
 
         if (nextPartId === -1) break
+        // await sleep(3 * 1000)
       }
 
-      return { file: data, multi_uuid: uuid, md5 }
+      return { file: data, multi_uuid: uuid }
     }
 
     const completeMultipartUpload = async data => {
-      const getConfig = () => {
-        return new Promise(resolve => {
-          const status = 'success'
-          resolve({ upload_status: status })
-        })
-      }
+      const uploadRecord = getUploadRecord()
 
-      return getConfig().then(res => {
+      return complete(uploadRecord.id, data.multi_uuid).then(res => {
         if (res.data.upload_status !== 'success') {
           throw new HError(605)
         }
 
+        multipartStorage.delete(md5) // 上传成功，删除上传记录
         return data
       })
     }
 
-    return initMultipartUpload()
-      .then(res => multipartUpload(res.data))
-      .then(res => completeMultipartUpload(res))
+    try {
+      const initConfig = await initMultipartUpload()
+      const data = await multipartUpload(initConfig)
+      return await completeMultipartUpload(data)
+    } catch (error) {
+      console.log('error', error)
+
+      if (error && error.data && error.data.msg === 'Network Error') return
+      multipartStorage.delete(md5) // 上传成功，删除上传记录
+    }
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

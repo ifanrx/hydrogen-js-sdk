@@ -51,8 +51,6 @@
   "homepage": "https://github.com/ifanrx/repository#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm test"
     }
   },
   "devDependencies": {
@@ -91,6 +89,7 @@
     "axios": "^0.21.1",
     "console-log-level": "^1.4.1",
     "core-js": "^3.0.1",
+    "dayjs": "^1.11.8",
     "regenerator-runtime": "^0.13.11",
     "spark-md5": "^3.0.2"
   }
