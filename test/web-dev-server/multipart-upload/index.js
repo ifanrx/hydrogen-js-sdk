@@ -23,10 +23,16 @@ var app = new Vue({
     subscriptions: [],
   },
   methods: {
-    getFile(event) {
+    async getFile(event) {
       const MyFile = new BaaS.File()
       const [fileObj] = event.target.files
-      MyFile.multipartUpload({ fileObj })
+      const metadata = {}
+      try {
+       const res = await MyFile.multipartUpload({ fileObj }, metadata)
+       console.log('res', res)
+      } catch (error) {
+        console.log('vue error', error);
+      }
     },
   },
   mounted() {

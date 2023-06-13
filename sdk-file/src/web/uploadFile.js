@@ -158,14 +158,11 @@ module.exports = function (BaaS) {
     }
 
     const initMultipartUpload = async () => {
-      // 以下这个 auth 和 date 返回 date offset error，有可能是 30 分钟过期了
-      // const authorization = 'UPYUN allenzhang:W5WWeY7g6Z4ZoOoeGtReHPdHsws='
-      // const date = 'Mon, 12 Jun 2023 07:41:24 GMT'
-
       const uploadRecord = getUploadRecord()
 
+      // 有上传记录，则续传
       if (uploadRecord) {
-        console.log('续传中')
+        // console.log('续传中')
         const res = await getAuthorization(uploadRecord.id)
         const initConfig = { ...res.data, ...uploadRecord }
         return initConfig
@@ -193,9 +190,9 @@ module.exports = function (BaaS) {
       let uuid = data.multi_uuid
       let nextPartId = data.multi_part_id
 
-      for (let chunk of _chunks) {
+      const uploadChunk = async chunk => {
         try {
-          const res = await axios.put(data.upload_url, chunk, {
+          return await axios.put(data.upload_url, chunk, {
             headers: {
               Authorization: data.authorization,
               'x-date': data.date,
@@ -204,15 +201,24 @@ module.exports = function (BaaS) {
               'x-upyun-part-id': nextPartId,
             },
           })
-
-          uuid = res.headers['x-upyun-multi-uuid']
-          nextPartId = res.headers['x-upyun-next-part-id']
         } catch (error) {
-          console.log('aaa eror', error)
+          // 如果是 authorization 超时 30 分钟，则需重新获取
+          if (error && error.data && error.data.code === 40100002) {
+            const uploadRecord = getUploadRecord()
+            const res = await getAuthorization(uploadRecord.id)
+            data.authorization = res.data.authorization
+            data.date = res.data.date
+            return await uploadChunk(chunk)
+          }
           throw error
         }
+      }
 
-        console.log('nextPartId', nextPartId)
+      for (let chunk of _chunks) {
+        const res = await uploadChunk(chunk)
+
+        uuid = res.headers['x-upyun-multi-uuid']
+        nextPartId = res.headers['x-upyun-next-part-id']
 
         multipartStorage.set(md5, {
           multi_part_id: +nextPartId,
@@ -220,7 +226,6 @@ module.exports = function (BaaS) {
         }) // 保存当前上传记录
 
         if (nextPartId === -1) break
-        // await sleep(3 * 1000)
       }
 
       return { file: data, multi_uuid: uuid }
@@ -231,11 +236,23 @@ module.exports = function (BaaS) {
 
       return complete(uploadRecord.id, data.multi_uuid).then(res => {
         if (res.data.upload_status !== 'success') {
-          throw new HError(605)
+          throw new HError(617)
         }
 
         multipartStorage.delete(md5) // 上传成功，删除上传记录
-        return data
+        return {
+          status: 'ok',
+          path: data.file.path,
+          file: {
+            id: data.file.id,
+            path: data.file.path,
+            name: data.file.name,
+            created_at: data.file.created_at,
+            mime_type: fileObj.type,
+            cdn_path: data.file.cdn_path,
+            size: fileObj.size,
+          },
+        }
       })
     }
 
@@ -244,14 +261,13 @@ module.exports = function (BaaS) {
       const data = await multipartUpload(initConfig)
       return await completeMultipartUpload(data)
     } catch (error) {
-      console.log('error', error)
+      // 没有 error 返回，一般是网络问题，不做删除处理
+      if (!error) {
+        throw new HError(600)
+      }
 
-      if (error && error.data && error.data.msg === 'Network Error') return
       multipartStorage.delete(md5) // 上传成功，删除上传记录
+      throw error
     }
   }
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
