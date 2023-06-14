@@ -26,11 +26,19 @@ var app = new Vue({
     async getFile(event) {
       const MyFile = new BaaS.File()
       const [fileObj] = event.target.files
-      const metadata = {}
+      const fileParams = {
+        fileObj,
+      }
+      const metadata = {
+        // categoryID: '64896d567d5ed6f0ff76215c',
+        categoryName: 'jiajun',
+      }
       try {
-       const res = await MyFile.multipartUpload({ fileObj }, metadata)
+       const res = await MyFile.multipartUpload(fileParams, metadata)
+       notie.alert({type: 1, text: '上传成功'});
        console.log('res', res)
       } catch (error) {
+        notie.alert({type: 3, text: '上传失败'});
         console.log('vue error', error);
       }
     },
