@@ -162,7 +162,6 @@ module.exports = function (BaaS) {
 
       // 有上传记录，则续传
       if (uploadRecord) {
-        // console.log('续传中')
         const res = await getAuthorization(uploadRecord.id)
         const initConfig = { ...res.data, ...uploadRecord }
         return initConfig
