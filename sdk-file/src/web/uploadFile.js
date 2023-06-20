@@ -239,7 +239,7 @@ module.exports = function (BaaS) {
         }
 
         multipartStorage.delete(md5) // 上传成功，删除上传记录
-        return {
+        return {data: {
           status: 'ok',
           path: data.file.path,
           file: {
@@ -251,7 +251,7 @@ module.exports = function (BaaS) {
             cdn_path: data.file.cdn_path,
             size: fileObj.size,
           },
-        }
+        }}
       })
     }
 
