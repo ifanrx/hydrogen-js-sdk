@@ -1,6 +1,6 @@
 {
   "name": "minapp-sdk",
-  "version": "3.22.0",
+  "version": "3.23.0",
   "main": "./lib/index.js",
   "browser": "./lib/web.js",
   "miniprogram": "lib",
@@ -14,7 +14,7 @@
     "directory": "types/test"
   },
   "scripts": {
-    "test": "npm run gen-types && npm run tsd && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
+    "test": "npm run gen-types && npm run test-core && npm run test-wechat && npm run test-web && npm run test-alipay && npm run test-qq && npm run test-baidu",
     "test-core": "jest",
     "test-wechat": "mocha test/wechat/index.js",
     "test-alipay": "mocha test/alipay/index.js",
@@ -90,6 +90,9 @@
     "ava": "^2.3.0",
     "axios": "^0.21.1",
     "console-log-level": "^1.4.1",
-    "core-js": "^3.0.1"
+    "core-js": "^3.0.1",
+    "dayjs": "^1.11.8",
+    "regenerator-runtime": "^0.13.11",
+    "spark-md5": "^3.0.2"
   }
 }

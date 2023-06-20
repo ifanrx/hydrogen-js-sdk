@@ -14,6 +14,7 @@ module.exports = {
     ALIPAY_USER_ID: 'alipay_user_id',
     LATEST_VERSION_CHECK_MILLISECONDS: 'latest_version_check_milliseconds',
     REPORT_TICKET_INVOKE_RECORD: 'report_ticket_invoke_record',
+    MULTIPART_UPLOAD: 'multipart_upload',
   },
   VERSION_MIN_CHECK_INTERVAL: '86400000',
 
