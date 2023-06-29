@@ -8,17 +8,17 @@
   }
 
   // 初始化
-  window.BaaS.init('a4d2d62965ddb57fa4d6', {
-    autoLogin: true,
-    logLevel: 'debug',
-  })
+  // window.BaaS.init('a4d2d62965ddb57fa4d6', {
+  //   autoLogin: true,
+  //   logLevel: 'debug',
+  // })
 
   // QA
-  // window.BaaS.init('995140f59511a222c937', {
-  //   autoLogin: true,
-  //   host: 'https://i-v5204.eng.szx.ifanrx.com/',
-  //   ws_host: 'wss://i-v5204.eng.szx.ifanrx.com/',
-  // })
+  window.BaaS.init('995140f59511a222c937', {
+    autoLogin: true,
+    host: 'https://v5204.eng.szx.ifanrx.com/',
+    ws_host: 'wss://v5204.eng.szx.ifanrx.com/',
+  })
 
   // hook request
   var r = window.BaaS.request;
