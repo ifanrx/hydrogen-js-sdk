@@ -11,35 +11,39 @@ module.exports = BaaS => {
    * @return {Promise<any>}
    */
   const wxCensorImage = filePath => {
-    return BaaS.getAuthToken().then(authToken => {
-      return new Promise((resolve, reject) => {
-        let header = {
-          'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
-          'X-Hydrogen-Client-Version': BaaS._config.VERSION,
-          'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
-          'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
-          'User-Agent': constants.UPLOAD.UA,
-        }
+    const beforeRequestPromise = BaaS._config.AUTO_LOGIN ? BaaS.auth.silentLogin() : Promise.resolve()
+    return beforeRequestPromise.then(() => {
+      return BaaS.getAuthToken().then(authToken => {
+        return new Promise((resolve, reject) => {
+          let header = {
+            'Authorization': constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
+            'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+            'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+            'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+            'User-Agent': constants.UPLOAD.UA,
+          }
 
-        if (BaaS._config.ENV) {
-          header['X-Hydrogen-Env-ID'] = BaaS._config.ENV
-        }
-        wx.uploadFile({
-          url: BaaS._polyfill.getAPIHost() + BaaS._config.API.WECHAT.CENSOR_IMAGE,
-          filePath: filePath,
-          name: constants.UPLOAD.UPLOAD_FILE_KEY,
-          header,
-          success: res => {
-            let {statusCode, data} = res
+          if (BaaS._config.ENV) {
+            header['X-Hydrogen-Env-ID'] = BaaS._config.ENV
+          }
 
-            if (parseInt(statusCode) !== constants.STATUS_CODE.SUCCESS) {
-              return reject(res)
-            }
-            resolve(JSON.parse(data))
-          },
-          fail: () => {
-            BaaS.request.wxRequestFail(reject)
-          },
+          wx.uploadFile({
+            url: BaaS._polyfill.getAPIHost() + BaaS._config.API.WECHAT.CENSOR_IMAGE,
+            filePath: filePath,
+            name: constants.UPLOAD.UPLOAD_FILE_KEY,
+            header,
+            success: res => {
+              let {statusCode, data} = res
+
+              if (parseInt(statusCode) !== constants.STATUS_CODE.SUCCESS) {
+                return reject(res)
+              }
+              resolve(JSON.parse(data))
+            },
+            fail: () => {
+              BaaS.request.wxRequestFail(reject)
+            },
+          })
         })
       })
     })
