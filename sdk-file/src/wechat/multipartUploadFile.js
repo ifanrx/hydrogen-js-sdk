@@ -6,14 +6,12 @@ const dayjs = require('dayjs')
 const { multipartUpload } = require('core-module/upload')
 const SparkMD5 = require('spark-md5')
 
-const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD // eslint-disable-line
-const { getAuthorization, init, complete } = multipartUpload // eslint-disable-line
-
-const readFileAsync = utils.promisify(wx.getFileSystemManager().readFile)
-const wxRequest = utils.promisify(wx.request)
+const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD
+const { getAuthorization, init, complete } = multipartUpload
 
 const createFileChunks = async fileParams => {
   const chunkSize = 1 * 1024 * 1024 // 又拍云限制每次只能上传 1MB
+  const readFileAsync = utils.promisify(wx.getFileSystemManager().readFile)
 
   let current = 0
   let chunks = [] // 保存与返回所有切片的参数
@@ -66,7 +64,12 @@ const multipartStorage = {
  * @return {Promise<any>}
  */
 const multipartUploadFile = async (fileParams, metaData) => {
-  if (!fileParams || typeof fileParams !== 'object' || !fileParams.filePath || !fileParams.fileSize) {
+  if (
+    !fileParams ||
+    typeof fileParams !== 'object' ||
+    !fileParams.filePath ||
+    !fileParams.fileSize
+  ) {
     throw new HError(605)
   }
 
@@ -128,6 +131,7 @@ const multipartUploadFile = async (fileParams, metaData) => {
   }
 
   const multipartUpload = async data => {
+    const wxRequest = utils.promisify(wx.request)
     const _chunks = chunks.slice(data.multi_part_id)
     let uuid = data.multi_uuid
     let nextPartId = data.multi_part_id
