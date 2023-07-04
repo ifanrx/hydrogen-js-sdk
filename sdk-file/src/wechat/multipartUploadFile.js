@@ -6,8 +6,8 @@ const dayjs = require('dayjs')
 const { multipartUpload } = require('core-module/upload')
 const SparkMD5 = require('spark-md5')
 
-const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD
-const { getAuthorization, init, complete } = multipartUpload
+const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD // eslint-disable-line
+const { getAuthorization, init, complete } = multipartUpload // eslint-disable-line
 
 const readFileAsync = utils.promisify(wx.getFileSystemManager().readFile)
 const wxRequest = utils.promisify(wx.request)
