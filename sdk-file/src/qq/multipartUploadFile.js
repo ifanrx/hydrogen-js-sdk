@@ -11,7 +11,7 @@ const { getAuthorization, init, complete } = multipartUpload
 
 const createFileChunks = async fileParams => {
   const chunkSize = 1 * 1024 * 1024 // 又拍云限制每次只能上传 1MB
-  const readFileAsync = utils.promisify(wx.getFileSystemManager().readFile)
+  const readFileAsync = utils.promisify(qq.getFileSystemManager().readFile)
 
   let current = 0
   let chunks = [] // 保存与返回所有切片的参数
@@ -86,7 +86,7 @@ const multipartUploadFile = async (fileParams, metaData) => {
     throw new HError(605)
   }
 
-  const wxRequest = utils.promisify(wx.request)
+  const wxRequest = utils.promisify(qq.request)
   const chunks = await createFileChunks(fileParams)
   const md5 = SparkMD5.ArrayBuffer.hash(chunks)
 
