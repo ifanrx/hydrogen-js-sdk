@@ -9,9 +9,24 @@ const SparkMD5 = require('spark-md5')
 const storageKey = constants.STORAGE_KEY.MULTIPART_UPLOAD
 const { getAuthorization, init, complete } = multipartUpload
 
+class UploadError extends HError {
+  mapErrorMessage(code) {
+    switch (code) {
+    case 11:
+      return '文件不存在'
+    case 12:
+      return '上传文件失败'
+    case 13:
+      return '没有权限'
+    default:
+      return '未知错误'
+    }
+  }
+}
+
 const createFileChunks = async fileParams => {
   const chunkSize = 1 * 1024 * 1024 // 又拍云限制每次只能上传 1MB
-  const readFileAsync = utils.promisify(wx.getFileSystemManager().readFile)
+  const readFileAsync = utils.promisify(my.getFileSystemManager().readFile)
 
   let current = 0
   let chunks = [] // 保存与返回所有切片的参数
@@ -86,7 +101,7 @@ const multipartUploadFile = async (fileParams, metaData) => {
     throw new HError(605)
   }
 
-  const wxRequest = utils.promisify(wx.request)
+  const wxRequest = utils.promisify(my.request)
   const chunks = await createFileChunks(fileParams)
   const md5 = SparkMD5.ArrayBuffer.hash(chunks)
 
@@ -224,4 +239,8 @@ const multipartUploadFile = async (fileParams, metaData) => {
   }
 }
 
-module.exports = multipartUploadFile
+module.exports = function (BaaS) {
+  BaaS.multipartUploadFile = multipartUploadFile
+}
+
+module.exports.UploadError = UploadError
