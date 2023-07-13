@@ -152,32 +152,37 @@ const multipartUploadFile = async (fileParams, metaData) => {
     let nextPartId = data.multi_part_id
 
     const uploadChunk = async chunk => {
-      try {
-        return await wxRequest({
-          url: data.upload_url,
-          method: 'PUT',
-          data: chunk.data,
-          header: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': chunk.length,
-            Authorization: data.authorization,
-            'x-date': data.date,
-            'x-upyun-multi-stage': 'upload',
-            'x-upyun-multi-uuid': uuid,
-            'x-upyun-part-id': nextPartId,
-          },
-        })
-      } catch (error) {
+      const res = await wxRequest({
+        url: data.upload_url,
+        method: 'PUT',
+        data: chunk.data,
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': chunk.length,
+          Authorization: data.authorization,
+          'x-date': data.date,
+          'x-upyun-multi-stage': 'upload',
+          'x-upyun-multi-uuid': uuid,
+          'x-upyun-part-id': nextPartId,
+        },
+      })
+
+      const stringifiedStatusCode = res.statusCode + ''
+
+      if (!stringifiedStatusCode.startsWith('2')) {
         // 如果是 authorization 超时 30 分钟，则需重新获取
-        if (error && error.data && error.data.code === 40100002) {
+        if (res && res.data && res.data.code === 40100002) {
           const uploadRecord = getUploadRecord()
           const res = await getAuthorization(uploadRecord.id)
           data.authorization = res.data.authorization
           data.date = res.data.date
           return await uploadChunk(chunk)
         }
-        throw error
+
+        throw res
       }
+
+      return res
     }
 
     for (let chunk of _chunks) {
@@ -229,8 +234,8 @@ const multipartUploadFile = async (fileParams, metaData) => {
     const data = await multipartUpload(initConfig)
     return await completeMultipartUpload(data)
   } catch (error) {
-    // 没有 error 返回，一般是网络问题，不做删除处理
-    if (!error) {
+    // 没有 statusCode 返回，一般是网络问题，不做删除处理
+    if (!error.statusCode) {
       throw new HError(600)
     }
 
