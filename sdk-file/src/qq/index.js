@@ -23,7 +23,9 @@ BaaS.use(censor)
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')
+BaaS.multipartUploadFile = require('./multipartUploadFile')
 BaaS._createRequestMethod()
+
 // 暴露 BaaS 到小程序环境
 if (typeof qq !== 'undefined') {
   qq.BaaS = BaaS

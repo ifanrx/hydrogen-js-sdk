@@ -446,6 +446,18 @@ function compareBaseLibraryVersion(v1, v2) {
   return 0
 }
 
+const promisify = func => {
+  return (args = {}) =>
+    new Promise((resolve, reject) => {
+      func(
+        Object.assign(args, {
+          success: resolve,
+          fail: reject,
+        })
+      )
+    })
+}
+
 module.exports = {
   mergeRequestHeader,
   log: log.log,
@@ -479,4 +491,5 @@ module.exports = {
   withRetry: require('./withRetry'),
   getBytedanceAppName: require('./getBytedanceAppName'),
   compareBaseLibraryVersion,
+  promisify,
 }
