@@ -22,7 +22,7 @@ module.exports = function (BaaS) {
       update_userprofile: syncUserProfile,
     }
     if (provider == PROVIDER_APPLE) {
-      data.username = username
+      data.nickname = username
     }
     return BaaS._baasRequest({
       url,
@@ -43,7 +43,7 @@ module.exports = function (BaaS) {
       update_userprofile: syncUserProfile,
     }
     if (provider == PROVIDER_APPLE) {
-      data.username = username
+      data.nickname = username
     }
     return BaaS._baasRequest({
       url,
