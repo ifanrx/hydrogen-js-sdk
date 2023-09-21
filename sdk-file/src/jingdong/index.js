@@ -11,6 +11,7 @@ BaaS.use(auth)
 BaaS.request = require('./request')
 BaaS._baasRequest = require('./baasRequest')
 BaaS.uploadFile = require('./uploadFile')
+BaaS.multipartUploadFile = require('./multipartUploadFile')
 BaaS._createRequestMethod()
 
 if (typeof jd !== 'undefined') {
