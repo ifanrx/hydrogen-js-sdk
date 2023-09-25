@@ -291,11 +291,19 @@
  */
 
 /**
+ * 保存数据记录
+ * @typedef SaveRecord
+ * @memberof BaaS
+ * @property {string} [expand] 展开字段
+ */
+
+/**
  * 批量更新参数
  * @typedef BatchUpdateParams
  * @memberof BaaS
  * @property {boolean} [enableTrigger] 是否触发触发器
  * @property {boolean} [withCount] 是否返回 total_count
+ * @property {string} [expand] 展开字段
  */
 
 /**

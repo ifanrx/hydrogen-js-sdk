@@ -22,6 +22,7 @@ class TableRecord extends BaseRecord {
 
   /**
    * 保存数据记录。
+   * @param {BaaS.SaveRecord} [options] 保存数据记录参数
    * @return {Promise<BaaS.Response<any>>}
    */
   save({expand = ''} = {}) {
