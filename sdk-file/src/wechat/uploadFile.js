@@ -44,7 +44,10 @@ const wxUpload = (header, config, resolve, reject, type) => {
         reject(err)
       }
     },
-    fail: () => {
+    fail: error => {
+      if (error && error.errMsg === 'uploadFile:fail abort') {
+        return reject(new Error('aborted'))
+      }
       BaaS.request.wxRequestFail(reject)
     },
   })
@@ -129,18 +132,16 @@ const uploadFile = (fileParams, metaData, type) => {
       filePath: fileParams.filePath,
       destLink: res.data.path,
     }
-    uploadTask = getUploadHeaders().then(header => {
-      const upload = wxUpload(header, config, e => {
-        if (isAborted) return rj(new Error('aborted'))
-        rs(e)
-      }, rj, type)
 
-      if (uploadCallback) {
-        upload.onProgressUpdate(uploadCallback)
-      }
+    const header = getUploadHeaders({async: false})
+    uploadTask = wxUpload(header, config, e => {
+      if (isAborted) return rj(new Error('aborted'))
+      rs(e)
+    }, rj, type)
 
-      return upload
-    })
+    if (uploadCallback) {
+      uploadTask.onProgressUpdate(uploadCallback)
+    }
   }, rj)
 
   return p
