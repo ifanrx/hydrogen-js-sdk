@@ -99,8 +99,10 @@ const multipartUploadFile = (fileParams, metaData) => {
     return null
   }
 
-  let rs, rj, uploadCallback = null
-  // isAborted
+  let rs,
+    rj,
+    uploadCallback,
+    isAborted = null
 
   let p = new Promise((resolve, reject) => {
     rs = resolve
@@ -109,6 +111,12 @@ const multipartUploadFile = (fileParams, metaData) => {
 
   function onProgressUpdate(cb) {
     uploadCallback = cb
+    return this
+  }
+
+  function abort() {
+    isAborted = true
+    return this
   }
 
   function mix(obj) {
@@ -124,6 +132,7 @@ const multipartUploadFile = (fileParams, metaData) => {
         return newPromise
       },
       onProgressUpdate,
+      abort,
     })
   }
 
@@ -131,7 +140,10 @@ const multipartUploadFile = (fileParams, metaData) => {
 
   const wxRequest = utils.promisify(wx.request)
 
+  if (isAborted) return rj(new Error('aborted'))
+
   createFileChunks(fileParams).then(async chunks => {
+    if (isAborted) return rj(new Error('aborted'))
     const md5 = SparkMD5.ArrayBuffer.hash(chunks)
 
     const initMultipartUpload = async () => {
@@ -139,6 +151,8 @@ const multipartUploadFile = (fileParams, metaData) => {
 
       // 有上传记录，则续传
       if (uploadRecord) {
+        if (isAborted) return rj(new Error('aborted'))
+
         const res = await getAuthorization(uploadRecord.id)
         const initConfig = { ...res.data, ...uploadRecord }
         return initConfig
@@ -148,6 +162,9 @@ const multipartUploadFile = (fileParams, metaData) => {
         fileParams.fileName || utils.getFileNameFromPath(fileParams.filePath)
       const data = { file_size: fileParams.fileSize, filename }
       const res = await init(data, utils.replaceQueryParams(metaData))
+
+      if (isAborted) return rj(new Error('aborted'))
+
       const initConfig = res.data
 
       // 超时或者初始上传，都重新设置新值
@@ -208,6 +225,7 @@ const multipartUploadFile = (fileParams, metaData) => {
       }
 
       for (let chunk of _chunks) {
+        if (isAborted) return rj(new Error('aborted'))
         const res = await uploadChunk(chunk)
 
         uuid = res.header['x-upyun-multi-uuid']
@@ -244,6 +262,8 @@ const multipartUploadFile = (fileParams, metaData) => {
           uploadCallback({ progress: 100 })
         }
 
+        if (isAborted) return rj(new Error('aborted'))
+
         return {
           data: {
             status: 'ok',
@@ -266,6 +286,9 @@ const multipartUploadFile = (fileParams, metaData) => {
       const initConfig = await initMultipartUpload()
       const data = await multipartUpload(initConfig)
       const result = await completeMultipartUpload(data)
+
+      if (isAborted) return rj(new Error('aborted'))
+
       return rs(result)
     } catch (error) {
       // 没有 statusCode 返回，一般是网络问题，不做删除处理
