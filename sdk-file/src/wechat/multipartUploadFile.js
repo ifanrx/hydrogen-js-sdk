@@ -293,7 +293,7 @@ const multipartUploadFile = (fileParams, metaData) => {
     } catch (error) {
       // 没有 statusCode 返回，一般是网络问题，不做删除处理
       if (!error.statusCode) {
-        rj(new HError(600))
+        return rj(new HError(600))
       }
 
       multipartStorage.delete(md5) // 上传成功，删除上传记录
