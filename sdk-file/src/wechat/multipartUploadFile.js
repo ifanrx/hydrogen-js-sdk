@@ -231,10 +231,11 @@ const multipartUploadFile = (fileParams, metaData) => {
         uuid = res.header['x-upyun-multi-uuid']
         nextPartId = res.header['x-upyun-next-part-id']
 
+        // 保存当前上传记录
         multipartStorage.set(md5, {
           multi_part_id: +nextPartId,
           multi_uuid: uuid,
-        }) // 保存当前上传记录
+        })
 
         if (nextPartId == -1) break
 
