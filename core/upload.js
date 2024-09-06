@@ -1,5 +1,6 @@
 const BaaS = require('./baas')
 const constants = require('./constants')
+const storage = require('./storage')
 const utils = require('./utils')
 
 // get the upload config for upyun from sso
@@ -16,7 +17,18 @@ const getUploadFileConfig = (fileName, metaData) => {
   })
 }
 
-const getUploadHeaders = () => {
+const getUploadHeaders = ({async = true} = {}) => {
+  if (!async) {
+    const authToken = storage.get(constants.STORAGE_KEY.AUTH_TOKEN)
+    return {
+      Authorization: constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
+      'X-Hydrogen-Client-Version': BaaS._config.VERSION,
+      'X-Hydrogen-Client-Platform': utils.getSysPlatform(),
+      'X-Hydrogen-Client-ID': BaaS._config.CLIENT_ID,
+      'User-Agent': constants.UPLOAD.UA,
+    }
+  }
+
   return BaaS.getAuthToken().then(authToken => {
     return {
       Authorization: constants.UPLOAD.HEADER_AUTH_VALUE + authToken,
