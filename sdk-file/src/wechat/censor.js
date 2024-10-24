@@ -56,15 +56,24 @@ module.exports = BaaS => {
    * @param {string} text 带检测的文本内容
    * @return {Promise<any>}
    */
-  const wxCensorText = text => {
-    if (!text || typeof text !== 'string') {
+  const wxCensorText = ({content = '', scene = '', nickname = '', signature = '', title = ''} = {}) => {
+    if (!content || typeof content !== 'string') {
       return Promise.reject(new HError(605))
     }
+
+    if (!constants.WECHAT_CENSOR_SCENE.includes(scene)) {
+      return Promise.reject(new HError(605))
+    }
+
     return BaaS._baasRequest({
       url: BaaS._config.API.WECHAT.CENSOR_MSG,
       method: 'POST',
       data: {
-        content: text,
+        content,
+        scene,
+        ...(nickname ? {nickname} : {}),
+        ...(signature ? {signature} : {}),
+        ...(title ? {title} : {}),
       },
     })
   }
@@ -77,12 +86,17 @@ module.exports = BaaS => {
    * @param {string} fileID 文件 ID
    * @return {Promise<BaaS.Response<BaaS.CensorAsyncResult>>}
    */
-  const censorAsync = fileId => {
+  const censorAsync = (fileId, scene) => {
+    if (!constants.WECHAT_CENSOR_SCENE.includes(scene)) {
+      return Promise.reject(new HError(605))
+    }
+
     return BaaS._baasRequest({
       url: BaaS._config.API.WECHAT.CENSOR_ASYNC,
       method: 'POST',
       data: {
         file_id: fileId,
+        scene,
       },
     })
   }

@@ -129,4 +129,6 @@ module.exports = {
     JONGDONG: 'jd_miniapp',
     KUAISHOU: 'kuaishou_miniapp',
   },
+
+  WECHAT_CENSOR_SCENE: ['data', 'comment', 'forum', 'social_log'],
 }
